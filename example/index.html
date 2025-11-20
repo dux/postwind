@@ -4,120 +4,346 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DuxWind - Real-time CSS Generator</title>
-    <script src="../src/dux-wind-config.js"></script>
     <script src="../src/dux-wind.js"></script>
-</head>
-<body>
-    <h1 class="text-4xl font-bold text-center">DuxWind Test</h1>
-    <div class="container mx-auto p-4">
-        <p class="text-gray-700 mb-4">This is a test paragraph.</p>
-        <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-            Click me
-        </button>
-        <div class="box p-4 mb-4">
-            <div class="m:p-10 d:p-20">
-                Responsive padding test - mobile: 40px, desktop: 80px
-            </div>
-        </div>
-        <div class="box p-4 mb-4">
-            <div class="flex m:flex-col d:flex-row gap-4 items-center">
-                <span>Flex test</span>
-                <button class="cursor-pointer">Click</button>
-            </div>
-        </div>
-        <div class="box p-4 mb-4">
-            <div class="mt-8 -ml-4">
-                Negative margin test (-ml-4 = -16px)
-            </div>
-        </div>
-        <div class="box p-4 mb-4">
-            <div class="p-40px mt-20px">
-                Pixel test: p-40px = 40px padding, mt-20px = 20px margin-top
-            </div>
-        </div>
-        <div class="box p-4 mb-4">
-            <div class="p-10|20 mt-2|4">
-                Pipe notation: p-10|20 = mobile:40px, desktop:80px padding
-            </div>
-        </div>
-        <div class="box p-4 mb-4">
-            <div class="p-4 hover:p-8 hover:bg-blue-100" style="background: #f0f0f0; transition: all 0.3s ease;">
-                Hover demo: Hover me! (hover:p-8 hover:bg-blue-100)
-            </div>
-        </div>
-        <div class="box p-4 mb-4">
-            <button class="p-2 border hover:p-4|6 cursor-pointer" style="background: #e0e0e0; border: 1px solid #ccc; transition: all 0.3s ease;">
-                Hover + Pipe: hover:p-4|6 = mobile:16px, desktop:24px on hover
-            </button>
-        </div>
-        <div class="box p-4 mb-4">
-            <button class="btn-primary mr-4">Primary Button</button>
-            <div class="card">
-                <h3>Card Example</h3>
-                <p>This uses the 'card' shortcut class.</p>
-            </div>
-        </div>
-        <div class="box p-4 mb-4">
-            <h3 class="mb-4">New Features Demo</h3>
-            
-            <!-- Arbitrary Values -->
-            <div class="w-[250px] h-[100px] bg-[#ff6b6b] mb-4 flex items-center justify-center text-white">
-                Arbitrary: w-[250px] bg-[#ff6b6b]
-            </div>
-            
-            <!-- Opacity -->
-            <div class="bg-blue-500 p-4 mb-4">
-                <div class="bg-white opacity-25 p-2 mb-2">opacity-25</div>
-                <div class="bg-white opacity-50 p-2 mb-2">opacity-50</div>
-                <div class="bg-white opacity-75 p-2">opacity-75</div>
-            </div>
-            
-            <!-- CSS Grid -->
-            <div class="grid grid-cols-3 gap-4 mb-4">
-                <div class="bg-red-100 p-4">Grid 1</div>
-                <div class="bg-red-100 p-4 col-span-2">Grid 2 (span 2)</div>
-                <div class="bg-red-100 p-4 col-span-full">Grid 3 (full width)</div>
-            </div>
-            
-            <!-- States Demo -->
-            <div class="grid grid-cols-2 gap-4 mb-4">
-                <button class="p-4 bg-blue-500 text-white hover:bg-blue-600 focus:bg-blue-700 active:bg-blue-800 transition-all duration-300">
-                    Multi-state button
-                </button>
-                <input type="text" placeholder="Focus me" class="p-4 border focus:border-blue-500 focus:ring-2 disabled:opacity-50 transition-all">
-            </div>
-            
-            <!-- Animation -->
-            <div class="flex gap-4">
-                <div class="w-12 h-12 bg-green-500 animate-spin"></div>
-                <div class="w-12 h-12 bg-yellow-500 animate-pulse"></div>
-                <div class="w-12 h-12 bg-purple-500 animate-bounce"></div>
-            </div>
-        </div>
-    </div>
-    
-    <!-- Documentation -->
-    <div class="container mx-auto p-4 mt-8">
-        <div id="documentation"></div>
-    </div>
-    
     <script>
-        // Generate documentation when DOM is ready
+        // Initialize DuxWind when DOM is loaded
         document.addEventListener('DOMContentLoaded', function() {
+            // Load default config and reset CSS
+            DuxWind.resetCss();
+            DuxWind.loadDefaultConfig();
+
+            // Redefine breakpoints - mobile and desktop only
+            DuxWind.config.breakpoints = {
+                'm': '(max-width: 768px)',    // Mobile: up to tablet
+                'd': '(min-width: 769px)'     // Desktop: tablet and up
+            };
+
+            // Add example shortcuts
+            DuxWind.config.shortcuts = {
+                'btn': 'px-4 py-2 rounded font-medium transition-all duration-200 cursor-pointer border',
+                'btn-primary': 'btn bg-blue-500 text-white border-blue-500 hover:bg-blue-600 hover:border-blue-600 active:bg-blue-700',
+                'btn-outline': 'btn bg-transparent text-blue-500 border-blue-500 hover:bg-blue-50 active:bg-blue-100',
+                'card': 'bg-white rounded-lg border p-6 shadow-sm',
+                'center': 'flex items-center justify-center',
+                'full-center': 'w-full h-full center',
+                'container': 'max-w-[1200px] mx-auto px-4',
+                'section': 'mb-12 p-6 bg-white rounded-lg border',
+                'h1': 'font-bold m:text-24px d:text-36px leading-tight',
+                'h2': 'font-semibold m:text-20px d:text-24px leading-tight',
+                // Test shortcut with conflicting properties
+                'spacious-box': 'p-8 bg-gray-100 border-2 m-4 rounded'
+            };
+
+            // Initialize DuxWind after configuration is complete
+            DuxWind.init({ debug: true, clearCache: true });
+        });
+    </script>
+</head>
+<body class="bg-gray-50 min-h-screen">
+    <style>
+        * {
+            transition: all 0.2s ease-in;
+        }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Open Sans', 'Helvetica Neue', sans-serif;
+            font-weight: 400;
+            line-height: 1.6;
+            letter-spacing: -0.01em;
+        }
+    </style>
+    <!-- Header -->
+    <header class="bg-white border-b">
+        <div class="container py-6">
+            <h1 class="h1 text-center mb-6">DuxWind Demo</h1>
+            <p class="text-gray-600 text-center mb-8 m:text-14px d:text-16px">Real-time Tailwind-like CSS with shortcuts, responsive utilities, and modern features</p>
+
+            <!-- Navigation -->
+            <nav class="flex flex-wrap justify-center gap-4">
+                <button onclick="showSection('intro')" class="btn-primary">Overview</button>
+                <button onclick="showSection('shortcuts')" class="btn-outline">Shortcuts</button>
+                <button onclick="showSection('responsive')" class="btn-outline">Responsive</button>
+                <button onclick="showSection('flex')" class="btn-outline">Flexbox</button>
+                <button onclick="showSection('grid')" class="btn-outline">Grid</button>
+                <button onclick="showSection('states')" class="btn-outline">States</button>
+                <button onclick="showSection('features')" class="btn-outline">Features</button>
+                <button onclick="showSection('override-test')" class="btn-outline">CSS Override</button>
+                <button onclick="showSection('documentation')" class="btn-outline">Docs</button>
+            </nav>
+        </div>
+    </header>
+
+    <main class="py-8">
+        <div class="container">
+
+        <!-- Introduction Section - Default Visible -->
+        <section id="intro" class="section mb-8" style="display: block;">
+            <h2 class="h2 mb-6">DuxWind Features Overview</h2>
+            <div class="bg-blue-50 border border-blue-200 rounded-lg p-6">
+                <p class="text-blue-800 mb-4">
+                    Welcome to DuxWind! This demo showcases real-time Tailwind-like CSS generation with advanced features like shortcuts, pipe notation, and responsive design.
+                </p>
+                <p class="text-blue-700 text-sm">
+                    Use the navigation above to explore different feature categories. Each section demonstrates input classes and their generated CSS output.
+                </p>
+            </div>
+        </section>
+
+        <!-- Button Shortcuts Section -->
+        <section id="shortcuts" class="section" style="display: none;">
+            <h2 class="h2 mb-6">Button Shortcuts Demo</h2>
+            <div class="flex flex-wrap gap-4 mb-6">
+                <button class="btn">Base Button</button>
+                <button class="btn-primary">Primary Button</button>
+                <button class="btn-outline">Outline Button</button>
+            </div>
+            <div class="bg-gray-100 p-4 rounded">
+                <h3 class="font-semibold mb-2">Shortcut Definitions:</h3>
+                <ul class="text-sm font-mono space-y-1">
+                    <li><strong>btn:</strong> px-4 py-2 rounded font-medium transition-all duration-200 cursor-pointer border</li>
+                    <li><strong>btn-primary:</strong> btn bg-blue-500 text-white border-blue-500 hover:bg-blue-600 hover:border-blue-600 active:bg-blue-700</li>
+                    <li><strong>btn-outline:</strong> btn bg-transparent text-blue-500 border-blue-500 hover:bg-blue-50 active:bg-blue-100</li>
+                    <li><strong>h1:</strong> font-bold m:text-24px d:text-36px leading-tight</li>
+                    <li><strong>h2:</strong> font-semibold m:text-20px d:text-24px leading-tight</li>
+                </ul>
+            </div>
+        </section>
+
+        <!-- Flex Demo Section -->
+        <section id="flex" class="section" style="display: none;">
+            <h2 class="h2 mb-6">Flexbox Demo</h2>
+            <div class="space-y-6">
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Responsive Flex Direction</h3>
+                    <div class="flex m:flex-col d:flex-row gap-4 items-center p-4 bg-gray-50 rounded">
+                        <div class="bg-blue-500 text-white p-4 rounded">Item 1</div>
+                        <div class="bg-green-500 text-white p-4 rounded">Item 2</div>
+                        <div class="bg-purple-500 text-white p-4 rounded">Item 3</div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-2">Mobile: column, Desktop: row</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Justify & Align</h3>
+                    <div class="flex justify-between items-center p-4 bg-gray-50 rounded h-24">
+                        <div class="bg-red-500 text-white p-2 rounded text-sm">Start</div>
+                        <div class="bg-yellow-500 text-white p-2 rounded text-sm">Center</div>
+                        <div class="bg-indigo-500 text-white p-2 rounded text-sm">End</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Grid Demo Section -->
+        <section id="grid" class="section" style="display: none;">
+            <h2 class="h2 mb-6">CSS Grid Demo</h2>
+            <div class="space-y-6">
+                <div class="card">
+                    <h3 class="font-semibold mb-4">3-Column Grid</h3>
+                    <div class="grid grid-cols-3 gap-4">
+                        <div class="bg-blue-100 p-4 rounded">Grid 1</div>
+                        <div class="bg-blue-100 p-4 rounded">Grid 2</div>
+                        <div class="bg-blue-100 p-4 rounded">Grid 3</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Column Spanning</h3>
+                    <div class="grid grid-cols-4 gap-4">
+                        <div class="bg-green-100 p-4 rounded">Normal</div>
+                        <div class="bg-green-200 p-4 rounded col-span-2">Span 2</div>
+                        <div class="bg-green-100 p-4 rounded">Normal</div>
+                        <div class="bg-green-300 p-4 rounded col-span-full">Full Width</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- States Demo Section -->
+        <section id="states" class="section" style="display: none;">
+            <h2 class="h2 mb-6">Interactive States Demo</h2>
+            <div class="space-y-6">
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Hover Effects</h3>
+                    <div class="space-y-4">
+                        <div class="p-4 bg-blue-100 hover:bg-blue-200 rounded transition-all cursor-pointer">
+                            Hover me for background change
+                        </div>
+                        <div class="p-4 bg-gray-100 hover:p-8 rounded transition-all cursor-pointer">
+                            Hover for padding change
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Focus & Active States</h3>
+                    <div class="space-y-4">
+                        <button class="btn-primary w-full hover:bg-blue-600 active:bg-blue-700 focus:ring-2">
+                            Click & Focus Demo
+                        </button>
+                        <input type="text" placeholder="Focus me" class="w-full p-4 border rounded focus:border-blue-500 focus:ring-2 transition-all">
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Responsive Section -->
+        <section id="responsive" class="section" style="display: none;">
+            <h2 class="h2 mb-6">Responsive Demo</h2>
+            <div class="space-y-6">
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Pipe Notation</h3>
+                    <div class="p-4|8 bg-purple-100 rounded text-center">
+                        <strong>Responsive Padding:</strong> 16px on mobile, 32px on desktop
+                        <br><code>class="p-4|8"</code>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-4">@ Notation</h3>
+                    <div class="p-8@m p-16@d bg-orange-100 rounded text-center">
+                        <strong>@ Notation:</strong> 32px on mobile, 64px on desktop
+                        <br><code>class="p-8@m p-16@d"</code>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Breakpoint Prefixes</h3>
+                    <div class="p-4 m:bg-red-100 d:bg-blue-100 rounded">
+                        <p>Red on mobile, Blue on desktop</p>
+                        <code class="text-sm">m:bg-red-100 d:bg-blue-100</code>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Special Features Section -->
+        <section id="features" class="section" style="display: none;">
+            <h2 class="h2 mb-6">Special Features</h2>
+            <div class="space-y-6">
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Arbitrary Values</h3>
+                    <div class="w-[250px] h-[100px] bg-[#ff6b6b] flex items-center justify-center text-white rounded mb-2">
+                        Custom sizing & color
+                    </div>
+                    <code class="text-sm">w-[250px] h-[100px] bg-[#ff6b6b]</code>
+                </div>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Opacity Utilities</h3>
+                    <div class="bg-blue-500 p-4 rounded space-y-2">
+                        <div class="bg-white opacity-25 p-2 rounded">opacity-25</div>
+                        <div class="bg-white opacity-50 p-2 rounded">opacity-50</div>
+                        <div class="bg-white opacity-75 p-2 rounded">opacity-75</div>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Animations</h3>
+                    <div class="flex gap-4">
+                        <div class="w-12 h-12 bg-green-500 animate-spin rounded"></div>
+                        <div class="w-12 h-12 bg-yellow-500 animate-pulse rounded"></div>
+                        <div class="w-12 h-12 bg-purple-500 animate-bounce rounded"></div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- CSS Override Test Section -->
+        <section id="override-test" class="section" style="display: none;">
+            <h2 class="h2 mb-6">CSS Override Prevention Test</h2>
+            <div class="space-y-6">
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Explicit Classes Override Shortcuts</h3>
+                    <p class="mb-4 text-gray-600">When you have explicit classes alongside shortcuts, explicit classes should take priority.</p>
+                    
+                    <div class="space-y-4">
+                        <!-- Test 1: Explicit padding overrides shortcut padding -->
+                        <div>
+                            <h4 class="font-medium mb-2">Test 1: Explicit p-2 + spacious-box shortcut</h4>
+                            <div class="p-2 spacious-box text-center">
+                                This should have 8px padding (from explicit p-2), not 32px (from spacious-box p-8)
+                            </div>
+                            <code class="text-sm bg-gray-100 p-2 rounded block mt-2">class="p-2 spacious-box"</code>
+                            <p class="text-sm text-gray-600 mt-1">spacious-box expands to: p-8 bg-gray-100 border-2 m-4 rounded</p>
+                            <p class="text-sm text-blue-600 mt-1">Expected: p-2 (8px) should override p-8 (32px) from the shortcut</p>
+                        </div>
+
+                        <!-- Test 2: Explicit margin overrides shortcut margin -->
+                        <div>
+                            <h4 class="font-medium mb-2">Test 2: Explicit m-2 + spacious-box shortcut</h4>
+                            <div class="m-2 spacious-box text-center">
+                                This should have 8px margin (from explicit m-2), not 16px (from spacious-box m-4)
+                            </div>
+                            <code class="text-sm bg-gray-100 p-2 rounded block mt-2">class="m-2 spacious-box"</code>
+                            <p class="text-sm text-gray-600 mt-1">spacious-box expands to: p-8 bg-gray-100 border-2 m-4 rounded</p>
+                            <p class="text-sm text-blue-600 mt-1">Expected: m-2 should override m-4 from the shortcut</p>
+                        </div>
+
+                        <!-- Test 3: Multiple explicit overrides -->
+                        <div>
+                            <h4 class="font-medium mb-2">Test 3: Multiple explicit overrides</h4>
+                            <div class="p-4 m-1 bg-red-200 spacious-box text-center">
+                                This should have: 16px padding (p-4), 4px margin (m-1), red background (bg-red-200)
+                            </div>
+                            <code class="text-sm bg-gray-100 p-2 rounded block mt-2">class="p-4 m-1 bg-red-200 spacious-box"</code>
+                            <p class="text-sm text-gray-600 mt-1">spacious-box expands to: p-8 bg-gray-100 border-2 m-4 rounded</p>
+                            <p class="text-sm text-blue-600 mt-1">Expected: All explicit classes should override shortcut values</p>
+                        </div>
+                        
+                        <!-- Debug console info -->
+                        <div class="bg-yellow-50 border border-yellow-200 rounded p-4">
+                            <h4 class="font-medium mb-2">Debug Information</h4>
+                            <p class="text-sm">Check the browser console for debug messages showing which classes were removed due to conflicts.</p>
+                            <p class="text-sm">Debug mode is enabled, so you should see messages like:</p>
+                            <code class="text-xs bg-yellow-100 p-1 rounded">DuxWind: Removed conflicting class 'p-8' (padding) in favor of explicit 'p-10'</code>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Documentation Section -->
+        <section id="documentation" class="section" style="display: none;">
+            <div id="doc-content"></div>
+        </section>
+        </div>
+    </main>
+
+    <script>
+        // Section navigation
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('main section');
+            sections.forEach(section => section.style.display = 'none');
+
+            // Show selected section
+            document.getElementById(sectionId).style.display = 'block';
+
+            // Update button styles
+            const buttons = document.querySelectorAll('nav button');
+            buttons.forEach(btn => {
+                btn.className = btn.className.replace('btn-primary', 'btn-outline');
+            });
+            
+            // Find and highlight the button for this section
+            const targetButton = document.querySelector(`button[onclick*="${sectionId}"]`);
+            if (targetButton) {
+                targetButton.className = targetButton.className.replace('btn-outline', 'btn-primary');
+            }
+        }
+
+        // Initialize page with intro section visible
+        document.addEventListener('DOMContentLoaded', function() {
+            // Show intro section by default
+            showSection('intro');
+            
+            // Generate documentation when ready
             setTimeout(() => {
-                const docContainer = document.getElementById('documentation');
-                console.log('Doc container:', docContainer);
-                console.log('DuxWind available:', window.DuxWind);
-                console.log('generateDoc available:', window.DuxWind ? window.DuxWind.generateDoc : 'No DuxWind');
-                
+                const docContainer = document.getElementById('doc-content');
                 if (docContainer && window.DuxWind && window.DuxWind.generateDoc) {
                     docContainer.innerHTML = DuxWind.generateDoc();
-                    console.log('Documentation generated');
-                } else {
-                    console.log('Failed to generate documentation');
-                    docContainer.innerHTML = '<p>Documentation generation failed. Check console.</p>';
                 }
-            }, 1000); // Increased delay
+            }, 1000);
         });
     </script>
 </body>

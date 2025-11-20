@@ -55,5 +55,8 @@
   },
   "engines": {
     "bun": ">=1.0.0"
+  },
+  "dependencies": {
+    "puppeteer": "^24.30.0"
   }
 }
