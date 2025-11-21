@@ -102,7 +102,7 @@ export const generateShortcutCSS = safeWrapper(function(shortcutName, processCla
     // Media query rule: @media ... { .class-name:pseudo { ... } }
     if (rule.startsWith('@media')) {
       return rule.replace(
-        /(\@media[^{]+\{\s*)\.([^:\s]+)(:[^{]*)?(\s*\{[^}]+\}\s*\})/,
+        /(\@media[^{]+\{\s*)\.((?:\\.|[^:\\s])+)(:[^{]*)?(\s*\{[^}]+\}\s*\})/,
         `$1.${shortcutSelector}$3$4`
       );
     }

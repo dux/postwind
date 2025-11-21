@@ -4,38 +4,37 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DuxWind - Real-time CSS Generator</title>
-    <script type="module" src="../src/dux-wind.js"></script>
-    <script>
-        // ✨ DuxWind auto-loads with 100+ utilities, 200+ keywords, and responsive breakpoints!
-        document.addEventListener('DOMContentLoaded', function() {
-            // 🎯 Optional: Override default breakpoints (already has mobile/desktop)
-            DuxWind.config.breakpoints = {
-                'm': '(max-width: 768px)',    // Mobile: up to tablet
-                'd': '(min-width: 769px)'     // Desktop: tablet and up
-            };
+    <link rel="icon" type="image/svg+xml" href="/example/favicon.svg">
+    <script type="module">
+        import DuxWind from '../dist/dux-wind.js';
 
-            // 🛠️ Optional: Add custom shortcuts (build on auto-loaded utilities)
-            DuxWind.config.shortcuts = {
-                'btn': 'px-4 py-2 rounded font-medium cursor-pointer border',
-                'btn-primary': 'btn bg-blue-500 text-white border-blue-500 hover:bg-blue-600 hover:border-blue-600 active:bg-blue-700',
-                'btn-outline': 'btn bg-transparent text-blue-500 border-blue-500 hover:bg-blue-50 hover:border-blue-600 active:bg-blue-100 focus:ring-2',
-                'card': 'bg-white rounded-lg border p-6 shadow-sm',
-                'center': 'flex items-center justify-center',
-                'full-center': 'w-full h-full center',
-                'container': 'max-w-[1200px] mx-auto px-4',
-                'section': 'mb-12 p-6 bg-white rounded-lg border',
-                'h1': 'font-bold m:text-24px d:text-36px leading-tight',
-                'h2': 'font-semibold m:text-20px d:text-24px leading-tight'
-            };
+        // 🎯 Optional: Override default breakpoints (already has mobile/desktop)
+        DuxWind.config.breakpoints = {
+            'm': '(max-width: 768px)',    // Mobile: up to tablet
+            'd': '(min-width: 769px)'     // Desktop: tablet and up
+        };
 
-            // 🚀 One-line initialization: reset CSS + debug mode + all utilities ready!
-            DuxWind.init({ debug: true, reset: true });
+        // 🛠️ Optional: Add custom shortcuts (build on auto-loaded utilities)
+        DuxWind.config.shortcuts = {
+            'btn': 'px-4 py-2 rounded font-medium cursor-pointer border',
+            'btn-primary': 'btn bg-blue-500 text-white border-blue-500 hover:bg-blue-600 hover:border-blue-600 active:bg-blue-700',
+            'btn-outline': 'btn bg-transparent text-blue-500 border-blue-500 hover:bg-blue-50 hover:border-blue-600 active:bg-blue-100 focus:ring-2',
+            'card': 'bg-white rounded-lg border p-6 shadow-sm',
+            'center': 'flex items-center justify-center',
+            'full-center': 'w-full h-full center',
+            'container': 'max-w-[1200px] mx-auto px-4',
+            'section': 'mb-12 p-6 bg-white rounded-lg border',
+            'h1': 'font-bold m:text-24px d:text-36px leading-tight',
+            'h2': 'font-semibold m:text-20px d:text-24px leading-tight'
+        };
 
-            console.log('🎉 DuxWind ready! Auto-loaded:',
-                Object.keys(DuxWind.config.props).length, 'properties,',
-                Object.keys(DuxWind.config.keywords).length, 'keywords'
-            );
-        });
+        // 🚀 One-line initialization: reset CSS + debug mode + all utilities ready!
+        DuxWind.init({ debug: true, reset: true });
+
+        console.log('🎉 DuxWind ready! Auto-loaded:',
+            Object.keys(DuxWind.config.props).length, 'properties,',
+            Object.keys(DuxWind.config.keywords).length, 'keywords'
+        );
     </script>
 </head>
 <body class="bg-gray-50 min-h-screen flex flex-col">
@@ -1208,7 +1207,7 @@
                 <div class="card">
                     <h3 class="font-semibold mb-4">Transition Timing</h3>
                     <p class="text-sm text-gray-600 mb-6">Hover over each box to see different timing functions. All transitions go from blue to red in 1 second.</p>
-                    
+
                     <!-- Timing Functions -->
                     <div class="space-y-6">
                         <div>
@@ -1236,7 +1235,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Duration Examples -->
                         <div>
                             <h4 class="font-medium mb-4 text-gray-800">Duration Examples</h4>
@@ -1263,7 +1262,7 @@
                                 </div>
                             </div>
                         </div>
-                        
+
                         <!-- Custom Timing with Buttons -->
                         <div>
                             <h4 class="font-medium mb-4 text-gray-800">Interactive Timing Functions</h4>
@@ -1283,11 +1282,11 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="mt-6 p-4 bg-blue-50 border border-blue-200 rounded-lg">
                         <h5 class="font-semibold text-blue-800 mb-2">Tip:</h5>
                         <p class="text-sm text-blue-700">
-                            Use <code>ease-in-out</code> for most UI interactions as it feels most natural. 
+                            Use <code>ease-in-out</code> for most UI interactions as it feels most natural.
                             Use <code>ease-out</code> for elements entering the screen, and <code>ease-in</code> for elements leaving.
                         </p>
                     </div>
@@ -1328,7 +1327,7 @@
                                 <div class="text-green-700 text-sm">Your action was completed successfully.</div>
                             </div>
                         </div>
-                        
+
                         <div class="bg-yellow-50 border border-yellow-200 rounded-lg p-4 flex items-center gap-3">
                             <div class="w-5 h-5 bg-yellow-500 rounded-full flex items-center justify-center text-white text-xs font-bold">!</div>
                             <div>
@@ -1336,7 +1335,7 @@
                                 <div class="text-yellow-700 text-sm">Please check your input before proceeding.</div>
                             </div>
                         </div>
-                        
+
                         <div class="bg-red-50 border border-red-200 rounded-lg p-4 flex items-center gap-3">
                             <div class="w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-white text-xs font-bold">×</div>
                             <div>
