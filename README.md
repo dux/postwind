@@ -544,13 +544,13 @@ DuxWind.config = {
 </button>
 
 <!-- Focus States -->
-<input class="border focus:border-blue-500 focus:ring-2 focus:ring-blue-200" 
+<input class="border focus:border-blue-500 focus:ring-2 focus:ring-blue-200"
        placeholder="Focus me">
 
 <!-- Multiple States Combined -->
 <button class="bg-green-500 text-white px-4 py-2 rounded
-               hover:bg-green-600 
-               active:bg-green-700 
+               hover:bg-green-600
+               active:bg-green-700
                focus:ring-4 focus:ring-green-200
                disabled:bg-gray-300 disabled:cursor-not-allowed">
     Multi-state button
@@ -583,9 +583,9 @@ DuxWind.config = {
 </div>
 
 <!-- Complex Responsive Example -->
-<div class="grid 
-            grid-cols-1@m grid-cols-2@t grid-cols-4@d 
-            gap-4@m gap-6@d 
+<div class="grid
+            grid-cols-1@m grid-cols-2@t grid-cols-4@d
+            gap-4@m gap-6@d
             p-4|6|8">
     Responsive grid with gaps and padding
 </div>
@@ -624,7 +624,7 @@ DuxWind.config = {
 </div>
 
 <!-- Custom Timing -->
-<button class="bg-blue-500 
+<button class="bg-blue-500
                transition-colors duration-150 ease-out
                hover:bg-blue-600">
     Quick color transition
@@ -639,10 +639,10 @@ DuxWind.config = {
 ### Advanced Component Examples
 ```html
 <!-- Card Component with All Features -->
-<div class="bg-white rounded-xl shadow-lg hover:shadow-xl 
+<div class="bg-white rounded-xl shadow-lg hover:shadow-xl
            transition-all duration-300 border border-gray-200
            p-6 max-w-sm mx-auto transform hover:-translate-y-1">
-    <img class="w-full h-48 object-cover rounded-lg mb-4" 
+    <img class="w-full h-48 object-cover rounded-lg mb-4"
          src="image.jpg" alt="Card image">
     <h3 class="text-xl font-bold text-gray-900 mb-2">Card Title</h3>
     <p class="text-gray-600 leading-relaxed mb-4">
@@ -674,7 +674,7 @@ DuxWind.config = {
             </div>
         </div>
         <div class="flex items-center gap-4">
-            <button class="bg-blue-500 hover:bg-blue-600 text-white 
+            <button class="bg-blue-500 hover:bg-blue-600 text-white
                            px-4 py-2 rounded-lg font-medium transition-colors">
                 Sign Up
             </button>
@@ -685,26 +685,26 @@ DuxWind.config = {
 <!-- Form Example -->
 <form class="max-w-md mx-auto bg-white p-8 rounded-lg shadow-md border">
     <h2 class="text-2xl font-bold text-gray-900 mb-6 text-center">Contact Form</h2>
-    
+
     <div class="mb-4">
         <label class="block text-gray-700 font-semibold mb-2">Name</label>
-        <input type="text" 
+        <input type="text"
                class="w-full px-4 py-2 border border-gray-300 rounded-lg
                       focus:border-blue-500 focus:ring-2 focus:ring-blue-200
                       transition-all duration-200"
                placeholder="Your name">
     </div>
-    
+
     <div class="mb-4">
         <label class="block text-gray-700 font-semibold mb-2">Email</label>
-        <input type="email" 
+        <input type="email"
                class="w-full px-4 py-2 border border-gray-300 rounded-lg
                       focus:border-blue-500 focus:ring-2 focus:ring-blue-200
                       invalid:border-red-500 invalid:ring-red-200
                       transition-all duration-200"
                placeholder="your@email.com">
     </div>
-    
+
     <div class="mb-6">
         <label class="block text-gray-700 font-semibold mb-2">Message</label>
         <textarea rows="4"
@@ -713,8 +713,8 @@ DuxWind.config = {
                          resize-vertical transition-all duration-200"
                   placeholder="Your message"></textarea>
     </div>
-    
-    <button type="submit" 
+
+    <button type="submit"
             class="w-full bg-blue-500 hover:bg-blue-600 active:bg-blue-700
                    text-white font-semibold py-3 rounded-lg
                    transition-colors duration-200
@@ -732,33 +732,33 @@ DuxWind.config.shortcuts = {
     'btn': 'px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer border focus:ring-4',
     'card': 'bg-white rounded-lg border border-gray-200 shadow-sm p-6',
     'container': 'max-w-[1200px] mx-auto px-4@m px-6@d',
-    
+
     // Button variants
     'btn-primary': 'btn bg-blue-500 text-white border-blue-500 hover:bg-blue-600 focus:ring-blue-200',
     'btn-secondary': 'btn bg-gray-500 text-white border-gray-500 hover:bg-gray-600 focus:ring-gray-200',
     'btn-outline': 'btn bg-transparent text-blue-500 border-blue-500 hover:bg-blue-50 focus:ring-blue-200',
     'btn-ghost': 'btn bg-transparent text-gray-600 border-transparent hover:bg-gray-100 focus:ring-gray-200',
-    
+
     // Button sizes
     'btn-sm': 'px-3 py-1.5 text-sm',
     'btn-lg': 'px-6 py-3 text-lg',
     'btn-xl': 'px-8 py-4 text-xl',
-    
+
     // Typography
     'h1': 'text-3xl@m text-5xl@d font-bold leading-tight text-gray-900',
     'h2': 'text-2xl@m text-3xl@d font-semibold leading-tight text-gray-900',
     'h3': 'text-xl@m text-2xl@d font-semibold leading-tight text-gray-800',
     'body': 'text-base leading-relaxed text-gray-700',
     'caption': 'text-sm text-gray-600',
-    
+
     // Layout
     'section': 'py-16@m py-24@d',
     'grid-auto': 'grid grid-cols-1@m grid-cols-2@t grid-cols-3@d gap-6',
-    
+
     // Form elements
     'input': 'px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-2 focus:ring-blue-200 transition-all duration-200',
     'input-error': 'border-red-500 focus:border-red-500 focus:ring-red-200',
-    
+
     // Status indicators
     'badge': 'px-2 py-1 text-xs font-semibold rounded-full',
     'badge-success': 'badge bg-green-100 text-green-800',
@@ -863,112 +863,6 @@ DuxWind.shortcut('hero', 'text-4xl font-bold mb-8');
 DuxWind.init({ body: true });
 // <body class="mobile"> or <body class="desktop">
 ```
-
-### Features Tailwind Has That DuxWind Doesn't
-
-**Advanced Design System**
-- Container queries (@container)
-- Subgrid utilities
-- Space-between utilities (space-x, space-y with child targeting)
-- Divide utilities (borders between children)
-- Ring utilities with offset
-- Gradient color stops (from-*, via-*, to-*)
-- Mix blend modes
-- Background blend modes
-
-**Extended Utilities**
-- Font variant numeric
-- Text decoration styles (wavy, double, etc.)
-- Scroll behavior & snap utilities
-- Touch action utilities
-- Will-change utilities
-- Full backdrop filter support
-- Print variant (@media print)
-- RTL/LTR modifiers
-
-**Configuration & Tooling**
-- IntelliSense/autocomplete support
-- Plugin ecosystem
-- Deep theme customization
-- Variant ordering control
-- Important modifier (!)
-- CSS-in-JS extraction
-- Component extraction (@apply)
-
-### Performance Analysis
-
-**DuxWind Performance**
-```
-Initial Load: ~20KB uncompressed JavaScript
-Runtime: 0.1ms per unique class
-Memory: Only processed classes cached
-Best For: Development, prototypes, small-medium projects
-```
-
-**Tailwind Performance**
-```
-Dev CSS: 3-5MB uncompressed
-Production CSS: 5-15KB (purged)
-Runtime: No overhead (static CSS)
-Best For: Production apps, large projects
-```
-
-### When to Use Each
-
-**Use DuxWind when you need:**
-- ✅ Zero build step workflow
-- ✅ Instant prototyping
-- ✅ Dynamic class generation
-- ✅ Runtime configuration changes
-- ✅ Working in CodePen/JSFiddle
-- ✅ Teaching/learning environments
-- ✅ Small to medium projects
-- ✅ Browser-based tools
-
-**Use Tailwind CSS when you need:**
-- ✅ Production optimization
-- ✅ IDE autocomplete support
-- ✅ Large team collaboration
-- ✅ Complex design systems
-- ✅ Plugin ecosystem
-- ✅ Advanced CSS features
-- ✅ Enterprise applications
-- ✅ Maximum performance
-
-### Developer Experience
-
-| Aspect | DuxWind | Tailwind CSS |
-|--------|---------|--------------|
-| **Setup Time** | < 1 minute | 5-15 minutes |
-| **Learning Curve** | Minimal | Moderate |
-| **Documentation** | Basic | Extensive |
-| **Community** | Growing | Large |
-| **Debugging** | Browser DevTools | Build tools + DevTools |
-| **Hot Reload** | Instant | Build step required |
-| **Config Changes** | Runtime | Requires rebuild |
-| **Bundle Impact** | ~20KB JS | 5-15KB CSS (purged) |
-
-### Migration & Compatibility
-
-**Tailwind → DuxWind**
-- Most utility classes work identically
-- Replace `sm:`, `md:`, `lg:` with `m:`, `d:` (or configure breakpoints)
-- Components using `@apply` need conversion to shortcuts
-- Plugin-based utilities need manual implementation
-
-**DuxWind → Tailwind**
-- Standard utilities transfer directly
-- Convert pipe notation: `p-4|8` → `p-4 md:p-8`
-- Convert @ notation: `p-4@m` → `max-md:p-4`
-- Runtime shortcuts become config components
-
-### Conclusion
-
-**DuxWind** excels at rapid development, prototyping, and scenarios where build tools are impractical. Its runtime generation and unique syntax features make it ideal for dynamic applications and learning environments.
-
-**Tailwind CSS** remains the better choice for production applications requiring maximum optimization, extensive tooling support, and access to the full spectrum of modern CSS features.
-
-Both frameworks share the utility-first philosophy but serve different use cases. DuxWind prioritizes developer velocity and simplicity, while Tailwind focuses on production optimization and comprehensive feature coverage.
 
 ## Browser Support
 
