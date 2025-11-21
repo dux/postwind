@@ -14,7 +14,7 @@
     "./package.json": "./package.json"
   },
   "bin": {
-    "dux-wind": "./bin/server.js"
+    "ai-bridge": "./bin/ai-bridge.js"
   },
   "files": [
     "dist/",
@@ -28,7 +28,8 @@
     "test": "bun test src/",
     "start": "bun run bin/server.js",
     "dev": "bun run --watch bin/server.js & bun build src/dux-wind.js --outdir dist --format esm --watch & bun build src/dux-wind.js --outdir dist --format cjs --outfile dist/dux-wind.cjs --watch",
-    "pages": "echo 'GitHub Pages ready! Enable Pages in repo settings.' && echo 'Demo will be at: https://dux.github.io/dux-wind/'"
+    "pages": "echo 'GitHub Pages ready! Enable Pages in repo settings.' && echo 'Demo will be at: https://dux.github.io/dux-wind/'",
+    "ai-bridge": "bun run bin/ai-bridge.js"
   },
   "keywords": [
     "css",
