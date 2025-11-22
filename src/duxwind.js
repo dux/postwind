@@ -1,5 +1,5 @@
 // DuxWind - Real-time CSS Generator (Browser/UMD)
-import { init, resetCSS, loadClass, shortcut, CONFIG, getConfig, setConfig } from './core.js';
+import { init, resetCSS, loadClass, shortcut, CONFIG, getConfig, setConfig, defineKeyword } from './core.js';
 import { createDefaultConfig } from './config.js';
 import { generateDoc } from './gen-doc.js';
 
@@ -9,6 +9,7 @@ const DuxWind = {
   resetCss: resetCSS,
   loadClass,
   shortcut,
+  define: defineKeyword,
   loadDefaultConfig: () => {
     // Clear all properties and reset to defaults
     Object.keys(CONFIG).forEach(key => delete CONFIG[key]);
@@ -16,7 +17,7 @@ const DuxWind = {
     Object.assign(CONFIG, defaultConfig);
   },
   generateDoc,
-  
+
   // Configuration access
   get config() {
     return getConfig();

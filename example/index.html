@@ -19,9 +19,9 @@
             }
         });
 
-        // 🛠️ Optional: Add custom shortcuts (build on auto-loaded utilities)
-        DuxWind.shortcut({
-            'btn': 'px-4 py-2 rounded-xl font-medium cursor-pointer border border-transparent transition-colors duration-200 shadow-sm shadow-black/5',
+        // 🛠️ Optional: Define custom utilities or shortcuts inline
+        DuxWind.define({
+            'btn': 'px-4 py-2 rounded font-medium cursor-pointer border border-transparent transition-colors duration-200 shadow-sm shadow-black/5',
             'btn-primary': 'btn bg-blue-600 text-white border-blue-600 hover:bg-blue-500 hover:border-blue-500 active:bg-blue-700 focus:ring-4 focus:ring-blue-200',
             'btn-outline': 'btn bg-white text-blue-600 border-blue-200 hover:bg-blue-50 hover:border-blue-400 active:bg-blue-100 focus:ring-4 focus:ring-blue-100',
             'btn-ghost': 'btn bg-transparent text-gray-700 border-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200',
@@ -38,9 +38,10 @@
             'full-center': 'w-full h-full center',
             'container': 'max-w-[1200px] mx-auto px-4',
             'section': 'mb-12 p-6 bg-white rounded-3xl border border-gray-200 shadow-sm shadow-gray-200/50 space-y-6',
+            'text-glow': 'color: #0ea5e9; text-shadow: 0 0 20px rgba(14,165,233,0.6)',
             'h1': 'font-bold m:text-24px d:text-36px leading-tight',
             'h2': 'font-semibold m:text-20px d:text-24px leading-tight',
-        })
+        });
 
         console.log('🎉 DuxWind ready! Auto-loaded:',
             Object.keys(DuxWind.config.props).length, 'properties,',
@@ -66,7 +67,7 @@
         <div class="container py-6">
             <div class="flex justify-between items-start mb-6">
                 <div class="flex-1">
-                    <h1 class="h1 text-center mb-2">DuxWind Demo</h1>
+                    <h1 class="h1 text-center mb-2 text-glow">DuxWind Demo</h1>
                     <p class="text-gray-600 text-center mb-4 m:text-14px d:text-16px">Real-time Tailwind-like CSS with shortcuts, responsive utilities, and modern features</p>
                 </div>
                 <div class="flex gap-3 m:hidden">
@@ -98,6 +99,7 @@
                 <button onclick="showSection('flex')" class="btn-outline">Flexbox</button>
                 <button onclick="showSection('grid')" class="btn-outline">Grid</button>
                 <button onclick="showSection('borders')" class="btn-outline">Borders</button>
+                <button onclick="showSection('rounded')" class="btn-outline">Rounded</button>
                 <button onclick="showSection('transforms')" class="btn-outline">Transforms</button>
                 <button onclick="showSection('states')" class="btn-outline">States</button>
                 <button onclick="showSection('animations')" class="btn-outline">Animations</button>
@@ -1312,6 +1314,25 @@
                         <div class="bg-[hsl(240,100%,80%)] p-4 rounded text-center text-sm">bg-[hsl(240,100%,80%)]</div>
                     </div>
                 </div>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Gradients & Text Fill</h3>
+                    <div class="grid grid-cols-1 d:grid-cols-3 gap-4">
+                        <div class="h-28 rounded-2xl text-white font-semibold center bg-gradient-to-r from-sky-400 via-fuchsia-500 to-amber-400">
+                            bg-gradient-to-r from-sky-400 via-fuchsia-500 to-amber-400
+                        </div>
+                        <div class="h-28 rounded-2xl text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500 flex flex-col items-center justify-center text-center px-4">
+                            <span class="text-base font-semibold">Text Gradient</span>
+                            <code class="text-xs mt-2">text-transparent bg-clip-text from-emerald-400 to-cyan-500</code>
+                        </div>
+                        <div class="h-28 rounded-2xl flex flex-col items-center justify-center gap-2 bg-slate-900 text-white">
+                            <span class="text-sm font-semibold">accent-pink-500</span>
+                            <input type="checkbox" checked class="accent-pink-500 w-5 h-5" aria-label="Accent demo">
+                            <span class="text-xs text-slate-300">Supports accent/fill utilities too</span>
+                        </div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-4">Combine gradient stops, clip text fills, and accent colors to show off advanced color keywords.</p>
+                </div>
             </div>
         </section>
 
@@ -1320,44 +1341,399 @@
             <h2 class="h2 mb-6">Borders & Effects</h2>
             <div class="space-y-8">
                 <div class="card">
-                    <h3 class="font-semibold mb-4">Border Radius</h3>
-                    <div class="grid grid-cols-2 d:grid-cols-3 gap-4">
-                        <div class="bg-blue-100 p-4 rounded text-center text-sm">rounded (4px)</div>
-                        <div class="bg-blue-200 p-4 rounded-lg text-center text-sm">rounded-lg (8px)</div>
-                        <div class="bg-blue-300 p-4 rounded-[24px] text-center text-sm">rounded-[24px] (custom)</div>
+                    <h3 class="font-semibold mb-3">Border Width &amp; Style</h3>
+                    <p class="text-sm text-gray-600 mb-4">Every Tailwind border width &amp; style keyword is available, including dashed/dotted/double helpers.</p>
+                    <div class="grid grid-cols-1 d:grid-cols-3 gap-4">
+                        <div class="bg-white rounded-2xl p-4 text-center text-sm border border-gray-300">border (1px solid)</div>
+                        <div class="bg-white rounded-2xl p-4 text-center text-sm border-2 border-dashed border-blue-500">border-2 border-dashed</div>
+                        <div class="bg-white rounded-2xl p-4 text-center text-sm border-4 border-double border-amber-500">border-4 border-double</div>
                     </div>
-                    <div class="mt-4 space-y-2">
-                        <div class="bg-green-200 p-3 rounded-t-lg rounded-b-none text-center text-sm">rounded-t-lg (top only)</div>
-                        <div class="bg-purple-200 p-3 rounded-r-lg rounded-l-none text-center text-sm">rounded-r-lg (right only)</div>
+                    <div class="grid grid-cols-1 d:grid-cols-2 gap-4 mt-4">
+                        <div class="bg-sky-50 rounded-2xl p-4 text-center text-sm border-y-4 border-sky-500">border-y-4</div>
+                        <div class="bg-slate-50 rounded-2xl p-4 text-center text-sm border-l-8 border-r-8 border-slate-400">border-l-8 border-r-8</div>
                     </div>
                 </div>
 
                 <div class="card">
-                    <h3 class="font-semibold mb-4">Box Shadows</h3>
+                    <h3 class="font-semibold mb-3">Border Colors &amp; Partial Edges</h3>
+                    <p class="text-sm text-gray-600 mb-4">Color keywords mirror the palette map, so <code>border-pink-500</code>, <code>border-slate-200</code>, and even logical helpers like <code>border-s</code> all work.</p>
+                    <div class="grid grid-cols-1 d:grid-cols-3 gap-4">
+                        <div class="bg-white rounded-2xl p-4 text-center text-sm border border-blue-500 text-blue-600 font-semibold">border-blue-500</div>
+                        <div class="bg-white rounded-2xl p-4 text-center text-sm border border-l-4 border-l-emerald-500">border-l-emerald-500</div>
+                        <div class="bg-white rounded-2xl p-4 text-center text-sm border border-pink-500/60">border-pink-500/60 (alpha)</div>
+                    </div>
+                    <div class="grid grid-cols-1 d:grid-cols-2 gap-4 mt-4">
+                        <div class="bg-emerald-50 rounded-2xl p-4 text-center text-sm border-x-4 border-emerald-500">border-x-4 border-emerald-500</div>
+                        <div class="bg-rose-50 rounded-2xl p-4 text-center text-sm border-t-4 border-b-4 border-rose-500">border-t-4 border-b-4</div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-3">Tip: Combine with <code>border-transparent</code> when building gradient borders.</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-3">Shadows &amp; Elevation</h3>
+                    <div class="grid grid-cols-1 d:grid-cols-3 gap-4">
+                        <div class="bg-white p-5 rounded-2xl shadow-sm border border-gray-100 text-center text-sm">shadow-sm</div>
+                        <div class="bg-white p-5 rounded-2xl shadow-lg shadow-blue-500/20 border border-blue-50 text-center text-sm">shadow-lg + color tint</div>
+                        <div class="bg-white p-5 rounded-2xl shadow-[0_20px_45px_-12px_rgba(15,23,42,0.45)] text-center text-sm">shadow-[custom]</div>
+                    </div>
+                    <p class="text-sm text-gray-600 mt-3">Use arbitrary shadow values for art-directed cards or soft UI blurs.</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-3">Ring Effects</h3>
+                    <div class="grid grid-cols-1 d:grid-cols-3 gap-4">
+                        <div class="bg-white p-5 rounded-2xl ring-2 ring-blue-500 text-center text-sm">ring-2 ring-blue-500</div>
+                        <div class="bg-white p-5 rounded-2xl ring-4 ring-emerald-400 ring-offset-4 ring-offset-emerald-50 text-center text-sm">ring-offset + color</div>
+                        <div class="bg-white p-5 rounded-2xl ring-inset ring-rose-500 ring-offset-2 ring-offset-rose-100 text-center text-sm">ring-inset</div>
+                    </div>
+                    <p class="text-xs text-gray-500 mt-3">Rings stack with borders, so focus states stay crisp even on thick outlines.</p>
+                </div>
+
+                <div class="card">
+                    <h3 class="font-semibold mb-3">Outlines &amp; Divide Helpers</h3>
                     <div class="grid grid-cols-1 d:grid-cols-2 gap-6">
-                        <div class="bg-white p-4 rounded shadow-sm border text-center text-sm">shadow-sm</div>
-                        <div class="bg-white p-4 rounded shadow-[0_4px_6px_-1px_rgba(0,0,0,0.1)] text-center text-sm">shadow-[custom]</div>
+                        <div class="bg-white rounded-2xl p-5 border border-sky-100 outline outline-2 outline-sky-500 outline-offset-4">
+                            <p class="text-sm font-semibold text-sky-700">outline-2 outline-sky-500 outline-offset-4</p>
+                            <p class="text-xs text-gray-600 mt-2">Perfect for keyboard focus styles that sit outside the element.</p>
+                        </div>
+                        <div class="bg-white rounded-2xl border border-gray-200">
+                            <div class="divide-y divide-gray-200">
+                                <div class="p-3 text-sm font-semibold flex justify-between">
+                                    <span>divide-y</span>
+                                    <code class="text-xs text-gray-500">divide-gray-200</code>
+                                </div>
+                                <div class="p-3 text-sm">Row two picks up the divider automatically.</div>
+                                <div class="p-3 text-sm">Row three as well.</div>
+                            </div>
+                            <div class="grid grid-cols-3 divide-x divide-dashed divide-blue-200 text-center text-xs">
+                                <div class="py-2">A</div>
+                                <div class="py-2">B</div>
+                                <div class="py-2">C</div>
+                            </div>
+                        </div>
                     </div>
-                    <p class="text-sm text-gray-600 mt-2">Note: Use arbitrary values like shadow-[0_4px_6px_rgba(0,0,0,0.1)] for custom shadows</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Rounded Corners Playground -->
+        <section id="rounded" class="section" style="display: none;">
+            <h2 class="h2 mb-4">Rounded Corners Playground</h2>
+            <p class="text-gray-600 mb-8">
+                DuxWind ships every Tailwind-style border-radius keyword, including directional (`rounded-t-*`),
+                corner (`rounded-tl-*`), and logical (`rounded-s*`) variants. Explore the complete map below.
+            </p>
+
+            <div class="space-y-10">
+                <!-- Base scale -->
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-3">1. Base Radius Scale</h3>
+                    <p class="text-sm text-gray-600 mb-4">Nine tokens cover everything from perfectly sharp corners to pills.</p>
+                    <div class="grid grid-cols-1 t:grid-cols-2 d:grid-cols-3 gap-6">
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3">
+                            <div class="flex items-center justify-between text-sm font-semibold text-gray-800">
+                                <span>rounded-none</span>
+                                <span class="text-gray-500">0px</span>
+                            </div>
+                            <div class="h-20 border border-blue-200 bg-blue-50 flex items-center justify-center text-blue-700 font-semibold rounded-none">
+                                rounded-none
+                            </div>
+                            <code class="block text-xs text-gray-500">class="rounded-none"</code>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3">
+                            <div class="flex items-center justify-between text-sm font-semibold text-gray-800">
+                                <span>rounded-sm</span>
+                                <span class="text-gray-500">0.125rem</span>
+                            </div>
+                            <div class="h-20 border border-blue-200 bg-blue-50 flex items-center justify-center text-blue-700 font-semibold rounded-sm">
+                                rounded-sm
+                            </div>
+                            <code class="block text-xs text-gray-500">class="rounded-sm"</code>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3">
+                            <div class="flex items-center justify-between text-sm font-semibold text-gray-800">
+                                <span>rounded</span>
+                                <span class="text-gray-500">0.25rem</span>
+                            </div>
+                            <div class="h-20 border border-blue-200 bg-blue-50 flex items-center justify-center text-blue-700 font-semibold rounded">
+                                rounded
+                            </div>
+                            <code class="block text-xs text-gray-500">class="rounded"</code>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3">
+                            <div class="flex items-center justify-between text-sm font-semibold text-gray-800">
+                                <span>rounded-md</span>
+                                <span class="text-gray-500">0.375rem</span>
+                            </div>
+                            <div class="h-20 border border-blue-200 bg-blue-50 flex items-center justify-center text-blue-700 font-semibold rounded-md">
+                                rounded-md
+                            </div>
+                            <code class="block text-xs text-gray-500">class="rounded-md"</code>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3">
+                            <div class="flex items-center justify-between text-sm font-semibold text-gray-800">
+                                <span>rounded-lg</span>
+                                <span class="text-gray-500">0.5rem</span>
+                            </div>
+                            <div class="h-20 border border-blue-200 bg-blue-50 flex items-center justify-center text-blue-700 font-semibold rounded-lg">
+                                rounded-lg
+                            </div>
+                            <code class="block text-xs text-gray-500">class="rounded-lg"</code>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3">
+                            <div class="flex items-center justify-between text-sm font-semibold text-gray-800">
+                                <span>rounded-xl</span>
+                                <span class="text-gray-500">0.75rem</span>
+                            </div>
+                            <div class="h-20 border border-blue-200 bg-blue-50 flex items-center justify-center text-blue-700 font-semibold rounded-xl">
+                                rounded-xl
+                            </div>
+                            <code class="block text-xs text-gray-500">class="rounded-xl"</code>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3">
+                            <div class="flex items-center justify-between text-sm font-semibold text-gray-800">
+                                <span>rounded-2xl</span>
+                                <span class="text-gray-500">1rem</span>
+                            </div>
+                            <div class="h-20 border border-blue-200 bg-blue-50 flex items-center justify-center text-blue-700 font-semibold rounded-2xl">
+                                rounded-2xl
+                            </div>
+                            <code class="block text-xs text-gray-500">class="rounded-2xl"</code>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3">
+                            <div class="flex items-center justify-between text-sm font-semibold text-gray-800">
+                                <span>rounded-3xl</span>
+                                <span class="text-gray-500">1.5rem</span>
+                            </div>
+                            <div class="h-20 border border-blue-200 bg-blue-50 flex items-center justify-center text-blue-700 font-semibold rounded-3xl">
+                                rounded-3xl
+                            </div>
+                            <code class="block text-xs text-gray-500">class="rounded-3xl"</code>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-3">
+                            <div class="flex items-center justify-between text-sm font-semibold text-gray-800">
+                                <span>rounded-full</span>
+                                <span class="text-gray-500">9999px</span>
+                            </div>
+                            <div class="h-20 border border-blue-200 bg-blue-50 flex items-center justify-center text-blue-700 font-semibold rounded-full">
+                                rounded-full
+                            </div>
+                            <code class="block text-xs text-gray-500">class="rounded-full"</code>
+                        </div>
+                    </div>
                 </div>
 
-                <div class="card">
-                    <h3 class="font-semibold mb-4">Ring Effects</h3>
+                <!-- Directional edges -->
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-3">2. Directional Edges (`rounded-{t|r|b|l}`)</h3>
+                    <p class="text-sm text-gray-600 mb-4">Apply radii to paired edges and scale them with any token.</p>
+                    <div class="grid grid-cols-1 d:grid-cols-2 gap-6">
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                            <div class="text-sm font-semibold text-gray-800 mb-3">Top Edges</div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <div class="h-16 bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 font-semibold rounded-t">
+                                        rounded-t
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-t</code>
+                                </div>
+                                <div>
+                                    <div class="h-16 bg-emerald-50 border border-emerald-200 flex items-center justify-center text-emerald-700 font-semibold rounded-t-3xl">
+                                        rounded-t-3xl
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-t-3xl</code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                            <div class="text-sm font-semibold text-gray-800 mb-3">Right Edges</div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <div class="h-16 bg-teal-50 border border-teal-200 flex items-center justify-center text-teal-700 font-semibold rounded-r">
+                                        rounded-r
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-r</code>
+                                </div>
+                                <div>
+                                    <div class="h-16 bg-teal-50 border border-teal-200 flex items-center justify-center text-teal-700 font-semibold rounded-r-full">
+                                        rounded-r-full
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-r-full</code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                            <div class="text-sm font-semibold text-gray-800 mb-3">Bottom Edges</div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <div class="h-16 bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 font-semibold rounded-b">
+                                        rounded-b
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-b</code>
+                                </div>
+                                <div>
+                                    <div class="h-16 bg-amber-50 border border-amber-200 flex items-center justify-center text-amber-700 font-semibold rounded-b-3xl">
+                                        rounded-b-3xl
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-b-3xl</code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                            <div class="text-sm font-semibold text-gray-800 mb-3">Left Edges</div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <div class="h-16 bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-700 font-semibold rounded-l">
+                                        rounded-l
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-l</code>
+                                </div>
+                                <div>
+                                    <div class="h-16 bg-sky-50 border border-sky-200 flex items-center justify-center text-sky-700 font-semibold rounded-l-full">
+                                        rounded-l-full
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-l-full</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Individual corners -->
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-3">3. Individual Corners (`rounded-{tl|tr|br|bl}`)</h3>
+                    <p class="text-sm text-gray-600 mb-4">Mix tokens per corner for custom shapes.</p>
+                    <div class="grid grid-cols-1 d:grid-cols-2 gap-6">
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                            <div class="text-sm font-semibold text-gray-800 mb-3">Top Left</div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <div class="h-16 bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-700 font-semibold rounded-tl">
+                                        rounded-tl
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-tl</code>
+                                </div>
+                                <div>
+                                    <div class="h-16 bg-purple-50 border border-purple-200 flex items-center justify-center text-purple-700 font-semibold rounded-tl-3xl">
+                                        rounded-tl-3xl
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-tl-3xl</code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                            <div class="text-sm font-semibold text-gray-800 mb-3">Top Right</div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <div class="h-16 bg-pink-50 border border-pink-200 flex items-center justify-center text-pink-700 font-semibold rounded-tr">
+                                        rounded-tr
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-tr</code>
+                                </div>
+                                <div>
+                                    <div class="h-16 bg-pink-50 border border-pink-200 flex items-center justify-center text-pink-700 font-semibold rounded-tr-full">
+                                        rounded-tr-full
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-tr-full</code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                            <div class="text-sm font-semibold text-gray-800 mb-3">Bottom Right</div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <div class="h-16 bg-orange-50 border border-orange-200 flex items-center justify-center text-orange-700 font-semibold rounded-br">
+                                        rounded-br
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-br</code>
+                                </div>
+                                <div>
+                                    <div class="h-16 bg-orange-50 border border-orange-200 flex items-center justify-center text-orange-700 font-semibold rounded-br-3xl">
+                                        rounded-br-3xl
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-br-3xl</code>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm">
+                            <div class="text-sm font-semibold text-gray-800 mb-3">Bottom Left</div>
+                            <div class="grid grid-cols-2 gap-4">
+                                <div>
+                                    <div class="h-16 bg-lime-50 border border-lime-200 flex items-center justify-center text-lime-700 font-semibold rounded-bl">
+                                        rounded-bl
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-bl</code>
+                                </div>
+                                <div>
+                                    <div class="h-16 bg-lime-50 border border-lime-200 flex items-center justify-center text-lime-700 font-semibold rounded-bl-full">
+                                        rounded-bl-full
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-bl-full</code>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Logical helpers -->
+                <div>
+                    <h3 class="font-semibold text-gray-900 mb-3">4. Logical Helpers (`rounded-s*`, `rounded-e*`)</h3>
+                    <p class="text-sm text-gray-600 mb-4">Writing-mode aware classes follow start/end semantics, perfect for RTL.</p>
                     <div class="grid grid-cols-1 d:grid-cols-3 gap-6">
-                        <div class="bg-white p-4 rounded ring-2 ring-blue-500 text-center text-sm">ring-2 ring-blue-500</div>
-                        <div class="bg-white p-4 rounded ring-4 ring-green-500 ring-offset-2 text-center text-sm">ring-4 ring-offset-2</div>
-                        <div class="bg-white p-4 rounded ring-2 ring-purple-500 ring-offset-4 ring-offset-gray-100 text-center text-sm">ring with colored offset</div>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3 class="font-semibold mb-4">Opacity</h3>
-                    <div class="flex gap-4">
-                        <div class="bg-blue-500 p-4 rounded opacity-25 text-center text-white text-sm flex-1">opacity-25</div>
-                        <div class="bg-blue-500 p-4 rounded opacity-50 text-center text-white text-sm flex-1">opacity-50</div>
-                        <div class="bg-blue-500 p-4 rounded opacity-75 text-center text-white text-sm flex-1">opacity-75</div>
-                        <div class="bg-blue-500 p-4 rounded opacity-90 text-center text-white text-sm flex-1">opacity-90</div>
-                        <div class="bg-blue-500 p-4 rounded opacity-100 text-center text-white text-sm flex-1">opacity-100</div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-4">
+                            <div class="text-sm font-semibold text-gray-800">Inline Edges</div>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="h-16 bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-700 font-semibold rounded-s">
+                                        rounded-s
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-s</code>
+                                </div>
+                                <div>
+                                    <div class="h-16 bg-slate-50 border border-slate-200 flex items-center justify-center text-slate-700 font-semibold rounded-e-3xl">
+                                        rounded-e-3xl
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-e-3xl</code>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500">Switches automatically for RTL/vertical writing modes.</p>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-4">
+                            <div class="text-sm font-semibold text-gray-800">Start Corners</div>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="h-16 bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-700 font-semibold rounded-ss-full">
+                                        rounded-ss-full
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-ss-full</code>
+                                </div>
+                                <div>
+                                    <div class="h-16 bg-rose-50 border border-rose-200 flex items-center justify-center text-rose-700 font-semibold rounded-se-2xl">
+                                        rounded-se-2xl
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-se-2xl</code>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500">Start corners = top-left in LTR, top-right in RTL.</p>
+                        </div>
+                        <div class="bg-white border border-gray-200 rounded-xl p-4 shadow-sm space-y-4">
+                            <div class="text-sm font-semibold text-gray-800">End Corners</div>
+                            <div class="space-y-3">
+                                <div>
+                                    <div class="h-16 bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-700 font-semibold rounded-es-full">
+                                        rounded-es-full
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-es-full</code>
+                                </div>
+                                <div>
+                                    <div class="h-16 bg-cyan-50 border border-cyan-200 flex items-center justify-center text-cyan-700 font-semibold rounded-ee-3xl">
+                                        rounded-ee-3xl
+                                    </div>
+                                    <code class="block text-xs text-gray-500 mt-2">rounded-ee-3xl</code>
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500">End corners mirror start corners (bottom / right in LTR).</p>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -1982,7 +2358,7 @@
         // Handle hash navigation
         function loadSectionFromHash() {
             const hash = window.location.hash.slice(1); // Remove #
-            const validSections = ['intro', 'spacing', 'typography', 'colors', 'responsive', 'container-queries', 'flex', 'grid', 'borders', 'transforms', 'states', 'animations', 'visible', 'components', 'shortcuts', 'documentation'];
+            const validSections = ['intro', 'spacing', 'typography', 'colors', 'responsive', 'container-queries', 'flex', 'grid', 'borders', 'rounded', 'transforms', 'states', 'animations', 'visible', 'components', 'shortcuts', 'documentation'];
 
             if (hash && validSections.includes(hash)) {
                 showSection(hash, false); // Don't update hash since we're loading from it

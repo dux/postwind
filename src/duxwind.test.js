@@ -121,6 +121,28 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
       expect(DuxWind.config.shortcuts.card).toBe('p-6 bg-white shadow rounded-lg border');
     });
 
+    test('default config includes Tailwind border radius keywords', () => {
+      const radiusMap = {
+        'rounded-none': '0px',
+        'rounded-sm': '0.125rem',
+        'rounded': '0.25rem',
+        'rounded-md': '0.375rem',
+        'rounded-lg': '0.5rem',
+        'rounded-xl': '0.75rem',
+        'rounded-2xl': '1rem',
+        'rounded-3xl': '1.5rem',
+        'rounded-full': '9999px'
+      };
+
+      Object.entries(radiusMap).forEach(([keyword, expectedValue]) => {
+        expect(DuxWind.config.keywords[keyword]).toContain(expectedValue);
+      });
+
+      expect(DuxWind.config.keywords['rounded-tl-2xl']).toContain('border-top-left-radius: 1rem');
+      expect(DuxWind.config.keywords['rounded-s-full']).toContain('border-start-start-radius: 9999px');
+      expect(DuxWind.config.keywords['rounded-t-none']).toContain('border-top-left-radius: 0px');
+    });
+
     test('init accepts breakpoint overrides object', () => {
       const overrides = {
         's': '(max-width: 480px)',
@@ -158,6 +180,90 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
       expect(newCSS).toContain('padding-left: 8px');
       expect(newCSS).toContain('padding-right: 8px');
       expect(DuxWind.config.shortcuts.container).toBe('px-2 py-1 rounded');
+    });
+
+    test('define helper registers keyword utilities', () => {
+      const cssBeforeDefine = capturedCSS.length;
+      const success = DuxWind.define('rounded-3xl', 'border-radius: 2rem;');
+      expect(success).toBe(true);
+      expect(DuxWind.config.keywords['rounded-3xl']).toBe('border-radius: 2rem;');
+
+      const defineCSS = capturedCSS.substring(cssBeforeDefine);
+      expect(defineCSS).toContain('border-radius: 2rem;');
+
+      const initialCSSLength = capturedCSS.length;
+      DuxWind.loadClass('rounded-3xl');
+      const newCSS = capturedCSS.substring(initialCSSLength);
+      expect(newCSS).toBe('');
+    });
+
+    test('define helper requires semicolons for CSS strings', () => {
+      const cssLikeString = 'color: #2563eb';
+      const success = DuxWind.define('text-brand', cssLikeString);
+      expect(success).toBe(true);
+      expect(DuxWind.config.shortcuts['text-brand']).toBe(cssLikeString);
+      expect(DuxWind.config.keywords['text-brand']).toBeUndefined();
+    });
+
+    test('define helper accepts object maps', () => {
+      const cssBeforeDefine = capturedCSS.length;
+      const success = DuxWind.define({
+        'flex-center': 'display: flex; justify-content: center; align-items: center;'
+      });
+
+      expect(success).toBe(true);
+      expect(DuxWind.config.keywords['flex-center']).toContain('display: flex');
+
+      const defineCSS = capturedCSS.substring(cssBeforeDefine);
+      expect(defineCSS).toContain('display: flex');
+      expect(defineCSS).toContain('justify-content: center');
+      expect(defineCSS).toContain('align-items: center');
+
+      const result = testClassWithOutput('flex-center');
+      expect(result.success).toBe(true);
+    });
+
+    test('define helper routes class lists to shortcuts', () => {
+      const beforeDefineCSS = capturedCSS.length;
+      const success = DuxWind.define('btn-demo', 'px-4 py-2 rounded shadow-sm');
+      expect(success).toBe(true);
+      expect(DuxWind.config.shortcuts['btn-demo']).toBe('px-4 py-2 rounded shadow-sm');
+      expect(DuxWind.config.keywords['btn-demo']).toBeUndefined();
+
+      const shortcutCSS = capturedCSS.substring(beforeDefineCSS);
+      expect(shortcutCSS).toContain('padding-left: 16px');
+      expect(shortcutCSS).toContain('border-radius');
+
+      const beforeLoad = capturedCSS.length;
+      DuxWind.loadClass('btn-demo');
+      const newCSS = capturedCSS.substring(beforeLoad);
+      expect(newCSS).toBe('');
+    });
+
+    test('define helper treats responsive class lists as shortcuts', () => {
+      const responsiveClasses = 'm:text-24px d:text-36px font-semibold';
+      const success = DuxWind.define('hero-title', responsiveClasses);
+      expect(success).toBe(true);
+      expect(DuxWind.config.shortcuts['hero-title']).toBe(responsiveClasses);
+      expect(DuxWind.config.keywords['hero-title']).toBeUndefined();
+    });
+
+    test('define helper suppresses keyword override warning when converting to shortcut', () => {
+      const originalWarn = console.warn;
+      const warnings = [];
+      console.warn = (...args) => warnings.push(args.join(' '));
+
+      try {
+        const success = DuxWind.define('container', 'px-2 py-1 rounded');
+        expect(success).toBe(true);
+      } finally {
+        console.warn = originalWarn;
+      }
+
+      const conflictWarning = warnings.find(message => message.includes('shortcut "container" overrides'));
+      expect(conflictWarning).toBeUndefined();
+      expect(DuxWind.config.shortcuts.container).toBe('px-2 py-1 rounded');
+      expect(DuxWind.config.keywords.container).toBeUndefined();
     });
   });
 

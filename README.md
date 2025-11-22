@@ -31,7 +31,7 @@ DuxWind maintains full compatibility with Tailwind's core concepts while adding 
 - **🚀 Real-time CSS generation** - Styles are generated as you use classes
 - **🎯 100% Tailwind compatibility** - Drop-in replacement for the utility, pseudo, and responsive syntax you already know
 - **📱 Responsive utilities** - Multiple breakpoint syntaxes
-- **⚡ Custom shortcuts** - Define reusable class combinations
+- **⚡ Custom shortcuts & overrides** - Use `DuxWind.define()` to register shortcuts or keyword utilities inline
 - **🎨 Arbitrary values** - Use any CSS value with bracket notation
 - **🔧 Configurable** - Customize properties, breakpoints, and keywords
 - **🐛 Debug mode** - Track original classes during development
@@ -80,8 +80,9 @@ DuxWind maintains full compatibility with Tailwind's core concepts while adding 
             }
         });
 
-        // Optional: Add custom shortcuts
-        DuxWind.shortcut({
+        // Optional: Define custom utilities or shortcuts without touching config
+        DuxWind.define({
+            'text-brand': 'color: #2563eb; font-weight: 600',
             'btn': 'px-4 py-2 rounded font-medium cursor-pointer',
             'btn-primary': 'btn bg-blue-500 text-white hover:bg-blue-600',
             'card': 'bg-white rounded border p-6 shadow-sm'
@@ -167,16 +168,35 @@ DuxWind.init({
 
 > ℹ️ Breakpoints must be supplied via `DuxWind.init({ breakpoints: { … } })`.
 
-### Custom Shortcuts
+### Custom Utilities & Shortcuts (`DuxWind.define`)
+
+`DuxWind.define(name, style)` lets you override keyword utilities or register shortcuts without mutating `DuxWind.config` manually.
 
 ```javascript
-DuxWind.config.shortcuts = {
-    'btn': 'px-4 py-2 rounded font-medium transition-all duration-200 cursor-pointer border',
+// Keyword utility: pass a CSS string (needs ':' and ';')
+DuxWind.define('text-brand', 'color: #2563eb; font-weight: 600;');
+
+// Keyword utility: pass an object map
+DuxWind.define('card-body', {
+    display: 'flex',
+    gap: '1.5rem',
+    'align-items': 'center'
+});
+
+// Multiple entries; strings without semicolons stay shortcuts automatically
+DuxWind.define({
+    'btn': 'px-4 py-2 rounded font-medium transition duration-200 cursor-pointer border',
     'btn-primary': 'btn bg-blue-500 text-white border-blue-500 hover:bg-blue-600',
-    'card': 'bg-white rounded-lg border p-6 shadow-sm',
-    'container': 'max-w-1200px mx-auto px-4'
-};
+    'container': 'max-w-[1200px] mx-auto px-4'
+});
 ```
+
+- **Strings containing both `:` _and_ `;`** are treated as CSS declarations (keyword utilities).
+- **Strings missing `;`** are treated as space-delimited class lists (shortcuts).
+- **Objects** convert each key/value pair to `property: value`.
+- **Tip:** When passing CSS as a string, end each declaration with a semicolon (or pass an object map) so DuxWind can detect it as CSS.
+
+> `DuxWind.shortcut()` still works, but `DuxWind.define()` covers both use cases through a single helper.
 
 ## Responsive Utilities
 
@@ -303,11 +323,11 @@ Define reusable combinations:
 ```html
 <!-- Define shortcuts -->
 <script>
-DuxWind.config.shortcuts = {
+DuxWind.define({
     'btn': 'px-4 py-2 rounded font-medium transition-all duration-200 cursor-pointer border',
     'btn-primary': 'btn bg-blue-500 text-white border-blue-500 hover:bg-blue-600',
     'card': 'bg-white rounded-lg border p-6 shadow-sm'
-};
+});
 </script>
 
 <!-- Use shortcuts -->
@@ -422,14 +442,24 @@ DuxWind.config.properties = {
 ```
 
 ### Keywords
-Define keyword classes:
+Define keyword classes (or override built-ins) via `DuxWind.define` or by mutating the config directly:
 
 ```javascript
-DuxWind.config.keywords = {
-    'flex': 'display: flex',
-    'hidden': 'display: none',
-    'text-center': 'text-align: center'
-};
+// Quick helper
+DuxWind.define('rounded-3xl', 'border-radius: 1.5rem;');
+
+// Batch definitions
+DuxWind.define({
+    'flex': 'display: flex;',
+    'hidden': 'display: none;',
+    'text-center': 'text-align: center;'
+});
+
+// Direct config access is still available
+DuxWind.config.keywords['btn'] = 'px-4 py-2 rounded border';
+
+// Tip: pass a class list (no ":") to auto-create a shortcut
+DuxWind.define('btn', 'px-4 py-2 rounded shadow-sm');
 ```
 
 ### Pixel Multiplier
@@ -450,6 +480,7 @@ DuxWind.loadClass(className)    // Process a single class
 DuxWind.resetCss()             // Apply modern CSS reset
 DuxWind.loadDefaultConfig()    // Reset to default config (auto-loaded)
 DuxWind.generateDoc()          // Generate documentation HTML
+DuxWind.define(name, style)    // Add or override keyword utilities
 
 // Init options
 {
@@ -819,7 +850,7 @@ DuxWind.config = {
 ```javascript
 // Complete button and component system
 // (Example uses built-in `m`/`t`/`d` breakpoints)
-DuxWind.config.shortcuts = {
+DuxWind.define({
     // Base components
     'btn': 'px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer border focus:ring-4',
     'card': 'bg-white rounded-lg border border-gray-200 shadow-sm p-6',
@@ -857,7 +888,7 @@ DuxWind.config.shortcuts = {
     'badge-warning': 'badge bg-yellow-100 text-yellow-800',
     'badge-error': 'badge bg-red-100 text-red-800',
     'badge-info': 'badge bg-blue-100 text-blue-800'
-};
+});
 ```
 
 ## DuxWind vs Tailwind CSS
@@ -933,7 +964,7 @@ DuxWind.init({
 });
 
 // Dynamic shortcut creation
-DuxWind.shortcut('hero', 'text-4xl font-bold mb-8');
+DuxWind.define('hero', 'text-4xl font-bold mb-8');
 ```
 
 **4. CSS Override Intelligence**

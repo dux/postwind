@@ -353,8 +353,66 @@ function createDefaultProperties() {
   };
 }
 
+function createBorderRadiusKeywordMap() {
+  const keywords = {};
+  const variants = [
+    { name: 'none', value: '0px' },
+    { name: 'sm', value: '0.125rem' },
+    { name: '', value: '0.25rem' },
+    { name: 'md', value: '0.375rem' },
+    { name: 'lg', value: '0.5rem' },
+    { name: 'xl', value: '0.75rem' },
+    { name: '2xl', value: '1rem' },
+    { name: '3xl', value: '1.5rem' },
+    { name: 'full', value: '9999px' }
+  ];
+
+  const baseClassName = (variant) => variant.name ? `rounded-${variant.name}` : 'rounded';
+  variants.forEach(variant => {
+    keywords[baseClassName(variant)] = `border-radius: ${variant.value};`;
+  });
+
+  const edgeGroups = {
+    't': ['border-top-left-radius', 'border-top-right-radius'],
+    'r': ['border-top-right-radius', 'border-bottom-right-radius'],
+    'b': ['border-bottom-right-radius', 'border-bottom-left-radius'],
+    'l': ['border-top-left-radius', 'border-bottom-left-radius'],
+    's': ['border-start-start-radius', 'border-end-start-radius'],
+    'e': ['border-start-end-radius', 'border-end-end-radius']
+  };
+
+  Object.entries(edgeGroups).forEach(([edge, props]) => {
+    variants.forEach(variant => {
+      const suffix = variant.name ? `-${variant.name}` : '';
+      const className = `rounded-${edge}${suffix}`;
+      keywords[className] = props.map(prop => `${prop}: ${variant.value};`).join(' ');
+    });
+  });
+
+  const cornerGroups = {
+    'tl': ['border-top-left-radius'],
+    'tr': ['border-top-right-radius'],
+    'br': ['border-bottom-right-radius'],
+    'bl': ['border-bottom-left-radius'],
+    'ss': ['border-start-start-radius'],
+    'se': ['border-start-end-radius'],
+    'ee': ['border-end-end-radius'],
+    'es': ['border-end-start-radius']
+  };
+
+  Object.entries(cornerGroups).forEach(([corner, props]) => {
+    variants.forEach(variant => {
+      const suffix = variant.name ? `-${variant.name}` : '';
+      const className = `rounded-${corner}${suffix}`;
+      keywords[className] = props.map(prop => `${prop}: ${variant.value};`).join(' ');
+    });
+  });
+
+  return keywords;
+}
+
 function createDefaultKeywords() {
-  return {
+  const keywords = {
     // Display
     'block': 'display: block',
     'inline-block': 'display: inline-block',
@@ -1744,10 +1802,6 @@ function createDefaultKeywords() {
     // Shadow
     'shadow-sm': 'box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05)',
 
-    // Border radius
-    'rounded': 'border-radius: 0.25rem',
-    'rounded-lg': 'border-radius: 0.5rem',
-
     // Interactivity
     'resize-none': 'resize: none',
     'resize-y': 'resize: vertical',
@@ -1808,6 +1862,9 @@ function createDefaultKeywords() {
     // Custom
     'box': 'border: 2px solid #aaa'
   };
+
+  Object.assign(keywords, createBorderRadiusKeywordMap());
+  return keywords;
 }
 
 export const CONFIG = {

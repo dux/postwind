@@ -2,7 +2,7 @@
 import { CONFIG, createDefaultConfig } from './config.js';
 import { processClass, expandClass } from './styler.js';
 import { addShortcut, isShortcut } from './shortcuts.js';
-import { debounce, safeWrapper } from './utils.js';
+import { debounce, safeWrapper, clearMemoCache } from './utils.js';
 import { splitContainerQueryClasses, updateContainerQueries, cleanupContainerQueriesForTree } from './container-query.js';
 import { generateDoc } from './gen-doc.js';
 
@@ -24,6 +24,120 @@ export function getConfig() {
 
 export function setConfig(newConfig) {
   Object.assign(CONFIG, newConfig);
+}
+
+function formatKeywordStyle(styleDefinition) {
+  if (typeof styleDefinition === 'string') {
+    return styleDefinition.trim();
+  }
+
+  if (styleDefinition && typeof styleDefinition === 'object' && !Array.isArray(styleDefinition)) {
+    return Object.entries(styleDefinition)
+      .map(([prop, value]) => `${prop}: ${value}`)
+      .join('; ')
+      .trim();
+  }
+
+  return '';
+}
+
+function looksLikeCssDeclaration(styleString) {
+  if (!styleString || typeof styleString !== 'string') {
+    return false;
+  }
+
+  const trimmed = styleString.trim();
+  if (!trimmed.includes(':') || !trimmed.includes(';')) {
+    return false;
+  }
+  return true;
+}
+
+function normalizeKeywordKey(key) {
+  try {
+    const expanded = expandClass(key);
+    if (Array.isArray(expanded) && expanded.length === 1) {
+      return expanded[0];
+    }
+  } catch (error) {
+    // Ignore normalization errors and fallback to original key
+  }
+  return key;
+}
+
+export function defineKeyword(nameOrEntries, style) {
+  if (!nameOrEntries) {
+    console.warn('DuxWind.define requires a name or object map.');
+    return false;
+  }
+
+  if (!CONFIG.keywords) {
+    CONFIG.keywords = {};
+  }
+
+  const entries = (typeof nameOrEntries === 'object' && !Array.isArray(nameOrEntries))
+    ? Object.entries(nameOrEntries)
+    : [[nameOrEntries, style]];
+
+  let updated = false;
+  const keywordsToReprocess = new Set();
+
+  entries.forEach(([key, value]) => {
+    if (!key || value == null) {
+      console.warn(`DuxWind.define skipped invalid definition for "${key}"`);
+      return;
+    }
+
+    if (CONFIG.shortcuts?.[key]) {
+      console.warn(`DuxWind.define: keyword "${key}" overrides existing shortcut definition.`);
+    }
+
+    if (typeof value === 'string') {
+      const trimmedValue = value.trim();
+
+      if (!looksLikeCssDeclaration(trimmedValue)) {
+        // Treat as shortcut definition
+        if (CONFIG.keywords?.[key]) {
+          delete CONFIG.keywords[key];
+        }
+        const shortcutRegistered = registerShortcut(key, trimmedValue);
+        if (shortcutRegistered) {
+          updated = true;
+        }
+        return;
+      }
+    }
+
+    const cssString = formatKeywordStyle(value);
+    if (!cssString) {
+      console.warn(`DuxWind.define: Unable to parse style for "${key}"`);
+      return;
+    }
+
+    const normalizedKey = normalizeKeywordKey(key);
+    const keywordTargets = new Set([key]);
+    if (normalizedKey !== key) {
+      keywordTargets.add(normalizedKey);
+    }
+
+    keywordTargets.forEach(keywordKey => {
+      CONFIG.keywords[keywordKey] = cssString;
+      processedClasses.delete(keywordKey);
+      keywordsToReprocess.add(keywordKey);
+    });
+    updated = true;
+  });
+
+  if (keywordsToReprocess.size > 0) {
+    clearMemoCache();
+    if (typeof document !== 'undefined') {
+      keywordsToReprocess.forEach(keywordKey => {
+        processClassForCSS(keywordKey);
+      });
+    }
+  }
+
+  return updated;
 }
 
 // Process entire class attribute string
