@@ -3,6 +3,7 @@
 import { safeWrapper } from './utils.js';
 
 const CONTAINER_QUERY_PATTERN = /^(min|max)-(\d+)(px)?:\s*(.+)$/i;
+const CONTAINER_QUERY_THROTTLE_MS = 300;
 const elementStates = new WeakMap();
 let warnedNoObserver = false;
 
@@ -94,12 +95,41 @@ function createObserver(element) {
   const observer = new ResizeObserver(entries => {
     entries.forEach(entry => {
       const width = entry?.contentRect?.width;
-      evaluateElementQueries(entry.target, typeof width === 'number' ? width : undefined);
+      scheduleEvaluation(entry.target, typeof width === 'number' ? width : undefined);
     });
   });
 
   observer.observe(element);
   return observer;
+}
+
+function scheduleEvaluation(element, explicitWidth) {
+  const state = elementStates.get(element);
+  if (!state) return;
+
+  const width = typeof explicitWidth === 'number' ? explicitWidth : undefined;
+  const now = Date.now();
+  const elapsed = now - state.lastEvalAt;
+  const hasLastEval = typeof state.lastEvalAt === 'number' && !Number.isNaN(state.lastEvalAt);
+
+  if (!hasLastEval || elapsed >= CONTAINER_QUERY_THROTTLE_MS) {
+    state.lastEvalAt = now;
+    evaluateElementQueries(element, width);
+    return;
+  }
+
+  state.pendingWidth = width;
+
+  if (state.throttleTimer) return;
+
+  const delay = Math.max(CONTAINER_QUERY_THROTTLE_MS - elapsed, 0);
+  state.throttleTimer = setTimeout(() => {
+    state.throttleTimer = null;
+    state.lastEvalAt = Date.now();
+    const pending = state.pendingWidth;
+    state.pendingWidth = undefined;
+    evaluateElementQueries(element, pending);
+  }, delay);
 }
 
 export const updateContainerQueries = safeWrapper(function(element, queries = []) {
@@ -123,7 +153,10 @@ export const updateContainerQueries = safeWrapper(function(element, queries = []
   if (!state) {
     state = {
       observer: createObserver(element),
-      queries: new Map()
+      queries: new Map(),
+      throttleTimer: null,
+      pendingWidth: undefined,
+      lastEvalAt: null
     };
     elementStates.set(element, state);
   }
@@ -174,6 +207,10 @@ export const teardownContainerQueries = safeWrapper(function(element) {
     } catch (error) {
       // Ignore observer errors during teardown
     }
+  }
+
+  if (state.throttleTimer) {
+    clearTimeout(state.throttleTimer);
   }
 
   elementStates.delete(element);

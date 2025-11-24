@@ -62,16 +62,71 @@ describe('Container query helpers', () => {
     const element = createTestElement();
     const queries = [{ token: 'max-320:flex', mode: 'max', threshold: 320, payload: 'flex' }];
 
-    updateContainerQueries(element, queries);
-    const observer = MockResizeObserver.instances.at(-1);
-    expect(observer).toBeDefined();
+    const originalNow = Date.now;
+    let fakeNow = 1000;
+    Date.now = () => fakeNow;
 
-    observer.fire(300);
-    expect(element.__getClasses()).toContain('flex');
+    try {
+      updateContainerQueries(element, queries);
+      const observer = MockResizeObserver.instances.at(-1);
+      expect(observer).toBeDefined();
 
-    observer.fire(400);
-    expect(element.__getClasses()).not.toContain('flex');
+      observer.fire(300);
+      expect(element.__getClasses()).toContain('flex');
 
-    teardownContainerQueries(element);
+      fakeNow += 400;
+      observer.fire(400);
+      expect(element.__getClasses()).not.toContain('flex');
+    } finally {
+      Date.now = originalNow;
+      teardownContainerQueries(element);
+    }
+  });
+
+  test('resize observer evaluations are throttled to 300ms', () => {
+    const element = createTestElement();
+    const queries = [{ token: 'max-320:flex', mode: 'max', threshold: 320, payload: 'flex' }];
+
+    const originalNow = Date.now;
+    let fakeNow = 0;
+    Date.now = () => fakeNow;
+
+    const originalSetTimeout = global.setTimeout;
+    const originalClearTimeout = global.clearTimeout;
+    const timers = [];
+
+    global.setTimeout = (fn, delay) => {
+      const timer = { fn, delay, cleared: false };
+      timers.push(timer);
+      return timer;
+    };
+    global.clearTimeout = handle => {
+      if (handle) {
+        handle.cleared = true;
+      }
+    };
+
+    try {
+      updateContainerQueries(element, queries);
+      const observer = MockResizeObserver.instances.at(-1);
+
+      observer.fire(300);
+      expect(element.__getClasses()).toContain('flex');
+
+      fakeNow = 100;
+      observer.fire(400);
+      expect(element.__getClasses()).toContain('flex');
+      expect(timers).toHaveLength(1);
+      expect(timers[0].delay).toBe(200);
+
+      fakeNow = 350;
+      timers[0].fn();
+      expect(element.__getClasses()).not.toContain('flex');
+    } finally {
+      Date.now = originalNow;
+      global.setTimeout = originalSetTimeout;
+      global.clearTimeout = originalClearTimeout;
+      teardownContainerQueries(element);
+    }
   });
 });
