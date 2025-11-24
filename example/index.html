@@ -13,9 +13,8 @@
         DuxWind.init({
             debug: true,
             breakpoints: {
-                'm': '(max-width: 640px)',                        // Mobile: phones and small tablets
-                't': '(min-width: 641px) and (max-width: 1023px)', // Tablet / small laptop window
-                'd': '(min-width: 1024px)'                         // Desktop and large screens
+                'm': '(max-width: 800px)',  // Mobile: phones and small tablets
+                'd': '(min-width: 801px)'   // Desktop and large screens
             }
         });
 
@@ -964,9 +963,9 @@
             <div class="space-y-6">
                 <div class="card">
                     <h3 class="font-semibold mb-4">Pipe Notation</h3>
-                    <div class="p-4|8 bg-purple-100 rounded text-center">
-                        <strong>Responsive Padding:</strong> 16px on mobile, 32px on desktop
-                        <br><code>class="p-4|8"</code>
+                    <div class="p-4|12 bg-purple-100 rounded text-center">
+                        <strong>Responsive Padding:</strong> 16px on mobile, 48px on desktop
+                        <br><code>class="p-4|12"</code>
                     </div>
                 </div>
 

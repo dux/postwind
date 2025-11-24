@@ -46,23 +46,12 @@ function looksLikeCssDeclaration(styleString) {
     return false;
   }
 
-  const trimmed = styleString.trim();
-  if (!trimmed.includes(':') || !trimmed.includes(';')) {
-    return false;
-  }
-  return true;
+  return styleString.includes(':') && styleString.includes(';');
 }
 
 function normalizeKeywordKey(key) {
-  try {
-    const expanded = expandClass(key);
-    if (Array.isArray(expanded) && expanded.length === 1) {
-      return expanded[0];
-    }
-  } catch (error) {
-    // Ignore normalization errors and fallback to original key
-  }
-  return key;
+  const expanded = expandClass(key);
+  return Array.isArray(expanded) && expanded.length === 1 ? expanded[0] : key
 }
 
 export function defineKeyword(nameOrEntries, style) {

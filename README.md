@@ -4,17 +4,15 @@ Real-time Tailwind-like CSS generator with shortcuts, responsive utilities, and 
 
 ## Why DuxWind?
 
-DuxWind was created to bridge the gap between Tailwind CSS's powerful utility-first philosophy and the need for rapid prototyping without build complexity. While Tailwind CSS excels in production environments, DuxWind focuses on developer velocity and simplicity.
-
-**The Vision:** A utility-first CSS framework that works instantly in any environment - from CodePen experiments to production applications - without sacrificing the developer experience that makes Tailwind so beloved.
+DuxWind was created to bridge the gap between Tailwind CSS's powerful utility-first philosophy and the need for rapid development.
 
 **Key Motivations:**
 - **Zero-friction setup** - Drop in a single script tag and start building
-- **No build step required** - Perfect for prototypes, learning, and environments where build tools aren't feasible
+- **No build step required** - For 1ms - 5ms (miliseconds) penalty per page render, skip build step and build css in real-time
 - **Enhanced syntax flexibility** - Support for both `p-12px` and `p-[12px]` notation for natural value input
 - **Intuitive responsive syntax** - Use built-in `m:`/`t:`/`d:` (plus `mobile:`/`tablet:`/`desktop:`) prefixes, property-first `@m`, or compact pipe notation (`p-4|8`)
 - **Built-in shortcuts system** - Create reusable component classes without additional tooling
-- **Complete solution** - CSS reset, utilities, and animations included out of the box
+- **Complete solution** - CSS reset, utilities, visibility, container queries and animations included out of the box
 
 DuxWind maintains full compatibility with Tailwind's core concepts while adding conveniences that make utility-first CSS more accessible to developers at every level—meaning existing Tailwind knowledge (and almost every class name) works out of the box.
 
@@ -24,7 +22,7 @@ DuxWind maintains full compatibility with Tailwind's core concepts while adding 
 - **Precise container queries:** `min-` / `max-` inline rules let each component respond to its own width, powered by per-node ResizeObservers and automatic cleanup.
 - **Visibility-powered motion:** The built-in `visible:` pseudo-class toggles transforms, opacity, or anything else as elements enter the viewport—no custom JS required.
 - **Packed responsive rules:** Pipe (`p-10|20`) and property-first (`text-lg@m`) syntaxes compress three breakpoints into one class token for rapid authoring.
-- **Shortcut composer:** Declare component primitives such as `btn`, `badge`, or `chip` directly in JavaScript and reference them just like Tailwind utilities.
+- **Shortcut composer:** Declare component primitives such as `btn`, `badge`, or `chip` directly in JavaScript using classes and register then as regular css definitions (faster and more readable then tailwind class sloop).
 
 ## Features
 
@@ -35,8 +33,8 @@ DuxWind maintains full compatibility with Tailwind's core concepts while adding 
 - **🎨 Arbitrary values** - Use any CSS value with bracket notation
 - **🔧 Configurable** - Customize properties, breakpoints, and keywords
 - **🐛 Debug mode** - Track original classes during development
-- **🌊 Pipe notation** - Compact responsive syntax (`p-10|20`) that maps to your breakpoint order
-- **@ Alternative syntax** - Property-first breakpoint notation (`text-lg@m text-xl@d`)
+- **🌊 Pipe notation** - Compact responsive syntax (`p-10|20` or `p-10:20`) that maps to your breakpoint order
+- **@ Alternative syntax** - Property-first breakpoint notation (`text-lg@m text-xl@d` insted of `m:text-lg`)
 - **👁️ Scroll animations** - Built-in `visible:` pseudo-class for viewport-triggered effects without extra JS
 - **📦 Inline container queries** - `min-`/`max-` classes toggle utilities by element width (per-node ResizeObserver for precise control)
 
@@ -73,7 +71,6 @@ DuxWind maintains full compatibility with Tailwind's core concepts while adding 
         DuxWind.init({
             debug: true,
             breakpoints: {
-                's': '(max-width: 480px)',    // Small mobile
                 'm': '(max-width: 768px)',    // Mobile
                 't': '(max-width: 1024px)',   // Tablet
                 'd': '(min-width: 1025px)'    // Desktop
@@ -84,7 +81,7 @@ DuxWind maintains full compatibility with Tailwind's core concepts while adding 
         DuxWind.define({
             'text-brand': 'color: #2563eb; font-weight: 600',
             'btn': 'px-4 py-2 rounded font-medium cursor-pointer',
-            'btn-primary': 'btn bg-blue-500 text-white hover:bg-blue-600',
+            'btn-primary': 'btn bg-blue-500 text-white hover:bg-blue-600', // reuse defined btn
             'card': 'bg-white rounded border p-6 shadow-sm'
         });
     </script>

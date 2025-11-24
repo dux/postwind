@@ -18,13 +18,19 @@ global.MutationObserver = class MutationObserver {
   disconnect() {}
 };
 
-// Mock style element to capture CSS output
-let capturedCSS = '';
+// Shared CSS capture store so multiple test suites see the same injected rules
+const CSS_STORE_KEY = '__duxwindCSSStore';
+const cssStore = global[CSS_STORE_KEY] || { value: '' };
+global[CSS_STORE_KEY] = cssStore;
+
+const getCapturedCSS = () => cssStore.value;
+const resetCapturedCSS = () => { cssStore.value = ''; };
+
 global.document = {
-  createElement: (tag) => ({
+  createElement: () => ({
     setAttribute: () => {},
-    get textContent() { return capturedCSS; },
-    set textContent(value) { capturedCSS += value; },
+    get textContent() { return cssStore.value; },
+    set textContent(value) { cssStore.value += value; },
     appendChild: () => {}
   }),
   head: {
@@ -34,30 +40,31 @@ global.document = {
   },
   getElementById: () => null,
   querySelector: () => ({
-    textContent: capturedCSS
+    textContent: cssStore.value
   }),
   querySelectorAll: () => [],
   addEventListener: () => {}
 };
 
-// Import DuxWind after setting up mocks
-await import('../src/duxwind.js');
-const DuxWind = global.window.DuxWind;
+// Import DuxWind after setting up mocks. When the module is cached between
+// files we still need to reattach the default export onto the mocked window.
+const { default: DuxWind } = await import('../src/duxwind.js');
+global.window.DuxWind = DuxWind;
 
 describe('DuxWind Test Suite - Input/Output Examples', () => {
   beforeEach(() => {
     // Reset CSS capture and configuration
-    capturedCSS = '';
+    resetCapturedCSS();
     DuxWind.loadDefaultConfig();
     DuxWind.init({ debug: false, clearCache: true });
   });
 
   // Helper function to test class processing and capture output
   function testClassWithOutput(className, expectedInCSS = []) {
-    const initialCSS = capturedCSS;
+    const initialCSS = getCapturedCSS();
     try {
       DuxWind.loadClass(className);
-      const newCSS = capturedCSS.substring(initialCSS.length);
+      const newCSS = getCapturedCSS().substring(initialCSS.length);
 
       // Check if expected strings are in the generated CSS
       expectedInCSS.forEach(expected => {
@@ -169,31 +176,31 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
     });
 
     test('shortcuts can override keyword classes', () => {
-      const initialCSSLength = capturedCSS.length;
+      const initialCSSLength = getCapturedCSS().length;
 
       const success = DuxWind.shortcut({
         'container': 'px-2 py-1 rounded'
       });
 
       expect(success).toBe(true);
-      const newCSS = capturedCSS.substring(initialCSSLength);
+      const newCSS = getCapturedCSS().substring(initialCSSLength);
       expect(newCSS).toContain('padding-left: 8px');
       expect(newCSS).toContain('padding-right: 8px');
       expect(DuxWind.config.shortcuts.container).toBe('px-2 py-1 rounded');
     });
 
     test('define helper registers keyword utilities', () => {
-      const cssBeforeDefine = capturedCSS.length;
+      const cssBeforeDefine = getCapturedCSS().length;
       const success = DuxWind.define('rounded-3xl', 'border-radius: 2rem;');
       expect(success).toBe(true);
       expect(DuxWind.config.keywords['rounded-3xl']).toBe('border-radius: 2rem;');
 
-      const defineCSS = capturedCSS.substring(cssBeforeDefine);
+      const defineCSS = getCapturedCSS().substring(cssBeforeDefine);
       expect(defineCSS).toContain('border-radius: 2rem;');
 
-      const initialCSSLength = capturedCSS.length;
+      const initialCSSLength = getCapturedCSS().length;
       DuxWind.loadClass('rounded-3xl');
-      const newCSS = capturedCSS.substring(initialCSSLength);
+      const newCSS = getCapturedCSS().substring(initialCSSLength);
       expect(newCSS).toBe('');
     });
 
@@ -206,7 +213,7 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
     });
 
     test('define helper accepts object maps', () => {
-      const cssBeforeDefine = capturedCSS.length;
+      const cssBeforeDefine = getCapturedCSS().length;
       const success = DuxWind.define({
         'flex-center': 'display: flex; justify-content: center; align-items: center;'
       });
@@ -214,7 +221,7 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
       expect(success).toBe(true);
       expect(DuxWind.config.keywords['flex-center']).toContain('display: flex');
 
-      const defineCSS = capturedCSS.substring(cssBeforeDefine);
+      const defineCSS = getCapturedCSS().substring(cssBeforeDefine);
       expect(defineCSS).toContain('display: flex');
       expect(defineCSS).toContain('justify-content: center');
       expect(defineCSS).toContain('align-items: center');
@@ -224,19 +231,19 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
     });
 
     test('define helper routes class lists to shortcuts', () => {
-      const beforeDefineCSS = capturedCSS.length;
+      const beforeDefineCSS = getCapturedCSS().length;
       const success = DuxWind.define('btn-demo', 'px-4 py-2 rounded shadow-sm');
       expect(success).toBe(true);
       expect(DuxWind.config.shortcuts['btn-demo']).toBe('px-4 py-2 rounded shadow-sm');
       expect(DuxWind.config.keywords['btn-demo']).toBeUndefined();
 
-      const shortcutCSS = capturedCSS.substring(beforeDefineCSS);
+      const shortcutCSS = getCapturedCSS().substring(beforeDefineCSS);
       expect(shortcutCSS).toContain('padding-left: 16px');
       expect(shortcutCSS).toContain('border-radius');
 
-      const beforeLoad = capturedCSS.length;
+      const beforeLoad = getCapturedCSS().length;
       DuxWind.loadClass('btn-demo');
-      const newCSS = capturedCSS.substring(beforeLoad);
+      const newCSS = getCapturedCSS().substring(beforeLoad);
       expect(newCSS).toBe('');
     });
 
@@ -572,120 +579,6 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
     });
   });
 
-  describe('Shortcut System: Input → Expanded Classes → CSS', () => {
-    test('basic shortcuts: {shortcut} → {expanded-classes} → {css}', () => {
-      // Setup shortcuts
-      DuxWind.config.shortcuts = {
-        'btn': 'px-4 py-2 rounded border cursor-pointer',
-        'card': 'p-6 bg-white shadow rounded-lg'
-      };
-
-      // Input: btn → Expands to: px-4 py-2 rounded border cursor-pointer
-      // Expected CSS: padding-left: 16px; padding-right: 16px; padding-top: 8px; etc.
-      const btnResult = testClassWithOutput('btn', ['padding-left: 16px', 'padding-top: 8px', 'border-radius', 'border-width', 'cursor: pointer']);
-      expect(btnResult.success).toBe(true);
-
-      // Input: card → Expands to: p-6 bg-white shadow rounded-lg
-      const cardResult = testClassWithOutput('card', ['padding: 24px']);
-      expect(cardResult.success).toBe(true);
-    });
-
-    test('nested shortcuts: {parent} references {child} → fully expanded CSS', () => {
-      // Setup nested shortcuts
-      DuxWind.config.shortcuts = {
-        'btn': 'px-4 py-2 rounded',                           // Base button
-        'btn-primary': 'btn bg-blue-500 text-white',          // btn + blue styling
-        'btn-lg': 'btn px-6 py-3 text-lg'                     // btn + larger size
-      };
-
-      // Input: btn-primary → Expands to: px-4 py-2 rounded bg-blue-500 text-white
-      const primaryResult = testClassWithOutput('btn-primary', [
-        'padding-left: 16px',     // from px-4
-        'padding-top: 8px',       // from py-2
-        'border-radius',          // from rounded
-        'background-color',       // from bg-blue-500
-        'color'                   // from text-white
-      ]);
-      expect(primaryResult.success).toBe(true);
-    });
-
-    test('runtime shortcut registration injects CSS immediately', () => {
-      const initialCSSLength = capturedCSS.length;
-
-      // Process class before shortcut exists (no CSS generated yet)
-      DuxWind.loadClass('btn-runtime');
-      expect(capturedCSS.length).toBe(initialCSSLength);
-
-      const success = DuxWind.shortcut('btn-runtime', 'px-4 py-2 rounded');
-      expect(success).toBe(true);
-
-      const newCSS = capturedCSS.substring(initialCSSLength);
-      expect(newCSS).toContain('.btn-runtime');
-      expect(newCSS).toContain('padding-left: 16px');
-      expect(newCSS).toContain('padding-top: 8px');
-    });
-
-    test('shortcut CSS uses nested selectors and media queries', () => {
-      const initialCSSLength = capturedCSS.length;
-
-      const success = DuxWind.shortcut('btn-modern', 'px-4 hover:bg-blue-500 d:px-8 d:hover:bg-blue-600');
-      expect(success).toBe(true);
-
-      DuxWind.loadClass('btn-modern');
-      const css = capturedCSS.substring(initialCSSLength);
-
-      expect(css).toContain('.btn-modern {');
-      expect(css).toContain('&:hover {');
-      expect(css).toContain('@media (min-width: 1025px) {');
-      expect(css).toContain('padding-left: 16px;');
-      expect(css).toContain('padding-left: 32px;');
-    });
-
-    test('selector shortcuts register raw selectors without dot prefix', () => {
-      const initialCSSLength = capturedCSS.length;
-
-      const success = DuxWind.shortcut('body h3', 'px-4 py-2 font-semibold');
-      expect(success).toBe(true);
-
-      const css = capturedCSS.substring(initialCSSLength);
-      expect(css).toContain('body h3 {');
-      expect(css).toContain('padding-left: 16px;');
-      expect(css).toContain('font-weight: 600;');
-    });
-
-    test('selector shortcuts support comma-separated selectors', () => {
-      const initialCSSLength = capturedCSS.length;
-      const definition = 'text-60px leading-80px font-bold mb-30px m:text-center m:text-30px m:leading-45px m:mb-10px';
-
-      const success = DuxWind.shortcut('.h1, .prose h1', definition);
-      expect(success).toBe(true);
-
-      const css = capturedCSS.substring(initialCSSLength);
-      expect(css).toContain('.h1, .prose h1 {');
-      expect(css).toContain('font-size: 60px;');
-      expect(css).toContain('line-height: 80px;');
-      expect(css).toContain('font-weight: 700;');
-      expect(css).toContain('margin-bottom: 30px;');
-      expect(css).toContain('@media (max-width: 768px)');
-      expect(css).toContain('text-align: center;');
-      expect(css).toContain('font-size: 30px;');
-    });
-
-    test('dot-prefixed shortcuts behave like class shortcuts', () => {
-      const initialCSSLength = capturedCSS.length;
-
-      const success = DuxWind.shortcut('.big-box', 'br-0|4');
-      expect(success).toBe(true);
-
-      const css = capturedCSS.substring(initialCSSLength);
-      expect(css).toContain('.big-box {');
-      expect(css).toContain('border-radius');
-
-      const loadResult = testClassWithOutput('big-box');
-      expect(loadResult.success).toBe(true);
-    });
-  });
-
   describe('Advanced Features: Special Notation', () => {
     test('pipe notation: {class}-{mobile}|{desktop} → responsive classes', () => {
       // Setup responsive breakpoints via init options
@@ -759,186 +652,6 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
       // m-8:16 → m:m-8 d:m-16
       testClassWithOutput('m:m-8', ['@media (max-width: 768px)', 'margin: 32px']);
       testClassWithOutput('d:m-16', ['@media (min-width: 1025px)', 'margin: 64px']);
-    });
-  });
-
-  describe('CSS Override System: Explicit Classes Override Shortcut Classes', () => {
-    test('basic override: explicit p-10 overrides shortcut p-8', () => {
-      // Setup shortcut with padding
-      DuxWind.config.shortcuts = {
-        'spacious-box': 'p-8 bg-gray-100 border-2 m-4 rounded'
-      };
-
-      // Test: spacious-box alone should include p-8 (32px padding)
-      const shortcutOnly = testClassWithOutput('spacious-box', ['padding: 32px']);
-      expect(shortcutOnly.success).toBe(true);
-
-      // Reset CSS capture for next test
-      capturedCSS = '';
-
-      // Test: p-10 spacious-box should use explicit p-10 (40px), not shortcut p-8 (32px)
-      // Expected: Explicit p-10 overrides shortcut p-8
-      // Note: This tests the conflict resolution system where explicit classes take priority
-      const explicitOverride = testClassWithOutput('p-10', ['padding: 40px']);
-      expect(explicitOverride.success).toBe(true);
-    });
-
-    test('responsive override: p-10@m overrides shortcut padding on mobile', () => {
-      // Setup breakpoints
-      reinitWithBreakpoints({
-        'm': '(max-width: 768px)',
-        'd': '(min-width: 1025px)'
-      });
-
-      // Setup shortcut with responsive padding
-      DuxWind.config.shortcuts = {
-        'responsive-card': 'm:p-4 d:p-6 bg-white shadow rounded'
-      };
-
-      // Test: responsive-card alone should include m:p-4 (16px padding on mobile)
-      const shortcutOnly = testClassWithOutput('responsive-card', ['@media (max-width: 768px)', 'padding: 16px']);
-      expect(shortcutOnly.success).toBe(true);
-
-      // Reset CSS capture
-      capturedCSS = '';
-
-      // Test: m:p-10 (equivalent to p-10@m) should override shortcut's m:p-4
-      // Expected: Explicit m:p-10 (40px) overrides shortcut m:p-4 (16px) on mobile
-      const responsiveOverride = testClassWithOutput('m:p-10', ['@media (max-width: 768px)', 'padding: 40px']);
-      expect(responsiveOverride.success).toBe(true);
-    });
-
-    test('@ notation override: p-10@m notation overrides shortcut padding', () => {
-      // Setup shortcut with mobile padding
-      DuxWind.config.shortcuts = {
-        'mobile-card': 'm:p-6 bg-blue-100 border rounded-lg'
-      };
-
-      // Test shortcut alone first
-      const shortcutResult = testClassWithOutput('mobile-card', ['@media', 'padding: 24px']);
-      expect(shortcutResult.success).toBe(true);
-
-      // Reset CSS capture
-      capturedCSS = '';
-
-      // Test @ notation override
-      // Input: p-10@m should be equivalent to m:p-10 and override shortcut m:p-6
-      // Expected: The @ notation class takes priority over shortcut padding
-      const atNotationResult = testClassWithOutput('m:p-10', ['@media', 'padding: 40px']);
-      expect(atNotationResult.success).toBe(true);
-    });
-
-    test('multiple property override: explicit classes override multiple shortcut properties', () => {
-      // Setup complex shortcut
-      DuxWind.config.shortcuts = {
-        'complex-component': 'p-4 m-2 bg-gray-200 text-gray-800 border-gray-300 rounded-md'
-      };
-
-      // Test: Multiple explicit classes should each override their respective shortcut properties
-      // Input: p-8 m-6 bg-red-500 complex-component
-      // Expected:
-      // - p-8 overrides shortcut p-4 → padding: 32px (not 16px)
-      // - m-6 overrides shortcut m-2 → margin: 24px (not 8px)
-      // - bg-red-500 overrides shortcut bg-gray-200
-      // - text-gray-800, border-gray-300, rounded-md from shortcut remain
-
-      // Test explicit padding override
-      const paddingOverride = testClassWithOutput('p-8', ['padding: 32px']);
-      expect(paddingOverride.success).toBe(true);
-
-      // Reset CSS
-      capturedCSS = '';
-
-      // Test explicit margin override
-      const marginOverride = testClassWithOutput('m-6', ['margin: 24px']);
-      expect(marginOverride.success).toBe(true);
-
-      // Reset CSS
-      capturedCSS = '';
-
-      // Test explicit background override
-      const backgroundOverride = testClassWithOutput('bg-red-500', ['background-color']);
-      expect(backgroundOverride.success).toBe(true);
-    });
-
-    test('nested shortcut override: explicit class overrides nested shortcut property', () => {
-      // Setup nested shortcuts where btn-large includes btn
-      DuxWind.config.shortcuts = {
-        'btn': 'px-4 py-2 rounded border',              // Base: 16px horizontal padding
-        'btn-large': 'btn px-6 py-4 text-lg font-bold' // Large: should override to 24px horizontal padding
-      };
-
-      // Test: px-8 btn-large should use explicit px-8 (32px), not btn-large's px-6 (24px) or btn's px-4 (16px)
-      // Expected: Explicit px-8 overrides all nested shortcut horizontal padding
-      const nestedOverride = testClassWithOutput('px-8', ['padding-left: 32px', 'padding-right: 32px']);
-      expect(nestedOverride.success).toBe(true);
-    });
-
-    test('specific requested scenario: p-10@m notation with shortcut override', () => {
-      // Setup: Shortcut that contains a padding class
-      DuxWind.config.shortcuts = {
-        'card-component': 'p-6 bg-white shadow rounded border'
-      };
-
-      // Setup: Custom breakpoints for @ notation
-      reinitWithBreakpoints({
-        'm': '(max-width: 768px)',
-        'd': '(min-width: 1025px)'
-      });
-
-      // Test 1: Shortcut alone should use p-6 (24px padding)
-      const shortcutResult = testClassWithOutput('card-component', ['padding: 24px']);
-      expect(shortcutResult.success).toBe(true);
-
-      // Reset CSS
-      capturedCSS = '';
-
-      // Test 2: Explicit p-10 should override shortcut p-6 → 40px padding
-      // Input: p-10 card-component (where card-component has p-6)
-      // Expected: p-10 (40px) overrides shortcut p-6 (24px)
-      const explicitOverride = testClassWithOutput('p-10', ['padding: 40px']);
-      expect(explicitOverride.success).toBe(true);
-
-      // Reset CSS
-      capturedCSS = '';
-
-      // Test 3: @ notation equivalence test
-      // p-10@m should be equivalent to m:p-10
-      // This is the key feature requested: @ notation support
-      try {
-        DuxWind.loadClass('m:p-10');
-        // If no error thrown, the processing succeeded
-        expect(true).toBe(true);
-      } catch (error) {
-        // This documents that @ notation processing works
-        expect(false).toBe(true);
-      }
-
-      // Test 4: Document the override behavior conceptually
-      // When you have "p-10 shortcut-with-p-8":
-      // - Explicit p-10 (40px) should override shortcut p-8 (32px)
-      // - This is the core CSS override functionality
-      expect(true).toBe(true); // This test documents the expected behavior
-    });
-
-    test('comprehensive override: multiple explicit classes vs shortcut', () => {
-      // Setup comprehensive shortcut
-      DuxWind.config.shortcuts = {
-        'complex-widget': 'p-4 m-2 bg-gray-100 text-black border-gray-300 rounded shadow-sm'
-      };
-
-      // Test individual overrides work
-      const tests = [
-        { class: 'p-8', expected: ['padding: 32px'] },
-        { class: 'm-6', expected: ['margin: 24px'] },
-        { class: 'bg-red-500', expected: ['background-color'] }
-      ];
-
-      tests.forEach(({ class: className, expected }) => {
-        capturedCSS = '';
-        const result = testClassWithOutput(className, expected);
-        expect(result.success).toBe(true);
-      });
     });
   });
 
