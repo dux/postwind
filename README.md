@@ -46,7 +46,7 @@ DuxWind maintains full compatibility with Tailwind's core concepts while adding 
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://dux.github.io/duxwind/src/duxwind.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/duxwind@latest/dist/lib.min.js"></script>
     <script>
         // Default configuration auto-loads - just initialize!
         DuxWind.init();
@@ -65,7 +65,7 @@ DuxWind maintains full compatibility with Tailwind's core concepts while adding 
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://dux.github.io/duxwind/src/duxwind.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/duxwind@latest/dist/lib.min.js"></script>
     <script>
         // DuxWind ships with `m`/`t`/`d` (and mobile/tablet/desktop) breakpoints preloaded.
         // Override them via init if you need a different map.
@@ -101,6 +101,8 @@ DuxWind maintains full compatibility with Tailwind's core concepts while adding 
 </body>
 </html>
 ```
+
+> Prefer the minified bundle (`dist/lib.min.js`) in production. A readable build (`dist/lib.js`) ships alongside for debugging or embedding via module loaders.
 
 ## Configuration
 

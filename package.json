@@ -1,13 +1,13 @@
 {
   "name": "duxwind",
-  "version": "0.1.2",
+  "version": "0.1.4",
   "description": "Real-time Tailwind-like CSS generator with pipe notation, shortcuts, and dynamic CSS injection",
   "type": "module",
-  "main": "dist/duxwind.js",
+  "main": "dist/lib.js",
   "exports": {
     ".": {
-      "import": "./dist/duxwind.js",
-      "require": "./dist/duxwind.cjs"
+      "import": "./dist/lib.js",
+      "require": "./dist/lib.cjs"
     },
     "./core": "./dist/core.js",
     "./config": "./dist/config.js",
@@ -24,11 +24,12 @@
     "README.md"
   ],
   "scripts": {
-    "build": "rm -rf dist/ && bun build src/duxwind.js --outfile dist/duxwind.js --format esm && bun build src/duxwind.js --outfile dist/duxwind.cjs --format cjs",
+    "build": "rm -rf dist/ && bun build src/duxwind.js --outfile dist/lib.js --format esm && bun build src/duxwind.js --outfile dist/lib.min.js --format esm --minify && bun build src/duxwind.js --outfile dist/lib.cjs --format cjs",
     "test": "bun test src/",
     "start": "bun bin/server.js",
-    "dev": "bun run bin/server.js & bun build src/duxwind.js --outdir dist --format cjs --outfile dist/duxwind.cjs --watch",
+    "dev": "bun run bin/server.js & bun build src/duxwind.js --outdir dist --format cjs --outfile dist/lib.cjs --watch",
     "pages": "open https://dux.github.io/duxwind/",
+    "publish": "bun run build && bun run test && npm publish",
     "ai-bridge": "bun run bin/ai-bridge.js"
   },
   "keywords": [

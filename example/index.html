@@ -7,7 +7,7 @@
     <link rel="icon" type="image/svg+xml" href="/example/favicon.svg">
     <!-- <script src="http://localhost:8999/client"></script> -->
     <script type="module">
-        import DuxWind from '../src/duxwind.js';
+        import DuxWind from '/dist/lib.js';
 
         // 🚀 Initialize with custom breakpoints (defaults cover mobile/desktop out of the box)
         DuxWind.init({
@@ -137,7 +137,11 @@
                 </div>
                 <div class="mt-4 p-3 bg-green-100 rounded border border-green-300">
                     <code class="text-green-800 text-sm">
-                        // Just one line needed - everything auto-loads!<br>
+                        import DuxWind from 'https://cdn.jsdelivr.net/npm/duxwind@latest/dist/lib.min.js';
+                        <br />
+                        <br />
+                        // Just one line needed - everything auto-loads!
+                        <br />
                         DuxWind.init();
                     </code>
                 </div>
