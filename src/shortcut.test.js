@@ -1,10 +1,10 @@
 import { describe, test, expect, beforeEach } from 'bun:test';
 
-// Mock DOM environment - must be set before importing DuxWind
+// Mock DOM environment - must be set before importing PostWind
 global.window = {
   innerWidth: 1024,
-  DuxWind: null,
-  DuxWindDebug: false,
+  PostWind: null,
+  PostWindDebug: false,
   location: {
     port: 3000
   }
@@ -19,7 +19,7 @@ global.MutationObserver = class MutationObserver {
 };
 
 // Shared CSS capture store so multiple test files see the same injected rules
-const CSS_STORE_KEY = '__duxwindCSSStore';
+const CSS_STORE_KEY = '__postwindCSSStore';
 const cssStore = global[CSS_STORE_KEY] || { value: '' };
 global[CSS_STORE_KEY] = cssStore;
 
@@ -46,24 +46,24 @@ global.document = {
   addEventListener: () => {}
 };
 
-// Import DuxWind after setting up mocks and ensure the cached module export
+// Import PostWind after setting up mocks and ensure the cached module export
 // is reattached to the mocked window environment for this file.
-const { default: DuxWind } = await import('../src/lib.js');
-global.window.DuxWind = DuxWind;
+const { default: PostWind } = await import('../src/lib.js');
+global.window.PostWind = PostWind;
 
-describe('DuxWind Shortcut Suites', () => {
+describe('PostWind Shortcut Suites', () => {
   beforeEach(() => {
     // Reset CSS capture and configuration
     resetCapturedCSS();
-    DuxWind.loadDefaultConfig();
-    DuxWind.init({ debug: false, clearCache: true });
+    PostWind.loadDefaultConfig();
+    PostWind.init({ debug: false, clearCache: true });
   });
 
   // Helper function to test class processing and capture output
   function testClassWithOutput(className, expectedInCSS = []) {
     const initialCSS = getCapturedCSS();
     try {
-      DuxWind.loadClass(className);
+      PostWind.loadClass(className);
       const newCSS = getCapturedCSS().substring(initialCSS.length);
 
       expectedInCSS.forEach(expected => {
@@ -77,12 +77,12 @@ describe('DuxWind Shortcut Suites', () => {
   }
 
   function reinitWithBreakpoints(breakpoints) {
-    DuxWind.init({ debug: false, clearCache: true, breakpoints });
+    PostWind.init({ debug: false, clearCache: true, breakpoints });
   }
 
   describe('Shortcut System: Input → Expanded Classes → CSS', () => {
     test('basic shortcuts: {shortcut} → {expanded-classes} → {css}', () => {
-      DuxWind.config.shortcuts = {
+      PostWind.config.shortcuts = {
         'btn': 'px-4 py-2 rounded border cursor-pointer',
         'card': 'p-6 bg-white shadow rounded-lg'
       };
@@ -95,7 +95,7 @@ describe('DuxWind Shortcut Suites', () => {
     });
 
     test('nested shortcuts: {parent} references {child} → fully expanded CSS', () => {
-      DuxWind.config.shortcuts = {
+      PostWind.config.shortcuts = {
         'btn': 'px-4 py-2 rounded',
         'btn-primary': 'btn bg-blue-500 text-white',
         'btn-lg': 'btn px-6 py-3 text-lg'
@@ -114,10 +114,10 @@ describe('DuxWind Shortcut Suites', () => {
     test('runtime shortcut registration injects CSS immediately', () => {
         const initialCSSLength = getCapturedCSS().length;
 
-      DuxWind.loadClass('btn-runtime');
+      PostWind.loadClass('btn-runtime');
       expect(getCapturedCSS().length).toBe(initialCSSLength);
 
-      const success = DuxWind.shortcut('btn-runtime', 'px-4 py-2 rounded');
+      const success = PostWind.shortcut('btn-runtime', 'px-4 py-2 rounded');
       expect(success).toBe(true);
 
       const newCSS = getCapturedCSS().substring(initialCSSLength);
@@ -129,10 +129,10 @@ describe('DuxWind Shortcut Suites', () => {
     test('shortcut CSS uses nested selectors and media queries', () => {
       const initialCSSLength = getCapturedCSS().length;
 
-      const success = DuxWind.shortcut('btn-modern', 'px-4 hover:bg-blue-500 d:px-8 d:hover:bg-blue-600');
+      const success = PostWind.shortcut('btn-modern', 'px-4 hover:bg-blue-500 d:px-8 d:hover:bg-blue-600');
       expect(success).toBe(true);
 
-      DuxWind.loadClass('btn-modern');
+      PostWind.loadClass('btn-modern');
       const css = getCapturedCSS().substring(initialCSSLength);
 
       expect(css).toContain('.btn-modern {');
@@ -145,7 +145,7 @@ describe('DuxWind Shortcut Suites', () => {
     test('selector shortcuts register raw selectors without dot prefix', () => {
       const initialCSSLength = getCapturedCSS().length;
 
-      const success = DuxWind.shortcut('body h3', 'px-4 py-2 font-semibold');
+      const success = PostWind.shortcut('body h3', 'px-4 py-2 font-semibold');
       expect(success).toBe(true);
 
       const css = getCapturedCSS().substring(initialCSSLength);
@@ -158,7 +158,7 @@ describe('DuxWind Shortcut Suites', () => {
       const initialCSSLength = getCapturedCSS().length;
       const definition = 'text-60px leading-80px font-bold mb-30px m:text-center m:text-30px m:leading-45px m:mb-10px';
 
-      const success = DuxWind.shortcut('.h1, .prose h1', definition);
+      const success = PostWind.shortcut('.h1, .prose h1', definition);
       expect(success).toBe(true);
 
       const css = getCapturedCSS().substring(initialCSSLength);
@@ -175,7 +175,7 @@ describe('DuxWind Shortcut Suites', () => {
     test('dot-prefixed shortcuts behave like class shortcuts', () => {
       const initialCSSLength = getCapturedCSS().length;
 
-      const success = DuxWind.shortcut('.big-box', 'br-0|4');
+      const success = PostWind.shortcut('.big-box', 'br-0|4');
       expect(success).toBe(true);
 
       const css = getCapturedCSS().substring(initialCSSLength);
@@ -189,7 +189,7 @@ describe('DuxWind Shortcut Suites', () => {
 
   describe('CSS Override System: Explicit Classes Override Shortcut Classes', () => {
     test('basic override: explicit p-10 overrides shortcut p-8', () => {
-      DuxWind.config.shortcuts = {
+      PostWind.config.shortcuts = {
         'spacious-box': 'p-8 bg-gray-100 border-2 m-4 rounded'
       };
 
@@ -208,7 +208,7 @@ describe('DuxWind Shortcut Suites', () => {
         'd': '(min-width: 1025px)'
       });
 
-      DuxWind.config.shortcuts = {
+      PostWind.config.shortcuts = {
         'responsive-card': 'm:p-4 d:p-6 bg-white shadow rounded'
       };
 
@@ -222,7 +222,7 @@ describe('DuxWind Shortcut Suites', () => {
     });
 
     test('@ notation override: p-10@m notation overrides shortcut padding', () => {
-      DuxWind.config.shortcuts = {
+      PostWind.config.shortcuts = {
         'mobile-card': 'm:p-6 bg-blue-100 border rounded-lg'
       };
 
@@ -236,7 +236,7 @@ describe('DuxWind Shortcut Suites', () => {
     });
 
     test('multiple property override: explicit classes override multiple shortcut properties', () => {
-      DuxWind.config.shortcuts = {
+      PostWind.config.shortcuts = {
         'complex-component': 'p-4 m-2 bg-gray-200 text-gray-800 border-gray-300 rounded-md'
       };
 
@@ -255,7 +255,7 @@ describe('DuxWind Shortcut Suites', () => {
     });
 
     test('nested shortcut override: explicit class overrides nested shortcut property', () => {
-      DuxWind.config.shortcuts = {
+      PostWind.config.shortcuts = {
         'btn': 'px-4 py-2 rounded border',
         'btn-large': 'btn px-6 py-4 text-lg font-bold'
       };
@@ -265,7 +265,7 @@ describe('DuxWind Shortcut Suites', () => {
     });
 
     test('specific requested scenario: p-10@m notation with shortcut override', () => {
-      DuxWind.config.shortcuts = {
+      PostWind.config.shortcuts = {
         'card-component': 'p-6 bg-white shadow rounded border'
       };
 
@@ -284,12 +284,12 @@ describe('DuxWind Shortcut Suites', () => {
 
       resetCapturedCSS();
 
-      expect(() => DuxWind.loadClass('m:p-10')).not.toThrow();
+      expect(() => PostWind.loadClass('m:p-10')).not.toThrow();
       expect(true).toBe(true);
     });
 
     test('comprehensive override: multiple explicit classes vs shortcut', () => {
-      DuxWind.config.shortcuts = {
+      PostWind.config.shortcuts = {
         'complex-widget': 'p-4 m-2 bg-gray-100 text-black border-gray-300 rounded shadow-sm'
       };
 

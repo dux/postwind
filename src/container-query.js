@@ -138,7 +138,7 @@ export const updateContainerQueries = safeWrapper(function(element, queries = []
 
   if (!supportsResizeObserver()) {
     if (!warnedNoObserver) {
-      console.warn('DuxWind: "min-"/"max-" container classes require ResizeObserver.');
+      console.warn('PostWind: "min-"/"max-" container classes require ResizeObserver.');
       warnedNoObserver = true;
     }
     return;

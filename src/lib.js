@@ -1,9 +1,9 @@
-// DuxWind - Real-time CSS Generator (Browser/UMD)
+// PostWind - Real-time CSS Generator (Browser/UMD)
 import { init, resetCSS, loadClass, preload, shortcut, CONFIG, getConfig, setConfig, defineKeyword } from './core.js';
 import { createDefaultConfig } from './config.js';
 import { generateDoc } from './gen-doc.js';
 
-const DuxWind = {
+const PostWind = {
   // Core methods
   init,
   resetCss: resetCSS,
@@ -30,8 +30,8 @@ const DuxWind = {
 
 // Global export for browser usage
 if (typeof window !== 'undefined') {
-  window.DuxWind = DuxWind;
+  window.PostWind = PostWind;
 }
 
 // ES Module export
-export default DuxWind;
+export default PostWind;

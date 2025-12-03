@@ -1,4 +1,4 @@
-// DuxWind Styler - CSS Generation Engine
+// PostWind Styler - CSS Generation Engine
 import { CONFIG, CONSTANTS } from './config.js';
 import { isShortcut, generateShortcutCSS } from './shortcuts.js';
 import { memoize, safeWrapper, escapeSelector } from './utils.js';

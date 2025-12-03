@@ -1,6 +1,6 @@
 {
-  "name": "duxwind",
-  "version": "0.1.4",
+  "name": "postwind",
+  "version": "0.2.0",
   "description": "Real-time Tailwind-like CSS generator with pipe notation, shortcuts, and dynamic CSS injection",
   "type": "module",
   "main": "dist/lib.js",
@@ -28,7 +28,9 @@
     "test": "bun test src/",
     "start": "bun bin/server.js",
     "dev": "bun run bin/server.js & bun build src/lib.js --outdir dist --format cjs --outfile dist/lib.cjs --watch",
-    "pages": "open https://dux.github.io/duxwind/",
+    "pages": "open https://dux.github.io/postwind/",
+    "open": "open https://www.npmjs.com/package/postwind",
+    "gh": "open https://github.com/dux/postwind",
     "publish": "bun run build && bun run test && npm publish",
     "ai-bridge": "bun run bin/ai-bridge.js"
   },
@@ -45,11 +47,11 @@
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "https://github.com/dux/duxwind.git"
+    "url": "https://github.com/dux/postwind.git"
   },
-  "homepage": "https://dux.github.io/duxwind/",
+  "homepage": "https://dux.github.io/postwind/",
   "bugs": {
-    "url": "https://github.com/dux/duxwind/issues"
+    "url": "https://github.com/dux/postwind/issues"
   },
   "devDependencies": {
     "jsdom": "^22.1.0"

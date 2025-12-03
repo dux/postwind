@@ -1,4 +1,4 @@
-// DuxWind Utilities - Shared constants and utility functions
+// PostWind Utilities - Shared constants and utility functions
 import { CONSTANTS } from './config.js';
 
 
@@ -72,7 +72,7 @@ export function safeWrapper(fn, context = 'unknown') {
     try {
       return fn.apply(this, args);
     } catch (error) {
-      console.warn(`DuxWind: Error in ${context}:`, error);
+      console.warn(`PostWind: Error in ${context}:`, error);
       if (typeof fn.defaultValue !== 'undefined') {
         return fn.defaultValue;
       }

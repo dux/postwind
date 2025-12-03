@@ -2,7 +2,7 @@
 import { describe, test, expect } from 'bun:test';
 import { generateStyles, processClass, expandClass } from './styler.js';
 
-describe('DuxWind Styler - Standalone CSS Generation', () => {
+describe('PostWind Styler - Standalone CSS Generation', () => {
 
   test('Basic class generation: p-4 → padding: 16px', () => {
     const styles = generateStyles('p-4');

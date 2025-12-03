@@ -1,10 +1,10 @@
-# DuxWind
+# PostWind
 
 Real-time Tailwind-like CSS generator with shortcuts, responsive utilities, and modern features.
 
-## Why DuxWind?
+## Why PostWind?
 
-DuxWind was created to bridge the gap between Tailwind CSS's powerful utility-first philosophy and the need for rapid development.
+PostWind was created to bridge the gap between Tailwind CSS's powerful utility-first philosophy and the need for rapid development.
 
 **Key Motivations:**
 - **Zero-friction setup** - Drop in a single script tag and start building
@@ -14,7 +14,7 @@ DuxWind was created to bridge the gap between Tailwind CSS's powerful utility-fi
 - **Built-in shortcuts system** - Create reusable component classes without additional tooling
 - **Complete solution** - CSS reset, utilities, visibility, container queries and animations included out of the box
 
-DuxWind maintains full compatibility with Tailwind's core concepts while adding conveniences that make utility-first CSS more accessible to developers at every level—meaning existing Tailwind knowledge (and almost every class name) works out of the box.
+PostWind maintains full compatibility with Tailwind's core concepts while adding conveniences that make utility-first CSS more accessible to developers at every level—meaning existing Tailwind knowledge (and almost every class name) works out of the box.
 
 ### Compatible + better than stock Tailwind
 
@@ -29,7 +29,7 @@ DuxWind maintains full compatibility with Tailwind's core concepts while adding 
 - **🚀 Real-time CSS generation** - Styles are generated as you use classes
 - **🎯 100% Tailwind compatibility** - Drop-in replacement for the utility, pseudo, and responsive syntax you already know
 - **📱 Responsive utilities** - Multiple breakpoint syntaxes
-- **⚡ Custom shortcuts & overrides** - Use `DuxWind.define()` to register shortcuts or keyword utilities inline
+- **⚡ Custom shortcuts & overrides** - Use `PostWind.define()` to register shortcuts or keyword utilities inline
 - **🎨 Arbitrary values** - Use any CSS value with bracket notation
 - **🔧 Configurable** - Customize properties, breakpoints, and keywords
 - **🐛 Debug mode** - Track original classes during development
@@ -46,15 +46,15 @@ DuxWind maintains full compatibility with Tailwind's core concepts while adding 
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/duxwind@latest/dist/lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/postwind@latest/dist/lib.min.js"></script>
     <script>
         // Default configuration auto-loads - just initialize!
-        DuxWind.init();
+        PostWind.init();
     </script>
 </head>
 <body>
     <div class="p-4 bg-blue-500 text-white rounded">
-        Hello DuxWind! 100+ utilities ready to use.
+        Hello PostWind! 100+ utilities ready to use.
     </div>
 </body>
 </html>
@@ -65,11 +65,11 @@ DuxWind maintains full compatibility with Tailwind's core concepts while adding 
 <!DOCTYPE html>
 <html>
 <head>
-    <script src="https://cdn.jsdelivr.net/npm/duxwind@latest/dist/lib.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/postwind@latest/dist/lib.min.js"></script>
     <script>
-        // DuxWind ships with `m`/`t`/`d` (and mobile/tablet/desktop) breakpoints preloaded.
+        // PostWind ships with `m`/`t`/`d` (and mobile/tablet/desktop) breakpoints preloaded.
         // Override them via init if you need a different map.
-        DuxWind.init({
+        PostWind.init({
             debug: true,
             breakpoints: {
                 'm': '(max-width: 768px)',    // Mobile
@@ -115,7 +115,7 @@ DuxWind maintains full compatibility with Tailwind's core concepts while adding 
 ### Basic Setup
 
 **Automatic Configuration Loading:**
-DuxWind automatically loads a complete default configuration including:
+PostWind automatically loads a complete default configuration including:
 - 100+ CSS properties (padding, margin, width, height, colors, etc.)
 - 200+ keyword classes (flex, grid, rounded, shadows, animations, etc.)
 - Mobile/desktop breakpoints
@@ -123,44 +123,44 @@ DuxWind automatically loads a complete default configuration including:
 
 ```javascript
 // ✅ Minimal setup - everything auto-loaded with CSS reset
-DuxWind.init();
+PostWind.init();
 
 // ✅ With options
-DuxWind.init({
+PostWind.init({
     debug: true,        // Enable debug mode (auto-detects dev ports)
     reset: true,        // Apply CSS reset automatically (default: true)
     clearCache: true    // Clear processed classes cache (default: true)
 });
 
 // 🔧 Disable CSS reset if not wanted
-DuxWind.init({ reset: false });
+PostWind.init({ reset: false });
 
 // 🔧 Optional: Manual CSS reset
-DuxWind.resetCss();
+PostWind.resetCss();
 
 // 🔄 Optional: Reset to default config (rarely needed)
-DuxWind.loadDefaultConfig();
+PostWind.loadDefaultConfig();
 ```
 
-`DuxWind.init` also accepts inline helpers:
+`PostWind.init` also accepts inline helpers:
 
-- `define`: object map, array of maps, or `[name, style]` tuples passed straight to `DuxWind.define`
-- `preload`: string or array of whitespace-delimited class lists processed immediately (same as calling `DuxWind.preload` manually)
+- `define`: object map, array of maps, or `[name, style]` tuples passed straight to `PostWind.define`
+- `preload`: string or array of whitespace-delimited class lists processed immediately (same as calling `PostWind.preload` manually)
 
 **What's Auto-Loaded:**
 - **100+ CSS Properties:** `p-4` (padding), `m-8` (margin), `w-full` (width), `text-lg` (font-size), `bg-blue-500` (background), etc.
 - **200+ Keyword Classes:** `flex`, `grid`, `rounded`, `shadow-lg`, `animate-spin`, `transition`, `cursor-pointer`, etc.
-- **Responsive Breakpoints:** `m`/`t`/`d` plus friendly `mobile`/`tablet`/`desktop` aliases (override via `DuxWind.init`)
+- **Responsive Breakpoints:** `m`/`t`/`d` plus friendly `mobile`/`tablet`/`desktop` aliases (override via `PostWind.init`)
 - **All Pseudo-classes:** `hover:`, `focus:`, `active:`, `first:`, `last:`, `even:`, `odd:`, `disabled:`, `visible:`, etc.
 - **Animations & Transitions:** `animate-spin`, `animate-pulse`, `duration-300`, `ease-in-out`
 - **Layout Systems:** Flexbox, CSS Grid, positioning, spacing utilities
 
 ### Preloading Classes
 
-Need key utilities available before the first DOM mutation? Call `DuxWind.preload()` with a whitespace-delimited string (or array of strings) to expand every class and inject its CSS immediately:
+Need key utilities available before the first DOM mutation? Call `PostWind.preload()` with a whitespace-delimited string (or array of strings) to expand every class and inject its CSS immediately:
 
 ```javascript
-DuxWind.preload(`
+PostWind.preload(`
     btn btn-primary card
     p-4 bg-blue-500 text-white rounded hover:bg-blue-600
 `);
@@ -170,13 +170,13 @@ DuxWind.preload(`
 - Uses the same parser as runtime processing, so responsive prefixes, `@` notation, pipe syntax, shortcuts, and container queries all work
 - Safe to invoke multiple times; already-processed classes are skipped via caching
 
-Pair it with `DuxWind.define()` to warm up custom shortcuts before they ever appear in the DOM.
+Pair it with `PostWind.define()` to warm up custom shortcuts before they ever appear in the DOM.
 
-Prefer to keep everything in one place? Pass the same string via `DuxWind.init({ preload: '...' })` and combine with `define` to register and warm shortcuts in a single call.
+Prefer to keep everything in one place? Pass the same string via `PostWind.init({ preload: '...' })` and combine with `define` to register and warm shortcuts in a single call.
 
 ### Custom Breakpoints
 
-DuxWind ships with pragmatic defaults tailored for rapid prototyping:
+PostWind ships with pragmatic defaults tailored for rapid prototyping:
 
 | Prefix | Media Query |
 | ------ | ----------- |
@@ -188,7 +188,7 @@ Override them any time during initialization:
 
 ```javascript
 // Redefine breakpoints during initialization
-DuxWind.init({
+PostWind.init({
     breakpoints: {
         'm': '(max-width: 768px)',    // Mobile
         'd': '(min-width: 769px)'     // Desktop
@@ -196,25 +196,25 @@ DuxWind.init({
 });
 ```
 
-> ℹ️ Breakpoints must be supplied via `DuxWind.init({ breakpoints: { … } })`.
+> ℹ️ Breakpoints must be supplied via `PostWind.init({ breakpoints: { … } })`.
 
-### Custom Utilities & Shortcuts (`DuxWind.define`)
+### Custom Utilities & Shortcuts (`PostWind.define`)
 
-`DuxWind.define(name, style)` lets you override keyword utilities or register shortcuts without mutating `DuxWind.config` manually.
+`PostWind.define(name, style)` lets you override keyword utilities or register shortcuts without mutating `PostWind.config` manually.
 
 ```javascript
 // Keyword utility: pass a CSS string (needs ':' and ';')
-DuxWind.define('text-brand', 'color: #2563eb; font-weight: 600;');
+PostWind.define('text-brand', 'color: #2563eb; font-weight: 600;');
 
 // Keyword utility: pass an object map
-DuxWind.define('card-body', {
+PostWind.define('card-body', {
     display: 'flex',
     gap: '1.5rem',
     'align-items': 'center'
 });
 
 // Multiple entries; strings without semicolons stay shortcuts automatically
-DuxWind.define({
+PostWind.define({
     'btn': 'px-4 py-2 rounded font-medium transition duration-200 cursor-pointer border',
     'btn-primary': 'btn bg-blue-500 text-white border-blue-500 hover:bg-blue-600',
     'container': 'max-w-[1200px] mx-auto px-4'
@@ -224,13 +224,13 @@ DuxWind.define({
 - **Strings containing both `:` _and_ `;`** are treated as CSS declarations (keyword utilities).
 - **Strings missing `;`** are treated as space-delimited class lists (shortcuts).
 - **Objects** convert each key/value pair to `property: value`.
-- **Tip:** When passing CSS as a string, end each declaration with a semicolon (or pass an object map) so DuxWind can detect it as CSS.
+- **Tip:** When passing CSS as a string, end each declaration with a semicolon (or pass an object map) so PostWind can detect it as CSS.
 
-> `DuxWind.shortcut()` still works, but `DuxWind.define()` covers both use cases through a single helper.
+> `PostWind.shortcut()` still works, but `PostWind.define()` covers both use cases through a single helper.
 
 ## Responsive Utilities
 
-DuxWind supports multiple syntaxes for responsive design:
+PostWind supports multiple syntaxes for responsive design:
 
 ### Traditional Breakpoint Syntax
 ```html
@@ -285,8 +285,8 @@ Need container-style logic without waiting for browser support? Use inline class
 **Key details:**
 - Syntax follows `max-<pixels>:<class>` or `min-<pixels>:<class>` (px units only; omit `-w-`).
 - The payload must be a single class token (e.g., `flex-col`, `gap-4`, `d:text-lg`).
-- DuxWind attaches a `ResizeObserver` per element, adds the payload class while the condition is true, and removes it once the condition flips or the node leaves the DOM.
-- If `ResizeObserver` is unavailable, DuxWind logs a warning and simply ignores the inline container classes (your layout still renders normally).
+- PostWind attaches a `ResizeObserver` per element, adds the payload class while the condition is true, and removes it once the condition flips or the node leaves the DOM.
+- If `ResizeObserver` is unavailable, PostWind logs a warning and simply ignores the inline container classes (your layout still renders normally).
 
 This approach gives you container-query ergonomics directly in markup, perfect for cards, dashboard widgets, or any component that rearranges itself based on its own width rather than the viewport.
 
@@ -394,7 +394,7 @@ Define reusable combinations:
 ```html
 <!-- Define shortcuts -->
 <script>
-DuxWind.define({
+PostWind.define({
     'btn': 'px-4 py-2 rounded font-medium transition-all duration-200 cursor-pointer border',
     'btn-primary': 'btn bg-blue-500 text-white border-blue-500 hover:bg-blue-600',
     'card': 'bg-white rounded-lg border p-6 shadow-sm'
@@ -440,7 +440,7 @@ DuxWind.define({
 
 ## Scroll-Triggered Animations (visible:)
 
-DuxWind includes a powerful `visible:` pseudo-class that triggers animations when elements enter the viewport:
+PostWind includes a powerful `visible:` pseudo-class that triggers animations when elements enter the viewport:
 
 ```html
 <!-- Fade in when visible -->
@@ -479,7 +479,7 @@ DuxWind includes a powerful `visible:` pseudo-class that triggers animations whe
 - **Intersection Observer**: Uses native browser API for performance
 - **70% threshold**: Triggers when 70% of element is visible
 - **Bidirectional**: Animations reverse when scrolling back up
-- **No JavaScript needed**: Just add classes, DuxWind handles the rest
+- **No JavaScript needed**: Just add classes, PostWind handles the rest
 - **Combines with any utility**: Works with transforms, opacity, colors, etc.
 
 ## Debug Mode
@@ -488,7 +488,7 @@ Debug mode helps track class expansions:
 
 ```javascript
 // Enable debug (auto-enabled for development ports > 2000)
-DuxWind.init({ debug: true });
+PostWind.init({ debug: true });
 ```
 
 ```html
@@ -505,7 +505,7 @@ DuxWind.init({ debug: true });
 Add custom CSS property mappings:
 
 ```javascript
-DuxWind.config.properties = {
+PostWind.config.properties = {
     'fs': 'font-size',           // fs-16 -> font-size: 64px
     'bg': 'background-color',    // bg-red -> background-color: red
     'w': 'width',               // w-10 -> width: 40px
@@ -513,31 +513,31 @@ DuxWind.config.properties = {
 ```
 
 ### Keywords
-Define keyword classes (or override built-ins) via `DuxWind.define` or by mutating the config directly:
+Define keyword classes (or override built-ins) via `PostWind.define` or by mutating the config directly:
 
 ```javascript
 // Quick helper
-DuxWind.define('rounded-3xl', 'border-radius: 1.5rem;');
+PostWind.define('rounded-3xl', 'border-radius: 1.5rem;');
 
 // Batch definitions
-DuxWind.define({
+PostWind.define({
     'flex': 'display: flex;',
     'hidden': 'display: none;',
     'text-center': 'text-align: center;'
 });
 
 // Direct config access is still available
-DuxWind.config.keywords['btn'] = 'px-4 py-2 rounded border';
+PostWind.config.keywords['btn'] = 'px-4 py-2 rounded border';
 
 // Tip: pass a class list (no ":") to auto-create a shortcut
-DuxWind.define('btn', 'px-4 py-2 rounded shadow-sm');
+PostWind.define('btn', 'px-4 py-2 rounded shadow-sm');
 ```
 
 ### Pixel Multiplier
 Customize the default pixel multiplication:
 
 ```javascript
-DuxWind.config.pixelMultiplier = 4;  // p-4 = 16px (4 * 4)
+PostWind.config.pixelMultiplier = 4;  // p-4 = 16px (4 * 4)
 ```
 
 ## API Reference
@@ -546,12 +546,12 @@ DuxWind.config.pixelMultiplier = 4;  // p-4 = 16px (4 * 4)
 
 ```javascript
 // Core methods
-DuxWind.init(options)           // Initialize with options
-DuxWind.loadClass(className)    // Process a single class
-DuxWind.resetCss()             // Apply modern CSS reset
-DuxWind.loadDefaultConfig()    // Reset to default config (auto-loaded)
-DuxWind.generateDoc()          // Generate documentation HTML
-DuxWind.define(name, style)    // Add or override keyword utilities
+PostWind.init(options)           // Initialize with options
+PostWind.loadClass(className)    // Process a single class
+PostWind.resetCss()             // Apply modern CSS reset
+PostWind.loadDefaultConfig()    // Reset to default config (auto-loaded)
+PostWind.generateDoc()          // Generate documentation HTML
+PostWind.define(name, style)    // Add or override keyword utilities
 
 // Init options
 {
@@ -564,7 +564,7 @@ DuxWind.define(name, style)    // Add or override keyword utilities
 ### Global Configuration
 
 ```javascript
-DuxWind.config = {
+PostWind.config = {
     breakpoints: {
         'm': '(max-width: 768px)',
         'd': '(min-width: 769px)'
@@ -921,7 +921,7 @@ DuxWind.config = {
 ```javascript
 // Complete button and component system
 // (Example uses built-in `m`/`t`/`d` breakpoints)
-DuxWind.define({
+PostWind.define({
     // Base components
     'btn': 'px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer border focus:ring-4',
     'card': 'bg-white rounded-lg border border-gray-200 shadow-sm p-6',
@@ -962,11 +962,11 @@ DuxWind.define({
 });
 ```
 
-## DuxWind vs Tailwind CSS
+## PostWind vs Tailwind CSS
 
 ### Philosophy & Architecture
 
-**DuxWind**
+**PostWind**
 - **Runtime CSS generation** - CSS is generated on-demand as classes are used
 - **Zero build step** - Works directly in the browser without tooling
 - **Dynamic processing** - Classes are expanded and transformed in real-time
@@ -982,7 +982,7 @@ DuxWind.define({
 
 ### Core Features Comparison
 
-| Feature Category | DuxWind | Tailwind CSS |
+| Feature Category | PostWind | Tailwind CSS |
 |-----------------|---------|--------------|
 | **Spacing** (p-, m-, px-, etc.) | ✅ Full support | ✅ Full support |
 | **Sizing** (w-, h-, min-, max-) | ✅ Full support | ✅ Full support |
@@ -1002,7 +1002,7 @@ DuxWind.define({
 | **Filters** | ⚡ Basic support | ✅ Full support |
 | **Backdrop Filters** | ⚡ Partial | ✅ Full support |
 
-### Unique DuxWind Features
+### Unique PostWind Features
 
 **1. Pipe Notation for Responsive Design**
 ```html
@@ -1025,17 +1025,17 @@ DuxWind.define({
 **3. Runtime Configuration**
 ```javascript
 // Change settings without rebuilding
-DuxWind.config.pixelMultiplier = 5; // p-4 = 20px now
+PostWind.config.pixelMultiplier = 5; // p-4 = 20px now
 
 // Breakpoints must be provided during initialization
-DuxWind.init({
+PostWind.init({
     breakpoints: {
         t: '(max-width: 1024px)'
     }
 });
 
 // Dynamic shortcut creation
-DuxWind.define('hero', 'text-4xl font-bold mb-8');
+PostWind.define('hero', 'text-4xl font-bold mb-8');
 ```
 
 **4. CSS Override Intelligence**
@@ -1060,7 +1060,7 @@ DuxWind.define('hero', 'text-4xl font-bold mb-8');
 **7. Body Class Viewport Detection**
 ```javascript
 // Automatic viewport-based body classes
-DuxWind.init({ body: true });
+PostWind.init({ body: true });
 // <body class="mobile"> or <body class="desktop">
 ```
 
@@ -1079,7 +1079,7 @@ DuxWind.init({ body: true });
 
 ## Browser Support
 
-DuxWind works in all modern browsers that support:
+PostWind works in all modern browsers that support:
 - ES6+ JavaScript
 - CSS Custom Properties
 - MutationObserver API

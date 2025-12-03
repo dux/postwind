@@ -1,10 +1,10 @@
 import { describe, test, expect, beforeEach } from 'bun:test';
 
-// Mock DOM environment - must be set before importing DuxWind
+// Mock DOM environment - must be set before importing PostWind
 global.window = {
   innerWidth: 1024,
-  DuxWind: null,
-  DuxWindDebug: false,
+  PostWind: null,
+  PostWindDebug: false,
   location: {
     port: 3000
   }
@@ -19,7 +19,7 @@ global.MutationObserver = class MutationObserver {
 };
 
 // Shared CSS capture store so multiple test suites see the same injected rules
-const CSS_STORE_KEY = '__duxwindCSSStore';
+const CSS_STORE_KEY = '__postwindCSSStore';
 const cssStore = global[CSS_STORE_KEY] || { value: '' };
 global[CSS_STORE_KEY] = cssStore;
 
@@ -46,24 +46,24 @@ global.document = {
   addEventListener: () => {}
 };
 
-// Import DuxWind after setting up mocks. When the module is cached between
+// Import PostWind after setting up mocks. When the module is cached between
 // files we still need to reattach the default export onto the mocked window.
-const { default: DuxWind } = await import('../src/lib.js');
-global.window.DuxWind = DuxWind;
+const { default: PostWind } = await import('../src/lib.js');
+global.window.PostWind = PostWind;
 
-describe('DuxWind Test Suite - Input/Output Examples', () => {
+describe('PostWind Test Suite - Input/Output Examples', () => {
   beforeEach(() => {
     // Reset CSS capture and configuration
     resetCapturedCSS();
-    DuxWind.loadDefaultConfig();
-    DuxWind.init({ debug: false, clearCache: true });
+    PostWind.loadDefaultConfig();
+    PostWind.init({ debug: false, clearCache: true });
   });
 
   // Helper function to test class processing and capture output
   function testClassWithOutput(className, expectedInCSS = []) {
     const initialCSS = getCapturedCSS();
     try {
-      DuxWind.loadClass(className);
+      PostWind.loadClass(className);
       const newCSS = getCapturedCSS().substring(initialCSS.length);
 
       // Check if expected strings are in the generated CSS
@@ -78,23 +78,23 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
   }
 
   function reinitWithBreakpoints(breakpoints) {
-    DuxWind.init({ debug: false, clearCache: true, breakpoints });
+    PostWind.init({ debug: false, clearCache: true, breakpoints });
   }
 
   describe('Configuration Examples', () => {
     test('loads default configuration with expected values', () => {
       // Input: Default configuration
-      expect(DuxWind.config).toBeDefined();
+      expect(PostWind.config).toBeDefined();
 
       // Expected Output: Default values
-      expect(DuxWind.config.pixelMultiplier).toBe(4); // 1 unit = 4px
-      expect(DuxWind.config.breakpoints).toBeDefined();
-      expect(DuxWind.config.breakpoints.m).toBe('(max-width: 768px)');
-      expect(DuxWind.config.breakpoints.t).toBe('(min-width: 769px) and (max-width: 1024px)');
-      expect(DuxWind.config.breakpoints.d).toBe('(min-width: 1025px)');
-      expect(DuxWind.config.breakpoints.mobile).toBe('(max-width: 768px)');
-      expect(DuxWind.config.breakpoints.desktop).toBe('(min-width: 1025px)');
-      expect(DuxWind.config.shortcuts).toEqual({});
+      expect(PostWind.config.pixelMultiplier).toBe(4); // 1 unit = 4px
+      expect(PostWind.config.breakpoints).toBeDefined();
+      expect(PostWind.config.breakpoints.m).toBe('(max-width: 768px)');
+      expect(PostWind.config.breakpoints.t).toBe('(min-width: 769px) and (max-width: 1024px)');
+      expect(PostWind.config.breakpoints.d).toBe('(min-width: 1025px)');
+      expect(PostWind.config.breakpoints.mobile).toBe('(max-width: 768px)');
+      expect(PostWind.config.breakpoints.desktop).toBe('(min-width: 1025px)');
+      expect(PostWind.config.shortcuts).toEqual({});
     });
 
     test('custom breakpoints: input vs output', () => {
@@ -108,7 +108,7 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
 
       // Expected Output: Overrides applied and available
       Object.entries(inputBreakpoints).forEach(([key, value]) => {
-        expect(DuxWind.config.breakpoints[key]).toBe(value);
+        expect(PostWind.config.breakpoints[key]).toBe(value);
       });
     });
 
@@ -120,12 +120,12 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
         'card': 'p-6 bg-white shadow rounded-lg border'
       };
 
-      DuxWind.config.shortcuts = inputShortcuts;
+      PostWind.config.shortcuts = inputShortcuts;
 
       // Expected Output: Exact shortcut mapping
-      expect(DuxWind.config.shortcuts.btn).toBe('px-4 py-2 rounded border cursor-pointer');
-      expect(DuxWind.config.shortcuts['btn-primary']).toBe('btn bg-blue-500 text-white hover:bg-blue-600');
-      expect(DuxWind.config.shortcuts.card).toBe('p-6 bg-white shadow rounded-lg border');
+      expect(PostWind.config.shortcuts.btn).toBe('px-4 py-2 rounded border cursor-pointer');
+      expect(PostWind.config.shortcuts['btn-primary']).toBe('btn bg-blue-500 text-white hover:bg-blue-600');
+      expect(PostWind.config.shortcuts.card).toBe('p-6 bg-white shadow rounded-lg border');
     });
 
     test('default config includes Tailwind border radius keywords', () => {
@@ -142,12 +142,12 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
       };
 
       Object.entries(radiusMap).forEach(([keyword, expectedValue]) => {
-        expect(DuxWind.config.keywords[keyword]).toContain(expectedValue);
+        expect(PostWind.config.keywords[keyword]).toContain(expectedValue);
       });
 
-      expect(DuxWind.config.keywords['rounded-tl-2xl']).toContain('border-top-left-radius: 1rem');
-      expect(DuxWind.config.keywords['rounded-s-full']).toContain('border-start-start-radius: 9999px');
-      expect(DuxWind.config.keywords['rounded-t-none']).toContain('border-top-left-radius: 0px');
+      expect(PostWind.config.keywords['rounded-tl-2xl']).toContain('border-top-left-radius: 1rem');
+      expect(PostWind.config.keywords['rounded-s-full']).toContain('border-start-start-radius: 9999px');
+      expect(PostWind.config.keywords['rounded-t-none']).toContain('border-top-left-radius: 0px');
     });
 
     test('init accepts breakpoint overrides object', () => {
@@ -157,17 +157,17 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
         'd': '(min-width: 641px)'
       };
 
-      DuxWind.init({ debug: false, breakpoints: overrides, clearCache: true });
+      PostWind.init({ debug: false, breakpoints: overrides, clearCache: true });
 
-      expect(DuxWind.config.breakpoints.s).toBe('(max-width: 480px)');
-      expect(DuxWind.config.breakpoints.m).toBe('(max-width: 640px)');
-      expect(DuxWind.config.breakpoints.d).toBe('(min-width: 641px)');
+      expect(PostWind.config.breakpoints.s).toBe('(max-width: 480px)');
+      expect(PostWind.config.breakpoints.m).toBe('(max-width: 640px)');
+      expect(PostWind.config.breakpoints.d).toBe('(min-width: 641px)');
     });
 
     test('init accepts inline define option', () => {
       const shortcutName = 'btn-init';
 
-      DuxWind.init({
+      PostWind.init({
         debug: false,
         clearCache: true,
         define: {
@@ -175,14 +175,14 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
         }
       });
 
-      expect(DuxWind.config.shortcuts[shortcutName]).toBe('px-3 py-2 rounded bg-blue-500 text-white');
+      expect(PostWind.config.shortcuts[shortcutName]).toBe('px-3 py-2 rounded bg-blue-500 text-white');
     });
 
     test('init preloads classes before DOM scan', () => {
       resetCapturedCSS();
       const cssBefore = getCapturedCSS().length;
 
-      DuxWind.init({
+      PostWind.init({
         debug: false,
         clearCache: true,
         preload: 'text-red-500'
@@ -193,20 +193,20 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
     });
 
     test('registering shortcuts via object helper', () => {
-      const success = DuxWind.shortcut({
+      const success = PostWind.shortcut({
         'btn': 'px-2 py-1 rounded',
         'btn-accent': 'btn bg-blue-500 text-white'
       });
 
       expect(success).toBe(true);
-      expect(DuxWind.config.shortcuts.btn).toBe('px-2 py-1 rounded');
-      expect(DuxWind.config.shortcuts['btn-accent']).toBe('btn bg-blue-500 text-white');
+      expect(PostWind.config.shortcuts.btn).toBe('px-2 py-1 rounded');
+      expect(PostWind.config.shortcuts['btn-accent']).toBe('btn bg-blue-500 text-white');
     });
 
     test('shortcuts can override keyword classes', () => {
       const initialCSSLength = getCapturedCSS().length;
 
-      const success = DuxWind.shortcut({
+      const success = PostWind.shortcut({
         'container': 'px-2 py-1 rounded'
       });
 
@@ -214,40 +214,40 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
       const newCSS = getCapturedCSS().substring(initialCSSLength);
       expect(newCSS).toContain('padding-left: 8px');
       expect(newCSS).toContain('padding-right: 8px');
-      expect(DuxWind.config.shortcuts.container).toBe('px-2 py-1 rounded');
+      expect(PostWind.config.shortcuts.container).toBe('px-2 py-1 rounded');
     });
 
     test('define helper registers keyword utilities', () => {
       const cssBeforeDefine = getCapturedCSS().length;
-      const success = DuxWind.define('rounded-3xl', 'border-radius: 2rem;');
+      const success = PostWind.define('rounded-3xl', 'border-radius: 2rem;');
       expect(success).toBe(true);
-      expect(DuxWind.config.keywords['rounded-3xl']).toBe('border-radius: 2rem;');
+      expect(PostWind.config.keywords['rounded-3xl']).toBe('border-radius: 2rem;');
 
       const defineCSS = getCapturedCSS().substring(cssBeforeDefine);
       expect(defineCSS).toContain('border-radius: 2rem;');
 
       const initialCSSLength = getCapturedCSS().length;
-      DuxWind.loadClass('rounded-3xl');
+      PostWind.loadClass('rounded-3xl');
       const newCSS = getCapturedCSS().substring(initialCSSLength);
       expect(newCSS).toBe('');
     });
 
     test('define helper requires semicolons for CSS strings', () => {
       const cssLikeString = 'color: #2563eb';
-      const success = DuxWind.define('text-brand', cssLikeString);
+      const success = PostWind.define('text-brand', cssLikeString);
       expect(success).toBe(true);
-      expect(DuxWind.config.shortcuts['text-brand']).toBe(cssLikeString);
-      expect(DuxWind.config.keywords['text-brand']).toBeUndefined();
+      expect(PostWind.config.shortcuts['text-brand']).toBe(cssLikeString);
+      expect(PostWind.config.keywords['text-brand']).toBeUndefined();
     });
 
     test('define helper accepts object maps', () => {
       const cssBeforeDefine = getCapturedCSS().length;
-      const success = DuxWind.define({
+      const success = PostWind.define({
         'flex-center': 'display: flex; justify-content: center; align-items: center;'
       });
 
       expect(success).toBe(true);
-      expect(DuxWind.config.keywords['flex-center']).toContain('display: flex');
+      expect(PostWind.config.keywords['flex-center']).toContain('display: flex');
 
       const defineCSS = getCapturedCSS().substring(cssBeforeDefine);
       expect(defineCSS).toContain('display: flex');
@@ -260,27 +260,27 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
 
     test('define helper routes class lists to shortcuts', () => {
       const beforeDefineCSS = getCapturedCSS().length;
-      const success = DuxWind.define('btn-demo', 'px-4 py-2 rounded shadow-sm');
+      const success = PostWind.define('btn-demo', 'px-4 py-2 rounded shadow-sm');
       expect(success).toBe(true);
-      expect(DuxWind.config.shortcuts['btn-demo']).toBe('px-4 py-2 rounded shadow-sm');
-      expect(DuxWind.config.keywords['btn-demo']).toBeUndefined();
+      expect(PostWind.config.shortcuts['btn-demo']).toBe('px-4 py-2 rounded shadow-sm');
+      expect(PostWind.config.keywords['btn-demo']).toBeUndefined();
 
       const shortcutCSS = getCapturedCSS().substring(beforeDefineCSS);
       expect(shortcutCSS).toContain('padding-left: 16px');
       expect(shortcutCSS).toContain('border-radius');
 
       const beforeLoad = getCapturedCSS().length;
-      DuxWind.loadClass('btn-demo');
+      PostWind.loadClass('btn-demo');
       const newCSS = getCapturedCSS().substring(beforeLoad);
       expect(newCSS).toBe('');
     });
 
     test('define helper treats responsive class lists as shortcuts', () => {
       const responsiveClasses = 'm:text-24px d:text-36px font-semibold';
-      const success = DuxWind.define('hero-title', responsiveClasses);
+      const success = PostWind.define('hero-title', responsiveClasses);
       expect(success).toBe(true);
-      expect(DuxWind.config.shortcuts['hero-title']).toBe(responsiveClasses);
-      expect(DuxWind.config.keywords['hero-title']).toBeUndefined();
+      expect(PostWind.config.shortcuts['hero-title']).toBe(responsiveClasses);
+      expect(PostWind.config.keywords['hero-title']).toBeUndefined();
     });
 
     test('define helper suppresses keyword override warning when converting to shortcut', () => {
@@ -289,7 +289,7 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
       console.warn = (...args) => warnings.push(args.join(' '));
 
       try {
-        const success = DuxWind.define('container', 'px-2 py-1 rounded');
+        const success = PostWind.define('container', 'px-2 py-1 rounded');
         expect(success).toBe(true);
       } finally {
         console.warn = originalWarn;
@@ -297,8 +297,8 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
 
       const conflictWarning = warnings.find(message => message.includes('shortcut "container" overrides'));
       expect(conflictWarning).toBeUndefined();
-      expect(DuxWind.config.shortcuts.container).toBe('px-2 py-1 rounded');
-      expect(DuxWind.config.keywords.container).toBeUndefined();
+      expect(PostWind.config.shortcuts.container).toBe('px-2 py-1 rounded');
+      expect(PostWind.config.keywords.container).toBeUndefined();
     });
   });
 
@@ -662,7 +662,7 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
         'padding: 80px'
       ]);
       expect(colonOutput.success).toBe(true);
-      expect(Object.keys(DuxWind.config.breakpoints).slice(0, 2)).toEqual(['m', 'd']);
+      expect(Object.keys(PostWind.config.breakpoints).slice(0, 2)).toEqual(['m', 'd']);
       expect(colonOutput.css).not.toContain('(min-width: 769px) and (max-width: 1024px)');
 
       // Direct responsive classes still generate the expected CSS
@@ -695,56 +695,56 @@ describe('DuxWind Test Suite - Input/Output Examples', () => {
   describe('Public API: Method Inputs → Outputs', () => {
     test('loadDefaultConfig() → resets configuration to defaults', () => {
       // Input: Custom configuration
-      DuxWind.config = { custom: 'value', pixelMultiplier: 8 };
+      PostWind.config = { custom: 'value', pixelMultiplier: 8 };
 
       // Action: loadDefaultConfig()
-      DuxWind.loadDefaultConfig();
+      PostWind.loadDefaultConfig();
 
       // Expected Output: Default configuration restored
-      expect(DuxWind.config.pixelMultiplier).toBe(4);
-      expect(DuxWind.config.breakpoints).toBeDefined();
-      expect(DuxWind.config.custom).toBeUndefined();
+      expect(PostWind.config.pixelMultiplier).toBe(4);
+      expect(PostWind.config.breakpoints).toBeDefined();
+      expect(PostWind.config.custom).toBeUndefined();
     });
 
     test('generateDoc() → HTML documentation string', () => {
       // Input: generateDoc() call
-      const doc = DuxWind.generateDoc();
+      const doc = PostWind.generateDoc();
 
       // Expected Output: HTML string with documentation
       expect(typeof doc).toBe('string');
       expect(doc.length).toBeGreaterThan(100);
-      expect(doc).toContain('DuxWind');
+      expect(doc).toContain('PostWind');
       expect(doc).toContain('<div'); // HTML content
       expect(doc).toContain('Documentation'); // Description
     });
 
     test('config property: get/set operations', () => {
       // Input: Set custom pixel multiplier
-      const originalMultiplier = DuxWind.config.pixelMultiplier;
-      DuxWind.config.pixelMultiplier = 8;
+      const originalMultiplier = PostWind.config.pixelMultiplier;
+      PostWind.config.pixelMultiplier = 8;
 
       // Expected Output: Value updated
-      expect(DuxWind.config.pixelMultiplier).toBe(8);
+      expect(PostWind.config.pixelMultiplier).toBe(8);
 
       // Cleanup
-      DuxWind.config.pixelMultiplier = originalMultiplier;
+      PostWind.config.pixelMultiplier = originalMultiplier;
     });
   });
 
   describe('Error Handling: Invalid Inputs → Graceful Handling', () => {
     test('invalid class names → no errors thrown', () => {
       // Input: Empty string
-      expect(() => DuxWind.loadClass('')).not.toThrow();
+      expect(() => PostWind.loadClass('')).not.toThrow();
 
       // Input: Invalid format
-      expect(() => DuxWind.loadClass('123-invalid-class')).not.toThrow();
+      expect(() => PostWind.loadClass('123-invalid-class')).not.toThrow();
 
       // Input: Unknown property
-      expect(() => DuxWind.loadClass('unknown-property-name')).not.toThrow();
+      expect(() => PostWind.loadClass('unknown-property-name')).not.toThrow();
 
       // Input: Malformed syntax
-      expect(() => DuxWind.loadClass('p--4')).not.toThrow();
-      expect(() => DuxWind.loadClass('p-')).not.toThrow();
+      expect(() => PostWind.loadClass('p--4')).not.toThrow();
+      expect(() => PostWind.loadClass('p-')).not.toThrow();
     });
 
     test('special characters → handled correctly', () => {

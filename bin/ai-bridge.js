@@ -24,7 +24,7 @@ const server = http.createServer((req, res) => {
 
   if (pathname === '/') {
     res.writeHead(200, { 'Content-Type': 'text/plain' })
-    res.end(`DuxWind Bridge Server
+    res.end(`PostWind Bridge Server
 
 Usage:
   GET /              - This help message
@@ -46,11 +46,11 @@ Connected clients: ${clients.size}
     res.end(`
 (function() {
   const ws = new WebSocket('ws://localhost:${PORT}')
-  
+
   ws.onopen = function() {
-    console.log('DuxWind Bridge: Connected to server')
+    console.log('PostWind Bridge: Connected to server')
   }
-  
+
   ws.onmessage = function(event) {
     try {
       const data = JSON.parse(event.data)
@@ -99,16 +99,16 @@ Connected clients: ${clients.size}
         }
       }
     } catch (err) {
-      console.error('DuxWind Bridge: Error processing message:', err)
+      console.error('PostWind Bridge: Error processing message:', err)
     }
   }
-  
+
   ws.onclose = function() {
-    console.log('DuxWind Bridge: Disconnected from server')
+    console.log('PostWind Bridge: Disconnected from server')
   }
-  
+
   ws.onerror = function(error) {
-    console.error('DuxWind Bridge: WebSocket error:', error)
+    console.error('PostWind Bridge: WebSocket error:', error)
   }
 })()
 `)
@@ -118,9 +118,9 @@ Connected clients: ${clients.size}
   if (pathname === '/ask' && query.js) {
     const jsCode = decodeURIComponent(query.js)
     const requestId = Date.now().toString()
-    
+
     console.log(`[ASK] ${jsCode}`)
-    
+
     if (clients.size === 0) {
       res.writeHead(200, { 'Content-Type': 'application/json' })
       res.end(JSON.stringify({ error: 'No clients connected' }))
@@ -143,7 +143,7 @@ Connected clients: ${clients.size}
           clearTimeout(timeout)
           responded = true
           ws.off('message', resultHandler(ws))
-          
+
           res.writeHead(200, { 'Content-Type': 'application/json' })
           if (data.error) {
             res.end(JSON.stringify({ error: data.error }))
@@ -164,7 +164,7 @@ Connected clients: ${clients.size}
         code: jsCode
       }))
     })
-    
+
     return
   }
 
@@ -177,12 +177,12 @@ const wss = new WebSocketServer({ server })
 wss.on('connection', (ws) => {
   clients.add(ws)
   console.log(`Client connected. Total clients: ${clients.size}`)
-  
+
   ws.on('close', () => {
     clients.delete(ws)
     console.log(`Client disconnected. Total clients: ${clients.size}`)
   })
-  
+
   ws.on('error', (error) => {
     console.error('WebSocket error:', error)
     clients.delete(ws)
@@ -190,7 +190,7 @@ wss.on('connection', (ws) => {
 })
 
 server.listen(PORT, () => {
-  console.log(`DuxWind Bridge Server running on http://localhost:${PORT}`)
+  console.log(`PostWind Bridge Server running on http://localhost:${PORT}`)
   console.log(`Add to your HTML: <script src="http://localhost:${PORT}/client"></script>`)
   console.log(`Test with: http://localhost:${PORT}/ask?js=document.title`)
 })

@@ -1,7 +1,7 @@
-// DuxWind Configuration
+// PostWind Configuration
 
 /**
- * Constants used throughout DuxWind
+ * Constants used throughout PostWind
  */
 export const CONSTANTS = {
   DEFAULT_PIXEL_MULTIPLIER: 4,
@@ -1918,7 +1918,7 @@ export function createDefaultConfig() {
   // Validate the default configuration
   const validation = validateConfig(config);
   if (!validation.valid) {
-    console.warn('DuxWind: Default configuration validation errors:', validation.errors);
+    console.warn('PostWind: Default configuration validation errors:', validation.errors);
   }
 
   return config;

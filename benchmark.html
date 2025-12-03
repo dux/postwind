@@ -3,15 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>DuxWind Performance Benchmark</title>
+    <title>PostWind Performance Benchmark</title>
 </head>
 <body class="dw-body">
     <main class="dw-page">
         <header class="dw-hero">
             <p class="dw-eyebrow">Labs benchmark</p>
-            <h1 class="dw-hero-title">DuxWind vs Tailwind Performance</h1>
+            <h1 class="dw-hero-title">PostWind vs Tailwind Performance</h1>
             <p class="dw-hero-copy">
-                Quick synthetic tests that simulate typical DuxWind workloads. Run each suite
+                Quick synthetic tests that simulate typical PostWind workloads. Run each suite
                 individually or trigger all three to capture a holistic snapshot.
             </p>
             <div class="dw-hero-actions">
@@ -54,11 +54,11 @@
     </main>
 
     <script type="module">
-        import DuxWind from "./src/lib.js";
+        import PostWind from "./src/lib.js";
 
-        DuxWind.init();
+        PostWind.init();
 
-        DuxWind.define({
+        PostWind.define({
             'shadow-pill': 'box-shadow: 0 12px 24px rgba(37, 99, 235, 0.25);',
             'shadow-pill-soft': 'box-shadow: 0 10px 18px rgba(37, 99, 235, 0.12);',
             'shadow-card': 'box-shadow: 0 25px 45px rgba(15, 23, 42, 0.08);',
@@ -166,7 +166,7 @@
             setButtonBusy(button, true);
             const classList = generateClassList();
             const start = performance.now();
-            classList.forEach(cls => DuxWind.loadClass(cls));
+            classList.forEach(cls => PostWind.loadClass(cls));
             const duration = performance.now() - start;
             const average = duration / classList.length;
 
@@ -178,11 +178,11 @@
                     { label: 'Throughput', value: `${Math.round(1000 / average)} cls/sec` },
                 ],
                 comparison: [
-                    `DuxWind generated on-demand in ${formatter.format(duration)} ms`,
+                    `PostWind generated on-demand in ${formatter.format(duration)} ms`,
                     'Tailwind ships ~50-200 ms worth of CSS upfront',
                     'Ideal workflow depends on cache priming',
                 ],
-                winner: duration < 50 ? 'DuxWind (cold start)' : 'Tailwind (prebuilt)',
+                winner: duration < 50 ? 'PostWind (cold start)' : 'Tailwind (prebuilt)',
                 note: 'Synthetic micro-benchmark. Real projects may vary with caching + hydration.',
             });
 
@@ -208,7 +208,7 @@
 
             container.querySelectorAll('[class]').forEach(el => {
                 el.className.split(/\s+/).forEach(cls => {
-                    if (cls) DuxWind.loadClass(cls);
+                    if (cls) PostWind.loadClass(cls);
                 });
             });
 
@@ -223,11 +223,11 @@
                     { label: 'Observer cost', value: average < 1 ? 'Low' : 'Moderate' },
                 ],
                 comparison: [
-                    `DuxWind generated + applied in ${formatter.format(duration)} ms`,
+                    `PostWind generated + applied in ${formatter.format(duration)} ms`,
                     'Tailwind only applies classes (~5-20 ms)',
                     'Winner changes with DOM churn + caching',
                 ],
-                winner: duration < 20 ? 'DuxWind' : 'Tailwind',
+                winner: duration < 20 ? 'PostWind' : 'Tailwind',
                 note: 'Processing includes synthetic DOM creation overhead.',
             });
 
@@ -261,9 +261,9 @@
 
             const before = performance.memory.usedJSHeapSize;
             for (let i = 0; i < 500; i++) {
-                DuxWind.loadClass(`test-class-${i}`);
-                DuxWind.loadClass(`bg-color-${i}`);
-                DuxWind.loadClass(`p-${i % 20}`);
+                PostWind.loadClass(`test-class-${i}`);
+                PostWind.loadClass(`bg-color-${i}`);
+                PostWind.loadClass(`p-${i % 20}`);
             }
             const after = performance.memory.usedJSHeapSize;
             const deltaKB = (after - before) / 1024;
@@ -276,11 +276,11 @@
                     { label: 'Runtime', value: '< 5 ms' },
                 ],
                 comparison: [
-                    `DuxWind cache delta ~${formatter.format(deltaKB)} KB`,
+                    `PostWind cache delta ~${formatter.format(deltaKB)} KB`,
                     'Tailwind (purged) ships 5-15 KB upfront',
                     'Tailwind (full) ~3.5 MB of CSS',
                 ],
-                winner: deltaKB < 100 ? 'DuxWind cache' : 'Tailwind (purged)',
+                winner: deltaKB < 100 ? 'PostWind cache' : 'Tailwind (purged)',
                 note: 'Heap sampling is approximate; run multiple times for stability.',
             });
 

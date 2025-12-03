@@ -1,4 +1,4 @@
-// DuxWind Shortcuts - Shortcut Management and Expansion
+// PostWind Shortcuts - Shortcut Management and Expansion
 import { CONFIG } from './config.js';
 import { generateStyles } from './styler.js';
 import { safeWrapper, escapeSelector } from './utils.js';
@@ -55,7 +55,7 @@ export function addShortcut(name, classes) {
     CONFIG.shortcuts = {};
   }
   if (CONFIG.keywords?.[name]) {
-    console.warn(`DuxWind: shortcut "${name}" overrides existing keyword class`);
+    console.warn(`PostWind: shortcut "${name}" overrides existing keyword class`);
   }
   CONFIG.shortcuts[name] = classes;
   return true;

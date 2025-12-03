@@ -1,4 +1,4 @@
-// DuxWind - Real-time CSS Generator Core
+// PostWind - Real-time CSS Generator Core
 import { CONFIG, createDefaultConfig } from './config.js';
 import { processClass, expandClass } from './styler.js';
 import { addShortcut, isShortcut, CLASS_NAME_PATTERN } from './shortcuts.js';
@@ -56,7 +56,7 @@ function normalizeKeywordKey(key) {
 
 export function defineKeyword(nameOrEntries, style) {
   if (!nameOrEntries) {
-    console.warn('DuxWind.define requires a name or object map.');
+    console.warn('PostWind.define requires a name or object map.');
     return false;
   }
 
@@ -73,12 +73,12 @@ export function defineKeyword(nameOrEntries, style) {
 
   entries.forEach(([key, value]) => {
     if (!key || value == null) {
-      console.warn(`DuxWind.define skipped invalid definition for "${key}"`);
+      console.warn(`PostWind.define skipped invalid definition for "${key}"`);
       return;
     }
 
     if (CONFIG.shortcuts?.[key]) {
-      console.warn(`DuxWind.define: keyword "${key}" overrides existing shortcut definition.`);
+      console.warn(`PostWind.define: keyword "${key}" overrides existing shortcut definition.`);
     }
 
     if (typeof value === 'string') {
@@ -99,7 +99,7 @@ export function defineKeyword(nameOrEntries, style) {
 
     const cssString = formatKeywordStyle(value);
     if (!cssString) {
-      console.warn(`DuxWind.define: Unable to parse style for "${key}"`);
+      console.warn(`PostWind.define: Unable to parse style for "${key}"`);
       return;
     }
 
@@ -219,10 +219,10 @@ function injectCSS(css, target = 'utility') {
 function ensureUtilityStyleElement() {
   if (utilityStyleElement || typeof document === 'undefined') return;
 
-  utilityStyleElement = document.getElementById('duxwind');
+  utilityStyleElement = document.getElementById('postwind');
   if (!utilityStyleElement) {
     utilityStyleElement = document.createElement('style');
-    utilityStyleElement.id = 'duxwind';
+    utilityStyleElement.id = 'postwind';
     document.head.appendChild(utilityStyleElement);
     utilityStyleElement.textContent = getAnimationKeyframes();
   }
@@ -231,10 +231,10 @@ function ensureUtilityStyleElement() {
 function ensureShortcutStyleElement() {
   if (shortcutStyleElement || typeof document === 'undefined') return;
 
-  shortcutStyleElement = document.getElementById('duxwind-shortcuts');
+  shortcutStyleElement = document.getElementById('postwind-shortcuts');
   if (!shortcutStyleElement) {
     shortcutStyleElement = document.createElement('style');
-    shortcutStyleElement.id = 'duxwind-shortcuts';
+    shortcutStyleElement.id = 'postwind-shortcuts';
     document.head.appendChild(shortcutStyleElement);
   }
 }
@@ -275,7 +275,7 @@ export function init(options = {}) {
   debugMode = settings.debug;
 
   if (typeof window !== 'undefined') {
-    window.DuxWindDebug = debugMode;
+    window.PostWindDebug = debugMode;
   }
 
   if (settings.clearCache) {
@@ -322,7 +322,7 @@ function parseInitOptions(options) {
 
 function applyBreakpointOverrides(breakpointMap) {
   if (!isPlainObject(breakpointMap)) {
-    console.warn('DuxWind: init breakpoints must be provided as an object map.');
+    console.warn('PostWind: init breakpoints must be provided as an object map.');
     return;
   }
 
@@ -331,7 +331,7 @@ function applyBreakpointOverrides(breakpointMap) {
     if (typeof value === 'string' && value.trim()) {
       normalized[key] = value.trim();
     } else {
-      console.warn(`DuxWind: breakpoint "${key}" must be a non-empty string media query.`);
+      console.warn(`PostWind: breakpoint "${key}" must be a non-empty string media query.`);
     }
   });
 
@@ -425,10 +425,10 @@ details summary{cursor:pointer}
 :focus-visible{outline:2px solid #2563eb;outline-offset:2px}
 @media (prefers-color-scheme:dark){:root{color-scheme:dark}}`;
 
-  let resetElement = document.querySelector('[data-duxwind-reset]');
+  let resetElement = document.querySelector('[data-postwind-reset]');
   if (!resetElement) {
     resetElement = document.createElement('style');
-    resetElement.setAttribute('data-duxwind-reset', 'true');
+    resetElement.setAttribute('data-postwind-reset', 'true');
     document.head.insertBefore(resetElement, document.head.firstChild);
   }
 
@@ -464,7 +464,7 @@ function applyInitDefinitions(definitionOption) {
     if (Array.isArray(entry)) {
       const [name, style] = entry;
       if (!name) {
-        console.warn('DuxWind: init.define entry missing name.');
+        console.warn('PostWind: init.define entry missing name.');
         return;
       }
       defineKeyword(name, style);
@@ -476,7 +476,7 @@ function applyInitDefinitions(definitionOption) {
       return;
     }
 
-    console.warn('DuxWind: init.define entries must be objects or [name, style] pairs.');
+    console.warn('PostWind: init.define entries must be objects or [name, style] pairs.');
   });
 }
 
@@ -558,7 +558,7 @@ function updateBodyClass() {
   const friendlyName = mapBreakpointToFriendlyName(currentBreakpoint);
 
   if (debugMode) {
-    console.log('DuxWind: Breakpoint check - current:', currentBreakpoint, 'friendly:', friendlyName, 'width:', window.innerWidth);
+    console.log('PostWind: Breakpoint check - current:', currentBreakpoint, 'friendly:', friendlyName, 'width:', window.innerWidth);
   }
 
   if (currentBodyClass !== friendlyName) {
@@ -590,7 +590,7 @@ function getCurrentBreakpoint() {
         }
       } catch (error) {
         if (debugMode) {
-          console.warn('DuxWind: invalid breakpoint media query', mediaQuery, error);
+          console.warn('PostWind: invalid breakpoint media query', mediaQuery, error);
         }
       }
     }
@@ -641,7 +641,7 @@ export { CONFIG };
 
 // Auto-setup global when in browser
 if (typeof window !== 'undefined') {
-  const DuxWind = {
+  const PostWind = {
     init,
     resetCSS,
     loadClass,
@@ -655,5 +655,5 @@ if (typeof window !== 'undefined') {
     get processedClasses() { return processedClasses; }
   };
 
-  window.DuxWind = DuxWind;
+  window.PostWind = PostWind;
 }

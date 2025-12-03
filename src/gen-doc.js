@@ -1,4 +1,4 @@
-// DuxWind Documentation Generator
+// PostWind Documentation Generator
 import { getConfig } from './core.js';
 
 /**
@@ -9,7 +9,7 @@ export function generateDoc() {
   const config = getConfig();
   const props = config.props || {};
   const keywords = config.keywords || {};
-  
+
   // Inject filterDocs function to window if available
   if (typeof window !== 'undefined') {
     window.filterDocs = function(searchTerm) {
@@ -18,7 +18,7 @@ export function generateDoc() {
       var results = document.getElementById('search-results');
       var total = rows.length;
       var visible = 0;
-      
+
       rows.forEach(function(row) {
         var matches = !s || row.innerHTML.toLowerCase().indexOf(s) !== -1;
         if (matches) {
@@ -28,24 +28,24 @@ export function generateDoc() {
           row.style.display = 'none';
         }
       });
-      
-      results.textContent = s ? 
-        'Showing ' + visible + ' of ' + total + ' items matching "' + s + '"' : 
+
+      results.textContent = s ?
+        'Showing ' + visible + ' of ' + total + ' items matching "' + s + '"' :
         'Showing all ' + total + ' items';
     };
   }
-  
+
   let html = `
     <div class="container">
-      <h1 class="font-bold text-3xl mb-8">DuxWind Documentation</h1>
-      
+      <h1 class="font-bold text-3xl mb-8">PostWind Documentation</h1>
+
       <!-- Search Section -->
       <div class="mb-8">
         <div class="max-w-md mx-auto">
-          <input 
-            type="text" 
-            id="doc-search" 
-            placeholder="Search properties and keywords..." 
+          <input
+            type="text"
+            id="doc-search"
+            placeholder="Search properties and keywords..."
             class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
             onkeyup="filterDocs(this.value)"
           >
@@ -56,7 +56,7 @@ export function generateDoc() {
           </span>
         </div>
       </div>
-      
+
       <!-- Properties Section -->
       <div class="mb-12">
         <h2 class="font-semibold text-2xl mb-6">CSS Properties (${Object.keys(props).length})</h2>
@@ -71,7 +71,7 @@ export function generateDoc() {
             </thead>
             <tbody id="properties-table">
   `;
-  
+
   // Add ALL property documentation
   Object.entries(props).forEach(([prop, css]) => {
     const cssDisplay = Array.isArray(css) ? css.join(', ') : css;
@@ -84,13 +84,13 @@ export function generateDoc() {
               </tr>
     `;
   });
-  
+
   html += `
             </tbody>
           </table>
         </div>
       </div>
-      
+
       <!-- Keywords Section -->
       <div class="mb-12">
         <h2 class="font-semibold text-2xl mb-6">CSS Keywords (${Object.keys(keywords).length})</h2>
@@ -104,7 +104,7 @@ export function generateDoc() {
             </thead>
             <tbody id="keywords-table">
   `;
-  
+
   // Add ALL keyword documentation
   Object.entries(keywords).forEach(([keyword, css]) => {
     html += `
@@ -114,7 +114,7 @@ export function generateDoc() {
               </tr>
     `;
   });
-  
+
   html += `
             </tbody>
           </table>
@@ -122,6 +122,6 @@ export function generateDoc() {
       </div>
     </div>
   `;
-  
+
   return html;
 }
