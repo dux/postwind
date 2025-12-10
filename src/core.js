@@ -133,10 +133,22 @@ export function defineKeyword(nameOrEntries, style) {
   return updated;
 }
 
+// class="dialog onload:trigger-animation"
+const onLoadFilter = (className, element) => {
+  if (element && className.startsWith('onload:')) {
+    const newKlass = className.slice('onload:'.length)
+    setTimeout(()=>element.classList.add(newKlass), 100)
+    return null;
+  } else {
+    return className
+  }
+}
+
 // Process entire class attribute string
-function expandClassString(classString) {
+function expandClassString(classString, element) {
   return classString
     .split(/\s+/)
+    .filter((klass)=>onLoadFilter(klass, element))
     .filter(Boolean)
     .flatMap(expandClass)  // This handles colon-to-pipe conversion and all expansions
     .join(' ');
@@ -147,7 +159,7 @@ const processElement = safeWrapper(function(element) {
   const originalClassString = element.getAttribute('class');
   if (!originalClassString || !originalClassString.trim()) return;
 
-  const processedClassString = expandClassString(originalClassString);
+  const processedClassString = expandClassString(originalClassString, element);
 
   // Replace class attribute if it changed
   if (processedClassString !== originalClassString) {
