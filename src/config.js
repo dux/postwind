@@ -793,6 +793,141 @@ const TAILWIND_COLORS = {
     800: '#0d6963',
     900: '#105752',
     950: '#023435'
+  },
+
+  // Light Blue (CSS named color)
+  lightblue: {
+    50: '#f0f9ff',
+    100: '#e0f4ff',
+    200: '#b9e8ff',
+    300: '#7cd6ff',
+    400: '#36c1ff',
+    500: '#add8e6',
+    600: '#0891b2',
+    700: '#0e7490',
+    800: '#155e75',
+    900: '#164e63',
+    950: '#083344'
+  },
+
+  // Coral (CSS named color)
+  coral: {
+    50: '#fff5f2',
+    100: '#ffe8e1',
+    200: '#ffd4c7',
+    300: '#ffb8a3',
+    400: '#ff9070',
+    500: '#ff7f50',
+    600: '#f05a28',
+    700: '#c9431a',
+    800: '#a33a1a',
+    900: '#86351c',
+    950: '#49170a'
+  },
+
+  // Gold (CSS named color)
+  gold: {
+    50: '#fffef0',
+    100: '#fffacc',
+    200: '#fff099',
+    300: '#ffe066',
+    400: '#ffcc00',
+    500: '#ffd700',
+    600: '#d4a800',
+    700: '#a67c00',
+    800: '#7a5c00',
+    900: '#524000',
+    950: '#2e2400'
+  },
+
+  // Navy (CSS named color)
+  navy: {
+    50: '#f0f4ff',
+    100: '#e0e8ff',
+    200: '#c7d2fe',
+    300: '#a5b4fc',
+    400: '#818cf8',
+    500: '#6366f1',
+    600: '#4f46e5',
+    700: '#4338ca',
+    800: '#3730a3',
+    900: '#000080',
+    950: '#000040'
+  },
+
+  // Maroon (CSS named color)
+  maroon: {
+    50: '#fdf2f4',
+    100: '#fce7eb',
+    200: '#f9d0d9',
+    300: '#f4a9ba',
+    400: '#ec7694',
+    500: '#df4770',
+    600: '#c9265a',
+    700: '#a91d4a',
+    800: '#800000',
+    900: '#5c0015',
+    950: '#370009'
+  },
+
+  // Olive (CSS named color)
+  olive: {
+    50: '#f9faf4',
+    100: '#f1f4e4',
+    200: '#e2e8c9',
+    300: '#cdd6a4',
+    400: '#b3bf79',
+    500: '#808000',
+    600: '#6b6b00',
+    700: '#545400',
+    800: '#454500',
+    900: '#3a3a00',
+    950: '#1f1f00'
+  },
+
+  // Silver (CSS named color)
+  silver: {
+    50: '#fafafa',
+    100: '#f5f5f5',
+    200: '#eeeeee',
+    300: '#e0e0e0',
+    400: '#c0c0c0',
+    500: '#c0c0c0',
+    600: '#9e9e9e',
+    700: '#757575',
+    800: '#616161',
+    900: '#424242',
+    950: '#212121'
+  },
+
+  // Aqua (CSS named color - alias for cyan)
+  aqua: {
+    50: '#ecfeff',
+    100: '#cffafe',
+    200: '#a5f3fc',
+    300: '#67e8f9',
+    400: '#22d3ee',
+    500: '#00ffff',
+    600: '#0891b2',
+    700: '#0e7490',
+    800: '#155e75',
+    900: '#164e63',
+    950: '#083344'
+  },
+
+  // Magenta (CSS named color - alias for fuchsia)
+  magenta: {
+    50: '#fdf4ff',
+    100: '#fae8ff',
+    200: '#f5d0fe',
+    300: '#f0abfc',
+    400: '#e879f9',
+    500: '#ff00ff',
+    600: '#c026d3',
+    700: '#a21caf',
+    800: '#86198f',
+    900: '#701a75',
+    950: '#4a044e'
   }
 };
 
@@ -825,7 +960,16 @@ const BASE_COLORS = {
   fuchsia: '#d946ef',
   pink: '#ec4899',
   rose: '#f43f5e',
-  turquoise: '#40e0d0'
+  turquoise: '#40e0d0',
+  lightblue: '#add8e6',
+  coral: '#ff7f50',
+  gold: '#ffd700',
+  navy: '#000080',
+  maroon: '#800000',
+  olive: '#808000',
+  silver: '#c0c0c0',
+  aqua: '#00ffff',
+  magenta: '#ff00ff'
 };
 
 const SHADE_STOPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
@@ -1359,7 +1503,7 @@ function createDefaultKeywords() {
     // Background Origin
     'bg-origin-border': 'background-origin: border-box',
     'bg-origin-padding': 'background-origin: padding-box',
-    'bg-origin-content': 'background-origin: content-box',
+    'bg-origin-content':  'background-origin: content-box',
 
     // Background Position
     'bg-bottom': 'background-position: bottom',
