@@ -18,8 +18,10 @@ PostWind maintains full compatibility with Tailwind's core concepts while adding
 
 ### PostWind-only superpowers (vs. Tailwind)
 
-- **Relative offset helpers (`top-4`, `right-6`, arbitrary offsets)** automatically inject `position: relative`, so badges, pills, and labels can “nudge” themselves without wrapping every element in a relative parent.
-- **Inline container queries (`min-480:flex-row`, `max-640:grid-cols-1`)** give every component a built-in ResizeObserver that swaps layouts based on the element’s own width—no @container support or custom JS needed.
+- **Children selector (`&:`)** applies styles to all direct children from the parent class—`&:p-4` gives every child padding without repeating classes, works with dark mode (`&:dark:text-white`) and hover (`&:hover:bg-blue-500`), cleaner than Tailwind's `[&>*]:` arbitrary variant syntax.
+- **Delayed classes (`onload:`)** schedules class application 100ms after load—`onload:opacity-100` enables entrance animations without JavaScript, perfect for fade-ins, slides, and scale effects that trigger immediately on page load.
+- **Relative offset helpers (`top-4`, `right-6`, arbitrary offsets)** automatically inject `position: relative`, so badges, pills, and labels can "nudge" themselves without wrapping every element in a relative parent.
+- **Inline container queries (`min-480:flex-row`, `max-640:grid-cols-1`)** give every component a built-in ResizeObserver that swaps layouts based on the element's own width—no @container support or custom JS needed.
 - **`scroll-x:<seconds>` marquee system** clones track children, injects bespoke keyframes, and loops content at any duration, providing hands-free ticker/feature-parade UI.
 - **`visible:` viewport pseudo-class** ties scroll-triggered animations to utilities you already know (opacity, translate, scale, rotate) with auto cleanup once the element leaves the DOM.
 - **JavaScript-defined shortcuts (`PostWind.define`)** elevate Tailwind-style component recipes into first-class citizens with zero build tooling—mix responsive, pipe notation, and pseudo variants inside reusable tokens like `btn`, `badge`, or `chip`.
@@ -43,7 +45,11 @@ PostWind maintains full compatibility with Tailwind's core concepts while adding
 - **🐛 Debug mode** - Track original classes during development
 - **🌊 Pipe notation** - Compact responsive syntax (`p-10|20` or `p-10:20`) that maps to your breakpoint order
 - **@ Alternative syntax** - Property-first breakpoint notation (`text-lg@m text-xl@d` insted of `m:text-lg`)
+- **🌙 Dark mode** - Simple `dark:` prefix with class-based activation (add `.dark` to `<html>`)
+- **✨ Pseudo-elements** - Support for `::before`, `::after`, `::placeholder`, `::marker`, `::selection`, `::first-line`, `::first-letter`, `::file-selector-button`
+- **⏱️ Delayed classes** - Use `onload:` prefix to apply classes 100ms after page load for entrance animations
 - **👁️ Scroll animations** - Built-in `visible:` pseudo-class for viewport-triggered effects without extra JS
+- **👶 Children selector** - Use `&:` prefix to target all direct children (e.g., `&:p-4` applies padding to all children)
 - **‼️ Priority modifiers** - Append `!` for `!important` or `!!` for scoped `html body` specificity boosts on any utility
 - **📦 Inline container queries** - `min-`/`max-` classes toggle utilities by element width (per-node ResizeObserver for precise control)
 
@@ -137,7 +143,8 @@ PostWind.init();
 PostWind.init({
     debug: true,        // Enable debug mode (auto-detects dev ports)
     reset: true,        // Apply CSS reset automatically (default: true)
-    clearCache: true    // Clear processed classes cache (default: true)
+    clearCache: true,   // Clear processed classes cache (default: true)
+    body: true          // Add viewport-based body classes (mobile/tablet/desktop)
 });
 
 // 🔧 Disable CSS reset if not wanted
@@ -414,6 +421,8 @@ PostWind.define({
 <div class="card">Card content</div>
 ```
 
+**Note:** `PostWind.shortcut()` is still available but `PostWind.define()` is preferred—it handles both shortcuts and raw CSS declarations automatically.
+
 ## Animations & Transitions
 
 ```html
@@ -429,21 +438,732 @@ PostWind.define({
 
 ## Interactive States
 
+PostWind supports all standard CSS pseudo-classes for interactive and structural states.
+
+### Supported Pseudo-classes
+
+**Interactive States:**
+- `hover:` - Mouse hover
+- `focus:` - Element has focus
+- `focus-within:` - Element or child has focus
+- `focus-visible:` - Keyboard focus (not mouse)
+- `active:` - Element is being clicked
+- `visited:` - Visited links
+- `disabled:` - Disabled form elements
+
+**Structural States:**
+- `first:` - First child element
+- `last:` - Last child element
+- `odd:` - Odd-numbered children (1st, 3rd, 5th...)
+- `even:` - Even-numbered children (2nd, 4th, 6th...)
+
+### Basic Usage
+
 ```html
 <!-- Hover effects -->
 <button class="bg-blue-500 hover:bg-blue-600">
+  Changes color on hover
+</button>
 
 <!-- Focus states -->
 <input class="border focus:border-blue-500 focus:ring-2">
 
+<!-- Focus within (parent detects child focus) -->
+<div class="border focus-within:border-blue-500">
+  <input>
+</div>
+
 <!-- Active states -->
 <button class="active:scale-95">
+  Scales down when clicked
+</button>
+
+<!-- Disabled state -->
+<button class="bg-blue-500 disabled:bg-gray-300 disabled:cursor-not-allowed">
+  Button
+</button>
+
+<!-- Visited links -->
+<a href="#" class="text-blue-500 visited:text-purple-500">
+  Changes color after visiting
+</a>
+
+<!-- Structural pseudo-classes -->
+<ul>
+  <li class="first:font-bold">First item (bold)</li>
+  <li class="even:bg-gray-100">Even item (gray bg)</li>
+  <li class="odd:bg-blue-50">Odd item (blue bg)</li>
+  <li class="last:border-b-2">Last item (bottom border)</li>
+</ul>
 
 <!-- Combined states -->
 <button class="hover:bg-blue-600 active:bg-blue-700 focus:ring-2">
+  Multiple states
+</button>
 
 <!-- Responsive + states -->
-<button class="hover:bg-blue-600@d">  <!-- Hover only on desktop -->
+<button class="hover:bg-blue-600@d">
+  Hover only on desktop
+</button>
+```
+
+## Children Selector (&:)
+
+Apply styles to all direct children using the `&:` prefix. This is cleaner than repeating classes on every child element:
+
+```html
+<!-- Basic usage: Apply padding to all children -->
+<div class="&:p-4">
+  <p>I get p-4</p>
+  <span>I get p-4 too</span>
+  <div>I also get p-4</div>
+</div>
+
+<!-- Dark mode: All children get dark styles -->
+<div class="&:dark:pl-1">
+  <p>Gets pl-1 in dark mode</p>
+  <div>Also gets pl-1 in dark mode</div>
+</div>
+
+<!-- Hover states: All children change on parent hover -->
+<div class="&:hover:bg-blue-500">
+  <button>Hover parent to change my background</button>
+  <button>I change too!</button>
+</div>
+
+<!-- Responsive: All children get responsive padding -->
+<div class="&:p-2 m:&:p-4 d:&:p-8">
+  <div>Small padding on mobile</div>
+  <div>Larger padding on desktop</div>
+</div>
+
+<!-- Combined modifiers: Dark + hover + children -->
+<ul class="&:dark:hover:text-white">
+  <li>In dark mode, when parent is hovered, I'm white</li>
+  <li>Me too!</li>
+</ul>
+```
+
+### How it works
+
+The `&:` modifier generates CSS using the `> *` child combinator:
+
+```css
+/* Input: &:p-4 */
+.&\:p-4 > * {
+  padding: 1rem;
+}
+
+/* Input: &:dark:pl-1 */
+.dark .&\:dark\:pl-1 > * {
+  padding-left: 0.25rem;
+}
+
+/* Input: &:hover:bg-blue-500 */
+.&\:hover\:bg-blue-500:hover > * {
+  background-color: rgb(59 130 246);
+}
+```
+
+This pattern is perfect for:
+- List items that share common styles
+- Navigation menus with uniform child styling
+- Card grids where all cards need the same spacing
+- Form groups where all inputs share properties
+
+## Dark Mode
+
+PostWind supports dark mode - simple, powerful, and automatic!
+
+## How It Works
+
+Dark mode is activated when `.dark` class is present on the `<body>` element. That's it!
+
+```html
+<!-- Light mode -->
+<body>
+
+<!-- Dark mode -->
+<body class="dark">
+```
+
+When `.dark` is present, all `dark:` prefixed classes become active:
+
+```html
+<div class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+  This switches between light/dark automatically!
+</div>
+```
+
+## Automatic Dark Mode (dark-auto)
+
+PostWind can automatically detect your OS preference and apply dark mode - no JavaScript needed!
+
+```html
+<!-- Automatically detects OS dark mode setting -->
+<body class="dark-auto">
+  <div class="bg-white dark:bg-gray-900">
+    This automatically switches based on your OS preference!
+  </div>
+</body>
+```
+
+### How dark-auto Works
+
+1. Add `class="dark-auto"` to your `<body>` tag
+2. PostWind checks if `.dark` is already present - if yes, skips auto-detection (manual mode takes priority)
+3. PostWind checks `prefers-color-scheme: dark` media query
+4. If OS is in dark mode → adds `.dark` class automatically
+5. If OS is in light mode → does nothing (stays light)
+6. No localStorage, no manual management needed!
+
+### When to use dark-auto
+
+- **Perfect for:** Apps that should respect OS preference automatically
+- **Use manual `.dark` when:** You want full control over dark mode state
+- **Combine both:** Start with `dark-auto`, let users toggle manually
+
+### Priority Behavior
+
+If both `dark-auto` and `dark` are present, **manual wins**:
+
+```html
+<!-- This will be in dark mode, regardless of OS preference -->
+<body class="dark-auto dark">
+  Manual .dark class takes priority!
+</body>
+
+<!-- This will check OS preference -->
+<body class="dark-auto">
+  Automatic OS detection
+</body>
+```
+
+This means users can toggle manually and their choice persists even with `dark-auto` present.
+
+## Usage
+
+### Basic Dark Mode Classes
+
+```html
+<!-- Text colors -->
+<h1 class="text-gray-900 dark:text-white">Title</h1>
+<p class="text-gray-600 dark:text-gray-300">Paragraph</p>
+
+<!-- Background colors -->
+<div class="bg-white dark:bg-gray-900">
+  <div class="bg-gray-100 dark:bg-gray-800">Content</div>
+</div>
+
+<!-- Borders -->
+<div class="border-gray-300 dark:border-gray-700">
+  Bordered element
+</div>
+```
+
+### Toggle Dark Mode with JavaScript
+
+```javascript
+// Toggle dark mode
+document.body.classList.toggle('dark');
+
+// Enable dark mode
+document.body.classList.add('dark');
+
+// Disable dark mode
+document.body.classList.remove('dark');
+
+// Check if dark mode is active
+const isDark = document.body.classList.contains('dark');
+```
+
+### Optional: Persist User Preference
+
+PostWind doesn't manage localStorage for you. If you want to save user preference, add your own solution:
+
+```javascript
+// Example: Save preference with localStorage (optional)
+function toggleDarkMode() {
+  document.body.classList.toggle('dark');
+  // Your custom persistence
+  localStorage.theme = document.body.classList.contains('dark') ? 'dark' : 'light';
+}
+
+// Restore on page load (before PostWind.init)
+if (localStorage.theme) {
+  document.body.classList.toggle('dark', localStorage.theme === 'dark');
+}
+```
+
+**Tip:** If you don't need persistence, just use `dark-auto` class instead!
+
+### Combined with Other Modifiers
+
+Dark mode works seamlessly with all PostWind features:
+
+```html
+<!-- Dark + Hover -->
+<button class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700">
+  Button
+</button>
+
+<!-- Dark + Responsive -->
+<div class="text-base m:text-sm dark:text-white">
+  Responsive + dark
+</div>
+
+<!-- Dark + Hover + Responsive -->
+<a class="m:dark:hover:text-blue-400">
+  Complex modifier chain
+</a>
+
+<!-- Dark + Pseudo-elements -->
+<div class="before:bg-gray-200 dark:before:bg-gray-700">
+  With ::before
+</div>
+```
+
+## Generated CSS
+
+PostWind generates CSS with `.dark` ancestor selector:
+
+```css
+/* Input */
+dark:bg-gray-900
+
+/* Output */
+.dark .dark\:bg-gray-900 {
+  background-color: rgb(17 24 39);
+}
+```
+
+This means dark mode styles only apply when an ancestor element has the `.dark` class.
+
+## Complete Examples
+
+### Example 1: Automatic (dark-auto)
+
+The simplest approach - just use `dark-auto` class:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="module">
+    import PostWind from './postwind/src/lib.js';
+    PostWind.init();
+  </script>
+</head>
+<body class="dark-auto bg-white dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
+  <div class="container mx-auto p-8">
+    <h1 class="text-4xl font-bold mb-4">Dark Mode Demo</h1>
+
+    <p class="text-lg mb-4">
+      This page automatically matches your OS dark mode preference!
+    </p>
+
+    <div class="mt-8 p-6 bg-gray-100 dark:bg-gray-800 rounded-lg">
+      <p class="text-gray-700 dark:text-gray-300">
+        Content automatically adapts to your system preference.
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+```
+
+### Example 2: Manual Toggle
+
+Full control over dark mode with JavaScript:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="module">
+    import PostWind from './postwind/src/lib.js';
+    PostWind.init();
+
+    // Toggle function
+    window.toggleDarkMode = function() {
+      document.body.classList.toggle('dark');
+    };
+  </script>
+</head>
+<body class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
+  <div class="container mx-auto p-8">
+    <h1 class="text-4xl font-bold mb-4">Dark Mode Demo</h1>
+
+    <button
+      onclick="toggleDarkMode()"
+      class="px-6 py-3 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-lg"
+    >
+      Toggle Dark Mode
+    </button>
+
+    <div class="mt-8 p-6 bg-gray-100 dark:bg-gray-800 rounded-lg">
+      <p class="text-gray-700 dark:text-gray-300">
+        Click the button to toggle dark mode!
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+```
+
+### Example 3: Combination (Auto + Manual Override)
+
+Start with OS preference, allow manual toggle:
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <script type="module">
+    import PostWind from './postwind/src/lib.js';
+    PostWind.init();
+
+    // Toggle function (overrides OS preference)
+    window.toggleDarkMode = function() {
+      document.body.classList.toggle('dark');
+      // Optional: Save preference
+      localStorage.theme = document.body.classList.contains('dark') ? 'dark' : 'light';
+    };
+
+    // Optional: Restore saved preference on load
+    if (localStorage.theme) {
+      document.body.classList.toggle('dark', localStorage.theme === 'dark');
+    }
+  </script>
+</head>
+<body class="dark-auto bg-white dark:bg-gray-900 text-gray-900 dark:text-white min-h-screen">
+  <div class="container mx-auto p-8">
+    <h1 class="text-4xl font-bold mb-4">Dark Mode Demo</h1>
+
+    <button
+      onclick="toggleDarkMode()"
+      class="px-6 py-3 bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white rounded-lg"
+    >
+      Toggle Dark Mode
+    </button>
+
+    <div class="mt-8 p-6 bg-gray-100 dark:bg-gray-800 rounded-lg">
+      <p class="text-gray-700 dark:text-gray-300">
+        Starts with OS preference, can be toggled manually!
+      </p>
+    </div>
+  </div>
+</body>
+</html>
+```
+
+## Common Patterns
+
+### Page Background
+
+```html
+<body class="bg-white dark:bg-gray-900">
+```
+
+### Cards
+
+```html
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+  <h3 class="text-gray-900 dark:text-white">Card Title</h3>
+  <p class="text-gray-600 dark:text-gray-300">Card content</p>
+</div>
+```
+
+### Buttons
+
+```html
+<!-- Primary button -->
+<button class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white">
+  Primary
+</button>
+
+<!-- Secondary button -->
+<button class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white">
+  Secondary
+</button>
+```
+
+### Inputs
+
+```html
+<input
+  type="text"
+  class="bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white placeholder:text-gray-400 dark:placeholder:text-gray-500"
+  placeholder="Enter text..."
+/>
+```
+
+## Color Recommendations
+
+Good color pairings for dark mode:
+
+| Element | Light Mode | Dark Mode |
+|---------|-----------|-----------|
+| Page background | `bg-white` | `bg-gray-900` |
+| Card background | `bg-white` or `bg-gray-50` | `bg-gray-800` |
+| Primary text | `text-gray-900` | `text-white` |
+| Secondary text | `text-gray-600` | `text-gray-300` |
+| Muted text | `text-gray-500` | `text-gray-400` |
+| Borders | `border-gray-200` or `border-gray-300` | `border-gray-700` |
+| Input background | `bg-white` | `bg-gray-900` |
+| Hover backgrounds | `bg-gray-100` | `bg-gray-800` |
+
+### Common Patterns
+
+```html
+<!-- Page Background -->
+<body class="bg-white dark:bg-gray-900">
+
+<!-- Cards -->
+<div class="bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-lg p-6">
+  <h3 class="text-gray-900 dark:text-white">Card Title</h3>
+  <p class="text-gray-600 dark:text-gray-300">Card content</p>
+</div>
+
+<!-- Buttons -->
+<button class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white">
+  Primary Button
+</button>
+
+<button class="bg-gray-200 hover:bg-gray-300 dark:bg-gray-700 dark:hover:bg-gray-600 text-gray-900 dark:text-white">
+  Secondary Button
+</button>
+
+<!-- Inputs -->
+<input
+  type="text"
+  class="bg-white dark:bg-gray-900 border-gray-300 dark:border-gray-600 text-gray-900 dark:text-white"
+  placeholder="Enter text...">
+```
+
+### Complete Examples
+
+**Example 1: Automatic (simplest)**
+```html
+<body class="dark-auto bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+  <div class="p-8">
+    <h1 class="text-4xl font-bold mb-4">My App</h1>
+    <p>This automatically matches your OS preference!</p>
+  </div>
+</body>
+```
+
+**Example 2: Manual Toggle**
+```html
+<script>
+  window.toggleDarkMode = function() {
+    document.body.classList.toggle('dark');
+  };
+</script>
+<body class="bg-white dark:bg-gray-900">
+  <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+</body>
+```
+
+**Example 3: Auto + Manual Override**
+```html
+<script>
+  window.toggleDarkMode = function() {
+    document.body.classList.toggle('dark');
+    // Optional: persist
+    localStorage.theme = document.body.classList.contains('dark') ? 'dark' : 'light';
+  };
+
+  // Optional: restore on load
+  if (localStorage.theme) {
+    document.body.classList.toggle('dark', localStorage.theme === 'dark');
+  }
+</script>
+<body class="dark-auto bg-white dark:bg-gray-900">
+  <button onclick="toggleDarkMode()">Toggle Dark Mode</button>
+  <!-- Starts with OS preference, can be toggled manually -->
+</body>
+```
+
+See `DARK-MODE.md` for more detailed documentation and patterns.
+
+## Pseudo-elements
+
+PostWind supports CSS pseudo-elements using the double-colon `::` notation. Apply styles to generated content, placeholders, and other special elements.
+
+### Supported Pseudo-elements
+
+- `before:` - Style the `::before` pseudo-element
+- `after:` - Style the `::after` pseudo-element
+- `placeholder:` - Style input placeholder text
+- `marker:` - Style list markers (bullets, numbers)
+- `selection:` - Style text selection highlighting
+- `first-line:` - Style the first line of text
+- `first-letter:` - Style the first letter (drop caps)
+- `file:` - Style file input selector button
+
+### Basic Usage
+
+```html
+<!-- Before and After pseudo-elements -->
+<div class="before:content-empty before:block before:w-4 before:h-4 before:bg-blue-500">
+  Element with blue square before
+</div>
+
+<div class="after:content-empty after:block after:absolute after:inset-0 after:bg-black after:opacity-25">
+  Element with dark overlay after
+</div>
+
+<!-- Placeholder styling -->
+<input class="placeholder:text-gray-400 placeholder:italic"
+       placeholder="Enter your name...">
+
+<!-- Marker styling (lists) -->
+<ul class="marker:text-blue-500 marker:text-2xl">
+  <li>Blue large bullet</li>
+  <li>Another blue bullet</li>
+</ul>
+
+<!-- Selection styling -->
+<p class="selection:bg-blue-200 selection:text-blue-900">
+  Select this text to see custom highlighting
+</p>
+
+<!-- First line styling -->
+<p class="first-line:font-bold first-line:text-lg">
+  This first line will be bold and large.
+  The rest of the text remains normal.
+</p>
+
+<!-- First letter (drop cap) -->
+<p class="first-letter:text-5xl first-letter:font-bold first-letter:float-left first-letter:mr-2">
+  This paragraph has a decorative drop cap.
+</p>
+
+<!-- File input button -->
+<input type="file"
+       class="file:bg-blue-500 file:text-white file:px-4 file:py-2 file:rounded file:border-0">
+```
+
+### Pseudo-elements with Modifiers
+
+Pseudo-elements work with responsive breakpoints, hover states, and dark mode:
+
+```html
+<!-- Responsive pseudo-elements -->
+<div class="before:w-2 m:before:w-4 d:before:w-8">
+  Responsive before element width
+</div>
+
+<!-- Dark mode pseudo-elements -->
+<div class="before:bg-gray-200 dark:before:bg-gray-700">
+  Before element adapts to dark mode
+</div>
+
+<!-- Hover + pseudo-elements -->
+<button class="before:opacity-0 hover:before:opacity-100">
+  Before element appears on hover
+</button>
+
+<!-- Combined modifiers -->
+<input class="placeholder:text-gray-400 dark:placeholder:text-gray-500 focus:placeholder:text-gray-300">
+```
+
+### Common Patterns
+
+```html
+<!-- Decorative lines before headings -->
+<h2 class="before:content-empty before:block before:w-12 before:h-1 before:bg-blue-500 before:mb-4">
+  Section Title
+</h2>
+
+<!-- Icon after links -->
+<a href="#" class="after:content-['→'] after:ml-2">
+  Read more
+</a>
+
+<!-- Required field asterisk -->
+<label class="after:content-['*'] after:text-red-500 after:ml-1">
+  Email
+</label>
+
+<!-- Custom file upload button -->
+<input type="file"
+       class="file:mr-4 file:py-2 file:px-4
+              file:rounded file:border-0
+              file:bg-blue-500 file:text-white
+              file:hover:bg-blue-600 file:cursor-pointer">
+
+<!-- Selection highlighting -->
+<article class="selection:bg-yellow-200 selection:text-yellow-900">
+  Custom selection colors for better reading experience
+</article>
+```
+
+### Content Property
+
+Use the `content-empty` keyword for empty content (required for `::before` and `::after`):
+
+```html
+<div class="before:content-empty before:block before:w-4 before:h-4 before:bg-red-500">
+  Red square before this text
+</div>
+```
+
+**Note:** For custom text content, you'll need to use arbitrary values or inline styles, as CSS `content` with strings requires quotes which aren't supported in class names.
+
+## Delayed Class Application (onload:)
+
+The `onload:` prefix schedules class application after page load, perfect for entrance animations and transitions.
+
+```html
+<!-- Fade in after page load -->
+<div class="opacity-0 transition-opacity duration-700 onload:opacity-100">
+  Fades in 100ms after load
+</div>
+
+<!-- Slide in from left -->
+<div class="-translate-x-full transition-transform duration-500 onload:translate-x-0">
+  Slides in from the left
+</div>
+
+<!-- Scale up entrance -->
+<div class="scale-0 transition-transform duration-700 onload:scale-100">
+  Scales up on load
+</div>
+
+<!-- Multiple properties -->
+<div class="opacity-0 scale-90 transition-all duration-500 onload:opacity-100 onload:scale-100">
+  Fades and scales together
+</div>
+```
+
+### How it works
+
+- Classes with `onload:` prefix are scheduled to be added 100ms after the element is processed
+- The `onload:` class itself is removed from the DOM
+- Perfect for entrance animations that should happen immediately on page load
+- Works with any utility class (transforms, opacity, colors, etc.)
+
+### Common Patterns
+
+```html
+<!-- Hero section entrance -->
+<section class="opacity-0 translate-y-8 transition-all duration-1000 onload:opacity-100 onload:translate-y-0">
+  <h1>Welcome!</h1>
+</section>
+
+<!-- Staggered list items -->
+<ul>
+  <li class="opacity-0 transition-opacity duration-500 delay-100 onload:opacity-100">Item 1</li>
+  <li class="opacity-0 transition-opacity duration-500 delay-200 onload:opacity-100">Item 2</li>
+  <li class="opacity-0 transition-opacity duration-500 delay-300 onload:opacity-100">Item 3</li>
+</ul>
+
+<!-- Card reveal -->
+<div class="opacity-0 scale-95 rotate-3 transition-all duration-700 onload:opacity-100 onload:scale-100 onload:rotate-0">
+  Card with complex entrance
+</div>
 ```
 
 ## Scroll-Triggered Animations (visible:)
@@ -559,13 +1279,18 @@ PostWind.loadClass(className)    // Process a single class
 PostWind.resetCss()             // Apply modern CSS reset
 PostWind.loadDefaultConfig()    // Reset to default config (auto-loaded)
 PostWind.generateDoc()          // Generate documentation HTML
-PostWind.define(name, style)    // Add or override keyword utilities
+PostWind.define(name, style)    // Add or override keyword utilities or shortcuts
+PostWind.shortcut(name, classes)// Register a shortcut (use define() for full flexibility)
 
 // Init options
 {
-    debug: boolean,      // Enable debug mode (default: auto-detect)
-    reset: boolean,      // Apply CSS reset automatically (default: true)
-    clearCache: boolean  // Clear processed classes (default: true)
+    debug: boolean,         // Enable debug mode (default: auto-detect dev ports)
+    reset: boolean,         // Apply CSS reset automatically (default: true)
+    clearCache: boolean,    // Clear processed classes (default: true)
+    body: boolean,          // Add viewport-based body classes (default: false)
+    breakpoints: object,   // Override breakpoint definitions
+    define: object|array,   // Define shortcuts/keywords during init
+    preload: string|array  // Preload classes for first render
 }
 ```
 
@@ -1002,13 +1727,16 @@ PostWind.define({
 | **Shadows** | ✅ Box shadows | ✅ Box & text shadows |
 | **Responsive Design** | ✅ Breakpoints | ✅ Breakpoints |
 | **Pseudo-classes** | ✅ hover, focus, etc. | ✅ All pseudo-classes |
-| **Pseudo-elements** | ⚡ Partial | ✅ Full support |
+| **Pseudo-elements** | ✅ 8 pseudo-elements (::before, ::after, etc.) | ✅ Full support |
+| **Dark Mode** | ✅ Simple `dark:` prefix with `.dark` class | ✅ Full support |
 | **Arbitrary Values** | ✅ [value] syntax | ✅ [value] syntax |
 | **Negative Values** | ✅ -m-4, etc. | ✅ Full support |
 | **Animations** | ✅ Basic set | ✅ Extended set |
 | **Transforms** | ✅ Full support | ✅ Full support |
 | **Filters** | ⚡ Basic support | ✅ Full support |
 | **Backdrop Filters** | ⚡ Partial | ✅ Full support |
+| **Delayed classes** | ✅ `onload:` prefix for entrance animations | ❌ Not built-in |
+| **Children selector** | ✅ `&:p-4` applies padding to all direct children via `> *` combinator | ⚠️ Requires arbitrary variant `[&>*]:p-4` (verbose) |
 | **Relative offset helpers** | ✅ `top/right/bottom/left` auto-inject `position: relative` | ⚠️ Must wrap each element in `relative` manually |
 | **Inline container queries** | ✅ `min-/max-` per-element rules via ResizeObserver | ⚠️ Requires new @container syntax + build tooling |
 | **`scroll-x:<seconds>` marquee** | ✅ Runtime child cloning + keyframes, no CSS authoring | ❌ No built-in marquee utility |
@@ -1035,7 +1763,65 @@ PostWind.define({
 </div>
 ```
 
-**3. Runtime Configuration**
+**3. Children Selector (&:)**
+```html
+<!-- Apply styles to all direct children from parent -->
+<div class="&:p-4">
+  <p>Gets padding-4</p>
+  <span>Also gets padding-4</span>
+</div>
+
+<!-- Works with dark mode and hover -->
+<ul class="&:dark:hover:text-white">
+  <li>Turns white on hover in dark mode</li>
+  <li>Me too!</li>
+</ul>
+
+<!-- Cleaner than Tailwind's [&>*]:p-4 -->
+```
+
+**4. Dark Mode**
+```html
+<!-- Simple class-based activation -->
+<html class="dark">
+
+<!-- All dark: prefixed classes become active -->
+<div class="bg-white dark:bg-gray-900 text-gray-900 dark:text-white">
+  Switches automatically!
+</div>
+
+<!-- Works with all modifiers -->
+<button class="dark:hover:bg-blue-700">Dark mode + hover</button>
+```
+
+**5. Pseudo-elements**
+```html
+<!-- 8 supported pseudo-elements -->
+<div class="before:content-empty before:bg-blue-500 before:w-4 before:h-4">
+  Blue square before
+</div>
+
+<input class="placeholder:text-gray-400 placeholder:italic"
+       placeholder="Styled placeholder">
+
+<ul class="marker:text-blue-500">
+  <li>Custom bullet color</li>
+</ul>
+```
+
+**6. Delayed Classes (onload:)**
+```html
+<!-- Entrance animations -->
+<div class="opacity-0 transition-opacity duration-700 onload:opacity-100">
+  Fades in 100ms after load
+</div>
+
+<div class="scale-0 transition-transform duration-500 onload:scale-100">
+  Scales up on load
+</div>
+```
+
+**7. Runtime Configuration**
 ```javascript
 // Change settings without rebuilding
 PostWind.config.pixelMultiplier = 5; // p-4 = 20px now
@@ -1051,7 +1837,7 @@ PostWind.init({
 PostWind.define('hero', 'text-4xl font-bold mb-8');
 ```
 
-**4. CSS Override Intelligence**
+**8. CSS Override Intelligence**
 ```html
 <!-- Explicit classes override shortcut classes -->
 <button class="btn p-8">
@@ -1059,25 +1845,25 @@ PostWind.define('hero', 'text-4xl font-bold mb-8');
 </button>
 ```
 
-**5. MutationObserver Integration**
+**9. MutationObserver Integration**
 - Automatically processes dynamically added elements
 - Handles class changes in real-time
 - Works seamlessly with SPAs and dynamic content
 
-**6. Debug Mode with Tracking**
+**10. Debug Mode with Tracking**
 ```html
 <!-- Original classes preserved for debugging -->
 <div class="btn-primary" data-dw-original-class="btn-primary">
 ```
 
-**7. Body Class Viewport Detection**
+**11. Body Class Viewport Detection**
 ```javascript
 // Automatic viewport-based body classes
 PostWind.init({ body: true });
 // <body class="mobile"> or <body class="desktop">
 ```
 
-**8. Scroll-Triggered Animations (visible:)**
+**12. Scroll-Triggered Animations (visible:)**
 ```html
 <!-- No JavaScript needed for scroll animations -->
 <div class="visible:scale-100 visible:opacity-100 scale-75 opacity-0 transition-all duration-700">
@@ -1090,7 +1876,7 @@ PostWind.init({ body: true });
 </div>
 ```
 
-**9. `scroll-x` Marquee System**
+**13. `scroll-x` Marquee System**
 ```html
 <!-- Infinite scrolling marquee in 20 seconds -->
 <div class="scroll-x:20 flex gap-4">
@@ -1100,7 +1886,7 @@ PostWind.init({ body: true });
 </div>
 ```
 
-**10. Relative Offset Helpers**
+**14. Relative Offset Helpers**
 ```html
 <!-- Auto-injects position: relative -->
 <div class="top-4 left-4">
@@ -1109,7 +1895,7 @@ PostWind.init({ body: true });
 </div>
 ```
 
-**11. Inline Container Queries**
+**15. Inline Container Queries**
 ```html
 <!-- Element-based responsive styles -->
 <div class="min-400:flex max-400:hidden">

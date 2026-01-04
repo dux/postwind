@@ -455,6 +455,106 @@ describe('PostWind Test Suite - Input/Output Examples', () => {
     });
   });
 
+  describe('Pseudo-elements: {element}:{class} → .{element}\\:{class}::{element} { ... }', () => {
+    test('before: before:{class} → .before\\:{class}::before { ... }', () => {
+      // Input: before:content-empty → Expected: .before\\:content-empty::before { content: ""; }
+      testClassWithOutput('before:content-empty', ['::before', 'content: ""']);
+
+      // Input: before:block → Expected: .before\\:block::before { display: block; }
+      testClassWithOutput('before:block', ['::before', 'display: block']);
+    });
+
+    test('after: after:{class} → .after\\:{class}::after { ... }', () => {
+      // Input: after:content-empty → Expected: .after\\:content-empty::after { content: ""; }
+      testClassWithOutput('after:content-empty', ['::after', 'content: ""']);
+
+      // Input: after:absolute → Expected: .after\\:after\\:absolute::after { position: absolute; }
+      testClassWithOutput('after:absolute', ['::after', 'position: absolute']);
+    });
+
+    test('placeholder: placeholder:{class} → .placeholder\\:{class}::placeholder { ... }', () => {
+      // Input: placeholder:text-gray-400 → Expected: .placeholder\\:text-gray-400::placeholder { color: ...; }
+      testClassWithOutput('placeholder:text-gray-400', ['::placeholder', 'color']);
+
+      // Input: placeholder:italic → Expected: .placeholder\\:placeholder\\:italic::placeholder { font-style: italic; }
+      testClassWithOutput('placeholder:italic', ['::placeholder', 'font-style: italic']);
+    });
+
+    test('marker: marker:{class} → .marker\\:{class}::marker { ... }', () => {
+      // Input: marker:text-blue-500 → Expected: .marker\\:text-blue-500::marker { color: rgb(59, 130, 246); }
+      testClassWithOutput('marker:text-blue-500', ['::marker', 'color']);
+    });
+
+    test('selection: selection:{class} → .selection\\:{class}::selection { ... }', () => {
+      // Input: selection:bg-yellow-200 → Expected: .selection\\:bg-yellow-200::selection { background-color: ...; }
+      testClassWithOutput('selection:bg-yellow-200', ['::selection', 'background-color']);
+    });
+
+    test('first-letter: first-letter:{class} → .first-letter\\:{class}::first-letter { ... }', () => {
+      // Input: first-letter:text-4xl → Expected: .first-letter\\:text-4xl::first-letter { font-size: ...; }
+      testClassWithOutput('first-letter:text-4xl', ['::first-letter', 'font-size']);
+    });
+
+    test('first-line: first-line:{class} → .first-line\\:{class}::first-line { ... }', () => {
+      // Input: first-line:font-bold → Expected: .first-line\\:font-bold::first-line { font-weight: 700; }
+      testClassWithOutput('first-line:font-bold', ['::first-line', 'font-weight: 700']);
+    });
+
+    test('file: file:{class} → .file\\:{class}::file-selector-button { ... }', () => {
+      // Input: file:bg-blue-500 → Expected: .file\\:bg-blue-500::file-selector-button { background-color: ...; }
+      testClassWithOutput('file:bg-blue-500', ['::file-selector-button', 'background-color']);
+    });
+  });
+
+  describe('Dark Mode: dark:{class} (uses .dark ancestor)', () => {
+    test('dark mode: dark:bg-gray-900', () => {
+      // Input: dark:bg-gray-900 → Expected: .dark .dark\\:bg-gray-900 { background-color: ...; }
+      testClassWithOutput('dark:bg-gray-900', ['.dark .dark\\:bg-gray-900', 'background-color']);
+    });
+
+    test('dark mode with hover: dark:hover:text-white', () => {
+      // Input: dark:hover:text-white → Expected: .dark .dark\\:hover\\:text-white:hover { color: ...; }
+      testClassWithOutput('dark:hover:text-white', ['.dark', ':hover', 'color']);
+    });
+
+    test('dark mode with responsive: m:dark:bg-black', () => {
+      // Input: m:dark:bg-black → Expected: @media (max-width: 768px) { .dark .m\\:dark\\:bg-black { background-color: ...; } }
+      testClassWithOutput('m:dark:bg-black', ['@media (max-width: 768px)', '.dark', 'background-color']);
+    });
+
+    test('dark mode with multiple states: dark:hover:focus:bg-blue-500', () => {
+      // Input: dark:hover:focus:bg-blue-500 → Expected: .dark .dark\\:hover\\:focus\\:bg-blue-500:hover:focus { background-color: ...; }
+      testClassWithOutput('dark:hover:focus:bg-blue-500', ['.dark', ':hover', ':focus', 'background-color']);
+    });
+  });
+
+  describe('Children Selector: &:{class} (targets direct children)', () => {
+    test('basic children selector: &:pl-1', () => {
+      // Input: &:pl-1 → Expected: .&\\:pl-1 > * { padding-left: 0.25rem; }
+      testClassWithOutput('&:pl-1', ['.&\\:pl-1 > *', 'padding-left', '0.25rem']);
+    });
+
+    test('children selector with dark mode: &:dark:pl-1', () => {
+      // Input: &:dark:pl-1 → Expected: .dark .&\\:dark\\:pl-1 > * { padding-left: 0.25rem; }
+      testClassWithOutput('&:dark:pl-1', ['.dark', '.&\\:dark\\:pl-1 > *', 'padding-left']);
+    });
+
+    test('children selector with hover: &:hover:bg-blue-500', () => {
+      // Input: &:hover:bg-blue-500 → Expected: .&\\:hover\\:bg-blue-500:hover > * { background-color: ...; }
+      testClassWithOutput('&:hover:bg-blue-500', ['.&\\:hover\\:bg-blue-500:hover > *', 'background-color']);
+    });
+
+    test('children selector with responsive: m:&:p-4', () => {
+      // Input: m:&:p-4 → Expected: @media (max-width: 768px) { .m\\:&\\:p-4 > * { padding: 1rem; } }
+      testClassWithOutput('m:&:p-4', ['@media (max-width: 768px)', '.m\\:&\\:p-4 > *', 'padding', '1rem']);
+    });
+
+    test('children selector with dark and hover: &:dark:hover:text-white', () => {
+      // Input: &:dark:hover:text-white → Expected: .dark .&\\:dark\\:hover\\:text-white:hover > * { color: ...; }
+      testClassWithOutput('&:dark:hover:text-white', ['.dark', ':hover', ' > *', 'color']);
+    });
+  });
+
   describe('Layout Utilities: Input → CSS Property/Value', () => {
     test('display: {display} → display: {display}', () => {
       // Input: block       → Expected: display: block

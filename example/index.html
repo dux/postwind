@@ -12,6 +12,8 @@
         // 🚀 Initialize with custom breakpoints (defaults cover mobile/desktop out of the box)
         PostWind.init({
             debug: true,
+            body: false,  // Set to true to add viewport-based body classes (mobile/tablet/desktop)
+            reset: true,  // Apply CSS reset automatically
             breakpoints: {
                 'm': '(max-width: 800px)',  // Mobile: phones and small tablets
                 'd': '(min-width: 801px)'   // Desktop and large screens
@@ -43,7 +45,7 @@
                 badge badge-success badge-warning chip chip-check card section container
                 text-glow h1 h2 h-4 center full-center flex gap-4 rounded-3xl shadow-sm h-4
                 opacity-0 opacity-100 translate-y-6 translate-y-0 scale-95 scale-100
-                duration-500 shadow-lg shadow-xl
+                duration-500 shadow-lg shadow-xl visible:opacity-100 visible:translate-y-0 visible:scale-100
             `
         });
 
@@ -149,7 +151,9 @@
                 <button onclick="showSection('borders')" class="btn-outline">Borders</button>
                 <button onclick="showSection('rounded')" class="btn-outline">Rounded</button>
                 <button onclick="showSection('transforms')" class="btn-outline">Transforms</button>
+                <button onclick="showSection('features')" class="btn-outline">API</button>
                 <button onclick="showSection('states')" class="btn-outline">States</button>
+                <button onclick="showSection('pseudo')" class="btn-outline">Pseudo</button>
                 <button onclick="showSection('onload')" class="btn-outline">Onload</button>
                 <button onclick="showSection('animations')" class="btn-outline">Animations</button>
                 <button onclick="showSection('marquee')" class="btn-outline">Scroll X</button>
@@ -228,6 +232,8 @@
             <ul class="list-disc list-inside space-y-1 mb-4">
                 <li>Shortcuts are generated as new classes</li>
                 <li>You can use nested shortcuts, notice <code>btn</code> inside <code>btn-primary</code></li>
+                <li>Use <code>PostWind.define()</code> for shortcuts OR raw CSS keywords (with <code>:</code> and <code>;</code>)</li>
+                <li><code>PostWind.shortcut()</code> is also available for shortcut-only definitions</li>
             </ul>
             <div class="flex flex-wrap gap-6 mb-8">
                 <div class="flex flex-col gap-2 min-w-[180px]">
@@ -302,9 +308,13 @@
                     <li><strong>badge-warning:</strong> badge bg-amber-100 text-amber-700</li>
                     <li><strong>chip:</strong> inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-sm</li>
                     <li><strong>chip-check:</strong> chip bg-blue-50 text-blue-700 border border-blue-200</li>
+                    <li><strong>text-glow:</strong> color: #0ea5e9; text-shadow: 0 0 20px rgba(14,165,233,0.6);</li>
                     <li><strong>h1:</strong> font-bold m:text-24px d:text-36px leading-tight</li>
                     <li><strong>h2:</strong> font-semibold m:text-20px d:text-24px leading-tight</li>
                 </ul>
+                <p class="text-xs text-gray-600 mt-3">
+                    <strong>Note:</strong> <code>text-glow</code> is a keyword utility (CSS declaration) - detected by <code>:</code> and <code>;</code>.
+                </p>
             </div>
         </section>
 
@@ -1272,8 +1282,39 @@
 
         <!-- Special Features Section -->
         <section id="features" class="section" style="display: none;">
-            <h2 class="h2 mb-6">Special Features</h2>
+            <h2 class="h2 mb-6">API & Special Features</h2>
             <div class="space-y-6">
+                <div class="card">
+                    <h3 class="font-semibold mb-4">Core API Methods</h3>
+                    <p class="text-sm text-gray-600 mb-4">PostWind exposes these methods for runtime control:</p>
+                    <div class="grid gap-4 d:grid-cols-2">
+                        <div class="bg-blue-50 p-3 rounded border border-blue-100">
+                            <code class="text-sm font-mono text-blue-800">PostWind.init(options)</code>
+                            <p class="text-xs text-gray-600 mt-1">Initialize with debug, reset, breakpoints, define, preload</p>
+                        </div>
+                        <div class="bg-green-50 p-3 rounded border border-green-100">
+                            <code class="text-sm font-mono text-green-800">PostWind.define(name, style)</code>
+                            <p class="text-xs text-gray-600 mt-1">Define shortcuts or raw CSS keywords</p>
+                        </div>
+                        <div class="bg-purple-50 p-3 rounded border border-purple-100">
+                            <code class="text-sm font-mono text-purple-800">PostWind.shortcut(name, classes)</code>
+                            <p class="text-xs text-gray-600 mt-1">Register shortcut (use define() for full flexibility)</p>
+                        </div>
+                        <div class="bg-amber-50 p-3 rounded border border-amber-100">
+                            <code class="text-sm font-mono text-amber-800">PostWind.preload(classes)</code>
+                            <p class="text-xs text-gray-600 mt-1">Warm up CSS before first render</p>
+                        </div>
+                        <div class="bg-rose-50 p-3 rounded border border-rose-100">
+                            <code class="text-sm font-mono text-rose-800">PostWind.loadClass(className)</code>
+                            <p class="text-xs text-gray-600 mt-1">Generate CSS for a single class</p>
+                        </div>
+                        <div class="bg-cyan-50 p-3 rounded border border-cyan-100">
+                            <code class="text-sm font-mono text-cyan-800">PostWind.generateDoc()</code>
+                            <p class="text-xs text-gray-600 mt-1">Generate documentation from current config</p>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="card">
                     <h3 class="font-semibold mb-4">Arbitrary Values</h3>
                     <div class="w-[250px] h-[100px] bg-[#ff6b6b] flex items-center justify-center text-white rounded mb-2">
@@ -2506,6 +2547,10 @@
 
         <!-- Documentation Section -->
         <section id="documentation" class="section" style="display: none;">
+            <h2 class="h2 mb-6">Documentation</h2>
+            <p class="text-gray-600 mb-4">
+                Auto-generated from current PostWind config using <code>PostWind.generateDoc()</code>. Click "Docs" button to generate.
+            </p>
             <div id="doc-content"></div>
         </section>
         </div>
@@ -2597,7 +2642,7 @@
         // Handle hash navigation
         function loadSectionFromHash() {
             const hash = window.location.hash.slice(1); // Remove #
-            const validSections = ['intro', 'spacing', 'typography', 'colors', 'responsive', 'offsets', 'container-queries', 'flex', 'grid', 'borders', 'rounded', 'transforms', 'states', 'onload', 'animations', 'marquee', 'visible', 'components', 'shortcuts', 'documentation'];
+            const validSections = ['intro', 'spacing', 'typography', 'colors', 'responsive', 'offsets', 'container-queries', 'flex', 'grid', 'borders', 'rounded', 'transforms', 'states', 'pseudo', 'features', 'onload', 'animations', 'marquee', 'visible', 'components', 'shortcuts', 'documentation'];
 
             if (hash && validSections.includes(hash)) {
                 showSection(hash, false); // Don't update hash since we're loading from it

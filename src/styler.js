@@ -302,7 +302,13 @@ const parseClassModifiers = memoize(function(className) {
  */
 function tryParseKeyword(actualClass, className, modifiers, breakpoint, importanceLevel) {
   if (CONFIG.keywords && CONFIG.keywords[actualClass]) {
-    return buildCSSRule(className, 'KEYWORD', CONFIG.keywords[actualClass], modifiers, breakpoint, importanceLevel);
+    // Check if this is an explicit position keyword that should override auto-relative
+    const isExplicitPosition = ['fixed', 'absolute', 'relative', 'sticky'].includes(actualClass);
+    const enhancedImportance = isExplicitPosition && importanceLevel === IMPORTANCE_LEVELS.NONE
+      ? IMPORTANCE_LEVELS.SCOPED  // Higher specificity
+      : importanceLevel;
+
+    return buildCSSRule(className, 'KEYWORD', CONFIG.keywords[actualClass], modifiers, breakpoint, enhancedImportance);
   }
   return null;
 }
@@ -475,14 +481,24 @@ function calculateNumericValue(property, value, unit, negative) {
  * @returns {string}
  */
 function buildCSSRule(className, cssProperty, cssValue, modifiers, breakpoint, importanceLevel = IMPORTANCE_LEVELS.NONE, extraDeclarations = null) {
-  let selector = buildCSSSelector(className, modifiers);
+  // Separate dark mode from other modifiers for special handling
+  const hasDarkMode = modifiers.includes('dark');
+  const otherModifiers = modifiers.filter(m => m !== 'dark');
+
+  let selector = buildCSSSelector(className, otherModifiers);
 
   if (importanceLevel === IMPORTANCE_LEVELS.SCOPED) {
     selector = `html body ${selector}`;
   }
 
+  // Apply dark mode: prepend .dark ancestor selector
+  if (hasDarkMode) {
+    selector = `.dark ${selector}`;
+  }
+
   const rule = buildCSSDeclaration(selector, cssProperty, cssValue, importanceLevel, extraDeclarations);
 
+  // Wrap in responsive breakpoint if present
   return breakpoint
     ? `@media ${CONFIG.breakpoints[breakpoint]} { ${rule} }`
     : rule;
@@ -497,18 +513,32 @@ function buildCSSRule(className, cssProperty, cssValue, modifiers, breakpoint, i
 function buildCSSSelector(className, modifiers) {
   let selector = `.${escapeSelector(className)}`;
 
-  modifiers.forEach(modifier => {
+  // Check if & (children selector) is present
+  const hasChildrenSelector = modifiers.includes('&');
+  const otherModifiers = modifiers.filter(m => m !== '&');
+
+  otherModifiers.forEach(modifier => {
     // Use constants for pseudo-selector mapping
     const pseudoSelector = CONSTANTS.PSEUDO_SELECTOR_MAPPING[modifier] || modifier;
 
-    // Special handling for visible pseudo-state
+    // Special handling for visible pseudo-state (uses class selector)
     if (modifier === 'visible') {
-      // For visible, we need to combine with .dw-visible class
       selector += pseudoSelector;
-    } else {
+    }
+    // Pseudo-elements already include :: in the mapping
+    else if (pseudoSelector.startsWith('::')) {
+      selector += pseudoSelector;
+    }
+    // Regular pseudo-classes need : prefix
+    else {
       selector += `:${pseudoSelector}`;
     }
   });
+
+  // Apply children selector if present
+  if (hasChildrenSelector) {
+    selector += ' > *';
+  }
 
   return selector;
 }
@@ -548,8 +578,8 @@ function buildCSSDeclaration(selector, cssProperty, cssValue, importanceLevel = 
       if (!property || value == null) {
         return;
       }
-      const finalValue = shouldAddImportant ? appendImportant(value) : value;
-      declarations.push(`${property}: ${finalValue}`);
+      // Extra declarations are defaults - never add !important so they can be overridden
+      declarations.push(`${property}: ${value}`);
     });
   }
 

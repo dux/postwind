@@ -16,15 +16,36 @@ export const CONSTANTS = {
   SUPPORTED_PSEUDO_STATES: [
     'hover', 'focus', 'active', 'disabled', 'visited',
     'focus-within', 'focus-visible', 'first', 'last', 'odd', 'even',
-    'visible'
+    'visible',
+    // Children selector (targets all direct children)
+    '&',
+    // Dark mode
+    'dark',
+    // Pseudo-elements (use :: in CSS)
+    'before', 'after', 'placeholder', 'marker', 'selection',
+    'first-line', 'first-letter', 'file'
   ],
   PSEUDO_SELECTOR_MAPPING: {
     'first': 'first-child',
     'last': 'last-child',
     'odd': 'nth-child(odd)',
     'even': 'nth-child(even)',
-    'visible': '.dw-visible'  // Special handling for visibility state
-  }
+    'visible': '.dw-visible',  // Special handling for visibility state
+    // Pseudo-elements use :: notation
+    'before': '::before',
+    'after': '::after',
+    'placeholder': '::placeholder',
+    'marker': '::marker',
+    'selection': '::selection',
+    'first-line': '::first-line',
+    'first-letter': '::first-letter',
+    'file': '::file-selector-button'
+  },
+  // Set of pseudo-elements that use :: instead of :
+  PSEUDO_ELEMENTS: new Set([
+    'before', 'after', 'placeholder', 'marker', 'selection',
+    'first-line', 'first-letter', 'file'
+  ])
 };
 
 function createDefaultProperties() {
@@ -423,7 +444,8 @@ const COLOR_PALETTE = {
     600: '71 85 105',
     700: '51 65 85',
     800: '30 41 59',
-    900: '15 23 42'
+    900: '15 23 42',
+    950: '2 6 23'
   },
   gray: {
     50: '249 250 251',
@@ -435,7 +457,8 @@ const COLOR_PALETTE = {
     600: '75 85 99',
     700: '55 65 81',
     800: '31 41 55',
-    900: '17 24 39'
+    900: '17 24 39',
+    950: '3 7 18'
   },
   zinc: {
     50: '250 250 250',
@@ -447,7 +470,8 @@ const COLOR_PALETTE = {
     600: '82 82 91',
     700: '63 63 70',
     800: '39 39 42',
-    900: '24 24 27'
+    900: '24 24 27',
+    950: '9 9 11'
   },
   neutral: {
     50: '250 250 250',
@@ -459,7 +483,8 @@ const COLOR_PALETTE = {
     600: '82 82 82',
     700: '64 64 64',
     800: '38 38 38',
-    900: '23 23 23'
+    900: '23 23 23',
+    950: '10 10 10'
   },
   stone: {
     50: '250 250 249',
@@ -471,7 +496,8 @@ const COLOR_PALETTE = {
     600: '87 83 78',
     700: '68 64 60',
     800: '41 37 36',
-    900: '28 25 23'
+    900: '28 25 23',
+    950: '12 10 9'
   },
   red: {
     50: '254 242 242',
@@ -483,7 +509,8 @@ const COLOR_PALETTE = {
     600: '220 38 38',
     700: '185 28 28',
     800: '153 27 27',
-    900: '127 29 29'
+    900: '127 29 29',
+    950: '69 10 10'
   },
   orange: {
     50: '255 247 237',
@@ -495,7 +522,8 @@ const COLOR_PALETTE = {
     600: '234 88 12',
     700: '194 65 12',
     800: '154 52 18',
-    900: '124 45 18'
+    900: '124 45 18',
+    950: '67 20 7'
   },
   amber: {
     50: '255 251 235',
@@ -507,7 +535,8 @@ const COLOR_PALETTE = {
     600: '217 119 6',
     700: '180 83 9',
     800: '146 64 14',
-    900: '120 53 15'
+    900: '120 53 15',
+    950: '69 26 3'
   },
   yellow: {
     50: '254 252 232',
@@ -519,7 +548,8 @@ const COLOR_PALETTE = {
     600: '202 138 4',
     700: '161 98 7',
     800: '133 77 14',
-    900: '113 63 18'
+    900: '113 63 18',
+    950: '66 32 6'
   },
   lime: {
     50: '247 254 231',
@@ -531,7 +561,8 @@ const COLOR_PALETTE = {
     600: '101 163 13',
     700: '77 124 15',
     800: '63 98 18',
-    900: '54 83 20'
+    900: '54 83 20',
+    950: '26 46 5'
   },
   green: {
     50: '240 253 244',
@@ -543,7 +574,8 @@ const COLOR_PALETTE = {
     600: '22 163 74',
     700: '21 128 61',
     800: '22 101 52',
-    900: '20 83 45'
+    900: '20 83 45',
+    950: '5 46 22'
   },
   emerald: {
     50: '236 253 245',
@@ -555,7 +587,8 @@ const COLOR_PALETTE = {
     600: '5 150 105',
     700: '4 120 87',
     800: '6 95 70',
-    900: '6 78 59'
+    900: '6 78 59',
+    950: '2 44 34'
   },
   teal: {
     50: '240 253 250',
@@ -567,7 +600,8 @@ const COLOR_PALETTE = {
     600: '13 148 136',
     700: '15 118 110',
     800: '17 94 89',
-    900: '19 78 74'
+    900: '19 78 74',
+    950: '4 47 46'
   },
   cyan: {
     50: '236 254 255',
@@ -579,7 +613,8 @@ const COLOR_PALETTE = {
     600: '8 145 178',
     700: '14 116 144',
     800: '21 94 117',
-    900: '22 78 99'
+    900: '22 78 99',
+    950: '8 51 68'
   },
   sky: {
     50: '240 249 255',
@@ -591,7 +626,8 @@ const COLOR_PALETTE = {
     600: '2 132 199',
     700: '3 105 161',
     800: '7 89 133',
-    900: '12 74 110'
+    900: '12 74 110',
+    950: '8 47 73'
   },
   blue: {
     50: '239 246 255',
@@ -603,7 +639,8 @@ const COLOR_PALETTE = {
     600: '37 99 235',
     700: '29 78 216',
     800: '30 64 175',
-    900: '30 58 138'
+    900: '30 58 138',
+    950: '23 37 84'
   },
   indigo: {
     50: '238 242 255',
@@ -615,7 +652,8 @@ const COLOR_PALETTE = {
     600: '79 70 229',
     700: '67 56 202',
     800: '55 48 163',
-    900: '49 46 129'
+    900: '49 46 129',
+    950: '30 27 75'
   },
   violet: {
     50: '245 243 255',
@@ -627,19 +665,21 @@ const COLOR_PALETTE = {
     600: '124 58 237',
     700: '109 40 217',
     800: '91 33 182',
-    900: '76 29 149'
+    900: '76 29 149',
+    950: '46 16 101'
   },
   purple: {
     50: '250 245 255',
     100: '243 232 255',
     200: '233 213 255',
     300: '216 180 254',
-    400: '196 144 254',
+    400: '192 132 252',
     500: '168 85 247',
     600: '147 51 234',
     700: '126 34 206',
     800: '107 33 168',
-    900: '88 28 135'
+    900: '88 28 135',
+    950: '59 7 100'
   },
   fuchsia: {
     50: '253 244 255',
@@ -651,7 +691,8 @@ const COLOR_PALETTE = {
     600: '192 38 211',
     700: '162 28 175',
     800: '134 25 143',
-    900: '112 26 117'
+    900: '112 26 117',
+    950: '74 4 78'
   },
   pink: {
     50: '253 242 248',
@@ -663,7 +704,8 @@ const COLOR_PALETTE = {
     600: '219 39 119',
     700: '190 24 93',
     800: '157 23 77',
-    900: '131 24 67'
+    900: '131 24 67',
+    950: '80 7 36'
   },
   rose: {
     50: '255 241 242',
@@ -675,7 +717,8 @@ const COLOR_PALETTE = {
     600: '225 29 72',
     700: '190 18 60',
     800: '159 18 57',
-    900: '136 19 55'
+    900: '136 19 55',
+    950: '76 5 25'
   }
 };
 
@@ -983,8 +1026,9 @@ function createDefaultKeywords() {
     'hyphens-manual': 'hyphens: manual',
     'hyphens-auto': 'hyphens: auto',
 
-    // Content
+    // Content (for pseudo-elements)
     'content-none': 'content: none',
+    'content-empty': 'content: ""',
 
     // Font Family
     'font-sans': 'font-family: ui-sans-serif, system-ui, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"',

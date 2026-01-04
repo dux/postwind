@@ -26,6 +26,7 @@ Use this guide whenever you (or another AI assistant) need quick context on Post
 <script>
   PostWind.init({
     debug: true,               // logs cache + class translations
+    body: true,                // adds viewport-based classes to body (mobile/tablet/desktop)
     breakpoints: {
       m: '(max-width: 640px)',
       t: '(min-width: 641px) and (max-width: 1023px)',
@@ -48,9 +49,10 @@ Use this guide whenever you (or another AI assistant) need quick context on Post
 ## Configuration Checklist
 
 1. **Default payload** — `PostWind.loadDefaultConfig()` auto registers ~100 CSS properties and 200 keyword utilities (flex/grid/shadows/rounded/etc.).
-2. **Runtime overrides** — pass partial objects into `PostWind.init({ props, keywords, breakpoints })` to merge/replace defaults.
+2. **Runtime overrides** — pass partial objects into `PostWind.init({ breakpoints, define, preload })` to merge/replace defaults.
 3. **Cache control** — `clearCache: true` inside `init()` wipes the memoized class map; `PostWind.resetCss()` reapplies the base reset.
-4. **Breakpoints** — stored as media query strings. Keys power:
+4. **Config access** — Use `PostWind.config` getter/setter for runtime configuration changes.
+5. **Breakpoints** — stored as media query strings. Keys power:
    - Prefix syntax (`d:items-center`)
    - Pipe notation order (`p-4|8|12` → `m|t|d`)
    - Property-first notation (`text-lg@d`)
@@ -63,6 +65,8 @@ Use this guide whenever you (or another AI assistant) need quick context on Post
 - **Keyword utility (CSS declaration)** — string that includes both `:` and `;`, or an object map. Example: `'text-brand': 'color: #2563eb; font-weight: 600;'`.
 - Supports nested shortcuts (`btn-primary` can re-use `btn`).
 - Automatically flushes memoized class output so overrides take effect immediately.
+
+**Note:** `PostWind.shortcut()` is still available but `PostWind.define()` is preferred—it handles both shortcuts and raw CSS declarations automatically.
 
 ## Responsive Syntax Buffet
 
@@ -77,10 +81,11 @@ Use this guide whenever you (or another AI assistant) need quick context on Post
 ## Advanced Utilities to Call Out
 
 - **`visible:` pseudo:** Works like `:isVisible`—PostWind uses `IntersectionObserver` to add/remove the target utility. Great for scroll animations (`visible:translate-y-0 opacity-100`).
+- **`onload:` prefix:** Schedules class application 100ms after page load—perfect for entrance animations (`onload:opacity-100`, `onload:scale-100`).
 - **Logical radius/edges:** Keyword map covers the entire Tailwind rounded family (`rounded-s-xl`, `rounded-ee-3xl`, etc.), showcased in `example/index.html`.
 - **Border helpers:** All border widths, styles (`dashed`, `dotted`, `double`), directional keywords (`border-y-4`, `border-s`), and new logical helpers mirror Tailwind.
 - **Inline gradients & arbitrary values:** Bracket notation (`bg-[hsl(240,100%,80%)]`, `shadow-[0_10px_40px_rgba(0,0,0,0.2)]`) works everywhere.
-- **Docs generator:** `src/gen-doc.js` scrapes config and emits markdown; run via `bun gen-doc` (see package scripts) when config changes.
+- **Docs generator:** `PostWind.generateDoc()` or `src/gen-doc.js` scrapes config and emits markdown; run via `bun gen-doc` (see package scripts) when config changes.
 
 ## Common Workflows for Contributors
 
@@ -93,6 +98,87 @@ Use this guide whenever you (or another AI assistant) need quick context on Post
    - Showcase new utilities in the demo tabs so users can see them instantly.
 4. **Testing** (`bun test`)
    - Tests live under `src/*.test.js` and cover parser rules, config generators, and shortcut behavior.
+5. **Documentation** (`src/gen-doc.js`)
+   - Run `bun gen-doc` to regenerate documentation when config changes.
+   - `PostWind.generateDoc()` is also available at runtime to generate docs from current config.
+
+## Dark Mode
+
+PostWind supports dark mode - simple, powerful, and automatic!
+
+### How It Works
+
+Dark mode is activated when `.dark` class is present on the `<body>` element:
+
+```html
+<!-- Light mode -->
+<body>
+
+<!-- Dark mode -->
+<body class="dark">
+```
+
+All `dark:` prefixed classes become active when `.dark` is present.
+
+### Automatic Dark Mode (dark-auto)
+
+PostWind can automatically detect OS preference using the `dark-auto` class:
+
+```html
+<body class="dark-auto">
+```
+
+**How dark-auto works:**
+- PostWind checks if `.dark` is already present (manual mode takes priority)
+- Checks `prefers-color-scheme: dark` media query
+- If OS is in dark mode → adds `.dark` class automatically
+- No localStorage or manual management needed
+
+### Priority Behavior
+
+If both `dark-auto` and `dark` are present, **manual wins**:
+
+```html
+<!-- Manual .dark takes priority, ignores OS preference -->
+<body class="dark-auto dark">
+
+<!-- Only auto-detection, follows OS preference -->
+<body class="dark-auto">
+```
+
+### Toggle Dark Mode with JavaScript
+
+```javascript
+// Toggle dark mode
+document.body.classList.toggle('dark');
+
+// Enable dark mode
+document.body.classList.add('dark');
+
+// Disable dark mode
+document.body.classList.remove('dark');
+
+// Check if dark mode is active
+const isDark = document.body.classList.contains('dark');
+```
+
+### Basic Usage
+
+```html
+<!-- Text colors -->
+<h1 class="text-gray-900 dark:text-white">Title</h1>
+<p class="text-gray-600 dark:text-gray-300">Paragraph</p>
+
+<!-- Background colors -->
+<div class="bg-white dark:bg-gray-900">
+  <div class="bg-gray-100 dark:bg-gray-800">Content</div>
+</div>
+
+<!-- Buttons -->
+<button class="bg-blue-500 hover:bg-blue-600 dark:bg-blue-600 dark:hover:bg-blue-700 text-white">
+  Button with dark mode support
+</button>
+```
 
 ## Tips for AI Edits
 

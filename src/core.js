@@ -6,7 +6,9 @@ import { debounce, safeWrapper, clearMemoCache, escapeSelector } from './utils.j
 import { splitContainerQueryClasses, updateContainerQueries, cleanupContainerQueriesForTree } from './container-query.js';
 import { generateDoc } from './gen-doc.js';
 
-// State management - use CONFIG singleton
+// ============================================================================
+// STATE
+// ============================================================================
 const processedClasses = new Set();
 let utilityStyleElement = null;
 let shortcutStyleElement = null;
@@ -21,7 +23,9 @@ const scrollXStyleCache = new Map();
 const SCROLL_X_CLASS_PATTERN = /^scroll-x:(\d+(?:\.\d+)?)$/;
 const SCROLL_X_DUPLICATE_ROUNDS = 3;
 
-// Configuration access
+// ============================================================================
+// CONFIGURATION
+// ============================================================================
 export function getConfig() {
   return CONFIG;
 }
@@ -125,7 +129,7 @@ export function defineKeyword(nameOrEntries, style) {
     clearMemoCache();
     if (typeof document !== 'undefined') {
       keywordsToReprocess.forEach(keywordKey => {
-        processClassForCSS(keywordKey);
+        generateCSSForClass(keywordKey);
       });
     }
   }
@@ -133,83 +137,159 @@ export function defineKeyword(nameOrEntries, style) {
   return updated;
 }
 
-// class="dialog onload:trigger-animation"
-const onLoadFilter = (className, element) => {
-  if (element && className.startsWith('onload:')) {
-    const newKlass = className.slice('onload:'.length)
-    setTimeout(()=>element.classList.add(newKlass), 100)
-    return null;
-  } else {
-    return className
-  }
-}
+// ============================================================================
+// CORE: Single function processes each class
+// ============================================================================
 
-// Process entire class attribute string
-function expandClassString(classString, element) {
-  return classString
-    .split(/\s+/)
-    .filter((klass)=>onLoadFilter(klass, element))
-    .filter(Boolean)
-    .flatMap(expandClass)  // This handles colon-to-pipe conversion and all expansions
-    .join(' ');
-}
-
-// Element processing - process entire class attribute
+/**
+ * Main handler - processes an element and all its classes
+ * This is called for every element with a class attribute
+ */
 const processElement = safeWrapper(function(element) {
   const originalClassString = element.getAttribute('class');
   if (!originalClassString || !originalClassString.trim()) return;
 
-  const processedClassString = expandClassString(originalClassString, element);
+  const originalClasses = originalClassString.split(/\s+/).filter(Boolean);
+  const transformedClasses = [];
 
-  // Replace class attribute if it changed
-  if (processedClassString !== originalClassString) {
-    element.setAttribute('class', processedClassString);
+  // Process each class through our single decision point
+  originalClasses.forEach(className => {
+    const result = handleClass(className, element);
+    if (result) {
+      transformedClasses.push(...result);
+    }
+  });
 
-    // Add debug info if enabled
+  // Update element if classes were transformed
+  const newClassString = transformedClasses.join(' ');
+  if (newClassString !== originalClassString) {
+    element.setAttribute('class', newClassString);
     if (debugMode) {
       element.setAttribute('data-dw-original', originalClassString);
     }
   }
 
-  // Generate CSS for all processed classes
-  const allClasses = processedClassString.split(/\s+/).filter(Boolean);
-  const { regularClasses, containerQueries } = splitContainerQueryClasses(allClasses);
-
-  regularClasses.forEach(className => {
-    processClassForCSS(className);
-  });
-
-  if (containerQueries.length) {
-    containerQueries.forEach(query => processClassForCSS(query.payload));
-  }
-
-  updateContainerQueries(element, containerQueries);
-
-  // Check if any classes use visible: pseudo-state
-  const hasVisiblePseudo = regularClasses.some(cls => cls.includes('visible:'));
-  if (hasVisiblePseudo) {
-    setupVisibilityObserver();
-    elementsWithVisiblePseudo.set(element, regularClasses.filter(cls => cls.includes('visible:')));
-    visibilityObserver.observe(element);
-  }
-
-  applyScrollXEnhancements(element, regularClasses);
+  // Handle special features that need element references
+  handleVisibilityTracking(element, transformedClasses);
+  handleScrollXFeature(element, transformedClasses);
 }, 'processElement');
 
+/**
+ * SINGLE DECISION POINT: Every class goes through here
+ * Determines what type of class it is and how to handle it
+ * Returns array of class names to keep in the DOM (or null to remove)
+ */
+function handleClass(className, element) {
+  // 1. ONLOAD: Special filter that schedules class addition
+  if (className.startsWith('onload:')) {
+    const targetClass = className.slice('onload:'.length);
+    setTimeout(() => element?.classList.add(targetClass), 100);
+    return null; // Remove from DOM
+  }
 
-const processClassForCSS = safeWrapper(function(className) {
+  // 2. EXPANSION: Handle pipe notation (p-10|20), @notation (p-10@m), brackets
+  const expandedClasses = expandClass(className);
+  if (expandedClasses.length > 1) {
+    // Recursively handle each expanded class
+    const results = [];
+    expandedClasses.forEach(expanded => {
+      const result = handleClass(expanded, element);
+      if (result) results.push(...result);
+    });
+    return results;
+  }
+
+  // Use the single expanded/cleaned class name
+  const cleanedClass = expandedClasses[0] || className;
+
+  // 3. CONTAINER QUERIES: Handle @container syntax
+  const { regularClasses, containerQueries } = splitContainerQueryClasses([cleanedClass]);
+  if (containerQueries.length > 0) {
+    containerQueries.forEach(query => {
+      generateCSSForClass(query.payload);
+    });
+    updateContainerQueries(element, containerQueries);
+  }
+
+  // 4. GENERATE CSS: For shortcuts, keywords, and utility classes
+  if (isPostwindClass(cleanedClass)) {
+    generateCSSForClass(cleanedClass);
+  }
+
+  // Return the cleaned class to keep in DOM
+  return [cleanedClass];
+}
+
+/**
+ * Check if this is a PostWind class (shortcut, keyword, or utility)
+ */
+function isPostwindClass(className) {
+  // Shortcuts are always PostWind classes
+  if (isShortcut(className)) return true;
+
+  // Keywords are PostWind classes
+  const baseClass = className.split(':').pop();
+  if (CONFIG.keywords?.[baseClass]) return true;
+
+  // Utility classes match patterns like: property-value
+  return isUtilityPattern(className);
+}
+
+/**
+ * Check if className matches utility class pattern
+ */
+function isUtilityPattern(className) {
+  // Remove modifiers (hover:, m:, etc.) to get base class
+  const baseClass = className.split(':').pop();
+
+  // Match patterns: property-value
+  // Examples: p-10, bg-red-500, w-[200px], text-lg
+  return /^-?[a-z-]+-[a-z0-9-[\]./]+$/i.test(baseClass);
+}
+
+/**
+ * Generate and inject CSS for a class (only once per class)
+ */
+const generateCSSForClass = safeWrapper(function(className) {
   if (processedClasses.has(className)) return;
   processedClasses.add(className);
 
-  // Use styler to generate CSS rules
   const cssRules = processClass(className);
   const targetBucket = isShortcut(className) ? 'shortcut' : 'utility';
+
   cssRules.forEach(rule => {
     if (rule) {
       injectCSS(rule, targetBucket);
     }
   });
-}, 'processClassForCSS');
+}, 'generateCSSForClass');
+
+/**
+ * Handle visibility tracking for elements with visible: pseudo-classes
+ */
+function handleVisibilityTracking(element, classes) {
+  const hasVisiblePseudo = classes.some(cls => cls.includes('visible:'));
+  if (hasVisiblePseudo) {
+    setupVisibilityObserver();
+    elementsWithVisiblePseudo.set(element, classes.filter(cls => cls.includes('visible:')));
+    visibilityObserver.observe(element);
+  }
+}
+
+/**
+ * Handle scroll-x animation feature
+ */
+function handleScrollXFeature(element, classes) {
+  const scrollClass = classes.find(cls => SCROLL_X_CLASS_PATTERN.test(cls));
+  if (!scrollClass) return;
+
+  const durationMatch = scrollClass.match(SCROLL_X_CLASS_PATTERN);
+  const duration = durationMatch ? parseFloat(durationMatch[1]) : null;
+  if (!duration || Number.isNaN(duration)) return;
+
+  ensureScrollXCSS(scrollClass, duration);
+  duplicateScrollXChildren(element);
+}
 
 function processNodeTree(node) {
   if (node.nodeType !== Node.ELEMENT_NODE) return;
@@ -220,7 +300,9 @@ function processNodeTree(node) {
   elementsWithClasses.forEach(processElement);
 }
 
-// CSS injection - immediate for reliability
+// ============================================================================
+// CSS INJECTION
+// ============================================================================
 function injectCSS(css, target = 'utility') {
   if (!css) return;
 
@@ -278,26 +360,10 @@ function getAnimationKeyframes() {
 `;
 }
 
-function applyScrollXEnhancements(element, regularClasses) {
-  if (!element || !regularClasses?.length) {
-    return;
-  }
 
-  const scrollClass = regularClasses.find(cls => SCROLL_X_CLASS_PATTERN.test(cls));
-  if (!scrollClass) {
-    return;
-  }
-
-  const durationMatch = scrollClass.match(SCROLL_X_CLASS_PATTERN);
-  const duration = durationMatch ? parseFloat(durationMatch[1]) : null;
-  if (!duration || Number.isNaN(duration)) {
-    return;
-  }
-
-  ensureScrollXCSS(scrollClass, duration);
-  duplicateScrollXChildren(element);
-}
-
+// ============================================================================
+// SCROLL-X FEATURE
+// ============================================================================
 function ensureScrollXCSS(className, durationSeconds) {
   const cachedDuration = scrollXStyleCache.get(className);
   if (cachedDuration === durationSeconds) {
@@ -333,7 +399,9 @@ function duplicateScrollXChildren(element) {
   }
 }
 
-// Initialization
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
 export function init(options = {}) {
   // Check if DOM is ready
   if (typeof document !== 'undefined' && document.readyState === 'loading') {
@@ -349,6 +417,7 @@ export function init(options = {}) {
   if (settings.breakpoints) {
     applyBreakpointOverrides(settings.breakpoints);
   }
+
   debugMode = settings.debug;
 
   if (typeof window !== 'undefined') {
@@ -373,6 +442,9 @@ export function init(options = {}) {
 
   const elementsWithClasses = document.querySelectorAll('[class]');
   elementsWithClasses.forEach(processElement);
+
+  // Setup dark mode auto-detection
+  setupDarkModeAuto();
 
   setupMutationObserver();
 
@@ -432,6 +504,9 @@ function isPlainObject(value) {
   return value && typeof value === 'object' && !Array.isArray(value);
 }
 
+// ============================================================================
+// OBSERVERS
+// ============================================================================
 function setupMutationObserver() {
   const observer = new MutationObserver((mutations) => {
     mutations.forEach(mutation => {
@@ -468,20 +543,20 @@ function setupVisibilityObserver() {
       if (!visibleClasses) return;
 
       if (entry.isIntersecting) {
-        // Element is visible - add the visible state
         element.classList.add('dw-visible');
       } else {
-        // Element is not visible - remove the visible state
         element.classList.remove('dw-visible');
       }
     });
   }, {
-    // Options for when to trigger
     threshold: 0.7, // Trigger when 70% visible
     rootMargin: '0px'
   });
 }
 
+// ============================================================================
+// PUBLIC API
+// ============================================================================
 export function resetCSS() {
   const resetRules = `*,*::before,*::after{box-sizing:border-box}
 *{margin:0}
@@ -511,7 +586,7 @@ details summary{cursor:pointer}`;
 }
 
 export function loadClass(className) {
-  processClassForCSS(className);
+  generateCSSForClass(className);
 }
 
 export function preload(classList) {
@@ -523,9 +598,10 @@ export function preload(classList) {
 
   normalizedEntries
     .filter(entry => typeof entry === 'string' && entry.trim())
-    .flatMap(entry => expandClassString(entry).split(/\s+/))
+    .flatMap(entry => expandClass(entry))
+    .flat()
     .filter(Boolean)
-    .forEach(cls => processClassForCSS(cls));
+    .forEach(cls => generateCSSForClass(cls));
 }
 
 function applyInitDefinitions(definitionOption) {
@@ -590,7 +666,7 @@ function registerShortcut(shortcutName, shortcutClasses) {
   // Immediately inject CSS for shortcuts that may already exist in the DOM
   if (typeof document !== 'undefined') {
     const targetName = processableName || normalizedName;
-    processClassForCSS(targetName);
+    generateCSSForClass(targetName);
   }
 
   return true;
@@ -606,7 +682,45 @@ export function shortcut(nameOrMap, classes) {
   return registerShortcut(nameOrMap, classes);
 }
 
-// Body class management
+// ============================================================================
+// DARK MODE MANAGEMENT
+// ============================================================================
+function setupDarkModeAuto() {
+  if (typeof document === 'undefined') return;
+
+  const body = document.body;
+  if (!body || !body.classList || typeof body.classList.contains !== 'function') return;
+
+  // If .dark is already present, skip auto-detection
+  if (body.classList.contains('dark')) {
+    if (debugMode) {
+      console.log('PostWind: Dark mode already set, skipping auto-detection');
+    }
+    return;
+  }
+
+  // Check if dark-auto class is present
+  if (body.classList.contains('dark-auto')) {
+    // Check OS preference
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (prefersDark) {
+        body.classList.add('dark');
+        if (debugMode) {
+          console.log('PostWind: Dark mode enabled from OS preference');
+        }
+      } else {
+        if (debugMode) {
+          console.log('PostWind: Light mode from OS preference');
+        }
+      }
+    }
+  }
+}
+
+// ============================================================================
+// BODY CLASS MANAGEMENT
+// ============================================================================
 function setupBodyClassManagement() {
   bodyClassMode = true;
 
