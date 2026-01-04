@@ -778,6 +778,21 @@ const TAILWIND_COLORS = {
     800: '#9f1239',
     900: '#881337',
     950: '#4c0519'
+  },
+
+  // Turquoise (custom color - not in standard Tailwind)
+  turquoise: {
+    50: '#effefa',
+    100: '#c7fff0',
+    200: '#90ffe2',
+    300: '#51f7d2',
+    400: '#1de4bd',
+    500: '#40e0d0',
+    600: '#06a896',
+    700: '#0a857a',
+    800: '#0d6963',
+    900: '#105752',
+    950: '#023435'
   }
 };
 
@@ -800,7 +815,7 @@ const BASE_COLORS = {
   lime: '#84cc16',
   green: '#22c55e',
   emerald: '#10b981',
-  t: '#14b8a6',
+  teal: '#14b8a6',
   cyan: '#06b6d4',
   sky: '#0ea5e9',
   blue: '#3b82f6',
@@ -809,7 +824,8 @@ const BASE_COLORS = {
   purple: '#a855f7',
   fuchsia: '#d946ef',
   pink: '#ec4899',
-  rose: '#f43f5e'
+  rose: '#f43f5e',
+  turquoise: '#40e0d0'
 };
 
 const SHADE_STOPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
@@ -1411,7 +1427,7 @@ function createDefaultKeywords() {
     'col-start-3': 'grid-column-start: 3',
     'col-start-4': 'grid-column-start: 4',
     'col-start-5': 'grid-column-start: 5',
-    'col-start-6':  'grid-column-start: 6',
+    'col-start-6': 'grid-column-start: 6',
     'col-end-1': 'grid-column-end: 1',
     'col-end-2': 'grid-column-end: 2',
     'col-end-3': 'grid-column-end: 3',
