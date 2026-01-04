@@ -584,9 +584,20 @@ details summary{cursor:pointer}`;
 
   resetElement.textContent = resetRules;
 }
-
+ 
 export function loadClass(className) {
-  generateCSSForClass(className);
+  if (!className) return;
+  
+  const normalizedEntries = Array.isArray(className)
+    ? className
+    : [className];
+  
+  normalizedEntries
+    .filter(entry => typeof entry === 'string' && entry.trim())
+    .flatMap(entry => expandClass(entry))
+    .flat()
+    .filter(Boolean)
+    .forEach(cls => generateCSSForClass(cls));
 }
 
 export function preload(classList) {

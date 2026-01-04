@@ -173,4 +173,64 @@ describe('PostWind Styler - Standalone CSS Generation', () => {
     expect(styles.length).toBeGreaterThan(0);
     expect(end - start).toBeLessThan(100); // Should be very fast (under 100ms)
   });
+
+  test('Gradient direction: bg-gradient-to-r', () => {
+    const rules = processClass('bg-gradient-to-r');
+    expect(rules).toHaveLength(1);
+    expect(rules[0]).toContain('background-image: linear-gradient(to right, var(--tw-gradient-stops))');
+  });
+
+  test('Gradient direction: bg-gradient-to-br', () => {
+    const rules = processClass('bg-gradient-to-br');
+    expect(rules).toHaveLength(1);
+    expect(rules[0]).toContain('background-image: linear-gradient(to bottom right, var(--tw-gradient-stops))');
+  });
+
+  test('Gradient color: from-blue-500', () => {
+    const rules = processClass('from-blue-500');
+    expect(rules).toHaveLength(1);
+    expect(rules[0]).toContain('--tw-gradient-from: #3b82f6');
+    expect(rules[0]).toContain('--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)');
+  });
+
+  test('Gradient color: to-purple-600', () => {
+    const rules = processClass('to-purple-600');
+    expect(rules).toHaveLength(1);
+    expect(rules[0]).toContain('--tw-gradient-to: #9333ea');
+    expect(rules[0]).toContain('--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)');
+  });
+
+  test('Gradient color with via: via-pink-500', () => {
+    const rules = processClass('via-pink-500');
+    expect(rules).toHaveLength(1);
+    expect(rules[0]).toContain('--tw-gradient-via: #ec4899');
+    expect(rules[0]).toContain('--tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to)');
+  });
+
+  test('Full gradient: bg-gradient-to-r from-blue-500 to-purple-600', () => {
+    const styles = generateStyles('bg-gradient-to-r from-blue-500 to-purple-600');
+    expect(styles).toHaveLength(3);
+
+    const directionRule = styles.find(rule => rule.includes('linear-gradient'));
+    expect(directionRule).toBeDefined();
+    expect(directionRule).toContain('to right');
+
+    const fromRule = styles.find(rule => rule.startsWith('.from-blue-500'));
+    expect(fromRule).toBeDefined();
+    expect(fromRule).toContain('#3b82f6');
+
+    const toRule = styles.find(rule => rule.startsWith('.to-purple-600'));
+    expect(toRule).toBeDefined();
+    expect(toRule).toContain('#9333ea');
+  });
+
+  test('Gradient with via: bg-gradient-to-r from-green-400 via-yellow-500 to-red-500', () => {
+    const styles = generateStyles('bg-gradient-to-r from-green-400 via-yellow-500 to-red-500');
+    expect(styles).toHaveLength(4);
+
+    const viaRule = styles.find(rule => rule.includes('--tw-gradient-via'));
+    expect(viaRule).toBeDefined();
+    expect(viaRule).toContain('#eab308');
+    expect(viaRule).toContain('--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to)');
+  });
 });

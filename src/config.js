@@ -125,6 +125,16 @@ function createDefaultProperties() {
     'border-y': ['border-top-width', 'border-bottom-width'],
     'border-s': 'border-inline-start-width',
     'border-e': 'border-inline-end-width',
+    // Border Style
+    'border-style': 'border-style',
+    'border-t-style': 'border-top-style',
+    'border-r-style': 'border-right-style',
+    'border-b-style': 'border-bottom-style',
+    'border-l-style': 'border-left-style',
+    'border-x-style': ['border-left-style', 'border-right-style'],
+    'border-y-style': ['border-top-style', 'border-bottom-style'],
+    'border-s-style': 'border-inline-start-style',
+    'border-e-style': 'border-inline-end-style',
 
     // Border Radius
     'br': 'border-radius',
@@ -797,17 +807,17 @@ const TAILWIND_COLORS = {
 
   // Light Blue (CSS named color)
   lightblue: {
-    50: '#f0f9ff',
-    100: '#e0f4ff',
-    200: '#b9e8ff',
-    300: '#7cd6ff',
-    400: '#36c1ff',
+    50: '#f7fbff',
+    100: '#eff7ff',
+    200: '#e0efff',
+    300: '#cce3ff',
+    400: '#b3d2ff',
     500: '#add8e6',
-    600: '#0891b2',
-    700: '#0e7490',
-    800: '#155e75',
-    900: '#164e63',
-    950: '#083344'
+    600: '#7eb8d6',
+    700: '#5b99c6',
+    800: '#3d7cb6',
+    900: '#2a5ea6',
+    950: '#1a3d6d'
   },
 
   // Coral (CSS named color)
@@ -890,8 +900,8 @@ const TAILWIND_COLORS = {
     50: '#fafafa',
     100: '#f5f5f5',
     200: '#eeeeee',
-    300: '#e0e0e0',
-    400: '#c0c0c0',
+    300: '#d9d9d9',
+    400: '#cccccc',
     500: '#c0c0c0',
     600: '#9e9e9e',
     700: '#757575',
@@ -902,17 +912,17 @@ const TAILWIND_COLORS = {
 
   // Aqua (CSS named color - alias for cyan)
   aqua: {
-    50: '#ecfeff',
-    100: '#cffafe',
-    200: '#a5f3fc',
-    300: '#67e8f9',
-    400: '#22d3ee',
+    50: '#f0fdff',
+    100: '#e0fbff',
+    200: '#baf8ff',
+    300: '#7ef4ff',
+    400: '#42f0ff',
     500: '#00ffff',
-    600: '#0891b2',
-    700: '#0e7490',
-    800: '#155e75',
-    900: '#164e63',
-    950: '#083344'
+    600: '#00d4d4',
+    700: '#00a9a9',
+    800: '#007e7e',
+    900: '#005353',
+    950: '#002f2f'
   },
 
   // Magenta (CSS named color - alias for fuchsia)
@@ -928,6 +938,156 @@ const TAILWIND_COLORS = {
     800: '#86198f',
     900: '#701a75',
     950: '#4a044e'
+  },
+
+  // Brown
+  brown: {
+    50: '#fef3f2',
+    100: '#fee2e2',
+    200: '#fecaca',
+    300: '#fca5a5',
+    400: '#f87171',
+    500: '#a52a2a',
+    600: '#8b4513',
+    700: '#6b3e0e',
+    800: '#4a2c0a',
+    900: '#331d06',
+    950: '#1a0e03'
+  },
+
+  // Beige
+  beige: {
+    50: '#fffcf8',
+    100: '#fff9f1',
+    200: '#fff3e3',
+    300: '#ffeccc',
+    400: '#ffe0af',
+    500: '#f5f5dc',
+    600: '#d4c5a9',
+    700: '#b39c78',
+    800: '#927749',
+    900: '#735b36',
+    950: '#3e311d'
+  },
+
+  // Salmon
+  salmon: {
+    50: '#fff1f2',
+    100: '#ffe4e6',
+    200: '#fecdd3',
+    300: '#fda4af',
+    400: '#fb7185',
+    500: '#fa8072',
+    600: '#e15a4c',
+    700: '#c44134',
+    800: '#9f322a',
+    900: '#822a24',
+    950: '#4b1512'
+  },
+
+  // Crimson
+  crimson: {
+    50: '#fef2f2',
+    100: '#fee2e2',
+    200: '#fecaca',
+    300: '#fca5a5',
+    400: '#f87171',
+    500: '#dc143c',
+    600: '#b81030',
+    700: '#940d25',
+    800: '#710a1d',
+    900: '#5a0717',
+    950: '#2f040c'
+  },
+
+  // Lavender
+  lavender: {
+    50: '#fafbff',
+    100: '#f5f6ff',
+    200: '#ebebf9',
+    300: '#e1e5f7',
+    400: '#ebdffe',
+    500: '#e6e6fa',
+    600: '#b8b8d1',
+    700: '#9194a8',
+    800: '#737480',
+    900: '#5c5e67',
+    950: '#36373d'
+  },
+
+  // Khaki
+  khaki: {
+    50: '#fbfbf5',
+    100: '#f5f5e6',
+    200: '#ebe9d0',
+    300: '#dedbb5',
+    400: '#cdca94',
+    500: '#f0e68c',
+    600: '#c9c273',
+    700: '#a39b5a',
+    800: '#817848',
+    900: '#695f3b',
+    950: '#3b361f'
+  },
+
+  // Chocolate
+  chocolate: {
+    50: '#fef5f0',
+    100: '#fde9d6',
+    200: '#fbd5a8',
+    300: '#f7b669',
+    400: '#f39c2b',
+    500: '#d2691e',
+    600: '#b05618',
+    700: '#8e4414',
+    800: '#6e350f',
+    900: '#572b0d',
+    950: '#321a08'
+  },
+
+  // Sienna
+  sienna: {
+    50: '#fef7f2',
+    100: '#fdece0',
+    200: '#fbdac1',
+    300: '#f7bd96',
+    400: '#f3995f',
+    500: '#a0522d',
+    600: '#874326',
+    700: '#6e341e',
+    800: '#562617',
+    900: '#441f11',
+    950: '#2a110a'
+  },
+
+  // Plum
+  plum: {
+    50: '#fdf4ff',
+    100: '#fae8ff',
+    200: '#f5d0fe',
+    300: '#f0abfc',
+    400: '#e8b4ff',
+    500: '#dda0dd',
+    600: '#b989ba',
+    700: '#957299',
+    800: '#755b78',
+    900: '#5e4961',
+    950: '#362837'
+  },
+
+  // Tomato
+  tomato: {
+    50: '#fef2f2',
+    100: '#fee2e2',
+    200: '#fecaca',
+    300: '#fca5a5',
+    400: '#f87171',
+    500: '#ff6347',
+    600: '#d9553d',
+    700: '#b34533',
+    800: '#8e3629',
+    900: '#742b22',
+    950: '#431613'
   }
 };
 
@@ -969,7 +1129,17 @@ const BASE_COLORS = {
   olive: '#808000',
   silver: '#c0c0c0',
   aqua: '#00ffff',
-  magenta: '#ff00ff'
+  magenta: '#ff00ff',
+  brown: '#a52a2a',
+  beige: '#f5f5dc',
+  salmon: '#fa8072',
+  crimson: '#dc143c',
+  lavender: '#e6e6fa',
+  khaki: '#f0e68c',
+  chocolate: '#d2691e',
+  sienna: '#a0522d',
+  plum: '#dda0dd',
+  tomato: '#ff6347'
 };
 
 const SHADE_STOPS = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
@@ -1026,6 +1196,44 @@ function createColorKeywordMap(prefix, cssProperty) {
     SHADE_STOPS.forEach(shade => {
       if (shades[shade]) {
         entries[`${prefix}-${name}-${shade}`] = `${cssProperty}: ${shades[shade]}`;
+      }
+    });
+  });
+
+  return entries;
+}
+
+function createGradientColorMap(prefix, colorVar, stopsVar, isVia = false) {
+  const entries = {};
+
+  Object.entries(TAILWIND_COLORS).forEach(([name, shades]) => {
+    // Handle special colors (black, white, transparent, current, inherit)
+    if (shades.DEFAULT !== undefined) {
+      if (isVia) {
+        entries[`${prefix}-${name}`] = `${colorVar}: ${shades.DEFAULT}; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to)`;
+      } else {
+        entries[`${prefix}-${name}`] = `${colorVar}: ${shades.DEFAULT}; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)`;
+      }
+      return;
+    }
+
+    // Add base class (maps to 500)
+    if (shades[500]) {
+      if (isVia) {
+        entries[`${prefix}-${name}`] = `${colorVar}: ${shades[500]}; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to)`;
+      } else {
+        entries[`${prefix}-${name}`] = `${colorVar}: ${shades[500]}; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)`;
+      }
+    }
+
+    // Add all shade variants
+    SHADE_STOPS.forEach(shade => {
+      if (shades[shade]) {
+        if (isVia) {
+          entries[`${prefix}-${name}-${shade}`] = `${colorVar}: ${shades[shade]}; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-via), var(--tw-gradient-to)`;
+        } else {
+          entries[`${prefix}-${name}-${shade}`] = `${colorVar}: ${shades[shade]}; --tw-gradient-stops: var(--tw-gradient-from), var(--tw-gradient-to)`;
+        }
       }
     });
   });
@@ -1538,6 +1746,45 @@ function createDefaultKeywords() {
     'border': 'border-width: 1px; border-style: solid; border-color: #d1d5db',
     'border-b': 'border-bottom-width: 1px; border-bottom-style: solid; border-bottom-color: #d1d5db',
     'border-blue-500': 'border-color: #3b82f6',
+
+    // Border Style
+    'border-solid': 'border-style: solid',
+    'border-dashed': 'border-style: dashed',
+    'border-dotted': 'border-style: dotted',
+    'border-double': 'border-style: double',
+    'border-groove': 'border-style: groove',
+    'border-ridge': 'border-style: ridge',
+    'border-inset': 'border-style: inset',
+    'border-outset': 'border-style: outset',
+    'border-hidden': 'border-style: hidden',
+    'border-none': 'border-style: none',
+    // Top/Bottom/Left/Right border styles
+    'border-t-solid': 'border-top-style: solid',
+    'border-t-dashed': 'border-top-style: dashed',
+    'border-t-dotted': 'border-top-style: dotted',
+    'border-t-double': 'border-top-style: double',
+    'border-r-solid': 'border-right-style: solid',
+    'border-r-dashed': 'border-right-style: dashed',
+    'border-r-dotted': 'border-right-style: dotted',
+    'border-r-double': 'border-right-style: double',
+    'border-b-solid': 'border-bottom-style: solid',
+    'border-b-dashed': 'border-bottom-style: dashed',
+    'border-b-dotted': 'border-bottom-style: dotted',
+    'border-b-double': 'border-bottom-style: double',
+    'border-l-solid': 'border-left-style: solid',
+    'border-l-dashed': 'border-left-style: dashed',
+    'border-l-dotted': 'border-left-style: dotted',
+    'border-l-double': 'border-left-style: double',
+    // X/Y axis border styles
+    'border-x-solid': 'border-left-style: solid; border-right-style: solid',
+    'border-x-dashed': 'border-left-style: dashed; border-right-style: dashed',
+    'border-x-dotted': 'border-left-style: dotted; border-right-style: dotted',
+    'border-x-double': 'border-left-style: double; border-right-style: double',
+    'border-y-solid': 'border-top-style: solid; border-bottom-style: solid',
+    'border-y-dashed': 'border-top-style: dashed; border-bottom-style: dashed',
+    'border-y-dotted': 'border-top-style: dotted; border-bottom-style: dotted',
+    'border-y-double': 'border-top-style: double; border-bottom-style: double',
+
 
     // Ring utilities
     'ring-2': 'box-shadow: 0 0 0 2px rgba(59, 130, 246, 0.5)',
@@ -2079,6 +2326,25 @@ function createDefaultKeywords() {
   Object.assign(keywords, createColorKeywordMap('decoration', 'text-decoration-color'));
   Object.assign(keywords, createColorKeywordMap('outline', 'outline-color'));
   Object.assign(keywords, createBorderRadiusKeywordMap());
+
+  // Gradient keywords
+  Object.assign(keywords, {
+    'bg-gradient': 'background-image: linear-gradient(to right, var(--tw-gradient-stops))',
+    'bg-gradient-to-t': 'background-image: linear-gradient(to top, var(--tw-gradient-stops))',
+    'bg-gradient-to-tr': 'background-image: linear-gradient(to top right, var(--tw-gradient-stops))',
+    'bg-gradient-to-r': 'background-image: linear-gradient(to right, var(--tw-gradient-stops))',
+    'bg-gradient-to-br': 'background-image: linear-gradient(to bottom right, var(--tw-gradient-stops))',
+    'bg-gradient-to-b': 'background-image: linear-gradient(to bottom, var(--tw-gradient-stops))',
+    'bg-gradient-to-bl': 'background-image: linear-gradient(to bottom left, var(--tw-gradient-stops))',
+    'bg-gradient-to-l': 'background-image: linear-gradient(to left, var(--tw-gradient-stops))',
+    'bg-gradient-to-tl': 'background-image: linear-gradient(to top left, var(--tw-gradient-stops))'
+  });
+
+  // Gradient color keywords
+  Object.assign(keywords, createGradientColorMap('from', '--tw-gradient-from', '--tw-gradient-stops'));
+  Object.assign(keywords, createGradientColorMap('via', '--tw-gradient-via', '--tw-gradient-stops', true));
+  Object.assign(keywords, createGradientColorMap('to', '--tw-gradient-to', '--tw-gradient-stops'));
+
   return keywords;
 }
 

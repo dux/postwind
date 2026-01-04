@@ -381,11 +381,43 @@ describe('PostWind Test Suite - Input/Output Examples', () => {
       // Input: text-[#333333]   → Expected: color: #333333
       testClassWithOutput('text-[#333333]', ['color: #333333']);
 
-      // Input: border-[#e5e5e5] → Expected: border-color: #e5e5e5
-      testClassWithOutput('border-[#e5e5e5]', ['border-color: #e5e5e5']);
+       // Input: border-[#e5e5e5] → Expected: border-color: #e5e5e5
+       testClassWithOutput('border-[#e5e5e5]', ['border-color: #e5e5e5']);
+     });
+
+    test('border style utilities: border-solid/dashed/dotted/double', () => {
+      // Basic border styles
+      testClassWithOutput('border-solid', ['border-style: solid']);
+      testClassWithOutput('border-dashed', ['border-style: dashed']);
+      testClassWithOutput('border-dotted', ['border-style: dotted']);
+      testClassWithOutput('border-double', ['border-style: double']);
+      testClassWithOutput('border-groove', ['border-style: groove']);
+      testClassWithOutput('border-ridge', ['border-style: ridge']);
+      testClassWithOutput('border-inset', ['border-style: inset']);
+      testClassWithOutput('border-outset', ['border-style: outset']);
+      testClassWithOutput('border-hidden', ['border-style: hidden']);
+      testClassWithOutput('border-none', ['border-style: none']);
+
+      // Directional border styles
+      testClassWithOutput('border-t-dashed', ['border-top-style: dashed']);
+      testClassWithOutput('border-r-dotted', ['border-right-style: dotted']);
+      testClassWithOutput('border-b-double', ['border-bottom-style: double']);
+      testClassWithOutput('border-l-solid', ['border-left-style: solid']);
+
+      // X/Y axis border styles
+      testClassWithOutput('border-x-dashed', ['border-left-style: dashed', 'border-right-style: dashed']);
+      testClassWithOutput('border-y-double', ['border-top-style: double', 'border-bottom-style: double']);
     });
 
-    test('calc and percentage values: w-[{expression}] → width: {expression}', () => {
+    test('combined border width and style utilities', () => {
+      // border-2 border-dashed should work together
+      testClassWithOutput('border-2', ['border-width: 8px']);
+      testClassWithOutput('border-dashed', ['border-style: dashed']);
+      testClassWithOutput('border-4', ['border-width: 16px']);
+      testClassWithOutput('border-double', ['border-style: double']);
+    });
+ 
+     test('calc and percentage values: w-[{expression}] → width: {expression}', () => {
       // Input: w-[calc(100%-20px)] → Expected: width: calc(100%-20px)
       testClassWithOutput('w-[calc(100%-20px)]', ['width: calc(100%-20px)']);
 

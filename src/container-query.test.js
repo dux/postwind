@@ -31,15 +31,16 @@ beforeEach(() => {
 });
 
 function createTestElement() {
-  const tokens = new Set();
+  const styleStore = {};
   return {
+    style: {},
     classList: {
-      add(cls) { tokens.add(cls); },
-      remove(cls) { tokens.delete(cls); },
-      contains(cls) { return tokens.has(cls); }
+      add(cls) {},
+      remove(cls) {},
+      contains(cls) { return false; }
     },
-    __getClasses() {
-      return Array.from(tokens);
+    __getStyles() {
+      return { ...this.style };
     }
   };
 }
@@ -58,13 +59,9 @@ describe('Container query helpers', () => {
     });
   });
 
-  test('updateContainerQueries toggles payload class based on width', () => {
+  test('updateContainerQueries toggles payload styles based on width', () => {
     const element = createTestElement();
     const queries = [{ token: 'max-320:flex', mode: 'max', threshold: 320, payload: 'flex' }];
-
-    const originalNow = Date.now;
-    let fakeNow = 1000;
-    Date.now = () => fakeNow;
 
     try {
       updateContainerQueries(element, queries);
@@ -72,27 +69,20 @@ describe('Container query helpers', () => {
       expect(observer).toBeDefined();
 
       observer.fire(300);
-      expect(element.__getClasses()).toContain('flex');
+      expect(element.__getStyles()).toHaveProperty('display', 'flex');
 
-      fakeNow += 400;
       observer.fire(400);
-      expect(element.__getClasses()).not.toContain('flex');
+      expect(element.__getStyles().display).toBe('');
     } finally {
-      Date.now = originalNow;
       teardownContainerQueries(element);
     }
   });
 
-  test('resize observer evaluations are throttled to 300ms', () => {
+  test('resize observer evaluations happen immediately', () => {
     const element = createTestElement();
     const queries = [{ token: 'max-320:flex', mode: 'max', threshold: 320, payload: 'flex' }];
 
-    const originalNow = Date.now;
-    let fakeNow = 0;
-    Date.now = () => fakeNow;
-
     const originalSetTimeout = global.setTimeout;
-    const originalClearTimeout = global.clearTimeout;
     const timers = [];
 
     global.setTimeout = (fn, delay) => {
@@ -100,32 +90,21 @@ describe('Container query helpers', () => {
       timers.push(timer);
       return timer;
     };
-    global.clearTimeout = handle => {
-      if (handle) {
-        handle.cleared = true;
-      }
-    };
 
     try {
       updateContainerQueries(element, queries);
       const observer = MockResizeObserver.instances.at(-1);
 
       observer.fire(300);
-      expect(element.__getClasses()).toContain('flex');
+      expect(element.__getStyles()).toHaveProperty('display', 'flex');
 
-      fakeNow = 100;
       observer.fire(400);
-      expect(element.__getClasses()).toContain('flex');
-      expect(timers).toHaveLength(1);
-      expect(timers[0].delay).toBe(200);
+      expect(element.__getStyles().display).toBe('');
 
-      fakeNow = 350;
-      timers[0].fn();
-      expect(element.__getClasses()).not.toContain('flex');
+      // Should not have any throttling timers
+      expect(timers).toHaveLength(0);
     } finally {
-      Date.now = originalNow;
       global.setTimeout = originalSetTimeout;
-      global.clearTimeout = originalClearTimeout;
       teardownContainerQueries(element);
     }
   });

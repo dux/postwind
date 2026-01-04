@@ -19,26 +19,26 @@
                 'd': '(min-width: 801px)'   // Desktop and large screens
             },
             define: {
-                'btn': 'px-4 py-2 rounded font-medium cursor-pointer border border-transparent transition-colors duration-200 shadow-sm shadow-black/5',
-                'btn-primary': 'btn bg-blue-600 text-white border-blue-600 hover:bg-blue-500 hover:border-blue-500 active:bg-blue-700 focus:ring-4 focus:ring-blue-200',
-                'btn-outline': 'btn bg-white text-blue-600 border-blue-200 hover:bg-blue-50 hover:border-blue-400 active:bg-blue-100 focus:ring-4 focus:ring-blue-100',
-                'btn-ghost': 'btn bg-transparent text-gray-700 border-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200',
-                'btn-success': 'btn bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-400 hover:border-emerald-400 active:bg-emerald-600 focus:ring-4 focus:ring-emerald-200',
-                'btn-danger': 'btn bg-rose-500 text-white border-rose-500 hover:bg-rose-400 hover:border-rose-400 active:bg-rose-600 focus:ring-4 focus:ring-rose-200',
-                'btn-soft': 'btn bg-blue-50 text-blue-700 border-blue-100 hover:bg-blue-100 focus:ring-4 focus:ring-blue-100',
+                'btn': 'px-4 py-2 rounded font-medium cursor-pointer border border-transparent transition-colors duration-200 shadow-sm dark:shadow-black/20',
+                'btn-primary': 'btn bg-blue-600 text-white border-blue-600 hover:bg-blue-500 hover:border-blue-500 active:bg-blue-700 focus:ring-4 focus:ring-blue-200 dark:bg-blue-500 dark:border-blue-500 dark:hover:bg-blue-400 dark:hover:border-blue-400 dark:active:bg-blue-600 dark:focus:ring-blue-900',
+                'btn-outline': 'btn bg-white text-blue-600 border-blue-200 hover:bg-blue-50 hover:border-blue-400 active:bg-blue-100 focus:ring-4 focus:ring-blue-100 dark:bg-gray-800 dark:text-blue-400 dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-blue-500 dark:active:bg-gray-600 dark:focus:ring-blue-900',
+                'btn-ghost': 'btn bg-transparent text-gray-700 border-transparent hover:bg-gray-100 focus:ring-4 focus:ring-gray-200 dark:text-gray-300 dark:hover:bg-gray-800 dark:focus:ring-gray-700',
+                'btn-success': 'btn bg-emerald-500 text-white border-emerald-500 hover:bg-emerald-400 hover:border-emerald-400 active:bg-emerald-600 focus:ring-4 focus:ring-emerald-200 dark:bg-emerald-600 dark:hover:bg-emerald-500 dark:active:bg-emerald-700 dark:focus:ring-emerald-900',
+                'btn-danger': 'btn bg-rose-500 text-white border-rose-500 hover:bg-rose-400 hover:border-rose-400 active:bg-rose-600 focus:ring-4 focus:ring-rose-200 dark:bg-rose-600 dark:hover:bg-rose-500 dark:active:bg-rose-700 dark:focus:ring-rose-900',
+                'btn-soft': 'btn bg-blue-50 text-blue-700 border-blue-100 hover:bg-blue-100 focus:ring-4 focus:ring-blue-100 dark:bg-gray-800 dark:text-blue-300 dark:border-gray-600 dark:hover:bg-gray-700 dark:focus:ring-blue-900',
                 'badge': 'inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full text-xs font-semibold uppercase tracking-widest',
-                'badge-success': 'badge bg-emerald-100 text-emerald-700',
-                'badge-warning': 'badge bg-amber-100 text-amber-700',
-                'chip': 'inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-sm font-medium border border-transparent',
-                'chip-check': 'chip bg-blue-50 text-blue-700 border-blue-200',
-                'card': 'bg-white rounded-2xl border border-gray-200 p-6 shadow-md shadow-gray-200/80 space-y-4',
+                'badge-success': 'badge bg-emerald-100 text-emerald-700 dark:bg-emerald-900 dark:text-emerald-300',
+                'badge-warning': 'badge bg-amber-100 text-amber-700 dark:bg-amber-900 dark:text-amber-300',
+                'chip': 'inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-gray-100 text-gray-700 text-sm font-medium border border-transparent dark:bg-gray-700 dark:text-gray-300',
+                'chip-check': 'chip bg-blue-50 text-blue-700 border-blue-200 dark:bg-gray-800 dark:text-blue-300 dark:border-blue-800',
+                'card': 'bg-white rounded-2xl border border-gray-200 p-6 shadow-md shadow-gray-200/80 space-y-4 dark:bg-gray-800 dark:border-gray-700 dark:shadow-black/40',
                 'center': 'flex items-center justify-center',
                 'full-center': 'w-full h-full center',
                 'container': 'max-w-[1200px] mx-auto px-4',
-                'section': 'mb-12 p-6 bg-white rounded-3xl border border-gray-200 shadow-sm shadow-gray-200/50 space-y-6',
+                'section': 'mb-12 p-6 bg-white rounded-3xl border border-gray-200 shadow-sm shadow-gray-200/50 space-y-6 dark:bg-gray-800 dark:border-gray-700 dark:shadow-black/30',
                 'text-glow': 'color: #0ea5e9; text-shadow: 0 0 20px rgba(14,165,233,0.6)',
-                'h1': 'font-bold m:text-24px d:text-36px leading-tight',
-                'h2': 'font-semibold m:text-20px d:text-24px leading-tight'
+                'h1': 'font-bold m:text-24px d:text-36px leading-tight dark:text-gray-100',
+                'h2': 'font-semibold m:text-20px d:text-24px leading-tight dark:text-gray-200'
             },
             preload: `
                 btn btn-primary btn-outline btn-ghost btn-success btn-danger btn-soft
@@ -46,6 +46,7 @@
                 text-glow h1 h2 h-4 center full-center flex gap-4 rounded-3xl shadow-sm h-4
                 opacity-0 opacity-100 translate-y-6 translate-y-0 scale-95 scale-100
                 duration-500 shadow-lg shadow-xl visible:opacity-100 visible:translate-y-0 visible:scale-100
+                dark dark:bg-gray-900 dark:text-gray-100 dark:border-gray-700
             `
         });
 
@@ -55,7 +56,7 @@
         );
     </script>
 </head>
-<body class="bg-gray-50 min-h-screen flex flex-col">
+<body class="bg-gray-50 min-h-screen flex flex-col dark:bg-gray-900 dark:text-gray-100">
     <style>
         /* Only animate specific properties, not layout changes */
         button {
@@ -112,7 +113,7 @@
         }
     </style>
     <!-- Header -->
-    <header class="bg-white border-b">
+    <header class="bg-white border-b dark:bg-gray-800 dark:border-gray-700">
         <div class="container py-6">
             <div class="flex justify-between items-start mb-6">
                 <div class="flex-1">
@@ -128,12 +129,13 @@
                         GitHub
                     </a>
                     <a href="https://github.com/dux/postwind/blob/main/README.md" target="_blank" rel="noopener"
-                       class="flex items-center gap-2 px-3 py-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors text-sm text-blue-700 hover:text-blue-900">
+                       class="flex items-center gap-2 px-3 py-2 bg-blue-100 hover:bg-blue-200 rounded-lg transition-colors text-sm text-blue-700 hover:text-blue-900 dark:bg-blue-900 dark:text-blue-300 dark:hover:bg-blue-800">
                         <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" style="width: 16px;">
                             <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/>
                         </svg>
                         Docs
                     </a>
+                    <button onclick="toggleDarkMode()" class="flex items-center justify-center px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-lg transition-colors text-gray-700 hover:text-gray-900 dark:bg-gray-700 dark:text-gray-200 dark:hover:bg-gray-600" id="dark-mode-toggle" aria-label="Toggle dark mode">🌙</button>
                 </div>
             </div>
 
@@ -174,24 +176,24 @@
             <h2 class="h2 mb-6">PostWind Features Overview</h2>
 
             <!-- Auto-Loading Highlight -->
-            <div class="bg-green-50 border border-green-200 rounded-lg p-6 mb-6">
-                <h3 class="font-semibold text-green-800 mb-3">✨ Auto-Loaded & Ready to Use!</h3>
+            <div class="bg-green-50 border border-green-200 rounded-lg p-6 mb-6 dark:bg-green-900/30 dark:border-green-800">
+                <h3 class="font-semibold text-green-800 mb-3 dark:text-green-300">✨ Auto-Loaded & Ready to Use!</h3>
                 <div class="grid m:grid-cols-1 d:grid-cols-3 gap-4 text-sm">
-                    <div class="bg-white p-4 rounded border">
-                        <div class="font-medium text-green-700 mb-1">100+ CSS Properties</div>
-                        <div class="text-green-600">p-4, m-8, w-full, h-screen, text-lg, etc.</div>
+                    <div class="bg-white p-4 rounded border dark:bg-gray-800 dark:border-gray-700">
+                        <div class="font-medium text-green-700 mb-1 dark:text-green-400">100+ CSS Properties</div>
+                        <div class="text-green-600 dark:text-green-500">p-4, m-8, w-full, h-screen, text-lg, etc.</div>
                     </div>
-                    <div class="bg-white p-4 rounded border">
-                        <div class="font-medium text-green-700 mb-1">200+ Keyword Classes</div>
-                        <div class="text-green-600">flex, grid, rounded, shadow-lg, animate-spin</div>
+                    <div class="bg-white p-4 rounded border dark:bg-gray-800 dark:border-gray-700">
+                        <div class="font-medium text-green-700 mb-1 dark:text-green-400">200+ Keyword Classes</div>
+                        <div class="text-green-600 dark:text-green-500">flex, grid, rounded, shadow-lg, animate-spin</div>
                     </div>
-                    <div class="bg-white p-4 rounded border">
-                        <div class="font-medium text-green-700 mb-1">Complete Responsive</div>
-                        <div class="text-green-600">m:, d:, hover:, focus:, first:, last:</div>
+                    <div class="bg-white p-4 rounded border dark:bg-gray-800 dark:border-gray-700">
+                        <div class="font-medium text-green-700 mb-1 dark:text-green-400">Complete Responsive</div>
+                        <div class="text-green-600 dark:text-green-500">m:, d:, hover:, focus:, first:, last:</div>
                     </div>
                 </div>
-                <div class="mt-4 p-3 bg-green-100 rounded border border-green-300">
-                    <code class="class-pill text-green-800" data-label="Import">
+                <div class="mt-4 p-3 bg-green-100 rounded border border-green-300 dark:bg-green-900/50 dark:border-green-800">
+                    <code class="class-pill text-green-800 dark:text-green-300" data-label="Import">
                         import PostWind from 'https://cdn.jsdelivr.net/npm/postwind@latest/dist/lib.min.js';<br>
                         // Everything auto-loads → PostWind.init();
                     </code>
@@ -293,7 +295,43 @@
                 </div>
             </div>
 
-            <div class="bg-gray-100 p-4 rounded">
+            <div class="grid gap-6 m:grid-cols-1 d:grid-cols-2 mb-6">
+                <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-4 dark:bg-gray-800 dark:border-gray-700">
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-gray-100">Dark Mode Toggle</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">Click the moon/sun icon in the navigation bar to toggle dark mode. All button variants support dark mode automatically.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-3">
+                        <button class="btn-primary">Primary</button>
+                        <button class="btn-outline">Outline</button>
+                        <button class="btn-ghost">Ghost</button>
+                        <button class="btn-success">Success</button>
+                        <button class="btn-danger">Danger</button>
+                        <button class="btn-soft">Soft</button>
+                    </div>
+                </div>
+
+                <div class="bg-white border border-gray-200 rounded-2xl p-6 shadow-sm space-y-4 dark:bg-gray-800 dark:border-gray-700">
+                    <div>
+                        <h3 class="font-semibold text-gray-900 dark:text-gray-100">Badges & Chips (Dark)</h3>
+                        <p class="text-sm text-gray-600 dark:text-gray-400">UI components automatically adapt to dark theme.</p>
+                    </div>
+                    <div class="flex flex-wrap gap-3 items-center">
+                        <span class="badge-success">Launched</span>
+                        <span class="badge-warning">Beta</span>
+                        <span class="chip">
+                            <span class="w-5 h-5 rounded-full bg-gray-200 dark:bg-gray-600 center text-[10px] font-semibold text-gray-600 dark:text-gray-300">AI</span>
+                            Playground Access
+                        </span>
+                        <span class="chip-check">
+                            <span class="w-5 h-5 rounded-full bg-blue-100 dark:bg-gray-700 text-blue-700 dark:text-blue-300 center text-xs font-semibold">✓</span>
+                            Autosave Enabled
+                        </span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="bg-gray-100 p-4 rounded dark:bg-gray-800 dark:border-gray-700">
                 <h3 class="font-semibold mb-2">Shortcut Definitions:</h3>
                 <ul class="text-sm font-mono space-y-1">
                     <li><strong>btn:</strong> px-4 py-2 rounded font-medium transition-all duration-200 cursor-pointer border</li>
@@ -1180,7 +1218,7 @@
                             <span id="cq-width" class="text-blue-600 font-semibold">900px</span>
                         </label>
                         <input id="cq-slider" type="range" min="320" max="1200" value="900" class="w-full mt-2">
-                        <div id="cq-preview" class="mt-4 flex flex-col gap-4 flex-wrap items-stretch transition-all duration-200 max-640:flex-col min-900:flex-row" style="width: 900px;">
+                        <div id="cq-preview" class="mt-4 flex flex-col gap-4 flex-wrap items-stretch transition-all duration-200 max-640:flex-col flex-row" style="width: 900px;">
                             <div class="flex-1 bg-white border rounded-lg p-4 shadow-sm">
                                 <h3 class="font-semibold mb-2">Primary Card</h3>
                                 <p class="text-gray-600 text-sm">Stacks vertically below 640px, flips to a row once the container hits 900px.</p>
@@ -1189,7 +1227,7 @@
                                 <h3 class="font-semibold text-blue-700 mb-2">Secondary Card</h3>
                                 <ul class="text-sm text-blue-700 space-y-1">
                                     <li>max-640:flex-col</li>
-                                    <li>min-900:flex-row</li>
+                                    <li>flex-row</li>
                                     <li>Resize to see it swap</li>
                                 </ul>
                             </div>
@@ -1214,7 +1252,7 @@
                                 <p class="text-cyan-700 text-sm">Gracefully collapses into a column on narrow widths.</p>
                             </div>
                         </div>
-                        <code class="class-pill" data-label="Container Query">max-640:flex-col min-900:flex-row</code>
+                        <code class="class-pill" data-label="Container Query">max-640:flex-col flex-row</code>
                     </div>
                 </div>
 
@@ -1249,9 +1287,9 @@
 
                     <div class="card">
                         <h4 class="font-semibold text-gray-800 mb-3">Stats Stack</h4>
-                        <p class="text-sm text-gray-600 mb-4">`max-420:grid-cols-1` vs `min-421:grid-cols-2` gives responsive cards inside their own container.</p>
+                        <p class="text-sm text-gray-600 mb-4">`grid-cols-2 max-420:grid-cols-1` gives responsive cards inside their own container.</p>
                         <div class="border border-gray-200 rounded-2xl p-4 bg-gray-50">
-                            <div class="grid gap-4 max-420:grid-cols-1 min-421:grid-cols-2">
+                            <div class="grid gap-4 grid-cols-2 max-420:grid-cols-1">
                                 <div class="bg-white rounded-xl shadow-sm p-4">
                                     <p class="text-xs uppercase tracking-widest text-gray-500">Build Time</p>
                                     <div class="text-2xl font-bold text-gray-900">420ms</div>
@@ -1274,7 +1312,7 @@
                                 </div>
                             </div>
                         </div>
-                        <code class="class-pill" data-label="Container">max-420:grid-cols-1 min-421:grid-cols-2</code>
+                        <code class="class-pill" data-label="Container">grid-cols-2 max-420:grid-cols-1</code>
                     </div>
                 </div>
             </div>
@@ -1466,53 +1504,28 @@
         <!-- Colors Section -->
         <section id="colors" class="section" style="display: none;">
             <h2 class="h2 mb-6">Color System</h2>
+            <p class="text-gray-600 mb-8">PostWind supports 32 color families with 11 shades each (50-950), plus special values and arbitrary colors.</p>
             <div class="space-y-8">
-                <div class="card">
-                    <h3 class="font-semibold mb-4">Background Colors</h3>
-                    <div class="grid grid-cols-2 d:grid-cols-4 gap-4">
-                        <div class="bg-gray-100 p-4 rounded text-center text-sm">bg-gray-100</div>
-                        <div class="bg-red-500 p-4 rounded text-center text-sm text-white">bg-red-500</div>
-                        <div class="bg-blue-500 p-4 rounded text-center text-sm text-white">bg-blue-500</div>
-                        <div class="bg-green-500 p-4 rounded text-center text-sm text-white">bg-green-500</div>
-                        <div class="bg-purple-500 p-4 rounded text-center text-sm text-white">bg-purple-500</div>
-                        <div class="bg-yellow-400 p-4 rounded text-center text-sm">bg-yellow-400</div>
-                        <div class="bg-pink-500 p-4 rounded text-center text-sm text-white">bg-pink-500</div>
-                        <div class="bg-indigo-500 p-4 rounded text-center text-sm text-white">bg-indigo-500</div>
-                        <div class="bg-orange-500 p-4 rounded text-center text-sm text-white">bg-orange-500</div>
-                        <div class="bg-gray-800 p-4 rounded text-center text-sm text-white">bg-gray-800</div>
-                        <div class="bg-teal-500 p-4 rounded text-center text-sm text-white">bg-teal-500</div>
-                        <div class="bg-cyan-500 p-4 rounded text-center text-sm text-white">bg-cyan-500</div>
-                    </div>
-                </div>
+                <div id="color-palette-container" class="space-y-6"></div>
 
                 <div class="card">
                     <h3 class="font-semibold mb-4">Text Colors</h3>
-                    <div class="space-y-2">
-                        <p class="text-gray-900">text-gray-900 - Very dark gray</p>
-                        <p class="text-gray-700">text-gray-700 - Dark gray</p>
-                        <p class="text-gray-500">text-gray-500 - Medium gray</p>
-                        <p class="text-red-600">text-red-600 - Red text</p>
-                        <p class="text-blue-600">text-blue-600 - Blue text</p>
-                        <p class="text-green-600">text-green-600 - Green text</p>
-                        <p class="text-purple-600">text-purple-600 - Purple text</p>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <h3 class="font-semibold mb-4">Color Shades</h3>
-                    <div class="space-y-4">
-                        <div class="flex gap-2">
-                            <div class="bg-blue-100 p-2 rounded text-xs text-center flex-1">100</div>
-                            <div class="bg-blue-200 p-2 rounded text-xs text-center flex-1">200</div>
-                            <div class="bg-blue-300 p-2 rounded text-xs text-center flex-1">300</div>
-                            <div class="bg-blue-400 p-2 rounded text-xs text-center flex-1 text-white">400</div>
-                            <div class="bg-blue-500 p-2 rounded text-xs text-center flex-1 text-white">500</div>
-                            <div class="bg-blue-600 p-2 rounded text-xs text-center flex-1 text-white">600</div>
-                            <div class="bg-blue-700 p-2 rounded text-xs text-center flex-1 text-white">700</div>
-                            <div class="bg-blue-800 p-2 rounded text-xs text-center flex-1 text-white">800</div>
-                            <div class="bg-blue-900 p-2 rounded text-xs text-center flex-1 text-white">900</div>
+                    <div class="grid grid-cols-1 d:grid-cols-3 gap-4">
+                        <div class="space-y-2">
+                            <p class="text-gray-900 dark:text-gray-100">text-gray-900 - Very dark gray</p>
+                            <p class="text-gray-700 dark:text-gray-300">text-gray-700 - Dark gray</p>
+                            <p class="text-gray-500 dark:text-gray-400">text-gray-500 - Medium gray</p>
                         </div>
-                        <p class="text-sm text-gray-600">Blue color scale from 100 (lightest) to 900 (darkest)</p>
+                        <div class="space-y-2">
+                            <p class="text-red-600 dark:text-red-400">text-red-600 - Red text</p>
+                            <p class="text-blue-600 dark:text-blue-400">text-blue-600 - Blue text</p>
+                            <p class="text-green-600 dark:text-green-400">text-green-600 - Green text</p>
+                        </div>
+                        <div class="space-y-2">
+                            <p class="text-purple-600 dark:text-purple-400">text-purple-600 - Purple text</p>
+                            <p class="text-yellow-600 dark:text-yellow-400">text-yellow-600 - Yellow text</p>
+                            <p class="text-rose-600 dark:text-rose-400">text-rose-600 - Rose text</p>
+                        </div>
                     </div>
                 </div>
 
@@ -1526,22 +1539,34 @@
                 </div>
 
                 <div class="card">
-                    <h3 class="font-semibold mb-4">Gradients & Text Fill</h3>
-                    <div class="grid grid-cols-1 d:grid-cols-3 gap-4">
-                        <div class="h-28 rounded-2xl text-white font-semibold center bg-gradient-to-r from-sky-400 via-fuchsia-500 to-amber-400">
-                            bg-gradient-to-r from-sky-400 via-fuchsia-500 to-amber-400
+                    <h3 class="font-semibold mb-4">Gradients</h3>
+                    <div class="grid grid-cols-1 d:grid-cols-2 gap-4">
+                        <div class="h-28 rounded-2xl text-white font-semibold center bg-gradient-to-r from-blue-400 to-purple-500">
+                            bg-gradient-to-r from-blue-400 to-purple-500
                         </div>
-                        <div class="h-28 rounded-2xl text-transparent bg-clip-text bg-gradient-to-r from-emerald-400 to-cyan-500 flex flex-col items-center justify-center text-center px-4">
-                            <span class="text-base font-semibold">Text Gradient</span>
-                            <code class="text-xs mt-2">text-transparent bg-clip-text from-emerald-400 to-cyan-500</code>
+                        <div class="h-28 rounded-2xl text-white font-semibold center bg-gradient-to-br from-pink-400 via-red-500 to-yellow-500">
+                            bg-gradient-to-br from-pink-400 via-red-500 to-yellow-500
                         </div>
-                        <div class="h-28 rounded-2xl flex flex-col items-center justify-center gap-2 bg-slate-900 text-white">
-                            <span class="text-sm font-semibold">accent-pink-500</span>
-                            <input type="checkbox" checked class="accent-pink-500 w-5 h-5" aria-label="Accent demo">
-                            <span class="text-xs text-slate-300">Supports accent/fill utilities too</span>
+                        <div class="h-28 rounded-2xl text-white font-semibold center bg-gradient-to-t from-green-400 to-cyan-500">
+                            bg-gradient-to-t from-green-400 to-cyan-500
+                        </div>
+                        <div class="h-28 rounded-2xl text-white font-semibold center bg-gradient-to-bl from-orange-400 to-pink-500">
+                            bg-gradient-to-bl from-orange-400 to-pink-500
+                        </div>
+                        <div class="h-28 rounded-2xl text-white font-semibold center bg-gradient-to-l from-indigo-400 to-purple-500">
+                            bg-gradient-to-l from-indigo-400 to-purple-500
+                        </div>
+                        <div class="h-28 rounded-2xl text-white font-semibold center bg-gradient-to-b from-sky-400 to-blue-500">
+                            bg-gradient-to-b from-sky-400 to-blue-500
+                        </div>
+                        <div class="h-28 rounded-2xl text-white font-semibold center bg-gradient-to-tl from-teal-400 to-green-500">
+                            bg-gradient-to-tl from-teal-400 to-green-500
+                        </div>
+                        <div class="h-28 rounded-2xl text-white font-semibold center bg-gradient-to-tr from-rose-400 to-orange-500">
+                            bg-gradient-to-tr from-rose-400 to-orange-500
                         </div>
                     </div>
-                    <p class="text-sm text-gray-600 mt-4">Combine gradient stops, clip text fills, and accent colors to show off advanced color keywords.</p>
+                    <p class="text-sm text-gray-600 mt-4 dark:text-gray-400">Tailwind 4 style gradients with <code>from-</code>, <code>via-</code>, <code>to-</code> utilities in all 8 directions (t, tr, r, br, b, bl, l, tl).</p>
                 </div>
             </div>
         </section>
@@ -2639,6 +2664,33 @@
             });
         }
 
+        // Dark mode toggle
+        function toggleDarkMode() {
+            const html = document.documentElement;
+            const isDark = html.classList.toggle('dark');
+            const toggleBtn = document.getElementById('dark-mode-toggle');
+
+            if (toggleBtn) {
+                toggleBtn.textContent = isDark ? '☀️' : '🌙';
+            }
+
+            localStorage.setItem('dark-mode', isDark);
+        }
+
+        // Initialize dark mode from localStorage or system preference
+        function initDarkMode() {
+            const savedMode = localStorage.getItem('dark-mode');
+
+            if (savedMode === 'true' ||
+                (savedMode === null && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+                document.documentElement.classList.add('dark');
+                const toggleBtn = document.getElementById('dark-mode-toggle');
+                if (toggleBtn) {
+                    toggleBtn.textContent = '☀️';
+                }
+            }
+        }
+
         // Handle hash navigation
         function loadSectionFromHash() {
             const hash = window.location.hash.slice(1); // Remove #
@@ -2699,10 +2751,78 @@
             return 'Classes';
         }
 
+        // Color palette generator
+        const colorFamilies = {
+            'Gray Scale': ['slate', 'gray', 'zinc', 'neutral', 'stone'],
+            'Red Spectrum': ['red', 'orange', 'amber', 'yellow', 'lime'],
+            'Green Spectrum': ['green', 'emerald', 'teal', 'cyan'],
+            'Blue Spectrum': ['sky', 'blue', 'indigo', 'violet'],
+            'Purple Spectrum': ['purple', 'fuchsia', 'pink', 'rose'],
+            'Extended Colors': ['turquoise', 'lightblue', 'coral', 'gold', 'navy', 'maroon', 'olive', 'silver', 'aqua', 'magenta', 'brown', 'beige', 'salmon', 'crimson', 'lavender', 'khaki', 'chocolate', 'sienna', 'plum', 'tomato']
+        };
+
+        const shades = [50, 100, 200, 300, 400, 500, 600, 700, 800, 900, 950];
+
+        function generateColorPalette(container) {
+            container.innerHTML = '';
+
+            for (const [category, colors] of Object.entries(colorFamilies)) {
+                const categoryCard = document.createElement('div');
+                categoryCard.className = 'card';
+
+                const title = document.createElement('h3');
+                title.className = 'font-semibold mb-4';
+                title.textContent = category;
+                categoryCard.appendChild(title);
+
+                colors.forEach(colorName => {
+                    try {
+                        const colorRow = document.createElement('div');
+                        colorRow.className = 'flex gap-2 mb-2 w-full';
+
+                        shades.forEach((shade, index) => {
+                            const shadeCell = document.createElement('div');
+
+                            if (index === 0) {
+                                shadeCell.className = `bg-${colorName}-${shade} p-3 rounded text-xs font-semibold flex items-center justify-center text-center min-w-[120px]`;
+                                shadeCell.textContent = `bg-${colorName}-${shade}`;
+
+                                const textColor = shade >= 500 ? 'text-white' : 'text-gray-800';
+                                shadeCell.classList.add(textColor);
+                            } else {
+                                shadeCell.className = `bg-${colorName}-${shade} p-3 rounded text-xs flex items-center justify-center text-center flex-1`;
+                                shadeCell.textContent = shade.toString();
+
+                                const textColor = shade >= 500 ? 'text-white' : 'text-gray-800';
+                                shadeCell.classList.add(textColor);
+                            }
+
+                            colorRow.appendChild(shadeCell);
+                        });
+
+                        categoryCard.appendChild(colorRow);
+                    } catch (error) {
+                        console.error(`Error generating color row for ${colorName}:`, error);
+                    }
+                });
+
+                container.appendChild(categoryCard);
+            }
+        }
+
         // Initialize page
         document.addEventListener('DOMContentLoaded', function() {
             // Load section from hash or show intro
             loadSectionFromHash();
+
+            // Initialize dark mode
+            initDarkMode();
+
+            // Generate color palette
+            const colorContainer = document.getElementById('color-palette-container');
+            if (colorContainer) {
+                generateColorPalette(colorContainer);
+            }
 
             const cqSlider = document.getElementById('cq-slider');
             const cqWidth = document.getElementById('cq-width');

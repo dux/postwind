@@ -1,9 +1,9 @@
 // Inline container query helpers
 // Handles classes like "max-320:flex" or "min-480:text-lg"
 import { safeWrapper } from './utils.js';
+import { processClass } from './styler.js';
 
 const CONTAINER_QUERY_PATTERN = /^(min|max)-(\d+)(px)?:\s*(.+)$/i;
-const CONTAINER_QUERY_THROTTLE_MS = 300;
 const elementStates = new WeakMap();
 let warnedNoObserver = false;
 
@@ -48,9 +48,79 @@ export function splitContainerQueryClasses(classNames = []) {
   return { regularClasses, containerQueries };
 }
 
+function parseCSSDeclaration(cssRule) {
+  const content = cssRule.substring(cssRule.indexOf('{') + 1, cssRule.indexOf('}'));
+  return content.split(';')
+    .filter(Boolean)
+    .map(decl => {
+      const [property, value] = decl.split(':').map(s => s.trim());
+      return { property, value };
+    })
+    .filter(({ property, value }) => property && value);
+}
+
+function applyInlineStyles(element, className) {
+  const cssRules = processClass(className);
+  const appliedStyles = new Map();
+
+  cssRules.forEach(rule => {
+    const declarations = parseCSSDeclaration(rule);
+    declarations.forEach(({ property, value }) => {
+      const camelCaseProperty = property.replace(/-([a-z])/g, (_, letter) => letter.toUpperCase());
+      element.style[camelCaseProperty] = value;
+      appliedStyles.set(camelCaseProperty, value);
+    });
+  });
+
+  return appliedStyles;
+}
+
+export const teardownContainerQueries = safeWrapper(function(element) {
+  const state = elementStates.get(element);
+  if (!state) return;
+
+  state.queries.forEach(query => {
+    if (query.appliedStyles && element?.style) {
+      removeInlineStyles(element, query.appliedStyles, state.queries, query);
+    }
+  });
+
+  if (state.observer) {
+    try {
+      state.observer.unobserve(element);
+      state.observer.disconnect();
+    } catch (error) {
+      // Ignore observer errors during teardown
+    }
+  }
+
+  elementStates.delete(element);
+}, 'teardownContainerQueries');
+
+function removeInlineStyles(element, appliedStyles, allQueries = null, currentQuery = null) {
+  if (!appliedStyles) return;
+
+  if (allQueries === null || currentQuery === null) {
+    appliedStyles.forEach((value, property) => {
+      element.style[property] = '';
+    });
+    return;
+  }
+
+  appliedStyles.forEach((value, property) => {
+    const isUsedByOtherActiveQuery = Array.from(allQueries.values())
+      .filter(q => q !== currentQuery && q.active)
+      .some(q => q.appliedStyles && q.appliedStyles.has(property));
+
+    if (!isUsedByOtherActiveQuery) {
+      element.style[property] = '';
+    }
+  });
+}
+
 const evaluateElementQueries = safeWrapper(function(element, explicitWidth) {
   const state = elementStates.get(element);
-  if (!state || !element?.classList) return;
+  if (!state || !element?.style) return;
 
   const width = typeof explicitWidth === 'number'
     ? explicitWidth
@@ -62,20 +132,12 @@ const evaluateElementQueries = safeWrapper(function(element, explicitWidth) {
       : width >= query.threshold;
 
     if (shouldApply && !query.active) {
-      const alreadyHasClass = element.classList.contains(query.payload);
-      if (!alreadyHasClass) {
-        element.classList.add(query.payload);
-        query.inserted = true;
-      } else {
-        query.inserted = false;
-      }
+      query.appliedStyles = applyInlineStyles(element, query.payload);
       query.active = true;
     } else if (!shouldApply && query.active) {
-      if (query.inserted) {
-        element.classList.remove(query.payload);
-      }
+      removeInlineStyles(element, query.appliedStyles, state.queries, query);
+      query.appliedStyles = null;
       query.active = false;
-      query.inserted = false;
     }
   });
 }, 'evaluateElementQueries');
@@ -95,7 +157,9 @@ function createObserver(element) {
   const observer = new ResizeObserver(entries => {
     entries.forEach(entry => {
       const width = entry?.contentRect?.width;
-      scheduleEvaluation(entry.target, typeof width === 'number' ? width : undefined);
+      if (typeof width === 'number') {
+        evaluateElementQueries(entry.target, width);
+      }
     });
   });
 
@@ -103,38 +167,9 @@ function createObserver(element) {
   return observer;
 }
 
-function scheduleEvaluation(element, explicitWidth) {
-  const state = elementStates.get(element);
-  if (!state) return;
-
-  const width = typeof explicitWidth === 'number' ? explicitWidth : undefined;
-  const now = Date.now();
-  const elapsed = now - state.lastEvalAt;
-  const hasLastEval = typeof state.lastEvalAt === 'number' && !Number.isNaN(state.lastEvalAt);
-
-  if (!hasLastEval || elapsed >= CONTAINER_QUERY_THROTTLE_MS) {
-    state.lastEvalAt = now;
-    evaluateElementQueries(element, width);
-    return;
-  }
-
-  state.pendingWidth = width;
-
-  if (state.throttleTimer) return;
-
-  const delay = Math.max(CONTAINER_QUERY_THROTTLE_MS - elapsed, 0);
-  state.throttleTimer = setTimeout(() => {
-    state.throttleTimer = null;
-    state.lastEvalAt = Date.now();
-    const pending = state.pendingWidth;
-    state.pendingWidth = undefined;
-    evaluateElementQueries(element, pending);
-  }, delay);
-}
-
 export const updateContainerQueries = safeWrapper(function(element, queries = []) {
   if (!element || typeof element !== 'object') return;
-  if (!element.classList) return;
+  if (!element.style) return;
 
   if (!supportsResizeObserver()) {
     if (!warnedNoObserver) {
@@ -150,13 +185,11 @@ export const updateContainerQueries = safeWrapper(function(element, queries = []
   }
 
   let state = elementStates.get(element);
-  if (!state) {
+  const isNewState = !state;
+  if (isNewState) {
     state = {
       observer: createObserver(element),
-      queries: new Map(),
-      throttleTimer: null,
-      pendingWidth: undefined,
-      lastEvalAt: null
+      queries: new Map()
     };
     elementStates.set(element, state);
   }
@@ -173,48 +206,24 @@ export const updateContainerQueries = safeWrapper(function(element, queries = []
       state.queries.set(query.token, {
         ...query,
         active: false,
-        inserted: false
+        appliedStyles: null
       });
     }
   });
 
   state.queries.forEach((storedQuery, token) => {
     if (!activeTokens.has(token)) {
-      if (storedQuery.active && storedQuery.inserted) {
-        element.classList.remove(storedQuery.payload);
+      if (storedQuery.active && storedQuery.appliedStyles) {
+        removeInlineStyles(element, storedQuery.appliedStyles, state.queries, storedQuery);
       }
       state.queries.delete(token);
     }
   });
 
-  evaluateElementQueries(element);
+  if (isNewState) {
+    evaluateElementQueries(element);
+  }
 }, 'updateContainerQueries');
-
-export const teardownContainerQueries = safeWrapper(function(element) {
-  const state = elementStates.get(element);
-  if (!state) return;
-
-  state.queries.forEach(query => {
-    if (query.active && query.inserted && element?.classList) {
-      element.classList.remove(query.payload);
-    }
-  });
-
-  if (state.observer) {
-    try {
-      state.observer.unobserve(element);
-      state.observer.disconnect();
-    } catch (error) {
-      // Ignore observer errors during teardown
-    }
-  }
-
-  if (state.throttleTimer) {
-    clearTimeout(state.throttleTimer);
-  }
-
-  elementStates.delete(element);
-}, 'teardownContainerQueries');
 
 export function cleanupContainerQueriesForTree(rootNode) {
   if (!rootNode) return;
