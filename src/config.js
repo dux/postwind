@@ -1834,12 +1834,23 @@ function createDefaultKeywords() {
     'row-end-3': 'grid-row-end: 3',
     'row-end-4': 'grid-row-end: 4',
 
-    // Animations
+    // Animations (Tailwind defaults)
     'animate-none': 'animation: none',
     'animate-spin': 'animation: spin 1s linear infinite',
     'animate-ping': 'animation: ping 1s cubic-bezier(0, 0, 0.2, 1) infinite',
     'animate-pulse': 'animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite',
     'animate-bounce': 'animation: bounce 1s infinite',
+    // Animations (PostWind extras)
+    'animate-slide-up': 'animation: slide-up 0.3s ease-out',
+    'animate-slide-down': 'animation: slide-down 0.3s ease-out',
+    'animate-slide-left': 'animation: slide-left 0.3s ease-out',
+    'animate-slide-right': 'animation: slide-right 0.3s ease-out',
+    'animate-fade-in': 'animation: fade-in 0.6s ease-out',
+    'animate-fade-out': 'animation: fade-out 0.3s ease-out',
+    'animate-zoom-in': 'animation: zoom-in 0.3s ease-out',
+    'animate-zoom-out': 'animation: zoom-out 0.3s ease-out',
+    'animate-shake': 'animation: shake 0.5s ease-in-out',
+    'animate-wiggle': 'animation: wiggle 1s ease-in-out infinite',
 
     // Transitions
     'transition': 'transition-property: color, background-color, border-color, text-decoration-color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter',

@@ -167,7 +167,7 @@ PostWind.loadDefaultConfig();
 - **200+ Keyword Classes:** `flex`, `grid`, `rounded`, `shadow-lg`, `animate-spin`, `transition`, `cursor-pointer`, etc.
 - **Responsive Breakpoints:** `m`/`t`/`d` plus friendly `mobile`/`tablet`/`desktop` aliases (override via `PostWind.init`)
 - **All Pseudo-classes:** `hover:`, `focus:`, `active:`, `first:`, `last:`, `even:`, `odd:`, `disabled:`, `visible:`, etc.
-- **Animations & Transitions:** `animate-spin`, `animate-pulse`, `duration-300`, `ease-in-out`
+- **Animations & Transitions:** `animate-spin`, `animate-pulse`, `animate-slide-up`, `animate-fade-in`, `animate-shake`, + more
 - **Layout Systems:** Flexbox, CSS Grid, positioning, spacing utilities
 
 ### Preloading Classes
@@ -426,10 +426,19 @@ PostWind.define({
 ## Animations & Transitions
 
 ```html
-<!-- Animations -->
+<!-- Tailwind Animations -->
 <div class="animate-spin">      <!-- Spinning -->
 <div class="animate-pulse">     <!-- Pulsing -->
 <div class="animate-bounce">    <!-- Bouncing -->
+<div class="animate-ping">      <!-- Ping effect -->
+
+<!-- PostWind Extra Animations -->
+<div class="animate-slide-up">    <!-- Slide up + fade -->
+<div class="animate-slide-down">  <!-- Slide down + fade -->
+<div class="animate-fade-in">     <!-- Simple fade in -->
+<div class="animate-zoom-in">     <!-- Scale up + fade -->
+<div class="animate-shake">       <!-- Error shake -->
+<div class="animate-wiggle">      <!-- Gentle wiggle -->
 
 <!-- Transitions -->
 <div class="transition duration-300 ease-in-out">
@@ -1537,11 +1546,23 @@ PostWind.config = {
 
 ### Animations & Transitions
 ```html
-<!-- Built-in Animations -->
+<!-- Tailwind Animations -->
 <div class="animate-spin">Spinning loader</div>
 <div class="animate-pulse">Pulsing skeleton</div>
 <div class="animate-bounce">Bouncing element</div>
 <div class="animate-ping">Pinging notification</div>
+
+<!-- PostWind Extra Animations -->
+<div class="animate-slide-up">Slide up + fade in</div>
+<div class="animate-slide-down">Slide down + fade in</div>
+<div class="animate-slide-left">Slide from right</div>
+<div class="animate-slide-right">Slide from left</div>
+<div class="animate-fade-in">Simple fade in</div>
+<div class="animate-fade-out">Simple fade out</div>
+<div class="animate-zoom-in">Scale up + fade in</div>
+<div class="animate-zoom-out">Scale down + fade out</div>
+<div class="animate-shake">Shake (error feedback)</div>
+<div class="animate-wiggle">Wiggle (infinite)</div>
 
 <!-- Transitions -->
 <div class="transition-all duration-300 ease-in-out

@@ -2022,8 +2022,8 @@
             <h2 class="h2 mb-6">Animations & Transitions</h2>
             <div class="space-y-8">
                 <div class="card">
-                    <h3 class="font-semibold mb-4">Built-in Animations</h3>
-                    <p class="text-sm text-gray-600 mb-4">PostWind includes 4 built-in animations with keyframes automatically loaded:</p>
+                    <h3 class="font-semibold mb-4">Tailwind Animations</h3>
+                    <p class="text-sm text-gray-600 mb-4">PostWind includes all 4 Tailwind animations with keyframes automatically loaded:</p>
                     <div class="grid grid-cols-2 d:grid-cols-4 gap-8 p-8 text-center">
                         <div>
                             <div class="w-12 h-12 mx-auto bg-blue-500 rounded animate-spin mb-2"></div>
@@ -2046,9 +2046,84 @@
                             <p class="text-xs text-gray-500 mt-1">Scale and fade</p>
                         </div>
                     </div>
-                    <div class="bg-blue-50 border border-blue-200 rounded p-3 mt-4">
-                        <p class="text-sm text-blue-800">
-                            <strong>Note:</strong> If animations aren't working, make sure PostWind is initialized: <code>PostWind.init()</code>
+                </div>
+
+                <div class="card">
+                    <div class="flex justify-between items-start mb-4">
+                        <div>
+                            <h3 class="font-semibold">PostWind Extra Animations</h3>
+                            <p class="text-sm text-gray-600 mt-1">PostWind adds these useful animations beyond Tailwind defaults. Click each box to replay:</p>
+                        </div>
+                        <button onclick="document.querySelectorAll('#extra-animations [class*=animate-]').forEach(el => { el.style.animation='none'; el.offsetHeight; el.style.animation=''; })" class="px-3 py-1.5 text-sm bg-indigo-500 text-white rounded hover:bg-indigo-600 transition-colors">Replay All</button>
+                    </div>
+                    
+                    <div id="extra-animations">
+                    <h4 class="font-medium text-gray-700 mb-3 mt-6">Slide Animations</h4>
+                    <div class="grid grid-cols-2 d:grid-cols-4 gap-6 p-6 text-center">
+                        <div>
+                            <div class="w-14 h-14 mx-auto bg-indigo-500 rounded-lg animate-slide-up mb-2 cursor-pointer" onclick="this.style.animation='none'; this.offsetHeight; this.style.animation='';"></div>
+                            <code class="text-sm">animate-slide-up</code>
+                            <p class="text-xs text-gray-500 mt-1">Slide up + fade in</p>
+                        </div>
+                        <div>
+                            <div class="w-14 h-14 mx-auto bg-indigo-500 rounded-lg animate-slide-down mb-2 cursor-pointer" onclick="this.style.animation='none'; this.offsetHeight; this.style.animation='';"></div>
+                            <code class="text-sm">animate-slide-down</code>
+                            <p class="text-xs text-gray-500 mt-1">Slide down + fade in</p>
+                        </div>
+                        <div>
+                            <div class="w-14 h-14 mx-auto bg-indigo-500 rounded-lg animate-slide-left mb-2 cursor-pointer" onclick="this.style.animation='none'; this.offsetHeight; this.style.animation='';"></div>
+                            <code class="text-sm">animate-slide-left</code>
+                            <p class="text-xs text-gray-500 mt-1">Slide from right</p>
+                        </div>
+                        <div>
+                            <div class="w-14 h-14 mx-auto bg-indigo-500 rounded-lg animate-slide-right mb-2 cursor-pointer" onclick="this.style.animation='none'; this.offsetHeight; this.style.animation='';"></div>
+                            <code class="text-sm">animate-slide-right</code>
+                            <p class="text-xs text-gray-500 mt-1">Slide from left</p>
+                        </div>
+                    </div>
+
+                    <h4 class="font-medium text-gray-700 mb-3 mt-6">Fade & Zoom Animations</h4>
+                    <div class="grid grid-cols-2 d:grid-cols-4 gap-6 p-6 text-center">
+                        <div>
+                            <div class="w-42 h-42 mx-auto bg-teal-500 rounded-lg animate-fade-in mb-2 cursor-pointer" onclick="this.style.animation='none'; this.offsetHeight; this.style.animation='';"></div>
+                            <code class="text-sm">animate-fade-in</code>
+                            <p class="text-xs text-gray-500 mt-1">Simple fade in</p>
+                        </div>
+                        <div>
+                            <div class="w-42 h-42 mx-auto bg-teal-500 rounded-lg animate-fade-out mb-2 cursor-pointer" onclick="this.style.animation='none'; this.offsetHeight; this.style.animation='';"></div>
+                            <code class="text-sm">animate-fade-out</code>
+                            <p class="text-xs text-gray-500 mt-1">Simple fade out</p>
+                        </div>
+                        <div>
+                            <div class="w-42 h-42 mx-auto bg-teal-500 rounded-lg animate-zoom-in mb-2 cursor-pointer" onclick="this.style.animation='none'; this.offsetHeight; this.style.animation='';"></div>
+                            <code class="text-sm">animate-zoom-in</code>
+                            <p class="text-xs text-gray-500 mt-1">Scale up + fade in</p>
+                        </div>
+                        <div>
+                            <div class="w-42 h-42 mx-auto bg-teal-500 rounded-lg animate-zoom-out mb-2 cursor-pointer" onclick="this.style.animation='none'; this.offsetHeight; this.style.animation='';"></div>
+                            <code class="text-sm">animate-zoom-out</code>
+                            <p class="text-xs text-gray-500 mt-1">Scale down + fade out</p>
+                        </div>
+                    </div>
+
+                    <h4 class="font-medium text-gray-700 mb-3 mt-6">Attention Animations</h4>
+                    <div class="grid grid-cols-2 d:grid-cols-4 gap-6 p-6 text-center">
+                        <div>
+                            <div class="w-14 h-14 mx-auto bg-rose-500 rounded-lg animate-shake mb-2 cursor-pointer" onclick="this.style.animation='none'; this.offsetHeight; this.style.animation='';"></div>
+                            <code class="text-sm">animate-shake</code>
+                            <p class="text-xs text-gray-500 mt-1">Error feedback</p>
+                        </div>
+                        <div>
+                            <div class="w-14 h-14 mx-auto bg-amber-500 rounded-lg animate-wiggle mb-2"></div>
+                            <code class="text-sm">animate-wiggle</code>
+                            <p class="text-xs text-gray-500 mt-1">Gentle wiggle (infinite)</p>
+                        </div>
+                    </div>
+                    </div>
+
+                    <div class="bg-green-50 border border-green-200 rounded p-3 mt-4 dark:bg-green-900/30 dark:border-green-800">
+                        <p class="text-sm text-green-800 dark:text-green-300">
+                            <strong>Tip:</strong> Combine with <code>visible:</code> for scroll-triggered animations: <code>opacity-0 visible:animate-slide-up</code>
                         </p>
                     </div>
                 </div>
