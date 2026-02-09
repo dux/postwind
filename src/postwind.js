@@ -169,6 +169,19 @@ window.PostWind = (() => {
   }
 
   function resolve(className) {
+    // @ notation: text-sm@m → m:text-sm (property-first breakpoint)
+    if (className.includes('@')) {
+      const atMatch = className.match(/^([^@]+)@([a-z]+)$/);
+      if (atMatch) {
+        const rewritten = atMatch[2] + ':' + atMatch[1];
+        return resolve(rewritten).then(css => {
+          if (!css) return null;
+          // rewrite selector to use original @ class name
+          return css.replace(CSS.escape(rewritten), CSS.escape(className));
+        });
+      }
+    }
+
     // shortcut?
     if (shortcuts[className]) return resolveShortcut(className);
 
@@ -257,23 +270,58 @@ window.PostWind = (() => {
     visibleObserver.observe(el);
   }
 
+  // container query pattern: min-480:flex, max-320:hidden
+  const containerQueryRe = /^(min|max)-(\d+):(.+)$/;
+  const containerQueryElements = new WeakMap();
+
+  function setupContainerQuery(el, cls, mode, width, innerClass) {
+    if (!containerQueryElements.has(el)) {
+      containerQueryElements.set(el, []);
+      const ro = new ResizeObserver(entries => {
+        for (const entry of entries) {
+          const w = entry.contentRect.width;
+          for (const q of containerQueryElements.get(el) || []) {
+            const active = q.mode === 'min' ? w >= q.width : w <= q.width;
+            el.classList.toggle(q.innerClass, active);
+          }
+        }
+      });
+      ro.observe(el);
+    }
+    containerQueryElements.get(el).push({ mode, width, innerClass });
+  }
+
+  // onload: prefix — adds class 100ms after page load
+  function handleOnload(el, cls) {
+    const targetClass = cls.substring(7); // remove "onload:"
+    setTimeout(() => el.classList.add(targetClass), 100);
+  }
+
   // check if a class needs PostWind processing
   function needsProcessing(cls) {
     if (shortcuts[cls]) return true;
     if (cls.startsWith('dark:')) return true;
     if (cls.startsWith('visible:')) return true;
+    if (cls.startsWith('onload:')) return true;
     if (cls.includes('|')) return true;
+    if (cls.includes('@')) return true;
     if (isColonResponsive(cls)) return true;
     if (unitRe.test(cls)) return true;
+    if (containerQueryRe.test(cls)) return true;
     return false;
   }
 
   // process a single element: inject CSS for PostWind classes, observe visible: elements
   function processElement(el) {
     for (const cls of el.classList) {
-      if (cls.startsWith('visible:')) {
+      if (cls.startsWith('onload:')) {
+        handleOnload(el, cls);
+      } else if (cls.startsWith('visible:')) {
         observeVisible(el);
         inject(cls);
+      } else if (containerQueryRe.test(cls)) {
+        const m = cls.match(containerQueryRe);
+        setupContainerQuery(el, cls, m[1], parseInt(m[2]), m[3]);
       } else if (shortcuts[cls]) {
         inject(cls);
       } else if (needsProcessing(cls)) {
@@ -342,6 +390,22 @@ window.PostWind = (() => {
   });
   domObserver.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ['class'] });
 
+  // body breakpoint class: adds mobile/tablet/desktop to <body> based on viewport width
+  let _bodyClassCurrent = null;
+  function _setupBodyClass() {
+    function update() {
+      const w = window.innerWidth;
+      const name = w < 768 ? 'mobile' : w < 1024 ? 'tablet' : 'desktop';
+      if (name !== _bodyClassCurrent) {
+        if (_bodyClassCurrent) document.body.classList.remove(_bodyClassCurrent);
+        document.body.classList.add(name);
+        _bodyClassCurrent = name;
+      }
+    }
+    update();
+    window.addEventListener('resize', update);
+  }
+
   // load Tailwind browser runtime
   // returns a Promise that resolves when Tailwind is loaded and has processed the page
   let _ready = null;
@@ -358,6 +422,23 @@ window.PostWind = (() => {
           shortcut(name, classes);
         }
       }
+    }
+
+    // dark-auto: detect OS dark mode preference
+    if (typeof window !== 'undefined' && window.matchMedia) {
+      if (document.body?.classList.contains('dark-auto')) {
+        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+        if (prefersDark) document.body.classList.add('dark');
+        // listen for OS changes
+        window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', e => {
+          document.body.classList.toggle('dark', e.matches);
+        });
+      }
+    }
+
+    // body breakpoint class: adds mobile/tablet/desktop to <body>
+    if (opts && opts.body) {
+      _setupBodyClass();
     }
 
     // already loaded or loading
@@ -424,6 +505,7 @@ window.PostWind = (() => {
   inject.twCSS = twCSS;
   inject.cache = cache;
   inject.observeVisible = observeVisible;
+  inject.processElement = processElement;
 
   // default breakpoints
   breakpoint('m', '@media (max-width: 767px)');

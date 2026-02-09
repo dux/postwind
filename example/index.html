@@ -113,6 +113,11 @@
             <li><strong>Shortcuts</strong> &mdash; compose multiple classes into one: <code class="bg-gray-100 px-1 rounded font-mono text-sm">btn-primary</code></li>
             <li><strong>visible:</strong> prefix &mdash; IntersectionObserver-based scroll animations</li>
             <li><strong>dark:</strong> prefix &mdash; dark mode via <code class="bg-gray-100 px-1 rounded font-mono text-sm">body.dark</code> class</li>
+            <li><strong>dark-auto</strong> &mdash; auto-detect OS dark mode preference on <code class="bg-gray-100 px-1 rounded font-mono text-sm">body.dark-auto</code></li>
+            <li><strong>@ notation</strong> &mdash; <code class="bg-gray-100 px-1 rounded font-mono text-sm">text-sm@m</code> instead of <code class="bg-gray-100 px-1 rounded font-mono text-sm">m:text-sm</code></li>
+            <li><strong>onload:</strong> prefix &mdash; add class 100ms after page load for entrance animations</li>
+            <li><strong>Container queries</strong> &mdash; <code class="bg-gray-100 px-1 rounded font-mono text-sm">min-480:flex</code> / <code class="bg-gray-100 px-1 rounded font-mono text-sm">max-320:hidden</code> based on element width</li>
+            <li><strong>Body class</strong> &mdash; <code class="bg-gray-100 px-1 rounded font-mono text-sm">init({ body: true })</code> adds mobile/tablet/desktop to <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;body&gt;</code></li>
             <li><strong>m: t: d:</strong> prefixes &mdash; explicit mobile / tablet / desktop breakpoints</li>
           </ul>
         </div>
@@ -308,6 +313,11 @@
                 <tr class="border-b border-gray-100"><td class="py-2 pr-4">Tablet prefix</td><td class="py-2 pr-4">t:flex</td><td class="py-2">md:flex</td></tr>
                 <tr class="border-b border-gray-100"><td class="py-2 pr-4">Desktop prefix</td><td class="py-2 pr-4">d:flex</td><td class="py-2">lg:flex</td></tr>
                 <tr class="border-b border-gray-100"><td class="py-2 pr-4">Visible</td><td class="py-2 pr-4">visible:opacity-100</td><td class="py-2">IntersectionObserver</td></tr>
+                <tr class="border-b border-gray-100"><td class="py-2 pr-4">Dark mode</td><td class="py-2 pr-4">dark:bg-gray-900</td><td class="py-2">body.dark scoped</td></tr>
+                <tr class="border-b border-gray-100"><td class="py-2 pr-4">@ notation</td><td class="py-2 pr-4">text-sm@m</td><td class="py-2">m:text-sm</td></tr>
+                <tr class="border-b border-gray-100"><td class="py-2 pr-4">Onload</td><td class="py-2 pr-4">onload:opacity-100</td><td class="py-2">class added after 100ms</td></tr>
+                <tr class="border-b border-gray-100"><td class="py-2 pr-4">Container min</td><td class="py-2 pr-4">min-480:flex</td><td class="py-2">ResizeObserver</td></tr>
+                <tr class="border-b border-gray-100"><td class="py-2 pr-4">Container max</td><td class="py-2 pr-4">max-320:hidden</td><td class="py-2">ResizeObserver</td></tr>
                 <tr><td class="py-2 pr-4">Shortcut</td><td class="py-2 pr-4">btn-primary</td><td class="py-2">user-defined</td></tr>
               </tbody>
             </table>
@@ -1614,6 +1624,79 @@
     </section>
 
     <!-- ============================== -->
+    <!-- SECTION: @ Notation            -->
+    <!-- ============================== -->
+    <section id="at-notation" class="mb-16">
+      <h2 class="text-3xl font-bold mb-2">@ Notation</h2>
+      <p class="text-gray-500 mb-8">Property-first alternative to breakpoint prefixes. Put the breakpoint at the end with <code class="bg-gray-100 px-1 rounded font-mono text-sm">@</code>.</p>
+
+      <div class="space-y-6">
+        <div class="bg-white rounded-xl border border-gray-200 p-6">
+          <h3 class="text-lg font-semibold mb-3">Examples</h3>
+          <div class="space-y-3">
+            <div class="text-sm@m text-2xl@d bg-blue-50 p-3 rounded">text-sm@m text-2xl@d — small on mobile, large on desktop</div>
+            <div class="flex-col@m flex-row@d flex gap-2 bg-green-50 p-3 rounded">
+              <span class="bg-green-200 px-3 py-1 rounded">flex-col@m</span>
+              <span class="bg-green-200 px-3 py-1 rounded">flex-row@d</span>
+            </div>
+          </div>
+          <div class="mt-4 bg-gray-50 rounded-lg p-4 font-mono text-sm">
+            <div>&lt;div class="<span class="text-blue-600">text-sm@m text-2xl@d</span>"&gt;Same as m:text-sm d:text-2xl&lt;/div&gt;</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== -->
+    <!-- SECTION: Onload Prefix         -->
+    <!-- ============================== -->
+    <section id="onload" class="mb-16">
+      <h2 class="text-3xl font-bold mb-2">onload: Prefix</h2>
+      <p class="text-gray-500 mb-8">Adds a class 100ms after page load. Perfect for entrance animations.</p>
+
+      <div class="space-y-6">
+        <div class="bg-white rounded-xl border border-gray-200 p-6">
+          <h3 class="text-lg font-semibold mb-3">Entrance Animations</h3>
+          <div class="space-y-4">
+            <div class="opacity-0 transition duration-700 onload:opacity-100 bg-blue-100 text-blue-800 rounded-lg p-4">
+              I fade in after page load (onload:opacity-100)
+            </div>
+            <div class="scale-95 opacity-0 transition duration-500 onload:scale-100 onload:opacity-100 bg-purple-100 text-purple-800 rounded-lg p-4">
+              I scale up and fade in (onload:scale-100 onload:opacity-100)
+            </div>
+          </div>
+          <div class="mt-4 bg-gray-50 rounded-lg p-4 font-mono text-sm">
+            <div>&lt;div class="<span class="text-blue-600">opacity-0 transition duration-700 onload:opacity-100</span>"&gt;</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== -->
+    <!-- SECTION: Container Queries     -->
+    <!-- ============================== -->
+    <section id="container-queries" class="mb-16">
+      <h2 class="text-3xl font-bold mb-2">Container Queries</h2>
+      <p class="text-gray-500 mb-8">Per-element responsive rules using ResizeObserver. Based on the element's own width, not the viewport.</p>
+
+      <div class="space-y-6">
+        <div class="bg-white rounded-xl border border-gray-200 p-6">
+          <h3 class="text-lg font-semibold mb-3">Element Width Responsive</h3>
+          <div class="min-480:flex-row min-480:gap-4 flex flex-col gap-2 bg-amber-50 p-4 rounded-lg" style="resize:horizontal;overflow:auto;min-width:200px;">
+            <div class="bg-amber-200 px-4 py-2 rounded">Column A</div>
+            <div class="bg-amber-200 px-4 py-2 rounded">Column B</div>
+            <div class="bg-amber-200 px-4 py-2 rounded">Column C</div>
+            <div class="text-xs text-amber-600 mt-2">(drag to resize — switches to row at 480px wide)</div>
+          </div>
+          <div class="mt-4 bg-gray-50 rounded-lg p-4 font-mono text-sm">
+            <div>&lt;div class="<span class="text-blue-600">flex flex-col min-480:flex-row</span>"&gt;</div>
+            <div class="text-gray-500">&lt;!-- switches to row when this element is >= 480px wide --&gt;</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ============================== -->
     <!-- SECTION: Dark Mode             -->
     <!-- ============================== -->
     <section id="dark-mode" class="mb-16">
@@ -2073,6 +2156,60 @@
         darkTestEl.remove()
         log('dark: class applies background when body.dark is set',
           hasDarkBg, `computed bg: ${computed}`)
+
+        // ---- Test 43: @ notation text-sm@m resolves to m:text-sm ----
+        const r43 = await PostWind.resolve('text-sm@m')
+        log('resolve("text-sm@m") @ notation wraps in max-width media query',
+          r43 && r43.includes('@media') && r43.includes('max-width: 767px') && r43.includes('font-size'),
+          r43 ? r43.substring(0, 100) : null)
+
+        // ---- Test 44: @ notation flex@d resolves to d:flex ----
+        const r44 = await PostWind.resolve('flex@d')
+        log('resolve("flex@d") @ notation wraps in min-width: 1024px',
+          r44 && r44.includes('@media') && r44.includes('min-width: 1024px'),
+          r44 ? r44.substring(0, 100) : null)
+
+        // ---- Test 45: @ notation uses original class name in selector ----
+        log('resolve("text-sm@m") selector uses text-sm@m (not m:text-sm)',
+          r43 && r43.includes('text-sm\\@m'),
+          r43 ? r43.substring(0, 80) : null)
+
+        // ---- Test 46: onload: prefix adds class after delay ----
+        const onloadEl = document.createElement('div')
+        onloadEl.className = 'onload:test-onload-class'
+        document.body.appendChild(onloadEl)
+        PostWind.processElement(onloadEl)
+        const beforeOnload = onloadEl.classList.contains('test-onload-class')
+        await new Promise(r => setTimeout(r, 200))
+        const afterOnload = onloadEl.classList.contains('test-onload-class')
+        onloadEl.remove()
+        log('onload: prefix adds class after 100ms delay',
+          !beforeOnload && afterOnload,
+          `before: ${beforeOnload}, after: ${afterOnload}`)
+
+        // ---- Test 47: container query pattern detected ----
+        const cqEl = document.createElement('div')
+        cqEl.style.cssText = 'width:500px;'
+        cqEl.className = 'min-480:flex'
+        document.body.appendChild(cqEl)
+        PostWind.processElement(cqEl)
+        await new Promise(r => setTimeout(r, 200))
+        const hasFlex = cqEl.classList.contains('flex')
+        log('Container query: min-480:flex adds flex class when width >= 480',
+          hasFlex, `classList: ${cqEl.className}`)
+
+        // ---- Test 48: container query max mode ----
+        const cqEl2 = document.createElement('div')
+        cqEl2.style.cssText = 'width:300px;'
+        cqEl2.className = 'max-400:hidden'
+        document.body.appendChild(cqEl2)
+        PostWind.processElement(cqEl2)
+        await new Promise(r => setTimeout(r, 200))
+        const hasHidden = cqEl2.classList.contains('hidden')
+        log('Container query: max-400:hidden adds hidden when width <= 400',
+          hasHidden, `classList: ${cqEl2.className}`)
+        cqEl.remove()
+        cqEl2.remove()
 
         // ---- Done ----
         window.__TEST_RESULTS.done = true

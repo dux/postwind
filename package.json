@@ -1,6 +1,6 @@
 {
   "name": "postwind",
-  "version": "0.4.0",
+  "version": "0.5.0",
   "description": "Lightweight Tailwind CSS v4 extension — pipe notation, shortcuts, visible: animations, and more",
   "type": "module",
   "main": "dist/postwind.js",

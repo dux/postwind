@@ -1,6 +1,6 @@
 # PostWind - AI Library Guide
 
-PostWind is a lightweight (~420 lines) runtime extension for Tailwind CSS v4 browser runtime. It runs entirely in the browser — no build step needed for development. All standard Tailwind classes work unchanged; PostWind only adds extra syntax.
+PostWind is a lightweight (~500 lines) runtime extension for Tailwind CSS v4 browser runtime. It runs entirely in the browser — no build step needed for development. All standard Tailwind classes work unchanged; PostWind only adds extra syntax.
 
 ## Architecture
 
@@ -12,8 +12,8 @@ Two ESM entry points for npm:
 
 ## How it works
 
-1. PostWind creates two `<style>` elements: `postwind-main` (pipes, breakpoints, units, visible:) and `postwind-shortcuts` (shortcut classes)
-2. When it encounters a PostWind class (pipe, shortcut, breakpoint prefix, unit suffix, visible:), it:
+1. PostWind creates two `<style>` elements: `postwind-main` (pipes, breakpoints, units, visible:, dark:, @notation) and `postwind-shortcuts` (shortcut classes)
+2. When it encounters a PostWind class (pipe, shortcut, breakpoint prefix, unit suffix, visible:, dark:, onload:, @notation, container query), it:
    - Creates a temp DOM element with the equivalent Tailwind class
    - Waits one `requestAnimationFrame` for Tailwind to generate CSS
    - Reads the CSS from `document.styleSheets`
@@ -64,10 +64,40 @@ IntersectionObserver-based. Adds `.pw-visible` class when element is 50% in view
 <div class="opacity-0 transition visible:opacity-100">fades in on scroll</div>
 ```
 
+### @ notation (property-first breakpoints)
+`text-sm@m` becomes `m:text-sm`. The CSS selector uses the original `@` class name.
+```html
+<div class="text-sm@m text-2xl@d">breakpoint after class</div>
+```
+
+### onload: prefix
+Adds a class 100ms after page load. Handled in `processElement()`, not `resolve()`.
+```html
+<div class="opacity-0 transition onload:opacity-100">fades in on load</div>
+```
+
+### dark-auto
+Add `dark-auto` to `<body>` to auto-detect OS dark mode and listen for changes.
+```html
+<body class="dark-auto"><!-- auto-adds .dark based on prefers-color-scheme --></body>
+```
+
+### Container queries (min-/max- width)
+Element-width queries via ResizeObserver. Toggles inner classes based on the element's own width.
+`min-480:flex` = add `flex` when element >= 480px wide
+`max-320:hidden` = add `hidden` when element <= 320px wide
+Pattern: `(min|max)-{number}:{class}`
+
+### Body breakpoint class
+`init({ body: true })` adds `mobile`/`tablet`/`desktop` class to `<body>` based on viewport width. Updates on resize.
+- `mobile`: < 768px
+- `tablet`: 768px - 1023px
+- `desktop`: >= 1024px
+
 ## Public API
 
 ```js
-PostWind.init({ tailwind: true, shortcuts: {...}, breakpoints: {...} })
+PostWind.init({ tailwind: true, shortcuts: {...}, breakpoints: {...}, body: true })
 PostWind.shortcut(name, classes)
 PostWind.breakpoint(name, mediaQuery)
 PostWind.resolve(className)     // returns Promise<cssText>
@@ -76,6 +106,7 @@ PostWind.ready()                // returns Promise (resolved when Tailwind is re
 PostWind(className)             // inject CSS for a class (returns Promise)
 PostWind.cache                  // object of cached class promises
 PostWind.observeVisible(el)     // manually observe an element for visible: classes
+PostWind.processElement(el)     // manually process all PostWind classes on an element
 ```
 
 ## Build
@@ -87,7 +118,7 @@ bun run start    # serves example/ for development
 
 ## Key files
 
-- `src/postwind.js` — entire library (420 lines)
+- `src/postwind.js` — entire library (~500 lines)
 - `src/bundle.js` — ESM entry with Tailwind CDN auto-load
 - `src/lib.js` — ESM entry without Tailwind CDN
 - `example/index.html` — demo page

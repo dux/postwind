@@ -1,6 +1,6 @@
 # PostWind
 
-PostWind is a lightweight runtime extension for [Tailwind CSS v4](https://tailwindcss.com) browser runtime. It adds pipe notation, shortcuts, scroll animations, and more — all in a single ~420-line file. Every standard Tailwind class works unchanged.
+PostWind is a lightweight runtime extension for [Tailwind CSS v4](https://tailwindcss.com) browser runtime. It adds pipe notation, shortcuts, scroll animations, dark mode, container queries, and more — all in a single ~500-line file. Every standard Tailwind class works unchanged.
 
 ## Setup
 
@@ -119,6 +119,59 @@ Toggle via JS:
 document.body.classList.toggle('dark');
 ```
 
+### `dark-auto` (auto-detect OS preference)
+
+Add `dark-auto` to `<body>` to automatically detect OS dark mode preference and listen for changes.
+
+```html
+<body class="dark-auto">
+  <!-- automatically adds .dark class based on OS prefers-color-scheme -->
+</body>
+```
+
+### `@` notation (property-first breakpoints)
+
+Write the breakpoint suffix after the class with `@`. `text-sm@m` becomes `m:text-sm`.
+
+```html
+<div class="text-sm@m text-2xl@d">small on mobile, large on desktop</div>
+<div class="flex@d hidden@m">desktop flex, mobile hidden</div>
+```
+
+### `onload:` prefix
+
+Adds a class 100ms after page load. Useful for entrance animations.
+
+```html
+<div class="opacity-0 transition duration-500 onload:opacity-100">
+  fades in on page load
+</div>
+```
+
+### Container queries (`min-`/`max-` width)
+
+Element-width container queries using ResizeObserver. Toggles inner classes based on the element's own width (not viewport).
+
+```html
+<div class="min-480:flex">becomes flex when this element is >= 480px wide</div>
+<div class="max-320:hidden">hidden when this element is <= 320px wide</div>
+```
+
+### Body breakpoint class
+
+Adds `mobile`, `tablet`, or `desktop` class to `<body>` based on viewport width. Opt-in via `init({ body: true })`.
+
+```js
+PostWind.init({ body: true });
+```
+
+```html
+<!-- body gets class="mobile" (<768px), "tablet" (768-1023px), or "desktop" (>=1024px) -->
+<style>
+  body.mobile .sidebar { display: none; }
+</style>
+```
+
 ### `visible:` scroll animations
 
 IntersectionObserver-based. Classes activate when element is 50% visible in the viewport.
@@ -132,7 +185,7 @@ IntersectionObserver-based. Classes activate when element is 50% visible in the 
 ## API
 
 ```js
-PostWind.init(options)            // initialize (tailwind, shortcuts, breakpoints)
+PostWind.init(options)            // initialize (tailwind, shortcuts, breakpoints, body)
 PostWind.shortcut(name, classes)  // register a shortcut
 PostWind.breakpoint(name, media)  // register a breakpoint
 PostWind.resolve(className)       // resolve a class to CSS (Promise)
@@ -141,6 +194,7 @@ PostWind.ready()                  // Promise that resolves when Tailwind is read
 PostWind(className)               // inject CSS for a class (Promise)
 PostWind.cache                    // object of cached class promises
 PostWind.observeVisible(el)       // manually observe element for visible: classes
+PostWind.processElement(el)       // manually process all PostWind classes on an element
 ```
 
 ## Development
@@ -158,7 +212,7 @@ Tests are defined in `example/index.html` as inline browser tests. `bun test` la
 ### Project structure
 
 ```
-src/postwind.js    # entire library (~420 lines, browser IIFE)
+src/postwind.js    # entire library (~500 lines, browser IIFE)
 src/bundle.js      # ESM entry — auto-loads Tailwind CDN
 src/lib.js         # ESM entry — no Tailwind CDN
 src/postwind.test.js  # Playwright test runner
@@ -169,7 +223,7 @@ dist/              # built output (ESM, CJS, minified)
 
 ## How it works
 
-PostWind runs in the browser alongside `@tailwindcss/browser`. When it encounters a PostWind class (pipe notation, shortcut, breakpoint prefix, unit suffix, or `visible:`), it:
+PostWind runs in the browser alongside `@tailwindcss/browser`. When it encounters a PostWind class (pipe notation, shortcut, breakpoint prefix, unit suffix, `visible:`, `dark:`, `onload:`, `@` notation, or container query), it:
 
 1. Creates a temporary DOM element with the equivalent Tailwind class
 2. Waits for Tailwind to generate CSS (via `requestAnimationFrame`)

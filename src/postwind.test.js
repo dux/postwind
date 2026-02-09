@@ -1,7 +1,9 @@
 // Runs the inline browser tests from example/index.html via Playwright.
 // Tests are defined once in the demo page — this file reads the results.
 
-import { test, expect, beforeAll, afterAll } from 'bun:test';
+import { test, expect, beforeAll, afterAll, setDefaultTimeout } from 'bun:test';
+
+setDefaultTimeout(30000);
 import { chromium } from 'playwright';
 
 let browser, page, server, testResults;
