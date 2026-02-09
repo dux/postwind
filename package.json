@@ -29,7 +29,7 @@
     "pages": "open https://dux.github.io/postwind/",
     "open": "open https://www.npmjs.com/package/postwind",
     "gh": "open https://github.com/dux/postwind",
-    "publish": "npm version patch --no-git-tag-version && bun run build && bun run test && npm publish"
+    "publish": "bash bin/publish.sh"
   },
   "keywords": [
     "css",

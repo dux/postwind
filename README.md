@@ -2,6 +2,21 @@
 
 PostWind is a lightweight runtime extension for [Tailwind CSS v4](https://tailwindcss.com) browser runtime. It adds pipe notation, shortcuts, scroll animations, dark mode, container queries, and more — all in a single ~500-line file. Every standard Tailwind class works unchanged.
 
+### Features unique to PostWind
+
+- **Pipe responsive** — `p-4|8` or `p-4|8|12` for mobile/tablet/desktop in one class
+- **Colon responsive** — `p-4:8` as alias for pipe notation
+- **Unit suffixes** — `p-10px`, `mt-2rem`, `w-50%` without bracket syntax
+- **@ notation** — `text-sm@m` instead of `m:text-sm` (breakpoint after class)
+- **Shortcuts** — composable class aliases: `btn-primary` expands to multiple classes
+- **visible:** — IntersectionObserver scroll animations: `visible:opacity-100`
+- **onload:** — entrance animations: `onload:opacity-100` adds class after 100ms
+- **dark:** — dark mode via `body.dark` class: `dark:bg-gray-900`
+- **dark-auto** — auto-detect OS dark mode on `<body class="dark-auto">`
+- **Container queries** — `min-480:flex` / `max-320:hidden` based on element width (ResizeObserver)
+- **Body breakpoint class** — `init({ body: true })` adds `mobile`/`tablet`/`desktop` to `<body>`
+- **m: t: d: prefixes** — short breakpoint aliases for mobile/tablet/desktop
+
 ## Setup
 
 ### CDN / script tag
