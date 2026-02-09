@@ -1,37 +1,7 @@
-// PostWind - Real-time CSS Generator (Browser/UMD)
-import { init, resetCSS, loadClass, preload, shortcut, CONFIG, getConfig, setConfig, defineKeyword } from './core.js';
-import { createDefaultConfig } from './config.js';
-import { generateDoc } from './gen-doc.js';
+// PostWind library — without Tailwind CDN auto-loading
+// Usage: import PostWind from 'postwind/lib'
+// User must load @tailwindcss/browser separately
 
-const PostWind = {
-  // Core methods
-  init,
-  resetCss: resetCSS,
-  loadClass,
-  preload,
-  shortcut,
-  define: defineKeyword,
-  loadDefaultConfig: () => {
-    // Clear all properties and reset to defaults
-    Object.keys(CONFIG).forEach(key => delete CONFIG[key]);
-    const defaultConfig = createDefaultConfig();
-    Object.assign(CONFIG, defaultConfig);
-  },
-  generateDoc,
+import './postwind.js';
 
-  // Configuration access
-  get config() {
-    return getConfig();
-  },
-  set config(newConfig) {
-    setConfig(newConfig);
-  }
-};
-
-// Global export for browser usage
-if (typeof window !== 'undefined') {
-  window.PostWind = PostWind;
-}
-
-// ES Module export
-export default PostWind;
+export default (typeof window !== 'undefined' ? window.PostWind : undefined);

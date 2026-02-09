@@ -1,48 +1,55 @@
 {
   "name": "postwind",
-  "version": "0.2.2",
-  "description": "Real-time Tailwind-like CSS generator with pipe notation, shortcuts, and dynamic CSS injection",
+  "version": "0.4.0",
+  "description": "Lightweight Tailwind CSS v4 extension — pipe notation, shortcuts, visible: animations, and more",
   "type": "module",
-  "main": "dist/lib.js",
+  "main": "dist/postwind.js",
   "exports": {
     ".": {
+      "import": "./dist/postwind.js",
+      "require": "./dist/postwind.cjs"
+    },
+    "./lib": {
       "import": "./dist/lib.js",
       "require": "./dist/lib.cjs"
     },
-    "./core": "./dist/core.js",
-    "./config": "./dist/config.js",
     "./package.json": "./package.json"
-  },
-  "bin": {
-    "ai-bridge": "./bin/ai-bridge.js"
   },
   "files": [
     "dist/",
     "src/",
-    "bin/",
     "example/",
     "README.md"
   ],
   "scripts": {
-    "build": "rm -rf dist/ && bun build src/lib.js --outfile dist/lib.js --format esm && bun build src/lib.js --outfile dist/lib.min.js --format esm --minify && bun build src/lib.js --outfile dist/lib.cjs --format cjs",
-    "test": "bun test src/",
+    "build": "rm -rf dist/ && bun build src/bundle.js --outfile dist/postwind.js --format esm && bun build src/bundle.js --outfile dist/postwind.min.js --format esm --minify && bun build src/bundle.js --outfile dist/postwind.cjs --format cjs && bun build src/lib.js --outfile dist/lib.js --format esm && bun build src/lib.js --outfile dist/lib.min.js --format esm --minify && bun build src/lib.js --outfile dist/lib.cjs --format cjs",
     "start": "bun bin/server.js",
-    "dev": "bun run bin/server.js & bun build src/lib.js --outdir dist --format cjs --outfile dist/lib.cjs --watch",
+    "test": "bun test src/",
+    "dev": "bun bin/server.js & bun build src/lib.js --outfile dist/lib.js --format esm --watch & bun build src/bundle.js --outfile dist/postwind.js --format esm --watch",
     "pages": "open https://dux.github.io/postwind/",
     "open": "open https://www.npmjs.com/package/postwind",
     "gh": "open https://github.com/dux/postwind",
-    "publish": "bun run build && bun run test && npm publish && exit",
-    "ai-bridge": "bun run bin/ai-bridge.js"
+    "publish": "npm version patch --no-git-tag-version && bun run build && bun run test && npm publish"
   },
   "keywords": [
     "css",
     "tailwind",
+    "tailwindcss",
     "utility-first",
-    "css-in-js",
     "responsive",
     "frontend",
-    "bun"
+    "bun",
+    "pipe-notation",
+    "shortcuts"
   ],
+  "peerDependencies": {
+    "@tailwindcss/browser": "^4.0.0"
+  },
+  "peerDependenciesMeta": {
+    "@tailwindcss/browser": {
+      "optional": false
+    }
+  },
   "author": "Dux",
   "license": "MIT",
   "repository": {
@@ -53,13 +60,7 @@
   "bugs": {
     "url": "https://github.com/dux/postwind/issues"
   },
-  "devDependencies": {
-    "jsdom": "^22.1.0"
-  },
   "engines": {
     "bun": ">=1.0.0"
-  },
-  "dependencies": {
-    "puppeteer": "^24.30.0"
   }
 }

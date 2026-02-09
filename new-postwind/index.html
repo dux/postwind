@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PostWind - Examples &amp; Tests</title>
-  <script src="../src/postwind.js"></script>
+  <script src="postwind.js"></script>
   <script>
     PostWind.init({
       tailwind: true,
@@ -112,7 +112,6 @@
             <li><strong>Colon responsive</strong> &mdash; <code class="bg-gray-100 px-1 rounded font-mono text-sm">p-4:8</code> as alias for <code class="bg-gray-100 px-1 rounded font-mono text-sm">p-4|8</code></li>
             <li><strong>Shortcuts</strong> &mdash; compose multiple classes into one: <code class="bg-gray-100 px-1 rounded font-mono text-sm">btn-primary</code></li>
             <li><strong>visible:</strong> prefix &mdash; IntersectionObserver-based scroll animations</li>
-            <li><strong>dark:</strong> prefix &mdash; dark mode via <code class="bg-gray-100 px-1 rounded font-mono text-sm">body.dark</code> class</li>
             <li><strong>m: t: d:</strong> prefixes &mdash; explicit mobile / tablet / desktop breakpoints</li>
           </ul>
         </div>
@@ -128,7 +127,7 @@
             <div>.p-4\|8 { padding: 1rem; }</div>
             <div>@media (min-width: 768px) { .p-4\|8 { padding: 2rem; } }</div>
           </div>
-          <p><strong>3. Injected into the page.</strong> Generated rules go into <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;style id="postwind-main"&gt;</code> and <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;style id="postwind-shortcuts"&gt;</code> elements. A cache prevents duplicate injection.</p>
+          <p><strong>3. Injected into the page.</strong> Generated rules go into a <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;style id="pw-styles"&gt;</code> element. A cache prevents duplicate injection.</p>
           <p><strong>4. Auto-scan.</strong> On DOMContentLoaded, PostWind scans all elements for PostWind-specific classes (pipes, unit suffixes, colon responsive, visible:) and injects their CSS automatically. A MutationObserver watches for dynamically added elements.</p>
         </div>
       </div>
@@ -1614,48 +1613,6 @@
     </section>
 
     <!-- ============================== -->
-    <!-- SECTION: Dark Mode             -->
-    <!-- ============================== -->
-    <section id="dark-mode" class="mb-16">
-      <h2 class="text-3xl font-bold mb-2">Dark Mode</h2>
-      <p class="text-gray-500 mb-8">Toggle <code class="bg-gray-100 px-1 rounded font-mono text-sm">.dark</code> on <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;body&gt;</code> to activate <code class="bg-gray-100 px-1 rounded font-mono text-sm">dark:</code> prefixed classes.</p>
-
-      <div class="space-y-6">
-        <!-- Toggle button -->
-        <div class="flex items-center gap-4">
-          <button onclick="document.body.classList.toggle('dark')" class="btn-primary">Toggle Dark Mode</button>
-          <span class="text-sm text-gray-500">Click to add/remove <code class="bg-gray-100 px-1 rounded font-mono text-sm">.dark</code> from body</span>
-        </div>
-
-        <!-- Dark mode card -->
-        <div class="bg-white dark:bg-gray-900 border border-gray-200 dark:border-gray-700 rounded-xl p-6 transition-colors duration-300">
-          <h3 class="text-xl font-semibold mb-4 text-gray-900 dark:text-white">Dark Mode Card</h3>
-          <p class="text-gray-600 dark:text-gray-300 mb-4">This card adapts its background, text, and border colors when dark mode is active.</p>
-          <div class="flex gap-3">
-            <span class="px-3 py-1 rounded-full text-sm bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200">Tag 1</span>
-            <span class="px-3 py-1 rounded-full text-sm bg-green-100 dark:bg-green-900 text-green-800 dark:text-green-200">Tag 2</span>
-            <span class="px-3 py-1 rounded-full text-sm bg-purple-100 dark:bg-purple-900 text-purple-800 dark:text-purple-200">Tag 3</span>
-          </div>
-        </div>
-
-        <!-- Dark mode code example -->
-        <div class="bg-white rounded-xl border border-gray-200 p-6">
-          <h3 class="text-lg font-semibold mb-3">Usage</h3>
-          <div class="bg-gray-50 rounded-lg p-4 font-mono text-sm space-y-2">
-            <div class="text-gray-500">&lt;!-- Add .dark to body --&gt;</div>
-            <div>&lt;body class="dark"&gt;</div>
-            <div class="pl-4">&lt;div class="<span class="text-blue-600">bg-white dark:bg-gray-900 text-black dark:text-white</span>"&gt;</div>
-            <div class="pl-8">adapts to dark mode</div>
-            <div class="pl-4">&lt;/div&gt;</div>
-            <div>&lt;/body&gt;</div>
-            <div class="mt-4 text-gray-500">&lt;!-- Toggle via JS --&gt;</div>
-            <div>document.body.classList.toggle('dark')</div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- ============================== -->
     <!-- SECTION: Side-by-side compare  -->
     <!-- ============================== -->
     <section id="compare" class="mb-16">
@@ -1760,7 +1717,7 @@
     <!-- ============================== -->
     <section id="tests" class="mb-16">
       <h2 class="text-3xl font-bold mb-2">Automated Tests</h2>
-      <p class="text-gray-500 mb-8">Testing PostWind breakpoints, pipes, shortcuts, visible: prefix, and dark: mode.</p>
+      <p class="text-gray-500 mb-8">Testing PostWind breakpoints, pipes, shortcuts, and visible: prefix.</p>
 
       <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
         <div class="bg-gray-50 border-b border-gray-200 px-6 py-3 flex items-center justify-between">
@@ -1781,16 +1738,9 @@
       const sandbox = document.getElementById('test-sandbox')
       let passed = 0, failed = 0, total = 0
 
-      // expose results for Playwright / bun test
-      window.__TEST_RESULTS = { tests: [], done: false, passed: 0, failed: 0, total: 0 }
-
       function log(name, pass, detail) {
         total++
         if (pass) passed++; else failed++
-        window.__TEST_RESULTS.tests.push({ name, pass, detail: detail || null })
-        window.__TEST_RESULTS.passed = passed
-        window.__TEST_RESULTS.failed = failed
-        window.__TEST_RESULTS.total = total
         const div = document.createElement('div')
         div.className = pass ? 'test-pass' : 'test-fail'
         div.textContent = `${pass ? 'PASS' : 'FAIL'} - ${name}${detail ? ' (' + detail + ')' : ''}`
@@ -1923,8 +1873,8 @@
         // ---- Test 20: cache deduplication ----
         await PostWind('p-4')
         await PostWind('p-4')
-        const allPwCSS = (document.getElementById('postwind-main')?.textContent || '') + (document.getElementById('postwind-shortcuts')?.textContent || '')
-        const matches = (allPwCSS.match(/\.p-4\s*\{/g) || []).length
+        const styleEl = document.getElementById('pw-styles')
+        const matches = (styleEl.textContent.match(/\.p-4\s*\{/g) || []).length
         log('Cache deduplication: p-4 injected only once',
           matches <= 1, `found ${matches} occurrence(s)`)
 
@@ -2020,15 +1970,15 @@
           r34 && r34.includes('10px') && r34.includes('20px') && r34.includes('min-width: 768px'),
           r34 ? r34.substring(0, 140) : null)
 
-        // ---- Test 35: unit suffix auto-scan - check postwind-main has p-10px rule ----
-        const pw = (document.getElementById('postwind-main')?.textContent || '') + (document.getElementById('postwind-shortcuts')?.textContent || '')
-        log('Auto-scan: postwind-main contains p-10px rule',
-          pw.includes('p-10px'), 'checked postwind-main')
+        // ---- Test 35: unit suffix auto-scan - check pw-styles has p-10px rule ----
+        const pw = document.getElementById('pw-styles').textContent
+        log('Auto-scan: pw-styles contains p-10px rule',
+          pw.includes('p-10px'), 'checked pw-styles')
 
-        // ---- Test 36: auto-scan: postwind styles contain colon responsive rule ----
-        log('Auto-scan: postwind styles contain p-4\\:10 rule',
+        // ---- Test 36: auto-scan: pw-styles contains colon responsive rule ----
+        log('Auto-scan: pw-styles contains p-4\\:10 rule',
           pw.includes('p-4\\:10') || pw.includes('p-4\\\\:10'),
-          'checked postwind styles for colon class')
+          'checked pw-styles for colon class')
 
         // ---- Test 37: m:prefix still works (not treated as colon responsive) ----
         const r37 = await PostWind.resolve('m:flex')
@@ -2036,46 +1986,7 @@
           r37 && r37.includes('@media') && r37.includes('max-width: 767px'),
           r37 ? r37.substring(0, 80) : null)
 
-        // ---- Test 38: dark: prefix generates body.dark scoped selector ----
-        const r38 = await PostWind.resolve('dark:bg-gray-900')
-        log('resolve("dark:bg-gray-900") generates body.dark scoped selector',
-          r38 && r38.includes('body.dark') && r38.includes('background'),
-          r38 ? r38.substring(0, 100) : null)
-
-        // ---- Test 39: dark: text color ----
-        const r39 = await PostWind.resolve('dark:text-white')
-        log('resolve("dark:text-white") generates body.dark scoped color',
-          r39 && r39.includes('body.dark'),
-          r39 ? r39.substring(0, 100) : null)
-
-        // ---- Test 40: dark: border color ----
-        const r40 = await PostWind.resolve('dark:border-gray-700')
-        log('resolve("dark:border-gray-700") generates body.dark scoped border',
-          r40 && r40.includes('body.dark') && r40.includes('border'),
-          r40 ? r40.substring(0, 100) : null)
-
-        // ---- Test 41: dark: classes auto-scanned ----
-        const pwAll = (document.getElementById('postwind-main')?.textContent || '')
-        log('Auto-scan: dark: classes injected into postwind-main',
-          pwAll.includes('body.dark'),
-          'checked postwind-main for body.dark rules')
-
-        // ---- Test 42: dark: class actually applies when body has .dark ----
-        const darkTestEl = document.createElement('div')
-        darkTestEl.className = 'dark:bg-red-500'
-        document.body.appendChild(darkTestEl)
-        await PostWind('dark:bg-red-500')
-        document.body.classList.add('dark')
-        await new Promise(r => setTimeout(r, 100))
-        const computed = getComputedStyle(darkTestEl).backgroundColor
-        const hasDarkBg = computed !== '' && computed !== 'rgba(0, 0, 0, 0)'
-        document.body.classList.remove('dark')
-        darkTestEl.remove()
-        log('dark: class applies background when body.dark is set',
-          hasDarkBg, `computed bg: ${computed}`)
-
         // ---- Done ----
-        window.__TEST_RESULTS.done = true
         const doneDiv = document.createElement('div')
         doneDiv.className = 'mt-4 pt-4 border-t border-gray-200 font-bold'
         doneDiv.textContent = `Done: ${passed}/${total} passed, ${failed} failed`
