@@ -1,4 +1,4 @@
-# PostWind - AI Library Guide
+# PostWind - AI Library Guide (css and js guide)
 
 PostWind is a lightweight (~500 lines) runtime extension for Tailwind CSS v4 browser runtime. It runs entirely in the browser — no build step needed for development. All standard Tailwind classes work unchanged; PostWind only adds extra syntax.
 
@@ -88,6 +88,9 @@ Element-width queries via ResizeObserver. Toggles inner classes based on the ele
 `max-320:hidden` = add `hidden` when element <= 320px wide
 Pattern: `(min|max)-{number}:{class}`
 
+### Preload classes
+`init({ preload: 'mt-10px text-sm@m' })` pre-injects CSS for classes that aren't yet in the DOM. Accepts a space-separated string or an array. Useful for classes added dynamically later (e.g. via JS) to avoid flash of unstyled content.
+
 ### Body breakpoint class
 `init({ body: true })` adds `mobile`/`tablet`/`desktop` class to `<body>` based on viewport width. Updates on resize.
 - `mobile`: < 768px
@@ -97,7 +100,7 @@ Pattern: `(min|max)-{number}:{class}`
 ## Public API
 
 ```js
-PostWind.init({ tailwind: true, shortcuts: {...}, breakpoints: {...}, body: true })
+PostWind.init({ tailwind: true, shortcuts: {...}, breakpoints: {...}, body: true, preload: 'mt-10px text-sm@m' })
 PostWind.shortcut(name, classes)
 PostWind.breakpoint(name, mediaQuery)
 PostWind.resolve(className)     // returns Promise<cssText>

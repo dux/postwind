@@ -8,6 +8,7 @@
   <script>
     PostWind.init({
       tailwind: true,
+      preload: 'mt-10px text-sm@m',
       shortcuts: {
         // base
         'btn': 'inline-flex items-center justify-center px-4 py-2 rounded-lg font-medium transition-all duration-200 cursor-pointer text-sm',
@@ -190,7 +191,8 @@
               <div>&nbsp; shortcuts: {</div>
               <div>&nbsp;&nbsp;&nbsp; 'btn': 'px-4 py-2 rounded-lg font-medium',</div>
               <div>&nbsp;&nbsp;&nbsp; 'btn-primary': 'btn bg-blue-600 text-white',</div>
-              <div>&nbsp; }</div>
+              <div>&nbsp; },</div>
+              <div>&nbsp; preload: 'mt-10px text-sm@m', <span class="text-gray-500">// pre-inject CSS for classes (string or array)</span></div>
               <div>})</div>
             </div>
           </div>
@@ -2209,6 +2211,14 @@
           hasHidden, `classList: ${cqEl2.className}`)
         cqEl.remove()
         cqEl2.remove()
+
+        // ---- Test 49: preload option injects CSS for classes not in DOM ----
+        const preloadClass = 'mt-10px'
+        const preloadCss = PostWind.cache[preloadClass]
+        const preloadResolved = preloadCss ? await preloadCss : null
+        log('init({ preload }) injects CSS for preloaded classes',
+          preloadResolved && preloadResolved.includes('margin-top'),
+          preloadResolved)
 
         // ---- Done ----
         window.__TEST_RESULTS.done = true

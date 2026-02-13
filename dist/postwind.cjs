@@ -246,9 +246,6 @@ window.PostWind = (() => {
     const prefix = className.substring(0, sep);
     const base = className.substring(sep + 1);
     const media = breakpoints[prefix];
-    if (prefix === "m") {
-      console.warn(`PostWind: "${className}" — m: prefix is unnecessary. PostWind is mobile-first, so "${base}" is already the mobile default. Use "${base}" directly and t:/d: for larger screens.`);
-    }
     if (!media)
       return twCSS(className).then((css) => css ? `.${CSS.escape(className)} { ${css} }` : null);
     return twCSS(base).then((css) => {
@@ -400,6 +397,8 @@ window.PostWind = (() => {
   let _bodyClassCurrent = null;
   function _setupBodyClass() {
     function update() {
+      if (!document.body)
+        return;
       const w = window.innerWidth;
       const name = w < 768 ? "mobile" : w < 1024 ? "tablet" : "desktop";
       if (name !== _bodyClassCurrent) {
@@ -409,7 +408,11 @@ window.PostWind = (() => {
         _bodyClassCurrent = name;
       }
     }
-    update();
+    if (document.body) {
+      update();
+    } else {
+      document.addEventListener("DOMContentLoaded", update);
+    }
     window.addEventListener("resize", update);
   }
   let _ready = null;
@@ -427,14 +430,20 @@ window.PostWind = (() => {
       }
     }
     if (typeof window !== "undefined" && window.matchMedia) {
-      if (document.body?.classList.contains("dark-auto")) {
-        const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
-        if (prefersDark)
-          document.body.classList.add("dark");
-        window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
-          document.body.classList.toggle("dark", e.matches);
-        });
-      }
+      const initDarkMode = () => {
+        if (document.body?.classList.contains("dark-auto")) {
+          const prefersDark = window.matchMedia("(prefers-color-scheme: dark)").matches;
+          if (prefersDark)
+            document.body.classList.add("dark");
+          window.matchMedia("(prefers-color-scheme: dark)").addEventListener("change", (e) => {
+            document.body.classList.toggle("dark", e.matches);
+          });
+        }
+      };
+      if (document.body)
+        initDarkMode();
+      else
+        document.addEventListener("DOMContentLoaded", initDarkMode);
     }
     if (opts && opts.body) {
       _setupBodyClass();
@@ -443,19 +452,26 @@ window.PostWind = (() => {
       return _ready;
     if (!opts || !opts.tailwind) {
       _ready = Promise.resolve();
-      return _ready;
-    }
-    if (document.querySelector('script[src*="tailwindcss/browser"]')) {
+    } else if (document.querySelector('script[src*="tailwindcss/browser"]')) {
       _ready = _waitForTailwind();
-      return _ready;
+    } else {
+      _ready = new Promise((resolve2, reject) => {
+        const s = document.createElement("script");
+        s.src = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4";
+        s.onload = () => _waitForTailwind().then(resolve2);
+        s.onerror = () => reject(new Error("Failed to load Tailwind"));
+        document.head.appendChild(s);
+      });
     }
-    _ready = new Promise((resolve2, reject) => {
-      const s = document.createElement("script");
-      s.src = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4";
-      s.onload = () => _waitForTailwind().then(resolve2);
-      s.onerror = () => reject(new Error("Failed to load Tailwind"));
-      document.head.appendChild(s);
-    });
+    if (opts && opts.preload) {
+      const classes = Array.isArray(opts.preload) ? opts.preload : opts.preload.split(/\s+/).filter(Boolean);
+      const doPreload = () => _ready.then(() => Promise.all(classes.map((cls) => inject(cls))));
+      if (document.body) {
+        doPreload();
+      } else {
+        document.addEventListener("DOMContentLoaded", doPreload);
+      }
+    }
     return _ready;
   }
   function _waitForTailwind() {
