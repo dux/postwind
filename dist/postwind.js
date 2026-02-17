@@ -81,27 +81,62 @@ window.PostWind = (() => {
     const list = classes.split(/\s+/);
     const expanded = [];
     for (const cls of list) {
-      if (shortcuts[cls]) {
-        expanded.push(...shortcuts[cls].split(/\s+/));
+      const nested = shortcuts[cls] || shortcuts[`.${cls}`];
+      if (nested) {
+        expanded.push(...nested.split(/\s+/));
       } else {
         expanded.push(cls);
       }
     }
+    const baseExtras = [];
+    for (const cls of expanded) {
+      const sep = cls.indexOf(":");
+      if (sep !== -1) {
+        const prefix = cls.substring(0, sep);
+        if (breakpoints[prefix])
+          baseExtras.push(cls.substring(sep + 1));
+      }
+    }
     const el = document.createElement("div");
-    el.className = expanded.join(" ");
+    el.className = [...expanded, ...baseExtras].join(" ");
     document.body.appendChild(el);
     return new Promise((resolve2) => {
       requestAnimationFrame(() => {
-        const parts = [];
+        const baseParts = [];
+        const mediaParts = {};
         for (const cls of expanded) {
+          const sep = cls.indexOf(":");
+          if (sep !== -1) {
+            const prefix = cls.substring(0, sep);
+            const base = cls.substring(sep + 1);
+            const media = breakpoints[prefix];
+            if (media) {
+              const full2 = twFull(base);
+              if (full2) {
+                if (!mediaParts[media])
+                  mediaParts[media] = [];
+                mediaParts[media].push(extractInner(full2));
+              }
+              continue;
+            }
+          }
           const full = twFull(cls);
           if (full)
-            parts.push(extractInner(full));
+            baseParts.push(extractInner(full));
         }
         el.remove();
-        if (!parts.length)
+        const mediaKeys = Object.keys(mediaParts);
+        if (!baseParts.length && !mediaKeys.length)
           return resolve2(null);
-        resolve2(`.${CSS.escape(name)} { ${parts.join(" ")} }`);
+        let css = "";
+        if (baseParts.length)
+          css += `${name} { ${baseParts.join(" ")} }`;
+        for (const media of mediaKeys) {
+          if (css)
+            css += " ";
+          css += `${media} { ${name} { ${mediaParts[media].join(" ")} } }`;
+        }
+        resolve2(css);
       });
     });
   }
@@ -146,7 +181,11 @@ window.PostWind = (() => {
         const m = base.match(unitRe);
         return m ? `${m[1]}[${m[2]}${m[3]}]` : base;
       })();
-      return Promise.all([twCSS(baseClass), twCSS(tabletClass), twCSS(desktopClass)]).then(([bCss, tCss, dCss]) => {
+      return Promise.all([
+        twCSS(baseClass),
+        twCSS(tabletClass),
+        twCSS(desktopClass)
+      ]).then(([bCss, tCss, dCss]) => {
         const rules = [];
         if (bCss)
           rules.push(`.${sel} { ${bCss} }`);
@@ -283,6 +322,9 @@ window.PostWind = (() => {
       return true;
     if (containerQueryRe.test(cls))
       return true;
+    const colonIdx = cls.indexOf(":");
+    if (colonIdx > 0 && breakpoints[cls.substring(0, colonIdx)])
+      return true;
     return false;
   }
   function processElement(el) {
@@ -358,7 +400,12 @@ window.PostWind = (() => {
       }
     });
   });
-  domObserver.observe(document.documentElement, { childList: true, subtree: true, attributes: true, attributeFilter: ["class"] });
+  domObserver.observe(document.documentElement, {
+    childList: true,
+    subtree: true,
+    attributes: true,
+    attributeFilter: ["class"]
+  });
   let _bodyClassCurrent = null;
   function _setupBodyClass() {
     function update() {
@@ -437,6 +484,15 @@ window.PostWind = (() => {
         document.addEventListener("DOMContentLoaded", doPreload);
       }
     }
+    if (opts && opts.shortcuts) {
+      const names = Object.keys(opts.shortcuts);
+      const doShortcuts = () => _ready.then(() => Promise.all(names.map((name) => inject(name))));
+      if (document.body) {
+        doShortcuts();
+      } else {
+        document.addEventListener("DOMContentLoaded", doShortcuts);
+      }
+    }
     return _ready;
   }
   function _waitForTailwind() {
@@ -450,17 +506,18 @@ window.PostWind = (() => {
             }
           } catch (e) {}
         }
-        for (const sheet of document.styleSheets) {
-          try {
-            for (const rule of sheet.cssRules) {
-              if (rule.constructor.name === "CSSLayerBlockRule") {
-                resolve2();
-                return;
-              }
-            }
-          } catch (e) {}
-        }
-        requestAnimationFrame(check);
+        const probe = document.createElement("div");
+        probe.className = "hidden";
+        document.body?.appendChild(probe);
+        requestAnimationFrame(() => {
+          const css = twRule("hidden");
+          probe.remove();
+          if (css) {
+            resolve2();
+          } else {
+            requestAnimationFrame(check);
+          }
+        });
       }
       check();
     });

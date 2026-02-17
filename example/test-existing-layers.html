@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>PostWind - Existing @layer test</title>
+  <!-- Pre-existing @layer rules (simulates a project with its own CSS layers,
+       e.g. SCSS build output that uses @layer base/theme before Tailwind loads) -->
+  <style>
+    @layer base {
+      *, ::after, ::before { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: sans-serif; font-size: 16px; }
+      h1, h2, h3 { font-size: inherit; font-weight: inherit; }
+    }
+    @layer theme {
+      :root {
+        --font-sans: sans-serif;
+        --spacing: 0.25rem;
+      }
+    }
+    @layer base {
+      body * { transition: width 0.2s, height 0.2s, padding 0.1s; }
+    }
+  </style>
+  <script src="../src/postwind.js"></script>
+  <script>
+    PostWind.init({
+      tailwind: true,
+      shortcuts: {
+        '.f-vcenter': 'flex items-center',
+        '.f-center': 'flex items-center justify-center',
+      }
+    })
+  </script>
+</head>
+<body>
+  <h1 class="f-vcenter" style="padding: 10px;">
+    <span>Shortcut test with existing @layer rules</span>
+  </h1>
+  <div class="f-center" style="height: 100px; border: 1px solid #ccc;">
+    <span>Centered content</span>
+  </div>
+  <div class="d:hidden" id="desktop-hidden">Should be hidden on desktop</div>
+  <div class="m:hidden" id="mobile-hidden">Should be hidden on mobile</div>
+  <div id="test-sandbox" style="position:absolute;left:-9999px;top:-9999px"></div>
+
+  <script>
+    window.__TEST_RESULTS = { tests: [], done: false, passed: 0, failed: 0, total: 0 }
+    let passed = 0, failed = 0, total = 0
+
+    function log(name, pass, detail) {
+      total++
+      if (pass) passed++; else failed++
+      window.__TEST_RESULTS.tests.push({ name, pass, detail: detail || null })
+      window.__TEST_RESULTS.passed = passed
+      window.__TEST_RESULTS.failed = failed
+      window.__TEST_RESULTS.total = total
+    }
+
+    PostWind.ready().then(async () => {
+      // Test 1: f-vcenter shortcut resolves despite pre-existing @layer rules
+      const r1 = await PostWind.resolve('.f-vcenter')
+      log('f-vcenter shortcut resolves with existing @layer rules',
+        r1 && r1.includes('display') && r1.includes('flex') && r1.includes('align-items'),
+        r1 ? r1.substring(0, 150) : 'null')
+
+      // Test 2: f-center shortcut resolves
+      const r2 = await PostWind.resolve('.f-center')
+      log('f-center shortcut resolves with existing @layer rules',
+        r2 && r2.includes('display') && r2.includes('flex') && r2.includes('justify-content'),
+        r2 ? r2.substring(0, 150) : 'null')
+
+      // Test 3: postwind-shortcuts style element has the shortcut CSS
+      const shortcutsCSS = document.getElementById('postwind-shortcuts')?.textContent || ''
+      log('postwind-shortcuts contains f-vcenter rule',
+        shortcutsCSS.includes('f-vcenter'),
+        shortcutsCSS.substring(0, 200))
+
+      // Test 4: the actual DOM element has flex applied
+      const h1 = document.querySelector('h1.f-vcenter')
+      const computed = h1 ? getComputedStyle(h1) : null
+      log('h1.f-vcenter has display:flex computed',
+        computed && computed.display === 'flex',
+        computed ? `display: ${computed.display}` : 'element not found')
+
+      // Test 5: basic Tailwind utility still works
+      const r5 = await PostWind.twCSS('p-4')
+      log('twCSS("p-4") works alongside existing @layer rules',
+        r5 && r5.includes('padding'),
+        r5)
+
+      // Test 6: unit suffix works
+      const r6 = await PostWind.resolve('p-10px')
+      log('resolve("p-10px") works alongside existing @layer rules',
+        r6 && r6.includes('padding') && r6.includes('10px'),
+        r6 ? r6.substring(0, 100) : 'null')
+
+      // Test 7: d:hidden breakpoint prefix is auto-scanned and injected
+      const pw = document.getElementById('postwind-main')?.textContent || ''
+      log('Auto-scan: d:hidden breakpoint prefix injected into postwind-main',
+        pw.includes('d\\:hidden') || pw.includes('d\\3a hidden'),
+        pw.substring(0, 300))
+
+      // Test 8: d:hidden resolve produces correct media query
+      const r8 = await PostWind.resolve('d:hidden')
+      log('resolve("d:hidden") wraps in min-width media query with display:none',
+        r8 && r8.includes('@media') && r8.includes('none'),
+        r8 ? r8.substring(0, 150) : 'null')
+
+      // Test 9: m:hidden resolve produces correct media query
+      const r9 = await PostWind.resolve('m:hidden')
+      log('resolve("m:hidden") wraps in max-width media query with display:none',
+        r9 && r9.includes('@media') && r9.includes('none'),
+        r9 ? r9.substring(0, 150) : 'null')
+
+      window.__TEST_RESULTS.done = true
+    })
+  </script>
+</body>
+</html>
