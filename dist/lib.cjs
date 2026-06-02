@@ -44,6 +44,9 @@ window.PostWind = (() => {
   const styleShortcuts = document.createElement("style");
   styleShortcuts.id = "postwind-shortcuts";
   document.head.appendChild(styleShortcuts);
+  const styleHide = document.createElement("style");
+  styleHide.textContent = "body:not(.pw-ready){opacity:0}body.pw-ready{opacity:1;transition:opacity .15s ease-in}";
+  document.head.appendChild(styleHide);
   const visibleObserver = new IntersectionObserver((entries) => {
     for (const entry of entries) {
       entry.target.classList.toggle("pw-visible", entry.isIntersecting);
@@ -107,7 +110,19 @@ window.PostWind = (() => {
     return cssText.substring(first + 1, last).trim();
   }
   function shortcut(name, classes) {
+    if (typeof name === "object") {
+      const keys = Object.keys(name);
+      for (const k of keys)
+        shortcuts[k] = name[k];
+      const doInject = () => Promise.all(keys.map((k) => inject(k)));
+      (_ready || Promise.resolve()).then(doInject);
+      return;
+    }
     shortcuts[name] = classes;
+  }
+  function toTwClass(cls) {
+    const m = cls.match(unitRe);
+    return m ? `${m[1]}[${m[2]}${m[3]}]` : cls;
   }
   function resolveShortcut(name) {
     const classes = shortcuts[name];
@@ -129,11 +144,17 @@ window.PostWind = (() => {
       if (sep !== -1) {
         const prefix = cls.substring(0, sep);
         if (breakpoints[prefix])
-          baseExtras.push(cls.substring(sep + 1));
+          baseExtras.push(toTwClass(cls.substring(sep + 1)));
       }
     }
+    const twClasses = expanded.map((cls) => {
+      const sep = cls.indexOf(":");
+      if (sep !== -1 && breakpoints[cls.substring(0, sep)])
+        return "";
+      return toTwClass(cls);
+    });
     const el = document.createElement("div");
-    el.className = [...expanded, ...baseExtras].join(" ");
+    el.className = [...twClasses, ...baseExtras].filter(Boolean).join(" ");
     document.body.appendChild(el);
     return new Promise((resolve2) => {
       requestAnimationFrame(() => {
@@ -146,7 +167,7 @@ window.PostWind = (() => {
             const base = cls.substring(sep + 1);
             const media = breakpoints[prefix];
             if (media) {
-              const full2 = twFull(base);
+              const full2 = twFull(toTwClass(base));
               if (full2) {
                 if (!mediaParts[media])
                   mediaParts[media] = [];
@@ -155,7 +176,7 @@ window.PostWind = (() => {
               continue;
             }
           }
-          const full = twFull(cls);
+          const full = twFull(toTwClass(cls));
           if (full)
             baseParts.push(extractInner(full));
         }
@@ -189,16 +210,11 @@ window.PostWind = (() => {
     const prop = dashIdx !== -1 ? base.substring(0, dashIdx + 1) : "";
     const sel = CSS.escape(className);
     function expandClass(val) {
-      const cls = prop + val;
-      const m = cls.match(unitRe);
-      return m ? `${m[1]}[${m[2]}${m[3]}]` : cls;
+      return toTwClass(prop + val);
     }
     if (parts.length === 2) {
       const tabletClass = expandClass(parts[1]);
-      const baseClass = (() => {
-        const m = base.match(unitRe);
-        return m ? `${m[1]}[${m[2]}${m[3]}]` : base;
-      })();
+      const baseClass = toTwClass(base);
       return Promise.all([twCSS(baseClass), twCSS(tabletClass)]).then(([bCss, tCss]) => {
         const rules = [];
         if (bCss)
@@ -212,10 +228,7 @@ window.PostWind = (() => {
     if (parts.length === 3) {
       const tabletClass = expandClass(parts[1]);
       const desktopClass = expandClass(parts[2]);
-      const baseClass = (() => {
-        const m = base.match(unitRe);
-        return m ? `${m[1]}[${m[2]}${m[3]}]` : base;
-      })();
+      const baseClass = toTwClass(base);
       return Promise.all([
         twCSS(baseClass),
         twCSS(tabletClass),
@@ -254,44 +267,46 @@ window.PostWind = (() => {
     if (isColonResponsive(className)) {
       return resolvePipe(className, className.split(":"));
     }
-    const unitMatch = className.match(unitRe);
-    if (unitMatch) {
-      const twClass = `${unitMatch[1]}[${unitMatch[2]}${unitMatch[3]}]`;
-      return twCSS(twClass).then((css) => {
+    {
+      const sep = className.indexOf(":");
+      if (sep > 0) {
+        const prefix = className.substring(0, sep);
+        const media = breakpoints[prefix];
+        if (media) {
+          const base = className.substring(sep + 1);
+          const twBase = toTwClass(base);
+          return twCSS(twBase).then((css) => {
+            if (!css)
+              return null;
+            return `${media} { .${CSS.escape(className)} { ${css} } }`;
+          });
+        }
+      }
+    }
+    if (unitRe.test(className)) {
+      return twCSS(toTwClass(className)).then((css) => {
         if (!css)
           return null;
         return `.${CSS.escape(className)} { ${css} }`;
       });
     }
     if (className.startsWith("dark:")) {
-      const base2 = className.substring(5);
-      return twCSS(base2).then((css) => {
+      const base = className.substring(5);
+      return twCSS(base).then((css) => {
         if (!css)
           return null;
         return `body.dark .${CSS.escape(className)} { ${css} }`;
       });
     }
     if (className.startsWith("visible:")) {
-      const base2 = className.substring(8);
-      return twCSS(base2).then((css) => {
+      const base = className.substring(8);
+      return twCSS(base).then((css) => {
         if (!css)
           return null;
         return `.pw-visible.${CSS.escape(className)} { ${css} }`;
       });
     }
-    const sep = className.indexOf(":");
-    if (sep === -1)
-      return twCSS(className).then((css) => css ? `.${CSS.escape(className)} { ${css} }` : null);
-    const prefix = className.substring(0, sep);
-    const base = className.substring(sep + 1);
-    const media = breakpoints[prefix];
-    if (!media)
-      return twCSS(className).then((css) => css ? `.${CSS.escape(className)} { ${css} }` : null);
-    return twCSS(base).then((css) => {
-      if (!css)
-        return null;
-      return `${media} { .${CSS.escape(className)} { ${css} } }`;
-    });
+    return twCSS(className).then((css) => css ? `.${CSS.escape(className)} { ${css} }` : null);
   }
   function inject(className) {
     if (cache[className])
@@ -392,13 +407,20 @@ window.PostWind = (() => {
       }
     }
   }
+  function _reveal() {
+    if (document.body)
+      document.body.classList.add("pw-ready");
+  }
   function autoInit() {
     function scan() {
       if (!_ready) {
         requestAnimationFrame(scan);
         return;
       }
-      _ready.then(() => initClasses());
+      _ready.then(() => {
+        initClasses();
+        Promise.all(Object.values(cache)).then(() => setTimeout(_reveal, 1));
+      });
     }
     scan();
   }
@@ -407,6 +429,7 @@ window.PostWind = (() => {
   } else {
     autoInit();
   }
+  setTimeout(_reveal, 1500);
   const domObserver = new MutationObserver((mutations) => {
     if (!_ready)
       return;

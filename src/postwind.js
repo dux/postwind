@@ -9,6 +9,11 @@ window.PostWind = (() => {
   styleShortcuts.id = "postwind-shortcuts";
   document.head.appendChild(styleShortcuts);
 
+  // anti-FOUC: hide body until PostWind CSS is ready
+  const styleHide = document.createElement("style");
+  styleHide.textContent = "body:not(.pw-ready){opacity:0}body.pw-ready{opacity:1;transition:opacity .15s ease-in}";
+  document.head.appendChild(styleHide);
+
   // IntersectionObserver for visible: prefix
   const visibleObserver = new IntersectionObserver(
     (entries) => {
@@ -81,7 +86,21 @@ window.PostWind = (() => {
   }
 
   function shortcut(name, classes) {
+    if (typeof name === 'object') {
+      const keys = Object.keys(name);
+      for (const k of keys) shortcuts[k] = name[k];
+      const doInject = () => Promise.all(keys.map(k => inject(k)));
+      (_ready || Promise.resolve()).then(doInject);
+      return;
+    }
     shortcuts[name] = classes;
+  }
+
+  // convert unit-suffix class to bracket notation for Tailwind
+  // e.g. max-w-1300px -> max-w-[1300px], p-10px -> p-[10px]
+  function toTwClass(cls) {
+    const m = cls.match(unitRe);
+    return m ? `${m[1]}[${m[2]}${m[3]}]` : cls;
   }
 
   function resolveShortcut(name) {
@@ -102,17 +121,26 @@ window.PostWind = (() => {
 
     // separate breakpoint-prefixed classes and collect their base classes
     // so Tailwind generates CSS for them (it doesn't know custom prefixes like m:)
+    // convert unit-suffix to bracket notation so Tailwind recognizes them
     const baseExtras = [];
     for (const cls of expanded) {
       const sep = cls.indexOf(":");
       if (sep !== -1) {
         const prefix = cls.substring(0, sep);
-        if (breakpoints[prefix]) baseExtras.push(cls.substring(sep + 1));
+        if (breakpoints[prefix]) baseExtras.push(toTwClass(cls.substring(sep + 1)));
       }
     }
 
+    // build Tailwind-compatible class names for the temp element
+    // unit-suffix classes like max-w-1300px must become max-w-[1300px]
+    const twClasses = expanded.map((cls) => {
+      const sep = cls.indexOf(":");
+      if (sep !== -1 && breakpoints[cls.substring(0, sep)]) return "";
+      return toTwClass(cls);
+    });
+
     const el = document.createElement("div");
-    el.className = [...expanded, ...baseExtras].join(" ");
+    el.className = [...twClasses, ...baseExtras].filter(Boolean).join(" ");
     document.body.appendChild(el);
 
     return new Promise((resolve) => {
@@ -128,7 +156,7 @@ window.PostWind = (() => {
             const media = breakpoints[prefix];
             if (media) {
               // resolve the base class and group under its media query
-              const full = twFull(base);
+              const full = twFull(toTwClass(base));
               if (full) {
                 if (!mediaParts[media]) mediaParts[media] = [];
                 mediaParts[media].push(extractInner(full));
@@ -136,7 +164,7 @@ window.PostWind = (() => {
               continue;
             }
           }
-          const full = twFull(cls);
+          const full = twFull(toTwClass(cls));
           if (full) baseParts.push(extractInner(full));
         }
 
@@ -178,17 +206,12 @@ window.PostWind = (() => {
 
     // resolve each part, expanding unit suffixes
     function expandClass(val) {
-      const cls = prop + val;
-      const m = cls.match(unitRe);
-      return m ? `${m[1]}[${m[2]}${m[3]}]` : cls;
+      return toTwClass(prop + val);
     }
 
     if (parts.length === 2) {
       const tabletClass = expandClass(parts[1]);
-      const baseClass = (() => {
-        const m = base.match(unitRe);
-        return m ? `${m[1]}[${m[2]}${m[3]}]` : base;
-      })();
+      const baseClass = toTwClass(base);
       return Promise.all([twCSS(baseClass), twCSS(tabletClass)]).then(
         ([bCss, tCss]) => {
           const rules = [];
@@ -202,10 +225,7 @@ window.PostWind = (() => {
     if (parts.length === 3) {
       const tabletClass = expandClass(parts[1]);
       const desktopClass = expandClass(parts[2]);
-      const baseClass = (() => {
-        const m = base.match(unitRe);
-        return m ? `${m[1]}[${m[2]}${m[3]}]` : base;
-      })();
+      const baseClass = toTwClass(base);
       return Promise.all([
         twCSS(baseClass),
         twCSS(tabletClass),
@@ -249,11 +269,28 @@ window.PostWind = (() => {
       return resolvePipe(className, className.split(":"));
     }
 
+    // prefix notation: m:p-10, d:flex, d:pt-51px, t:block
+    // must check before unit-suffix so "d:pt-51px" isn't consumed by unitRe
+    {
+      const sep = className.indexOf(":");
+      if (sep > 0) {
+        const prefix = className.substring(0, sep);
+        const media = breakpoints[prefix];
+        if (media) {
+          const base = className.substring(sep + 1);
+          // apply unit-suffix conversion to base if needed
+          const twBase = toTwClass(base);
+          return twCSS(twBase).then((css) => {
+            if (!css) return null;
+            return `${media} { .${CSS.escape(className)} { ${css} } }`;
+          });
+        }
+      }
+    }
+
     // unit-suffix: p-10px -> p-[10px], mt-2rem -> mt-[2rem]
-    const unitMatch = className.match(unitRe);
-    if (unitMatch) {
-      const twClass = `${unitMatch[1]}[${unitMatch[2]}${unitMatch[3]}]`;
-      return twCSS(twClass).then((css) => {
+    if (unitRe.test(className)) {
+      return twCSS(toTwClass(className)).then((css) => {
         if (!css) return null;
         return `.${CSS.escape(className)} { ${css} }`;
       });
@@ -277,26 +314,10 @@ window.PostWind = (() => {
       });
     }
 
-    // prefix notation: m:p-10, d:flex, t:block
-    const sep = className.indexOf(":");
-    if (sep === -1)
-      return twCSS(className).then((css) =>
-        css ? `.${CSS.escape(className)} { ${css} }` : null
-      );
-
-    const prefix = className.substring(0, sep);
-    const base = className.substring(sep + 1);
-    const media = breakpoints[prefix];
-
-    if (!media)
-      return twCSS(className).then((css) =>
-        css ? `.${CSS.escape(className)} { ${css} }` : null
-      );
-
-    return twCSS(base).then((css) => {
-      if (!css) return null;
-      return `${media} { .${CSS.escape(className)} { ${css} } }`;
-    });
+    // fallback: try as plain Tailwind class
+    return twCSS(className).then((css) =>
+      css ? `.${CSS.escape(className)} { ${css} }` : null
+    );
   }
 
   function inject(className) {
@@ -399,6 +420,11 @@ window.PostWind = (() => {
     }
   }
 
+  // anti-FOUC: reveal body after CSS is ready
+  function _reveal() {
+    if (document.body) document.body.classList.add("pw-ready");
+  }
+
   // auto-scan: wait for both DOM and Tailwind before scanning
   function autoInit() {
     function scan() {
@@ -406,7 +432,10 @@ window.PostWind = (() => {
         requestAnimationFrame(scan);
         return;
       }
-      _ready.then(() => initClasses());
+      _ready.then(() => {
+        initClasses();
+        Promise.all(Object.values(cache)).then(() => setTimeout(_reveal, 1));
+      });
     }
     scan();
   }
@@ -416,6 +445,9 @@ window.PostWind = (() => {
   } else {
     autoInit();
   }
+
+  // safety: always reveal after 1.5s even if init fails
+  setTimeout(_reveal, 1500);
 
   // MutationObserver to catch dynamically added elements and class attribute changes
   const domObserver = new MutationObserver((mutations) => {

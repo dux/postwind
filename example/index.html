@@ -61,6 +61,10 @@
         '.f-row': 'flex m:flex-col gap-6',
         // compound selector shortcut
         'h4, .h4': 'font-bold text-lg',
+        // shortcut with unit-suffix classes (regression test)
+        '.con': 'w-full max-w-1300px mx-auto px-3',
+        // shortcut with breakpoint prefix + unit-suffix
+        '.con-bp': 'w-full d:max-w-1300px mx-auto px-3',
       }
     })
   </script>
@@ -2246,6 +2250,35 @@
         log('selector shortcut "h4, .h4" uses raw selector (not escaped)',
           scCSS.includes('h4, .h4') && scCSS.includes('font-weight'),
           scCSS.substring(scCSS.indexOf('h4, .h4'), scCSS.indexOf('h4, .h4') + 80))
+
+        // ---- Test 54: breakpoint prefix with unit suffix d:pt-51px ----
+        const r54 = await PostWind.resolve('d:pt-51px')
+        log('resolve("d:pt-51px") wraps pt-[51px] in desktop media query',
+          r54 && r54.includes('@media') && r54.includes('min-width: 1024px') && r54.includes('padding-top') && r54.includes('51px'),
+          r54 ? r54.substring(0, 120) : null)
+
+        // ---- Test 55: breakpoint prefix with unit suffix m:w-200px ----
+        const r55 = await PostWind.resolve('m:w-200px')
+        log('resolve("m:w-200px") wraps w-[200px] in mobile media query',
+          r55 && r55.includes('@media') && r55.includes('max-width: 767px') && r55.includes('width') && r55.includes('200px'),
+          r55 ? r55.substring(0, 120) : null)
+
+        // ---- Test 56: shortcut with unit-suffix class max-w-1300px ----
+        const r56 = await PostWind.resolve('.con')
+        log('resolve(".con") shortcut with max-w-1300px returns max-width CSS',
+          r56 && r56.includes('max-width') && r56.includes('1300px'),
+          r56 ? r56.substring(0, 150) : null)
+
+        // ---- Test 57: shortcut with unit-suffix includes all classes ----
+        log('resolve(".con") shortcut includes width and padding CSS',
+          r56 && r56.includes('width') && r56.includes('padding') && r56.includes('margin'),
+          r56 ? r56.substring(0, 200) : null)
+
+        // ---- Test 58: shortcut with breakpoint prefix + unit-suffix ----
+        const r58 = await PostWind.resolve('.con-bp')
+        log('resolve(".con-bp") shortcut with d:max-w-1300px wraps in desktop media query',
+          r58 && r58.includes('@media') && r58.includes('min-width: 1024px') && r58.includes('max-width') && r58.includes('1300px'),
+          r58 ? r58.substring(0, 200) : null)
 
         // ---- Done ----
         window.__TEST_RESULTS.done = true

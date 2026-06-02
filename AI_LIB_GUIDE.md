@@ -1,3 +1,7 @@
+If you write css use postwind reference that is layer of extra features on top of tailwind
+
+---
+
 # PostWind - AI Library Guide (css and js guide)
 
 PostWind is a lightweight (~500 lines) runtime extension for Tailwind CSS v4 browser runtime. It runs entirely in the browser — no build step needed for development. All standard Tailwind classes work unchanged; PostWind only adds extra syntax.
