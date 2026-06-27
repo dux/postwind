@@ -3,6 +3,7 @@ window.PostWind = (() => {
   const breakpoints = {};
   const shortcuts = {};
   const cache = {};
+  let _ready = null;
   const styleMain = document.createElement("style");
   styleMain.id = "postwind-main";
   document.head.appendChild(styleMain);
@@ -450,7 +451,6 @@ window.PostWind = (() => {
     }
     window.addEventListener("resize", update);
   }
-  let _ready = null;
   function init(opts) {
     if (opts) {
       if (opts.breakpoints) {

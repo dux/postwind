@@ -2,6 +2,8 @@ window.PostWind = (() => {
   const breakpoints = {};
   const shortcuts = {};
   const cache = {};
+  // Tailwind-ready promise; declared up here so the eager autoInit() below never hits a TDZ
+  let _ready = null;
   const styleMain = document.createElement("style");
   styleMain.id = "postwind-main";
   document.head.appendChild(styleMain);
@@ -506,8 +508,6 @@ window.PostWind = (() => {
 
   // load Tailwind browser runtime
   // returns a Promise that resolves when Tailwind is loaded and has processed the page
-  let _ready = null;
-
   function init(opts) {
     if (opts) {
       if (opts.breakpoints) {
