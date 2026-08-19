@@ -26,59 +26,57 @@
 </script>
 
 <style>
-  :fez {
-    display: block;
-    overflow-x: auto;
+  display: block;
+  overflow-x: auto;
 
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 14px;
+  table {
+    width: 100%;
+    border-collapse: collapse;
+    font-size: 14px;
+  }
+
+  thead {
+    th {
+      padding: 12px 16px;
+      text-align: left;
+      font-weight: 600;
+      font-size: 13px;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: #6b7280;
+      border-bottom: 2px solid #e5e7eb;
+
+      &:not(:first-child) {
+        text-align: center;
+      }
     }
+  }
 
-    thead {
-      th {
-        padding: 12px 16px;
-        text-align: left;
-        font-weight: 600;
-        font-size: 13px;
-        text-transform: uppercase;
-        letter-spacing: 0.05em;
-        color: #6b7280;
-        border-bottom: 2px solid #e5e7eb;
+  tbody {
+    tr {
+      border-bottom: 1px solid #f3f4f6;
 
-        &:not(:first-child) {
-          text-align: center;
-        }
+      &:hover {
+        background: #f9fafb;
       }
     }
 
-    tbody {
-      tr {
-        border-bottom: 1px solid #f3f4f6;
+    td {
+      padding: 10px 16px;
 
-        &:hover {
-          background: #f9fafb;
-        }
-      }
-
-      td {
-        padding: 10px 16px;
-
-        &:not(:first-child) {
-          text-align: center;
-          font-size: 16px;
-        }
+      &:not(:first-child) {
+        text-align: center;
+        font-size: 16px;
       }
     }
+  }
 
-    .yes {
-      color: #10b981;
-    }
+  .yes {
+    color: #10b981;
+  }
 
-    .no {
-      color: #d1d5db;
-    }
+  .no {
+    color: #d1d5db;
   }
 </style>
 
