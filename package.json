@@ -1,18 +1,17 @@
 {
   "name": "postwind",
   "version": "0.6.1",
-  "description": "Lightweight Tailwind CSS v4 extension — pipe notation, shortcuts, visible: animations, and more",
+  "description": "Tailwind CSS v4 runtime with pipe notation, shortcuts, visible: animations, and more - compiler bundled, no CDN",
   "type": "module",
   "main": "dist/postwind.js",
+  "jsdelivr": "dist/postwind.global.min.js",
+  "unpkg": "dist/postwind.global.min.js",
   "exports": {
     ".": {
       "import": "./dist/postwind.js",
       "require": "./dist/postwind.cjs"
     },
-    "./lib": {
-      "import": "./dist/lib.js",
-      "require": "./dist/lib.cjs"
-    },
+    "./global": "./dist/postwind.global.js",
     "./package.json": "./package.json"
   },
   "files": [
@@ -22,10 +21,10 @@
     "README.md"
   ],
   "scripts": {
-    "build": "rm -rf dist/ && bun build src/bundle.js --outfile dist/postwind.js --format esm && bun build src/bundle.js --outfile dist/postwind.min.js --format esm --minify && bun build src/bundle.js --outfile dist/postwind.cjs --format cjs && bun build src/lib.js --outfile dist/lib.js --format esm && bun build src/lib.js --outfile dist/lib.min.js --format esm --minify && bun build src/lib.js --outfile dist/lib.cjs --format cjs",
+    "build": "rm -rf dist/ && bun build src/postwind.js --outfile dist/postwind.js --format esm && bun build src/postwind.js --outfile dist/postwind.min.js --format esm --minify && bun build src/postwind.js --outfile dist/postwind.cjs --format cjs && bun build src/postwind.js --outfile dist/postwind.global.js --format iife && bun build src/postwind.js --outfile dist/postwind.global.min.js --format iife --minify",
     "start": "bun bin/server.js",
     "test": "bun test src/",
-    "dev": "bun bin/server.js & bun build src/lib.js --outfile dist/lib.js --format esm --watch & bun build src/bundle.js --outfile dist/postwind.js --format esm --watch",
+    "dev": "bun bin/server.js & bun build src/postwind.js --outfile dist/postwind.global.js --format iife --watch",
     "pages": "open https://dux.github.io/postwind/",
     "open": "open https://www.npmjs.com/package/postwind",
     "gh": "open https://github.com/dux/postwind",
@@ -42,14 +41,6 @@
     "pipe-notation",
     "shortcuts"
   ],
-  "peerDependencies": {
-    "@tailwindcss/browser": "^4.0.0"
-  },
-  "peerDependenciesMeta": {
-    "@tailwindcss/browser": {
-      "optional": false
-    }
-  },
   "author": "Dux",
   "license": "MIT",
   "repository": {
@@ -62,5 +53,11 @@
   },
   "engines": {
     "bun": ">=1.0.0"
+  },
+  "dependencies": {
+    "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "playwright": "1.58.1"
   }
 }

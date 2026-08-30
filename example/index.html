@@ -4,10 +4,13 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PostWind - Examples &amp; Tests</title>
-  <script src="../src/postwind.js"></script>
+  <script src="../dist/postwind.global.js"></script>
+  <!-- Tailwind v4 CSS config (theme, custom variants, utilities) is picked up from these tags -->
+  <style type="text/tailwindcss">
+    @theme { --color-demo-500: #123456; }
+  </style>
   <script>
     PostWind.init({
-      tailwind: true,
       preload: 'mt-10px text-sm@m',
       shortcuts: {
         // base
@@ -106,14 +109,14 @@
     <!-- ============================== -->
     <section id="intro" class="mb-16">
       <h2 class="text-3xl font-bold mb-2">PostWind</h2>
-      <p class="text-gray-500 mb-6">A lightweight layer on top of Tailwind CSS browser runtime. Adds responsive shorthands, unit suffixes, shortcuts, and scroll-triggered animations.</p>
+      <p class="text-gray-500 mb-6">A Tailwind CSS v4 runtime with the compiler bundled in. Adds responsive shorthands, unit suffixes, shortcuts, and scroll-triggered animations.</p>
 
       <!-- What it is -->
       <div class="bg-white rounded-xl border border-gray-200 p-6 mb-8">
         <h3 class="text-xl font-semibold mb-4">What is PostWind?</h3>
         <div class="space-y-3 text-gray-700">
-          <p>PostWind is a ~3KB JavaScript library that extends Tailwind CSS with convenience features for prototyping and static pages. It runs in the browser alongside <code class="bg-gray-100 px-1 rounded font-mono text-sm">@tailwindcss/browser@4</code>.</p>
-          <p>It does <strong>not</strong> replace Tailwind. Standard Tailwind classes work as-is. PostWind adds:</p>
+          <p>PostWind is a browser runtime for Tailwind CSS v4 with convenience features for prototyping and static pages. It bundles Tailwind's own compiler (<code class="bg-gray-100 px-1 rounded font-mono text-sm">tailwindcss</code> v4) into one file: no CDN, no build step.</p>
+          <p>Standard Tailwind classes, variants and <code class="bg-gray-100 px-1 rounded font-mono text-sm">@theme</code> config work as-is. PostWind adds:</p>
           <ul class="list-none pl-0 space-y-2">
             <li class="flex items-start gap-2"><a href="#postwind" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>Pipe responsive</strong> &mdash; <code class="bg-gray-100 px-1 rounded font-mono text-sm">p-4|8</code> or <code class="bg-gray-100 px-1 rounded font-mono text-sm">p-4|8|12</code> for mobile / tablet / desktop</span></li>
             <li class="flex items-start gap-2"><a href="#colon" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>Colon responsive</strong> &mdash; <code class="bg-gray-100 px-1 rounded font-mono text-sm">p-4:8</code> as alias for <code class="bg-gray-100 px-1 rounded font-mono text-sm">p-4|8</code></span></li>
@@ -121,7 +124,7 @@
             <li class="flex items-start gap-2"><a href="#at-notation" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>@ notation</strong> &mdash; <code class="bg-gray-100 px-1 rounded font-mono text-sm">text-sm@m</code> instead of <code class="bg-gray-100 px-1 rounded font-mono text-sm">m:text-sm</code> (breakpoint after class)</span></li>
             <li class="flex items-start gap-2"><a href="#shortcuts" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>Shortcuts</strong> &mdash; composable class aliases: <code class="bg-gray-100 px-1 rounded font-mono text-sm">btn-primary</code> expands to multiple classes</span></li>
             <li class="flex items-start gap-2"><a href="#visible" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>visible:</strong> prefix &mdash; IntersectionObserver scroll animations</span></li>
-            <li class="flex items-start gap-2"><a href="#onload" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>onload:</strong> prefix &mdash; entrance animations, adds class 100ms after page load</span></li>
+            <li class="flex items-start gap-2"><a href="#onload" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>onload:</strong> prefix &mdash; entrance animations, adds class 100ms after the page is revealed</span></li>
             <li class="flex items-start gap-2"><a href="#dark-mode" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>dark:</strong> prefix &mdash; dark mode via <code class="bg-gray-100 px-1 rounded font-mono text-sm">body.dark</code> class</span></li>
             <li class="flex items-start gap-2"><a href="#dark-mode" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>dark-auto</strong> &mdash; auto-detect OS dark mode preference on <code class="bg-gray-100 px-1 rounded font-mono text-sm">body.dark-auto</code></span></li>
             <li class="flex items-start gap-2"><a href="#container-queries" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>Container queries</strong> &mdash; <code class="bg-gray-100 px-1 rounded font-mono text-sm">min-480:flex</code> / <code class="bg-gray-100 px-1 rounded font-mono text-sm">max-320:hidden</code> based on element width</span></li>
@@ -135,14 +138,14 @@
       <div class="bg-white rounded-xl border border-gray-200 p-6 mb-8">
         <h3 class="text-xl font-semibold mb-4">How it Works Under the Hood</h3>
         <div class="space-y-3 text-gray-700">
-          <p><strong>1. Tailwind generates CSS.</strong> PostWind uses Tailwind's browser runtime as its CSS engine. When PostWind needs to know what <code class="bg-gray-100 px-1 rounded font-mono text-sm">p-4</code> produces, it creates a temporary DOM element with that class, waits for Tailwind to process it, then extracts the CSS rules from the generated stylesheet.</p>
-          <p><strong>2. PostWind re-wraps the CSS.</strong> It takes the extracted CSS properties and wraps them in new selectors and media queries. For example, <code class="bg-gray-100 px-1 rounded font-mono text-sm">p-4|8</code> extracts both <code class="bg-gray-100 px-1 rounded font-mono text-sm">p-4</code> and <code class="bg-gray-100 px-1 rounded font-mono text-sm">p-8</code> CSS, then generates:</p>
+          <p><strong>1. Compile.</strong> On DOMContentLoaded PostWind compiles <code class="bg-gray-100 px-1 rounded font-mono text-sm">@import "tailwindcss"</code> together with its breakpoints as <code class="bg-gray-100 px-1 rounded font-mono text-sm">@custom-variant</code>s, your <code class="bg-gray-100 px-1 rounded font-mono text-sm">@theme</code> CSS and the shortcuts as <code class="bg-gray-100 px-1 rounded font-mono text-sm">@apply</code> rules, using the bundled Tailwind v4 compiler.</p>
+          <p><strong>2. Rewrite sugar.</strong> Every class on the page becomes a Tailwind candidate. PostWind syntax is rewritten first: <code class="bg-gray-100 px-1 rounded font-mono text-sm">p-4|8</code> becomes <code class="bg-gray-100 px-1 rounded font-mono text-sm">p-4 t:p-8</code>, and the original class is aliased onto Tailwind's rules so it keeps their cascade position:</p>
           <div class="bg-gray-900 rounded-lg p-4 font-mono text-sm text-green-400 overflow-x-auto">
-            <div>.p-4\|8 { padding: 1rem; }</div>
-            <div>@media (min-width: 768px) { .p-4\|8 { padding: 2rem; } }</div>
+            <div>:is(.p-4, .p-4\|8) { padding: calc(var(--spacing) * 4); }</div>
+            <div>@media (min-width: 768px) { :is(.t\:p-8, .p-4\|8) { padding: calc(var(--spacing) * 8); } }</div>
           </div>
-          <p><strong>3. Injected into the page.</strong> Generated rules go into <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;style id="postwind-main"&gt;</code>, one <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;style id="postwind-bp-*"&gt;</code> per breakpoint (in registration order, so <code class="bg-gray-100 px-1 rounded font-mono text-sm">t:</code> rules always precede <code class="bg-gray-100 px-1 rounded font-mono text-sm">d:</code> rules) and <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;style id="postwind-shortcuts"&gt;</code>. A cache prevents duplicate injection.</p>
-          <p><strong>4. Auto-scan.</strong> On DOMContentLoaded, PostWind scans all elements for PostWind-specific classes (pipes, unit suffixes, colon responsive, visible:) and injects their CSS automatically. A MutationObserver watches for dynamically added elements.</p>
+          <p><strong>3. One stylesheet.</strong> <code class="bg-gray-100 px-1 rounded font-mono text-sm">build()</code> returns Tailwind's full layered output, which goes into <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;style id="postwind"&gt;</code>. The body is revealed once it is in place.</p>
+          <p><strong>4. Watch.</strong> A MutationObserver feeds new elements and class changes into the same build. Late <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;style type="text/tailwindcss"&gt;</code> tags, <code class="bg-gray-100 px-1 rounded font-mono text-sm">shortcut()</code> and <code class="bg-gray-100 px-1 rounded font-mono text-sm">breakpoint()</code> calls recompile in about 10 ms.</p>
         </div>
       </div>
 
@@ -150,11 +153,10 @@
       <div class="bg-white rounded-xl border border-gray-200 p-6 mb-8">
         <h3 class="text-xl font-semibold mb-4">Quick Start</h3>
         <div class="bg-gray-900 rounded-lg p-4 font-mono text-sm text-green-400 overflow-x-auto space-y-1">
-          <div class="text-gray-500">&lt;!-- 1. Load PostWind (includes Tailwind) --&gt;</div>
-          <div>&lt;script src="postwind.js"&gt;&lt;/script&gt;</div>
+          <div class="text-gray-500">&lt;!-- 1. Load PostWind (includes the Tailwind v4 compiler) --&gt;</div>
+          <div>&lt;script src="https://cdn.jsdelivr.net/npm/postwind@latest"&gt;&lt;/script&gt;</div>
           <div>&lt;script&gt;</div>
           <div>&nbsp; PostWind.init({</div>
-          <div>&nbsp;&nbsp;&nbsp; tailwind: true, <span class="text-gray-500">// load Tailwind CSS from CDN (default: false)</span></div>
           <div>&nbsp;&nbsp;&nbsp; shortcuts: {</div>
           <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 'btn': 'px-4 py-2 rounded-lg font-medium',</div>
           <div>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 'btn-primary': 'btn bg-blue-600 text-white',</div>
@@ -167,7 +169,7 @@
           <div>&lt;div class="p-10px w-200px"&gt;Pixel values!&lt;/div&gt;</div>
           <div>&lt;button class="btn-primary"&gt;Click me&lt;/button&gt;</div>
         </div>
-        <p class="text-sm text-gray-400 mt-3"><code class="font-mono">PostWind.init({ tailwind: true })</code> loads Tailwind from CDN. Without <code class="font-mono">tailwind: true</code>, PostWind works as a class processor only (Tailwind must be loaded separately). Returns a Promise.</p>
+        <p class="text-sm text-gray-400 mt-3"><code class="font-mono">PostWind.init()</code> is optional: without it PostWind starts with defaults on DOMContentLoaded. Returns a Promise that resolves once the stylesheet is built.</p>
       </div>
     </section>
 
@@ -186,10 +188,11 @@
             <span class="text-gray-400 text-sm ml-2">returns Promise</span>
           </div>
           <div class="p-6 space-y-3">
-            <p class="text-gray-700">Initializes PostWind. Pass <code class="font-mono bg-gray-100 px-1 rounded">tailwind: true</code> to load Tailwind CSS browser runtime from CDN (default: false). Returns a Promise that resolves when ready.</p>
+            <p class="text-gray-700">Initializes PostWind. All options are optional. Returns a Promise that resolves once the stylesheet is built. Calling it again with <code class="font-mono bg-gray-100 px-1 rounded">shortcuts</code>, <code class="font-mono bg-gray-100 px-1 rounded">breakpoints</code> or <code class="font-mono bg-gray-100 px-1 rounded">css</code> recompiles.</p>
             <div class="bg-gray-900 rounded-lg p-4 font-mono text-sm text-green-400 overflow-x-auto">
               <div>PostWind.init({</div>
-              <div>&nbsp; tailwind: true, <span class="text-gray-500">// load Tailwind from CDN (default: false)</span></div>
+              <div>&nbsp; css: '@theme { --color-brand-500: #0066ff; }', <span class="text-gray-500">// Tailwind v4 CSS config; &lt;style type="text/tailwindcss"&gt; works too</span></div>
+              <div>&nbsp; preflight: true, <span class="text-gray-500">// false skips Tailwind's base reset</span></div>
               <div>&nbsp; breakpoints: {</div>
               <div>&nbsp;&nbsp;&nbsp; m: '@media (max-width: 767px)',&nbsp;&nbsp; <span class="text-gray-500">// default</span></div>
               <div>&nbsp;&nbsp;&nbsp; t: '@media (min-width: 768px)',&nbsp;&nbsp; <span class="text-gray-500">// default</span></div>
@@ -2018,8 +2021,8 @@
         // ---- Test 20: cache deduplication ----
         await PostWind('p-4')
         await PostWind('p-4')
-        const allPwCSS = (document.getElementById('postwind-main')?.textContent || '') + (document.getElementById('postwind-shortcuts')?.textContent || '')
-        const matches = (allPwCSS.match(/\.p-4\s*\{/g) || []).length
+        const sheetCSS = () => document.getElementById('postwind')?.textContent || ''
+        const matches = (sheetCSS().match(/\.p-4(?![\w\\-])/g) || []).length
         log('Cache deduplication: p-4 injected only once',
           matches <= 1, `found ${matches} occurrence(s)`)
 
@@ -2115,10 +2118,10 @@
           r34 && r34.includes('10px') && r34.includes('20px') && r34.includes('min-width: 768px'),
           r34 ? r34.substring(0, 140) : null)
 
-        // ---- Test 35: unit suffix auto-scan - check postwind-main has p-10px rule ----
-        const pw = (document.getElementById('postwind-main')?.textContent || '') + (document.getElementById('postwind-shortcuts')?.textContent || '')
-        log('Auto-scan: postwind-main contains p-10px rule',
-          pw.includes('p-10px'), 'checked postwind-main')
+        // ---- Test 35: unit suffix auto-scan - p-10px shares the p-[10px] rule ----
+        const pw = sheetCSS()
+        log('Auto-scan: stylesheet aliases p-10px onto p-[10px]',
+          /:is\(\.p-\\\[10px\\\], [^)]*\.p-10px[,)]/.test(pw), 'checked #postwind')
 
         // ---- Test 36: auto-scan: postwind styles contain colon responsive rule ----
         log('Auto-scan: postwind styles contain p-4\\:10 rule',
@@ -2150,10 +2153,9 @@
           r40 ? r40.substring(0, 100) : null)
 
         // ---- Test 41: dark: classes auto-scanned ----
-        const pwAll = (document.getElementById('postwind-main')?.textContent || '')
-        log('Auto-scan: dark: classes injected into postwind-main',
-          pwAll.includes('body.dark'),
-          'checked postwind-main for body.dark rules')
+        log('Auto-scan: dark: classes compiled with body.dark selector',
+          sheetCSS().includes('body.dark'),
+          'checked #postwind for body.dark rules')
 
         // ---- Test 42: dark: class actually applies when body has .dark ----
         const darkTestEl = document.createElement('div')
@@ -2231,27 +2233,29 @@
           preloadResolved && preloadResolved.includes('margin-top'),
           preloadResolved)
 
-        // ---- Test 50: f-row shortcut auto-scanned and injected ----
-        const scCSS = document.getElementById('postwind-shortcuts')?.textContent || ''
-        log('f-row shortcut auto-scanned into postwind-shortcuts',
-          scCSS.includes('f-row'),
-          scCSS.substring(0, 200))
+        // ---- Test 50: f-row shortcut compiled into the components layer ----
+        const scCSS = sheetCSS()
+        log('f-row shortcut compiled into @layer components',
+          scCSS.includes('@layer components') && scCSS.includes('.f-row {'),
+          scCSS.substring(scCSS.indexOf('.f-row {'), scCSS.indexOf('.f-row {') + 120))
 
         // ---- Test 51: f-row base rule has display:flex but NOT flex-direction:column ----
-        const r51base = scCSS.split('@media').find(s => s.includes('f-row')) || ''
+        const r51 = await PostWind.resolve('.f-row')
+        const r51base = r51 ? r51.split('@media')[0] : ''
         log('f-row base rule does NOT contain flex-direction:column',
           r51base.includes('display') && r51base.includes('flex') && !r51base.includes('column'),
           r51base.substring(0, 150))
 
         // ---- Test 52: f-row wraps flex-col in @media max-width ----
         log('f-row wraps flex-col in @media max-width query',
-          scCSS.includes('@media') && scCSS.includes('max-width') && scCSS.includes('column'),
-          scCSS.substring(scCSS.indexOf('@media'), scCSS.indexOf('@media') + 120))
+          r51 && r51.includes('@media') && r51.includes('max-width') && r51.includes('column'),
+          r51 ? r51.substring(r51.indexOf('@media'), r51.indexOf('@media') + 120) : null)
 
         // ---- Test 53: selector-style shortcut uses raw selector ----
+        const r53 = await PostWind.resolve('h4, .h4')
         log('selector shortcut "h4, .h4" uses raw selector (not escaped)',
-          scCSS.includes('h4, .h4') && scCSS.includes('font-weight'),
-          scCSS.substring(scCSS.indexOf('h4, .h4'), scCSS.indexOf('h4, .h4') + 80))
+          scCSS.includes('h4, .h4 {') && r53 && r53.includes('font-weight'),
+          r53 ? r53.substring(0, 120) : null)
 
         // ---- Test 54: breakpoint prefix with unit suffix d:pt-51px ----
         const r54 = await PostWind.resolve('d:pt-51px')
@@ -2294,31 +2298,27 @@
         log('t:p-4 injected after d:p-8 still loses to d:p-8 on desktop (padding 32px)',
           orderPad === '32px', `padding-top: ${orderPad}`)
 
-        // ---- Test 60: per-breakpoint style tags sit between main and shortcuts, in registration order ----
-        const styleIds = () => [...document.head.querySelectorAll('style[id^="postwind-"]')].map(s => s.id)
-        const ids60 = styleIds()
-        const idx60 = id => ids60.indexOf(id)
-        log('style tags ordered main < bp-m < bp-t < bp-d < shortcuts',
-          idx60('postwind-main') < idx60('postwind-bp-m') && idx60('postwind-bp-m') < idx60('postwind-bp-t') &&
-          idx60('postwind-bp-t') < idx60('postwind-bp-d') && idx60('postwind-bp-d') < idx60('postwind-shortcuts'),
-          ids60.join(' > '))
+        // ---- Test 60: Tailwind orders custom variants by registration: t before d in the sheet ----
+        const css60 = sheetCSS()
+        log('stylesheet emits .t\\:p-4 before .d\\:p-8 regardless of discovery order',
+          css60.indexOf('.t\\:p-4') > -1 && css60.indexOf('.t\\:p-4') < css60.indexOf('.d\\:p-8'),
+          `t at ${css60.indexOf('.t\\:p-4')}, d at ${css60.indexOf('.d\\:p-8')}`)
 
-        // ---- Test 61: breakpoint-prefixed rule lives in its bucket, not in main ----
-        const bpT61 = document.getElementById('postwind-bp-t')?.textContent || ''
-        const main61 = document.getElementById('postwind-main')?.textContent || ''
-        log('t:p-4 rule injected into postwind-bp-t, not postwind-main',
-          bpT61.includes('.t\\:p-4') && !main61.includes('.t\\:p-4'),
-          `bp-t has: ${bpT61.includes('.t\\:p-4')}, main has: ${main61.includes('.t\\:p-4')}`)
+        // ---- Test 61: only one stylesheet, and it is layered like Tailwind's own output ----
+        log('single #postwind stylesheet with @layer theme, base, components, utilities',
+          document.querySelectorAll('style[id^="postwind"]').length === 2 &&
+          css60.startsWith('/*! tailwindcss') && css60.includes('@layer theme, base, components, utilities;'),
+          [...document.querySelectorAll('style[id^="postwind"]')].map(s => s.id).join(', '))
 
-        // ---- Test 62: pipe segments land in main / bp-t / bp-d ----
+        // ---- Test 62: pipe class shares the rules of its canonical candidates ----
         await PostWind('p-4|8|12')
-        const main62 = document.getElementById('postwind-main')?.textContent || ''
-        const bpT62 = document.getElementById('postwind-bp-t')?.textContent || ''
-        const bpD62 = document.getElementById('postwind-bp-d')?.textContent || ''
-        log('p-4|8|12 splits into postwind-main, postwind-bp-t and postwind-bp-d',
-          main62.includes('.p-4\\|8\\|12 {') && bpT62.includes('.p-4\\|8\\|12 {') && bpD62.includes('.p-4\\|8\\|12 {') &&
-          !main62.includes('@media (min-width: 768px) { .p-4\\|8\\|12'),
-          `main: ${main62.includes('.p-4\\|8\\|12 {')}, t: ${bpT62.includes('.p-4\\|8\\|12 {')}, d: ${bpD62.includes('.p-4\\|8\\|12 {')}`)
+        const css62 = sheetCSS()
+        log('p-4|8|12 aliased onto p-4, t:p-8 and d:p-12 rules',
+          css62.includes(':is(.p-4, .p-4\\|8\\|12)') || css62.includes(', .p-4\\|8\\|12)'),
+          css62.substring(css62.indexOf('.p-4\\|8\\|12') - 30, css62.indexOf('.p-4\\|8\\|12') + 30))
+        log('p-4|8|12 desktop segment lives inside the d: media block',
+          css62.includes(':is(.d\\:p-12, .p-4\\|8\\|12)') || /\.d\\:p-12, [^)]*\.p-4\\\|8\\\|12\)/.test(css62),
+          css62.substring(css62.indexOf('.d\\:p-12'), css62.indexOf('.d\\:p-12') + 60))
 
         // ---- Test 63: shortcut media blocks follow breakpoint registration order ----
         PostWind.shortcut('.pw-order', 'p-2 d:p-8 t:p-4')
@@ -2327,15 +2327,12 @@
           r63 && r63.indexOf('min-width: 768px') > -1 && r63.indexOf('min-width: 768px') < r63.indexOf('min-width: 1024px'),
           r63 ? r63.substring(0, 200) : null)
 
-        // ---- Test 64: breakpoint registered later gets its sheet after bp-d and before shortcuts ----
+        // ---- Test 64: breakpoint registered at runtime recompiles and resolves ----
         PostWind.breakpoint('xxl', '@media (min-width: 1536px)')
-        const ids64 = styleIds()
-        const idx64 = id => ids64.indexOf(id)
         const r64 = await PostWind.resolve('xxl:p-4')
-        log('breakpoint("xxl") creates postwind-bp-xxl between bp-d and shortcuts and resolves xxl:p-4',
-          idx64('postwind-bp-d') < idx64('postwind-bp-xxl') && idx64('postwind-bp-xxl') < idx64('postwind-shortcuts') &&
-          r64 && r64.includes('min-width: 1536px'),
-          ids64.join(' > '))
+        log('breakpoint("xxl") at runtime resolves xxl:p-4 with its media query',
+          r64 && r64.includes('min-width: 1536px') && r64.includes('padding'),
+          r64 ? r64.substring(0, 120) : null)
 
         // ---- Test 65: init({ warn: true }) warns for PostWind classes that produce no CSS ----
         const warnings65 = []
@@ -2369,14 +2366,66 @@
           document.body.classList.contains('pw-ready') && onloadDemo && onloadDemo.classList.contains('opacity-100'),
           onloadDemo ? onloadDemo.className : 'no demo element')
 
-        // ---- Test 68: init({ nonce }) applies nonce to every postwind <style>, including later breakpoint sheets ----
+        // ---- Test 68: init({ nonce }) applies nonce to every postwind <style> ----
         PostWind.init({ nonce: 'pw-test-nonce' })
-        const styles68 = [...document.querySelectorAll('style[id^="postwind-"]')]
-        PostWind.breakpoint('print', '@media print')
-        const printSheet = document.getElementById('postwind-bp-print')
-        log('init({ nonce }) sets nonce on all postwind <style> tags and on sheets created afterwards',
-          styles68.length >= 6 && styles68.every(s => s.nonce === 'pw-test-nonce') && printSheet && printSheet.nonce === 'pw-test-nonce',
+        const styles68 = [...document.querySelectorAll('style[id^="postwind"]')]
+        log('init({ nonce }) sets nonce on all postwind <style> tags',
+          styles68.length === 2 && styles68.every(s => s.nonce === 'pw-test-nonce'),
           `${styles68.length} tags, nonces: ${[...new Set(styles68.map(s => s.nonce))].join(',')}`)
+
+        // ---- Test 69: Tailwind v4 variants work through PostWind ----
+        const r69 = await PostWind.resolve('has-checked:ring-2')
+        log('resolve("has-checked:ring-2") uses :has(:checked)',
+          r69 && r69.includes(':has(:checked)') && r69.includes('--tw-ring-shadow'),
+          r69 ? r69.substring(0, 120) : null)
+        const r69b = await PostWind.resolve('*:mt-2')
+        log('resolve("*:mt-2") targets direct children',
+          r69b && r69b.includes('> *') && r69b.includes('margin-top'),
+          r69b ? r69b.substring(0, 120) : null)
+        const r69c = await PostWind.resolve('@sm:flex')
+        log('resolve("@sm:flex") emits a container query',
+          r69c && r69c.includes('@container') && r69c.includes('display: flex'),
+          r69c ? r69c.substring(0, 120) : null)
+
+        // ---- Test 70: v4 theme: oklch palette and @theme from <style type="text/tailwindcss"> ----
+        log('theme layer uses oklch colors',
+          sheetCSS().includes('oklch('), 'checked #postwind for oklch(')
+        const r70 = await PostWind.resolve('text-demo-500')
+        log('<style type="text/tailwindcss"> @theme color is available (text-demo-500)',
+          r70 && r70.includes('--color-demo-500'),
+          r70 ? r70.substring(0, 120) : null)
+
+        // ---- Test 71: init({ css }) at runtime recompiles with the extra theme ----
+        await PostWind.init({ css: '@theme { --color-brand-500: #0066ff; }' })
+        const r71 = await PostWind.resolve('bg-brand-500')
+        log('init({ css: "@theme {...}" }) adds bg-brand-500',
+          r71 && r71.includes('--color-brand-500'),
+          r71 ? r71.substring(0, 120) : null)
+
+        // ---- Test 72: shortcut with an unknown class keeps the valid ones ----
+        await PostWind.shortcut('.pw-bad', 'p-2 nope-123')
+        const r72 = await PostWind.resolve('.pw-bad')
+        log('shortcut "p-2 nope-123" compiles with the unknown class dropped',
+          r72 && r72.includes('padding') && !r72.includes('nope'),
+          r72 ? r72.substring(0, 120) : null)
+
+        // ---- Test 73: utilities on the element override shortcut declarations ----
+        const el73 = document.createElement('button')
+        el73.className = 'btn p-0'
+        document.body.appendChild(el73)
+        await PostWind('p-0')
+        await new Promise(r => requestAnimationFrame(r))
+        const pad73 = getComputedStyle(el73).paddingLeft
+        el73.remove()
+        log('"btn p-0": utility p-0 wins over the btn shortcut (components < utilities)',
+          pad73 === '0px', `padding-left: ${pad73}`)
+
+        // ---- Test 74: Tailwind-native variants are not mistaken for colon-responsive ----
+        const r74 = await PostWind.resolve('group-hover:flex')
+        const r74b = await PostWind.resolve('max-md:p-2')
+        log('group-hover:flex and max-md:p-2 stay Tailwind variants',
+          r74 && r74.includes('.group') && r74.includes('display: flex') && r74b && r74b.includes('@media') && r74b.includes('padding'),
+          `${r74 ? r74.substring(0, 60) : null} | ${r74b ? r74b.substring(0, 60) : null}`)
 
         // ---- Done ----
         window.__TEST_RESULTS.done = true

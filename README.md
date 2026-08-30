@@ -1,6 +1,7 @@
 # PostWind
 
-PostWind is a lightweight runtime extension for [Tailwind CSS v4](https://tailwindcss.com) browser runtime. It adds pipe notation, shortcuts, scroll animations, dark mode, container queries, and more — all in a single ~500-line file. Every standard Tailwind class works unchanged.
+PostWind is a browser runtime for [Tailwind CSS v4](https://tailwindcss.com) with extra syntax: pipe notation, shortcuts, scroll animations, dark mode, container queries, and more.
+It bundles Tailwind's own compiler (one file, no CDN, no build step), so every standard Tailwind v4 class, variant and `@theme` setting works unchanged.
 
 ### Features unique to PostWind
 
@@ -19,13 +20,12 @@ PostWind is a lightweight runtime extension for [Tailwind CSS v4](https://tailwi
 
 ## Setup
 
-### CDN / script tag
+### Script tag
 
 ```html
-<script src="https://cdn.jsdelivr.net/npm/postwind@latest/src/postwind.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/postwind@latest"></script>
 <script>
   PostWind.init({
-    tailwind: true,
     shortcuts: {
       'btn': 'px-4 py-2 rounded font-medium cursor-pointer transition-colors',
       'btn-primary': 'btn bg-blue-600 text-white hover:bg-blue-500',
@@ -34,22 +34,17 @@ PostWind is a lightweight runtime extension for [Tailwind CSS v4](https://tailwi
 </script>
 ```
 
-Loads the IIFE directly — sets `window.PostWind`, no bundler needed. Pass `tailwind: true` to auto-load the Tailwind CSS v4 browser runtime from CDN.
+One self-contained file (`dist/postwind.global.min.js`, ~90 KB gzip) that sets `window.PostWind` and includes the Tailwind v4 compiler.
+`init()` is optional; without it PostWind starts with defaults on `DOMContentLoaded`.
 
 ### npm (ESM)
 
 ```js
-import PostWind from 'postwind'; // auto-loads Tailwind CDN
+import PostWind from 'postwind';
 
 PostWind.init({
   shortcuts: { ... }
 });
-```
-
-The default import auto-injects the Tailwind CDN script. If you already load Tailwind yourself, use the lib-only import:
-
-```js
-import PostWind from 'postwind/lib'; // no Tailwind CDN injection
 ```
 
 ### npm (CJS)
@@ -86,8 +81,9 @@ Short aliases: `m:` = mobile (max-width: 767px), `t:` = tablet (min-width: 768px
 <div class="m:text-sm d:text-2xl">Small on mobile, large on desktop</div>
 ```
 
-Each breakpoint gets its own `<style id="postwind-bp-{name}">`, inserted in registration order.
-Registration order is cascade order: `t:` rules always precede `d:` rules no matter which class is discovered first, so register custom breakpoints from narrow to wide.
+Breakpoints are compiled as Tailwind `@custom-variant`s in registration order, so `t:` rules always precede `d:` rules no matter which class is discovered first.
+Register custom breakpoints from narrow to wide.
+Tailwind's own `sm:`/`md:`/`lg:`/`max-md:`/`@sm:` variants work as usual.
 
 ### Unit suffix shorthand
 
@@ -117,7 +113,9 @@ PostWind.init({
 <div class="card">Card content</div>
 ```
 
-Shortcut CSS goes into `<style id="postwind-shortcuts">` (last in cascade), breakpoint rules into `<style id="postwind-bp-*">`, everything else into `<style id="postwind-main">`.
+Shortcut keys are CSS selectors (`'.btn'`, `'h4, .h4'`).
+They compile to `@apply` rules in Tailwind's `components` layer, so utilities on the same element override them: `<button class="btn p-0">` gets `p-0`.
+Variants inside shortcuts work (`hover:bg-blue-500`, `t:px-6`); classes Tailwind does not know are dropped (reported with `warn: true`).
 
 ### `dark:` dark mode
 
@@ -203,7 +201,7 @@ IntersectionObserver-based. Classes activate when element is 50% visible in the 
 ## API
 
 ```js
-PostWind.init(options)            // initialize (tailwind, shortcuts, breakpoints, body, preload, warn, nonce)
+PostWind.init(options)            // initialize (shortcuts, breakpoints, css, preflight, body, preload, warn, nonce)
 PostWind.shortcut(name, classes)  // register a shortcut
 PostWind.breakpoint(name, media)  // register a breakpoint
 PostWind.resolve(className)       // resolve a class to CSS (Promise)
@@ -223,7 +221,25 @@ Off by default; plain Tailwind classes are never checked.
 ### CSP nonce
 
 PostWind inherits the `nonce` of the `<script>` tag that loaded it.
-Module builds have no script tag, so pass `init({ nonce })`; it is applied to every injected `<style>` and to the Tailwind CDN `<script>`.
+Module builds have no script tag, so pass `init({ nonce })`; it is applied to every injected `<style>`.
+
+### Tailwind configuration
+
+Tailwind v4 is configured in CSS, and PostWind passes that CSS straight to the compiler.
+Either put it in `<style type="text/tailwindcss">` tags or in `init({ css })`:
+
+```html
+<style type="text/tailwindcss">
+  @theme { --color-brand-500: #0066ff; --font-display: "Inter", sans-serif; }
+  @utility card { @apply rounded-2xl border p-6 shadow-md; }
+</style>
+```
+
+```js
+PostWind.init({ css: '@theme { --breakpoint-xl: 80rem; }', preflight: false });
+```
+
+`preflight: false` skips Tailwind's base reset for pages that bring their own.
 
 ## Development
 
@@ -240,30 +256,28 @@ Tests are defined in `example/index.html` as inline browser tests. `bun test` la
 ### Project structure
 
 ```
-src/postwind.js    # entire library (~500 lines, browser IIFE)
-src/bundle.js      # ESM entry — auto-loads Tailwind CDN
-src/lib.js         # ESM entry — no Tailwind CDN
+src/postwind.js       # the library (ES module, sets window.PostWind)
+src/engine.js         # wraps the tailwindcss compiler + its bundled stylesheets
 src/postwind.test.js  # Playwright test runner
-example/index.html # demo page + inline tests
-bin/server.js      # dev server
-dist/              # built output (ESM, CJS, minified)
+example/index.html    # demo page + inline tests
+bin/server.js         # dev server
+dist/                 # built output: ESM, CJS, IIFE (global), minified variants
 ```
 
 ## How it works
 
-PostWind runs in the browser alongside `@tailwindcss/browser`. When it encounters a PostWind class (pipe notation, shortcut, breakpoint prefix, unit suffix, `visible:`, `dark:`, `onload:`, `@` notation, or container query), it:
+PostWind bundles the `tailwindcss` v4 compiler and is the only stylesheet generator on the page.
 
-1. Creates a temporary DOM element with the equivalent Tailwind class
-2. Waits for Tailwind to generate CSS (via `requestAnimationFrame`)
-3. Reads the CSS from `document.styleSheets`
-4. Re-wraps it with the PostWind selector and media queries
-5. Appends to `<style id="postwind-main">`, the breakpoint's `<style id="postwind-bp-*">` or `<style id="postwind-shortcuts">`
+1. On `DOMContentLoaded` it compiles `@import "tailwindcss"` plus PostWind's `@custom-variant`s (`m:`, `t:`, `d:`, `dark:`, `visible:`), your `@theme`/`@utility` CSS and the shortcuts as `@apply` rules
+2. Every class on every element is a candidate; PostWind sugar is rewritten first (`p-10px` -> `p-[10px]`, `p-4|8|12` -> `p-4 t:p-8 d:p-12`, `text-sm@m` -> `m:text-sm`)
+3. `compiler.build(candidates)` produces one layered stylesheet, and rewritten classes are aliased onto their Tailwind rules with `:is(.p-\[10px\], .p-10px)` so they keep Tailwind's cascade order and specificity
+4. The result goes into `<style id="postwind">`; the body is revealed once it is in place
 
-A MutationObserver automatically processes dynamically added elements.
+A MutationObserver feeds dynamically added elements and class changes to the same pipeline; a late `<style type="text/tailwindcss">`, `shortcut()` or `breakpoint()` recompiles (about 10 ms).
 
 ## Browser support
 
-Requires `@tailwindcss/browser` v4+ and any modern browser.
+Any browser that supports Tailwind CSS v4 (CSS nesting, `@layer`, `color-mix()`, `@property`).
 
 ## License
 

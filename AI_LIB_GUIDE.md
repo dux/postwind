@@ -4,26 +4,23 @@ If you write css use postwind reference that is layer of extra features on top o
 
 # PostWind - AI Library Guide (css and js guide)
 
-PostWind is a lightweight (~500 lines) runtime extension for Tailwind CSS v4 browser runtime. It runs entirely in the browser — no build step needed for development. All standard Tailwind classes work unchanged; PostWind only adds extra syntax.
+PostWind is a browser runtime for Tailwind CSS v4 that bundles Tailwind's own compiler (`tailwindcss` npm package) into one file. No CDN, no build step. All standard Tailwind v4 classes, variants and CSS config (`@theme`, `@utility`, `@custom-variant`) work unchanged; PostWind adds extra syntax on top.
 
 ## Architecture
 
-Single source file: `src/postwind.js` — a browser IIFE that sets `window.PostWind`.
+- `src/postwind.js` — the library (ES module, sets `window.PostWind`, default export)
+- `src/engine.js` — wraps `compile()` / `__unstable__loadDesignSystem()` from `tailwindcss`; the four Tailwind stylesheets are inlined as strings at build time
 
-Two ESM entry points for npm:
-- `src/bundle.js` — auto-loads Tailwind CDN, re-exports PostWind (default `import PostWind from 'postwind'`)
-- `src/lib.js` — exports PostWind without Tailwind CDN (user loads Tailwind themselves)
+Builds (`bun run build`): `dist/postwind.js` (ESM), `dist/postwind.cjs`, `dist/postwind.global.js` (IIFE for `<script src>`), plus `.min.js` variants. The demo and tests load `dist/postwind.global.js`, so build before opening them.
 
 ## How it works
 
-1. PostWind creates `<style>` elements in cascade order: `postwind-main` (pipes base part, units, visible:, dark:), one `postwind-bp-{name}` per breakpoint in registration order (so `t:` rules always precede `d:` rules), and `postwind-shortcuts` last (shortcut classes)
-2. When it encounters a PostWind class (pipe, shortcut, breakpoint prefix, unit suffix, visible:, dark:, onload:, @notation, container query), it:
-   - Creates a temp DOM element with the equivalent Tailwind class
-   - Waits one `requestAnimationFrame` for Tailwind to generate CSS
-   - Reads the CSS from `document.styleSheets`
-   - Re-wraps it with the PostWind selector and any media queries
-   - Appends to the appropriate `<style>` element
-3. MutationObserver auto-processes dynamically added elements
+1. On `DOMContentLoaded` PostWind compiles: `@import "tailwindcss"` + `@custom-variant` per breakpoint (`m`, `t`, `d`, registration order = cascade order) + `dark` (`body.dark`) + `visible` (`.pw-visible`) + user CSS (`init({ css })`, `<style type="text/tailwindcss">`) + shortcuts as `@layer components { sel { @apply ... } }`
+2. Every class on every element is a candidate. PostWind sugar is rewritten to canonical candidates first: `p-10px` -> `p-[10px]`, `p-4|8|12` -> `p-4 t:p-8 d:p-12`, `p-4:8` -> `p-4 t:p-8`, `text-sm@m` -> `m:text-sm`
+3. `compiler.build(candidates)` returns the full layered stylesheet; rewritten classes are aliased onto their rules as `:is(.p-\[10px\], .p-10px)` so they keep Tailwind's ordering and single-class specificity
+4. Output goes into one `<style id="postwind">`; `body.pw-ready` is set afterwards
+5. MutationObserver feeds new elements / class changes into the same build (batched per microtask). A late `<style type="text/tailwindcss">`, `shortcut()`, `breakpoint()` or `init({ css })` recompiles (~10 ms) and rebuilds
+6. `onload:` and `min-480:`/`max-320:` container classes stay JS-driven (class toggles), never stylesheet rules
 
 ## PostWind syntax features
 
@@ -108,17 +105,23 @@ Pattern: `(min|max)-{number}:{class}`
 `init({ warn: true })` logs `[postwind] no CSS for "<class>"` with a hint for PostWind classes that resolve to nothing. Off by default.
 
 ### CSP nonce
-Inherits the loading `<script>` nonce; module builds pass `init({ nonce })`. Applied to every injected `<style>` and the Tailwind CDN script.
+Inherits the loading `<script>` nonce; module builds pass `init({ nonce })`. Applied to every injected `<style>`.
+
+### Tailwind CSS config
+Tailwind v4 is configured in CSS. Put it in `<style type="text/tailwindcss">` tags or `init({ css })`: `@theme { --color-brand-500: #0066ff; }`, `@utility`, `@custom-variant`, `@source inline(...)`. `init({ preflight: false })` skips Tailwind's base reset.
+
+### Shortcuts cascade
+Shortcuts compile into `@layer components`, so a utility on the same element wins (`class="btn p-0"` has no padding). Classes Tailwind does not know are dropped from the shortcut (logged with `warn: true`).
 
 ## Public API
 
 ```js
-PostWind.init({ tailwind: true, shortcuts: {...}, breakpoints: {...}, body: true, preload: 'mt-10px text-sm@m', warn: false, nonce: null })
-PostWind.shortcut(name, classes)
-PostWind.breakpoint(name, mediaQuery)
-PostWind.resolve(className)     // returns Promise<cssText>
+PostWind.init({ shortcuts: {...}, breakpoints: {...}, css: '@theme {...}', preflight: true, body: true, preload: 'mt-10px text-sm@m', warn: false, nonce: null })
+PostWind.shortcut(name, classes) // returns Promise (recompiles when called after init)
+PostWind.breakpoint(name, mediaQuery) // same
+PostWind.resolve(className)     // returns Promise<cssText> (rule as Tailwind emits it, aliased to the given class)
 PostWind.twCSS(className)       // returns Promise<cssDeclarations>
-PostWind.ready()                // returns Promise (resolved when Tailwind is ready)
+PostWind.ready()                // returns Promise (resolved when the stylesheet is built)
 PostWind(className)             // inject CSS for a class (returns Promise)
 PostWind.cache                  // object of cached class promises
 PostWind.observeVisible(el)     // manually observe an element for visible: classes
@@ -128,13 +131,14 @@ PostWind.processElement(el)     // manually process all PostWind classes on an e
 ## Build
 
 ```bash
-bun run build    # builds dist/ (ESM, CJS, minified variants)
-bun run start    # serves example/ for development
+bun run build    # builds dist/ (ESM, CJS, IIFE global, minified variants)
+bun run start    # serves example/ for development (run build first)
+bun test src/    # builds, then runs the inline browser tests via Playwright
 ```
 
 ## Key files
 
-- `src/postwind.js` — entire library (~500 lines)
-- `src/bundle.js` — ESM entry with Tailwind CDN auto-load
-- `src/lib.js` — ESM entry without Tailwind CDN
-- `example/index.html` — demo page
+- `src/postwind.js` — the library
+- `src/engine.js` — Tailwind compiler wrapper
+- `example/index.html` — demo page + inline tests (single source of truth for tests)
+- `example/test-existing-layers.html` — regression page: own `@layer` rules + `preflight: false`

@@ -9,6 +9,10 @@ import { chromium } from "playwright";
 let browser, page, server, testResults;
 
 beforeAll(async () => {
+  // the demo page loads dist/postwind.global.js, so build first
+  const build = Bun.spawnSync(["bun", "run", "build"], { cwd: import.meta.dir + "/.." });
+  if (build.exitCode !== 0) throw new Error("build failed:\n" + build.stderr.toString());
+
   server = Bun.serve({
     port: 8222,
     async fetch(req) {
@@ -61,10 +65,13 @@ test("inline browser tests all pass", () => {
   }
 });
 
-test("no JS errors on page load", async () => {
+test("no JS errors or console warnings on page load", async () => {
   const freshPage = await browser.newPage();
   const errors = [];
   freshPage.on("pageerror", (err) => errors.push(err.message));
+  freshPage.on("console", (msg) => {
+    if (msg.type() === "warning" || msg.type() === "error") errors.push(`console.${msg.type()}: ${msg.text()}`);
+  });
   await freshPage.goto("http://localhost:8222/example/index.html", {
     waitUntil: "domcontentloaded",
   });
