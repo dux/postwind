@@ -16,7 +16,7 @@ Two ESM entry points for npm:
 
 ## How it works
 
-1. PostWind creates two `<style>` elements: `postwind-main` (pipes, breakpoints, units, visible:, dark:, @notation) and `postwind-shortcuts` (shortcut classes)
+1. PostWind creates `<style>` elements in cascade order: `postwind-main` (pipes base part, units, visible:, dark:), one `postwind-bp-{name}` per breakpoint in registration order (so `t:` rules always precede `d:` rules), and `postwind-shortcuts` last (shortcut classes)
 2. When it encounters a PostWind class (pipe, shortcut, breakpoint prefix, unit suffix, visible:, dark:, onload:, @notation, container query), it:
    - Creates a temp DOM element with the equivalent Tailwind class
    - Waits one `requestAnimationFrame` for Tailwind to generate CSS
@@ -101,10 +101,19 @@ Pattern: `(min|max)-{number}:{class}`
 - `tablet`: 768px - 1023px
 - `desktop`: >= 1024px
 
+### Anti-FOUC and entrance animations
+`<body>` is hidden (`opacity:0`) and all transitions are suppressed until PostWind CSS is ready, then `body.pw-ready` is set. `onload:` classes are added 100ms after reveal and `visible:` observation starts at reveal, so entrance animations play from their initial state.
+
+### Debug warnings
+`init({ warn: true })` logs `[postwind] no CSS for "<class>"` with a hint for PostWind classes that resolve to nothing. Off by default.
+
+### CSP nonce
+Inherits the loading `<script>` nonce; module builds pass `init({ nonce })`. Applied to every injected `<style>` and the Tailwind CDN script.
+
 ## Public API
 
 ```js
-PostWind.init({ tailwind: true, shortcuts: {...}, breakpoints: {...}, body: true, preload: 'mt-10px text-sm@m' })
+PostWind.init({ tailwind: true, shortcuts: {...}, breakpoints: {...}, body: true, preload: 'mt-10px text-sm@m', warn: false, nonce: null })
 PostWind.shortcut(name, classes)
 PostWind.breakpoint(name, mediaQuery)
 PostWind.resolve(className)     // returns Promise<cssText>

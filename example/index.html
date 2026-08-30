@@ -141,7 +141,7 @@
             <div>.p-4\|8 { padding: 1rem; }</div>
             <div>@media (min-width: 768px) { .p-4\|8 { padding: 2rem; } }</div>
           </div>
-          <p><strong>3. Injected into the page.</strong> Generated rules go into <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;style id="postwind-main"&gt;</code> and <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;style id="postwind-shortcuts"&gt;</code> elements. A cache prevents duplicate injection.</p>
+          <p><strong>3. Injected into the page.</strong> Generated rules go into <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;style id="postwind-main"&gt;</code>, one <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;style id="postwind-bp-*"&gt;</code> per breakpoint (in registration order, so <code class="bg-gray-100 px-1 rounded font-mono text-sm">t:</code> rules always precede <code class="bg-gray-100 px-1 rounded font-mono text-sm">d:</code> rules) and <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;style id="postwind-shortcuts"&gt;</code>. A cache prevents duplicate injection.</p>
           <p><strong>4. Auto-scan.</strong> On DOMContentLoaded, PostWind scans all elements for PostWind-specific classes (pipes, unit suffixes, colon responsive, visible:) and injects their CSS automatically. A MutationObserver watches for dynamically added elements.</p>
         </div>
       </div>
@@ -201,6 +201,8 @@
               <div>&nbsp;&nbsp;&nbsp; 'btn-primary': 'btn bg-blue-600 text-white',</div>
               <div>&nbsp; },</div>
               <div>&nbsp; preload: 'mt-10px text-sm@m', <span class="text-gray-500">// pre-inject CSS for classes (string or array)</span></div>
+              <div>&nbsp; warn: true, <span class="text-gray-500">// console.warn for PostWind classes that produce no CSS (default: false)</span></div>
+              <div>&nbsp; nonce: 'abc123', <span class="text-gray-500">// CSP nonce for injected &lt;style&gt; tags (defaults to the loading script's nonce)</span></div>
               <div>})</div>
             </div>
           </div>
@@ -2279,6 +2281,102 @@
         log('resolve(".con-bp") shortcut with d:max-w-1300px wraps in desktop media query',
           r58 && r58.includes('@media') && r58.includes('min-width: 1024px') && r58.includes('max-width') && r58.includes('1300px'),
           r58 ? r58.substring(0, 200) : null)
+
+        // ---- Test 59: t: rule discovered after d: still loses to d: on desktop ----
+        await PostWind('d:p-8')
+        const orderEl = document.createElement('div')
+        orderEl.className = 't:p-4 d:p-8'
+        document.body.appendChild(orderEl)
+        await PostWind('t:p-4')
+        await new Promise(r => requestAnimationFrame(r))
+        const orderPad = getComputedStyle(orderEl).paddingTop
+        orderEl.remove()
+        log('t:p-4 injected after d:p-8 still loses to d:p-8 on desktop (padding 32px)',
+          orderPad === '32px', `padding-top: ${orderPad}`)
+
+        // ---- Test 60: per-breakpoint style tags sit between main and shortcuts, in registration order ----
+        const styleIds = () => [...document.head.querySelectorAll('style[id^="postwind-"]')].map(s => s.id)
+        const ids60 = styleIds()
+        const idx60 = id => ids60.indexOf(id)
+        log('style tags ordered main < bp-m < bp-t < bp-d < shortcuts',
+          idx60('postwind-main') < idx60('postwind-bp-m') && idx60('postwind-bp-m') < idx60('postwind-bp-t') &&
+          idx60('postwind-bp-t') < idx60('postwind-bp-d') && idx60('postwind-bp-d') < idx60('postwind-shortcuts'),
+          ids60.join(' > '))
+
+        // ---- Test 61: breakpoint-prefixed rule lives in its bucket, not in main ----
+        const bpT61 = document.getElementById('postwind-bp-t')?.textContent || ''
+        const main61 = document.getElementById('postwind-main')?.textContent || ''
+        log('t:p-4 rule injected into postwind-bp-t, not postwind-main',
+          bpT61.includes('.t\\:p-4') && !main61.includes('.t\\:p-4'),
+          `bp-t has: ${bpT61.includes('.t\\:p-4')}, main has: ${main61.includes('.t\\:p-4')}`)
+
+        // ---- Test 62: pipe segments land in main / bp-t / bp-d ----
+        await PostWind('p-4|8|12')
+        const main62 = document.getElementById('postwind-main')?.textContent || ''
+        const bpT62 = document.getElementById('postwind-bp-t')?.textContent || ''
+        const bpD62 = document.getElementById('postwind-bp-d')?.textContent || ''
+        log('p-4|8|12 splits into postwind-main, postwind-bp-t and postwind-bp-d',
+          main62.includes('.p-4\\|8\\|12 {') && bpT62.includes('.p-4\\|8\\|12 {') && bpD62.includes('.p-4\\|8\\|12 {') &&
+          !main62.includes('@media (min-width: 768px) { .p-4\\|8\\|12'),
+          `main: ${main62.includes('.p-4\\|8\\|12 {')}, t: ${bpT62.includes('.p-4\\|8\\|12 {')}, d: ${bpD62.includes('.p-4\\|8\\|12 {')}`)
+
+        // ---- Test 63: shortcut media blocks follow breakpoint registration order ----
+        PostWind.shortcut('.pw-order', 'p-2 d:p-8 t:p-4')
+        const r63 = await PostWind.resolve('.pw-order')
+        log('shortcut "p-2 d:p-8 t:p-4" emits 768px block before 1024px block',
+          r63 && r63.indexOf('min-width: 768px') > -1 && r63.indexOf('min-width: 768px') < r63.indexOf('min-width: 1024px'),
+          r63 ? r63.substring(0, 200) : null)
+
+        // ---- Test 64: breakpoint registered later gets its sheet after bp-d and before shortcuts ----
+        PostWind.breakpoint('xxl', '@media (min-width: 1536px)')
+        const ids64 = styleIds()
+        const idx64 = id => ids64.indexOf(id)
+        const r64 = await PostWind.resolve('xxl:p-4')
+        log('breakpoint("xxl") creates postwind-bp-xxl between bp-d and shortcuts and resolves xxl:p-4',
+          idx64('postwind-bp-d') < idx64('postwind-bp-xxl') && idx64('postwind-bp-xxl') < idx64('postwind-shortcuts') &&
+          r64 && r64.includes('min-width: 1536px'),
+          ids64.join(' > '))
+
+        // ---- Test 65: init({ warn: true }) warns for PostWind classes that produce no CSS ----
+        const warnings65 = []
+        const origWarn = console.warn
+        console.warn = (...a) => warnings65.push(a.join(' '))
+        PostWind.init({ warn: true })
+        await PostWind('d:pading-4')
+        PostWind.init({ warn: false })
+        await PostWind('d:pading-5')
+        console.warn = origWarn
+        log('init({ warn: true }) warns once for d:pading-4 with a hint, silent when off',
+          warnings65.length === 1 && warnings65[0].includes('[postwind] no CSS for "d:pading-4"') && warnings65[0].includes('"pading-4" is not a Tailwind class'),
+          warnings65.join(' | ') || 'no warnings')
+
+        // ---- Test 66: transitions suppressed under the veil, active after pw-ready ----
+        const foucCSS = document.getElementById('postwind-fouc')?.textContent || ''
+        const trEl = document.createElement('div')
+        trEl.className = 'transition duration-500'
+        document.body.appendChild(trEl)
+        await new Promise(r => requestAnimationFrame(r))
+        const trProp = getComputedStyle(trEl).transitionProperty
+        trEl.remove()
+        log('transition:none rule targets body:not(.pw-ready) and is lifted after reveal',
+          foucCSS.includes('body:not(.pw-ready) *') && foucCSS.includes('transition:none') &&
+          document.body.classList.contains('pw-ready') && trProp !== 'none',
+          `pw-ready: ${document.body.classList.contains('pw-ready')}, transition-property: ${trProp}`)
+
+        // ---- Test 67: onload: demo elements got their class (after reveal) ----
+        const onloadDemo = document.querySelector('#onload .onload\\:opacity-100')
+        log('onload: demo element received opacity-100 after reveal',
+          document.body.classList.contains('pw-ready') && onloadDemo && onloadDemo.classList.contains('opacity-100'),
+          onloadDemo ? onloadDemo.className : 'no demo element')
+
+        // ---- Test 68: init({ nonce }) applies nonce to every postwind <style>, including later breakpoint sheets ----
+        PostWind.init({ nonce: 'pw-test-nonce' })
+        const styles68 = [...document.querySelectorAll('style[id^="postwind-"]')]
+        PostWind.breakpoint('print', '@media print')
+        const printSheet = document.getElementById('postwind-bp-print')
+        log('init({ nonce }) sets nonce on all postwind <style> tags and on sheets created afterwards',
+          styles68.length >= 6 && styles68.every(s => s.nonce === 'pw-test-nonce') && printSheet && printSheet.nonce === 'pw-test-nonce',
+          `${styles68.length} tags, nonces: ${[...new Set(styles68.map(s => s.nonce))].join(',')}`)
 
         // ---- Done ----
         window.__TEST_RESULTS.done = true

@@ -10,7 +10,7 @@ PostWind is a lightweight runtime extension for [Tailwind CSS v4](https://tailwi
 - **@ notation** — `text-sm@m` instead of `m:text-sm` (breakpoint after class)
 - **Shortcuts** — composable class aliases: `btn-primary` expands to multiple classes
 - **visible:** — IntersectionObserver scroll animations: `visible:opacity-100`
-- **onload:** — entrance animations: `onload:opacity-100` adds class after 100ms
+- **onload:** — entrance animations: `onload:opacity-100` adds class 100ms after the page is revealed
 - **dark:** — dark mode via `body.dark` class: `dark:bg-gray-900`
 - **dark-auto** — auto-detect OS dark mode on `<body class="dark-auto">`
 - **Container queries** — `min-480:flex` / `max-320:hidden` based on element width (ResizeObserver)
@@ -86,6 +86,9 @@ Short aliases: `m:` = mobile (max-width: 767px), `t:` = tablet (min-width: 768px
 <div class="m:text-sm d:text-2xl">Small on mobile, large on desktop</div>
 ```
 
+Each breakpoint gets its own `<style id="postwind-bp-{name}">`, inserted in registration order.
+Registration order is cascade order: `t:` rules always precede `d:` rules no matter which class is discovered first, so register custom breakpoints from narrow to wide.
+
 ### Unit suffix shorthand
 
 Write `p-10px` instead of `p-[10px]`. Supports px, rem, em, vh, vw, %, and more.
@@ -114,7 +117,7 @@ PostWind.init({
 <div class="card">Card content</div>
 ```
 
-Shortcut CSS goes into `<style id="postwind-shortcuts">`, everything else into `<style id="postwind-main">`.
+Shortcut CSS goes into `<style id="postwind-shortcuts">` (last in cascade), breakpoint rules into `<style id="postwind-bp-*">`, everything else into `<style id="postwind-main">`.
 
 ### `dark:` dark mode
 
@@ -155,7 +158,7 @@ Write the breakpoint suffix after the class with `@`. `text-sm@m` becomes `m:tex
 
 ### `onload:` prefix
 
-Adds a class 100ms after page load. Useful for entrance animations.
+Adds a class 100ms after the page is revealed (PostWind hides `<body>` and suppresses transitions until its CSS is ready, so entrance animations always start from their initial state). Useful for entrance animations.
 
 ```html
 <div class="opacity-0 transition duration-500 onload:opacity-100">
@@ -200,7 +203,7 @@ IntersectionObserver-based. Classes activate when element is 50% visible in the 
 ## API
 
 ```js
-PostWind.init(options)            // initialize (tailwind, shortcuts, breakpoints, body)
+PostWind.init(options)            // initialize (tailwind, shortcuts, breakpoints, body, preload, warn, nonce)
 PostWind.shortcut(name, classes)  // register a shortcut
 PostWind.breakpoint(name, media)  // register a breakpoint
 PostWind.resolve(className)       // resolve a class to CSS (Promise)
@@ -211,6 +214,16 @@ PostWind.cache                    // object of cached class promises
 PostWind.observeVisible(el)       // manually observe element for visible: classes
 PostWind.processElement(el)       // manually process all PostWind classes on an element
 ```
+
+### Debug warnings
+
+`init({ warn: true })` logs a `console.warn` for every PostWind class that produces no CSS, with a hint (`[postwind] no CSS for "d:pading-4" ("pading-4" is not a Tailwind class)`).
+Off by default; plain Tailwind classes are never checked.
+
+### CSP nonce
+
+PostWind inherits the `nonce` of the `<script>` tag that loaded it.
+Module builds have no script tag, so pass `init({ nonce })`; it is applied to every injected `<style>` and to the Tailwind CDN `<script>`.
 
 ## Development
 
@@ -244,7 +257,7 @@ PostWind runs in the browser alongside `@tailwindcss/browser`. When it encounter
 2. Waits for Tailwind to generate CSS (via `requestAnimationFrame`)
 3. Reads the CSS from `document.styleSheets`
 4. Re-wraps it with the PostWind selector and media queries
-5. Appends to `<style id="postwind-main">` or `<style id="postwind-shortcuts">`
+5. Appends to `<style id="postwind-main">`, the breakpoint's `<style id="postwind-bp-*">` or `<style id="postwind-shortcuts">`
 
 A MutationObserver automatically processes dynamically added elements.
 

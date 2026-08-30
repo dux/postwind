@@ -38,15 +38,28 @@ window.PostWind = (() => {
   const breakpoints = {};
   const shortcuts = {};
   const cache = {};
+  const bpStyles = {};
   let _ready = null;
-  const styleMain = document.createElement("style");
-  styleMain.id = "postwind-main";
+  let _warn = false;
+  let _nonce = document.currentScript?.nonce || null;
+  let _revealResolve;
+  const _revealed = new Promise((r) => _revealResolve = r);
+  function applyNonce(el) {
+    if (_nonce)
+      el.nonce = _nonce;
+    return el;
+  }
+  function createStyle(id) {
+    const style = document.createElement("style");
+    style.id = id;
+    return applyNonce(style);
+  }
+  const styleMain = createStyle("postwind-main");
   document.head.appendChild(styleMain);
-  const styleShortcuts = document.createElement("style");
-  styleShortcuts.id = "postwind-shortcuts";
+  const styleShortcuts = createStyle("postwind-shortcuts");
   document.head.appendChild(styleShortcuts);
-  const styleHide = document.createElement("style");
-  styleHide.textContent = "body:not(.pw-ready){opacity:0}body.pw-ready{opacity:1;transition:opacity .15s ease-in}";
+  const styleHide = createStyle("postwind-fouc");
+  styleHide.textContent = "body:not(.pw-ready){opacity:0}body.pw-ready{opacity:1;transition:opacity .15s ease-in}" + "body:not(.pw-ready) *,body:not(.pw-ready) *::before,body:not(.pw-ready) *::after{transition:none !important}";
   document.head.appendChild(styleHide);
   const visibleObserver = new IntersectionObserver((entries) => {
     for (const entry of entries) {
@@ -102,6 +115,10 @@ window.PostWind = (() => {
   }
   function breakpoint(name, media) {
     breakpoints[name] = media;
+    if (!bpStyles[name]) {
+      bpStyles[name] = createStyle("postwind-bp-" + name);
+      document.head.insertBefore(bpStyles[name], styleShortcuts);
+    }
   }
   function extractInner(cssText) {
     const first = cssText.indexOf("{");
@@ -182,7 +199,7 @@ window.PostWind = (() => {
             baseParts.push(extractInner(full));
         }
         el.remove();
-        const mediaKeys = Object.keys(mediaParts);
+        const mediaKeys = Object.values(breakpoints).filter((m) => mediaParts[m]);
         if (!baseParts.length && !mediaKeys.length)
           return resolve2(null);
         let css = "";
@@ -213,55 +230,43 @@ window.PostWind = (() => {
     function expandClass(val) {
       return toTwClass(prop + val);
     }
-    if (parts.length === 2) {
-      const tabletClass = expandClass(parts[1]);
-      const baseClass = toTwClass(base);
-      return Promise.all([twCSS(baseClass), twCSS(tabletClass)]).then(([bCss, tCss]) => {
-        const rules = [];
-        if (bCss)
-          rules.push(`.${sel} { ${bCss} }`);
-        if (tCss)
-          rules.push(`${breakpoints.t} { .${sel} { ${tCss} } }`);
-        return rules.length ? rules.join(`
-`) : null;
+    if (parts.length !== 2 && parts.length !== 3)
+      return Promise.resolve(null);
+    const bps = [null, "t", "d"];
+    const classes = [toTwClass(base), ...parts.slice(1).map(expandClass)];
+    return Promise.all(classes.map(twCSS)).then((cssList) => {
+      const out = [];
+      cssList.forEach((css, i) => {
+        if (!css)
+          return;
+        const bp = bps[i];
+        const rule = `.${sel} { ${css} }`;
+        out.push({ bp, css: bp ? `${breakpoints[bp]} { ${rule} }` : rule });
       });
-    }
-    if (parts.length === 3) {
-      const tabletClass = expandClass(parts[1]);
-      const desktopClass = expandClass(parts[2]);
-      const baseClass = toTwClass(base);
-      return Promise.all([
-        twCSS(baseClass),
-        twCSS(tabletClass),
-        twCSS(desktopClass)
-      ]).then(([bCss, tCss, dCss]) => {
-        const rules = [];
-        if (bCss)
-          rules.push(`.${sel} { ${bCss} }`);
-        if (tCss)
-          rules.push(`${breakpoints.t} { .${sel} { ${tCss} } }`);
-        if (dCss)
-          rules.push(`${breakpoints.d} { .${sel} { ${dCss} } }`);
-        return rules.length ? rules.join(`
-`) : null;
-      });
-    }
-    return Promise.resolve(null);
+      return out.length ? out : null;
+    });
   }
-  function resolve(className) {
+  function part(bp, css) {
+    return css ? [{ bp, css }] : null;
+  }
+  function resolveParts(className) {
     if (className.includes("@")) {
       const atMatch = className.match(/^([^@]+)@([a-z]+)$/);
       if (atMatch) {
         const rewritten = atMatch[2] + ":" + atMatch[1];
-        return resolve(rewritten).then((css) => {
-          if (!css)
+        return resolveParts(rewritten).then((parts) => {
+          if (!parts)
             return null;
-          return css.replace(CSS.escape(rewritten), CSS.escape(className));
+          return parts.map((p) => ({
+            bp: p.bp,
+            css: p.css.replace(CSS.escape(rewritten), CSS.escape(className))
+          }));
         });
       }
     }
-    if (shortcuts[className])
-      return resolveShortcut(className);
+    if (shortcuts[className]) {
+      return resolveShortcut(className).then((css) => part("shortcut", css));
+    }
     if (className.includes("|")) {
       return resolvePipe(className, className.split("|"));
     }
@@ -276,51 +281,55 @@ window.PostWind = (() => {
         if (media) {
           const base = className.substring(sep + 1);
           const twBase = toTwClass(base);
-          return twCSS(twBase).then((css) => {
-            if (!css)
-              return null;
-            return `${media} { .${CSS.escape(className)} { ${css} } }`;
-          });
+          return twCSS(twBase).then((css) => part(prefix, css && `${media} { .${CSS.escape(className)} { ${css} } }`));
         }
       }
     }
     if (unitRe.test(className)) {
-      return twCSS(toTwClass(className)).then((css) => {
-        if (!css)
-          return null;
-        return `.${CSS.escape(className)} { ${css} }`;
-      });
+      return twCSS(toTwClass(className)).then((css) => part(null, css && `.${CSS.escape(className)} { ${css} }`));
     }
     if (className.startsWith("dark:")) {
       const base = className.substring(5);
-      return twCSS(base).then((css) => {
-        if (!css)
-          return null;
-        return `body.dark .${CSS.escape(className)} { ${css} }`;
-      });
+      return twCSS(base).then((css) => part(null, css && `body.dark .${CSS.escape(className)} { ${css} }`));
     }
     if (className.startsWith("visible:")) {
       const base = className.substring(8);
-      return twCSS(base).then((css) => {
-        if (!css)
-          return null;
-        return `.pw-visible.${CSS.escape(className)} { ${css} }`;
-      });
+      return twCSS(base).then((css) => part(null, css && `.pw-visible.${CSS.escape(className)} { ${css} }`));
     }
-    return twCSS(className).then((css) => css ? `.${CSS.escape(className)} { ${css} }` : null);
+    return twCSS(className).then((css) => part(null, css && `.${CSS.escape(className)} { ${css} }`));
+  }
+  function resolve(className) {
+    return resolveParts(className).then((parts) => parts ? parts.map((p) => p.css).join(`
+`) : null);
+  }
+  function warnUnresolved(className) {
+    let hint = "";
+    const sep = className.indexOf(":");
+    if (shortcuts[className]) {
+      hint = `shortcut "${className}" produced no CSS`;
+    } else if (sep > 0 && breakpoints[className.substring(0, sep)]) {
+      hint = `"${className.substring(sep + 1)}" is not a Tailwind class`;
+    } else if (className.includes("|") || isColonResponsive(className)) {
+      hint = "no segment of the responsive value is a Tailwind class";
+    }
+    console.warn(`[postwind] no CSS for "${className}"${hint ? ` (${hint})` : ""}`);
   }
   function inject(className) {
     if (cache[className])
       return cache[className];
-    const isShortcut = !!shortcuts[className];
-    const p = resolve(className).then((css) => {
-      if (css && !cache[className]._injected) {
-        const target = isShortcut ? styleShortcuts : styleMain;
-        target.textContent += css + `
+    const p = resolveParts(className).then((parts) => {
+      if (parts && !cache[className]._injected) {
+        for (const { bp, css } of parts) {
+          const target = bp === "shortcut" ? styleShortcuts : bpStyles[bp] || styleMain;
+          target.textContent += css + `
 `;
+        }
         cache[className]._injected = true;
       }
-      return css;
+      if (!parts && _warn)
+        warnUnresolved(className);
+      return parts ? parts.map((x) => x.css).join(`
+`) : null;
     });
     p._injected = false;
     cache[className] = p;
@@ -330,7 +339,7 @@ window.PostWind = (() => {
     if (observedElements.has(el))
       return;
     observedElements.add(el);
-    visibleObserver.observe(el);
+    _revealed.then(() => visibleObserver.observe(el));
   }
   const containerQueryRe = /^(min|max)-(\d+):(.+)$/;
   const containerQueryElements = new WeakMap;
@@ -352,7 +361,7 @@ window.PostWind = (() => {
   }
   function handleOnload(el, cls) {
     const targetClass = cls.substring(7);
-    setTimeout(() => el.classList.add(targetClass), 100);
+    _revealed.then(() => setTimeout(() => el.classList.add(targetClass), 100));
   }
   function needsProcessing(cls) {
     if (shortcuts[cls])
@@ -409,8 +418,10 @@ window.PostWind = (() => {
     }
   }
   function _reveal() {
-    if (document.body)
-      document.body.classList.add("pw-ready");
+    if (!document.body)
+      return;
+    document.body.classList.add("pw-ready");
+    _revealResolve();
   }
   function autoInit() {
     function scan() {
@@ -488,6 +499,14 @@ window.PostWind = (() => {
   }
   function init(opts) {
     if (opts) {
+      if (opts.warn !== undefined)
+        _warn = !!opts.warn;
+      if (opts.nonce) {
+        _nonce = opts.nonce;
+        for (const el of document.querySelectorAll('style[id^="postwind-"]')) {
+          applyNonce(el);
+        }
+      }
       if (opts.breakpoints) {
         for (const [name, media] of Object.entries(opts.breakpoints)) {
           breakpoint(name, media);
@@ -526,7 +545,7 @@ window.PostWind = (() => {
       _ready = _waitForTailwind();
     } else {
       _ready = new Promise((resolve2, reject) => {
-        const s = document.createElement("script");
+        const s = applyNonce(document.createElement("script"));
         s.src = "https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4";
         s.onload = () => _waitForTailwind().then(resolve2);
         s.onerror = () => reject(new Error("Failed to load Tailwind"));

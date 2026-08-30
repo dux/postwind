@@ -95,8 +95,8 @@
         r6 ? r6.substring(0, 100) : 'null')
 
       // Test 7: d:hidden breakpoint prefix is auto-scanned and injected
-      const pw = document.getElementById('postwind-main')?.textContent || ''
-      log('Auto-scan: d:hidden breakpoint prefix injected into postwind-main',
+      const pw = document.getElementById('postwind-bp-d')?.textContent || ''
+      log('Auto-scan: d:hidden breakpoint prefix injected into postwind-bp-d',
         pw.includes('d\\:hidden') || pw.includes('d\\3a hidden'),
         pw.substring(0, 300))
 
