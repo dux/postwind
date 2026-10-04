@@ -1,6 +1,6 @@
 {
   "name": "postwind",
-  "version": "0.6.1",
+  "version": "1.5.2",
   "description": "Tailwind CSS v4 runtime with pipe notation, shortcuts, visible: animations, and more - compiler bundled, no CDN",
   "type": "module",
   "main": "dist/postwind.js",

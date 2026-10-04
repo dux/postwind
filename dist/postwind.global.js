@@ -8742,7 +8742,7 @@ input:where([type='button'], [type='reset'], [type='submit']),
     return jf(css, options);
   }
   // package.json
-  var version = "0.6.1";
+  var version = "1.5.2";
 
   // src/postwind.js
   function serverStub() {

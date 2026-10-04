@@ -8697,7 +8697,7 @@ function loadDesignSystem(css) {
   return jf(css, options);
 }
 // package.json
-var version = "0.6.1";
+var version = "1.5.2";
 
 // src/postwind.js
 function serverStub() {
