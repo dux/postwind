@@ -3,6 +3,9 @@
 PostWind is a browser runtime for [Tailwind CSS v4](https://tailwindcss.com) with extra syntax: pipe notation, shortcuts, scroll animations, dark mode, container queries, and more.
 It bundles Tailwind's own compiler (one file, no CDN, no build step), so every standard Tailwind v4 class, variant and `@theme` setting works unchanged.
 
+* **Docs and live demo:** https://dux.github.io/postwind/
+* **Latest minified build:** https://cdn.jsdelivr.net/npm/postwind@latest/dist/postwind.global.min.js
+
 ### Features unique to PostWind
 
 - **Pipe responsive** — `p-4|8` or `p-4|8|12` for mobile/tablet/desktop in one class
