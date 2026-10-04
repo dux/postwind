@@ -84,6 +84,24 @@ test("no JS errors or console warnings on page load", async () => {
   expect(errors).toEqual([]);
 });
 
+test("release version is the main commit count + 100, dotted like fez", async () => {
+  const { formatVersion, stampFor } = await import("../bin/version.js");
+  expect(stampFor(49)).toBe("v149");
+  expect(formatVersion(stampFor(49))).toBe("v1.4.9");
+  expect(formatVersion("v1123")).toBe("v11.2.3");
+  expect(formatVersion("v5")).toBe("v0.0.5");
+  expect(formatVersion("dev")).toBe("dev");
+});
+
+test("importing without a DOM (SSR) gives a no-op stub", async () => {
+  expect(typeof document).toBe("undefined");
+  const { default: PostWind } = await import("../dist/postwind.js");
+  expect(await PostWind.init({ shortcuts: { btn: "p-2" } })).toBeNull();
+  expect(await PostWind("p-4")).toBeNull();
+  expect(await PostWind.resolve("p-4")).toBeNull();
+  expect(PostWind.version).toBe((await Bun.file(import.meta.dir + "/../package.json").json()).version);
+});
+
 test("shortcuts work with pre-existing @layer rules", async () => {
   const layerPage = await browser.newPage();
   await layerPage.goto(

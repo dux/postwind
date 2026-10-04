@@ -7,28 +7,23 @@
   "jsdelivr": "dist/postwind.global.min.js",
   "unpkg": "dist/postwind.global.min.js",
   "exports": {
-    ".": {
-      "import": "./dist/postwind.js",
-      "require": "./dist/postwind.cjs"
-    },
+    ".": "./dist/postwind.js",
     "./global": "./dist/postwind.global.js",
     "./package.json": "./package.json"
   },
   "files": [
     "dist/",
-    "src/",
-    "example/",
     "README.md"
   ],
   "scripts": {
-    "build": "rm -rf dist/ && bun build src/postwind.js --outfile dist/postwind.js --format esm && bun build src/postwind.js --outfile dist/postwind.min.js --format esm --minify && bun build src/postwind.js --outfile dist/postwind.cjs --format cjs && bun build src/postwind.js --outfile dist/postwind.global.js --format iife && bun build src/postwind.js --outfile dist/postwind.global.min.js --format iife --minify",
+    "build": "rm -rf dist/ && bun build src/postwind.js --outfile dist/postwind.js --format esm && bun build src/postwind.js --outfile dist/postwind.min.js --format esm --minify && bun build src/postwind.js --outfile dist/postwind.global.js --format iife && bun build src/postwind.js --outfile dist/postwind.global.min.js --format iife --minify",
     "start": "bun bin/server.js",
     "test": "bun test src/",
     "dev": "bun bin/server.js & bun build src/postwind.js --outfile dist/postwind.global.js --format iife --watch",
     "pages": "open https://dux.github.io/postwind/",
     "open": "open https://www.npmjs.com/package/postwind",
     "gh": "open https://github.com/dux/postwind",
-    "publish": "bash bin/publish.sh"
+    "deploy": "bun bin/deploy.js"
   },
   "keywords": [
     "css",
@@ -51,11 +46,8 @@
   "bugs": {
     "url": "https://github.com/dux/postwind/issues"
   },
-  "engines": {
-    "bun": ">=1.0.0"
-  },
   "dependencies": {
-    "tailwindcss": "^4.3.3"
+    "tailwindcss": "4.3.3"
   },
   "devDependencies": {
     "playwright": "1.58.1"

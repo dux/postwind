@@ -12,10 +12,10 @@ It bundles Tailwind's own compiler (one file, no CDN, no build step), so every s
 - **Shortcuts** — composable class aliases: `btn-primary` expands to multiple classes
 - **visible:** — IntersectionObserver scroll animations: `visible:opacity-100`
 - **onload:** — entrance animations: `onload:opacity-100` adds class 100ms after the page is revealed
-- **dark:** — dark mode via `body.dark` class: `dark:bg-gray-900`
+- **dark:** — dark mode via a `.dark` class on `<html>`, `<body>` or any subtree: `dark:bg-gray-900`
 - **dark-auto** — auto-detect OS dark mode on `<body class="dark-auto">`
 - **Container queries** — `min-480:flex` / `max-320:hidden` based on element width (ResizeObserver)
-- **Body breakpoint class** — `init({ body: true })` adds `mobile`/`tablet`/`desktop` to `<body>`
+- **Body breakpoint class** — `init({ body: true })` adds `mobile`/`tablet`/`desktop` to `<body>`, following the `m:`/`d:` breakpoints
 - **m: t: d: prefixes** — short breakpoint aliases for mobile/tablet/desktop
 
 ## Setup
@@ -47,11 +47,7 @@ PostWind.init({
 });
 ```
 
-### npm (CJS)
-
-```js
-const PostWind = require('postwind');
-```
+The ESM build is browser-only; imported on the server (SSR) it returns a no-op stub.
 
 ## Features
 
@@ -81,8 +77,8 @@ Short aliases: `m:` = mobile (max-width: 767px), `t:` = tablet (min-width: 768px
 <div class="m:text-sm d:text-2xl">Small on mobile, large on desktop</div>
 ```
 
-Breakpoints are compiled as Tailwind `@custom-variant`s in registration order, so `t:` rules always precede `d:` rules no matter which class is discovered first.
-Register custom breakpoints from narrow to wide.
+Breakpoints are compiled as Tailwind `@custom-variant`s sorted by width: `max-width` breakpoints widest first, then `min-width` breakpoints narrowest first, then any other media query.
+So a narrower rule always comes first and the wider one wins, no matter when a breakpoint was registered or which class is discovered first.
 Tailwind's own `sm:`/`md:`/`lg:`/`max-md:`/`@sm:` variants work as usual.
 
 ### Unit suffix shorthand
@@ -113,13 +109,14 @@ PostWind.init({
 <div class="card">Card content</div>
 ```
 
-Shortcut keys are CSS selectors (`'.btn'`, `'h4, .h4'`).
+A bare key (`'btn'`) is a class name and becomes `.btn`; any other key is used as a CSS selector (`'h4, .h4'`, `'.card > a'`).
 They compile to `@apply` rules in Tailwind's `components` layer, so utilities on the same element override them: `<button class="btn p-0">` gets `p-0`.
 Variants inside shortcuts work (`hover:bg-blue-500`, `t:px-6`); classes Tailwind does not know are dropped (reported with `warn: true`).
 
 ### `dark:` dark mode
 
-Add `.dark` to `<body>` to activate all `dark:` prefixed classes. PostWind generates `body.dark .dark\:class` selectors.
+Add `.dark` to `<html>`, `<body>` or any element to activate `dark:` classes on it and everything inside it.
+PostWind compiles `dark:` as `&:where(.dark, .dark *)`.
 
 ```html
 <body class="dark">
@@ -127,12 +124,14 @@ Add `.dark` to `<body>` to activate all `dark:` prefixed classes. PostWind gener
     adapts to dark mode
   </div>
 </body>
+
+<aside class="dark">only this sidebar is dark</aside>
 ```
 
 Toggle via JS:
 
 ```js
-document.body.classList.toggle('dark');
+document.documentElement.classList.toggle('dark');
 ```
 
 ### `dark-auto` (auto-detect OS preference)
@@ -166,7 +165,8 @@ Adds a class 100ms after the page is revealed (PostWind hides `<body>` and suppr
 
 ### Container queries (`min-`/`max-` width)
 
-Element-width container queries using ResizeObserver. Toggles inner classes based on the element's own width (not viewport).
+Element-width container queries using ResizeObserver. Toggles inner classes based on the element's own width (not viewport), which CSS container queries cannot do.
+PostWind only removes classes it added, so a class you wrote yourself (`class="block min-480:block"`) is never stripped.
 
 ```html
 <div class="min-480:flex">becomes flex when this element is >= 480px wide</div>
@@ -175,14 +175,15 @@ Element-width container queries using ResizeObserver. Toggles inner classes base
 
 ### Body breakpoint class
 
-Adds `mobile`, `tablet`, or `desktop` class to `<body>` based on viewport width. Opt-in via `init({ body: true })`.
+Adds `mobile`, `tablet`, or `desktop` class to `<body>`: `mobile` when the `m:` media query matches, `desktop` when `d:` matches, `tablet` otherwise.
+It follows custom `m`/`d` breakpoints and updates on change. Opt-in via `init({ body: true })`.
 
 ```js
 PostWind.init({ body: true });
 ```
 
 ```html
-<!-- body gets class="mobile" (<768px), "tablet" (768-1023px), or "desktop" (>=1024px) -->
+<!-- default breakpoints: "mobile" (<768px), "tablet" (768-1023px), "desktop" (>=1024px) -->
 <style>
   body.mobile .sidebar { display: none; }
 </style>
@@ -190,7 +191,7 @@ PostWind.init({ body: true });
 
 ### `visible:` scroll animations
 
-IntersectionObserver-based. Classes activate when element is 50% visible in the viewport.
+IntersectionObserver-based. Classes activate when half of the element is visible, or when it fills half of the viewport (so very tall sections work too).
 
 ```html
 <div class="opacity-0 translate-y-8 transition duration-700 visible:opacity-100 visible:translate-y-0">
@@ -204,19 +205,17 @@ IntersectionObserver-based. Classes activate when element is 50% visible in the 
 PostWind.init(options)            // initialize (shortcuts, breakpoints, css, preflight, body, preload, warn, nonce)
 PostWind.shortcut(name, classes)  // register a shortcut
 PostWind.breakpoint(name, media)  // register a breakpoint
-PostWind.resolve(className)       // resolve a class to CSS (Promise)
-PostWind.twCSS(className)         // get Tailwind CSS for a class (Promise)
+PostWind.resolve(className)       // resolve a class to CSS without injecting it (Promise)
 PostWind.ready()                  // Promise that resolves when Tailwind is ready
+PostWind.version                  // release version of the loaded build, e.g. "1.5.1"
 PostWind(className)               // inject CSS for a class (Promise)
-PostWind.cache                    // object of cached class promises
-PostWind.observeVisible(el)       // manually observe element for visible: classes
-PostWind.processElement(el)       // manually process all PostWind classes on an element
 ```
 
 ### Debug warnings
 
 `init({ warn: true })` logs a `console.warn` for every PostWind class that produces no CSS, with a hint (`[postwind] no CSS for "d:pading-4" ("pading-4" is not a Tailwind class)`).
 Off by default; plain Tailwind classes are never checked.
+Unknown `init()` options always log a warning.
 
 ### CSP nonce
 
@@ -248,8 +247,11 @@ bun run dev      # start dev server (port 8000) + watch/rebuild dist
 bun run start    # start dev server only
 bun run build    # production build (dist/)
 bun run test     # run tests via Playwright
-bun run publish  # bump patch version, build, test, publish to npm
+bun run deploy   # stamp version, test + build, npm publish, commit release, push main (--dry-run to try)
 ```
+
+The version is the number of commits on `main` (including the release commit) plus 100, written dotted like Fez: 151 commits -> `1.5.1`.
+The raw stamp is kept in `.version`; the bundle exposes it as `PostWind.version`.
 
 Tests are defined in `example/index.html` as inline browser tests. `bun test` launches Playwright, loads the demo page, and reads the results — single source of truth, no duplication.
 
@@ -261,7 +263,8 @@ src/engine.js         # wraps the tailwindcss compiler + its bundled stylesheets
 src/postwind.test.js  # Playwright test runner
 example/index.html    # demo page + inline tests
 bin/server.js         # dev server
-dist/                 # built output: ESM, CJS, IIFE (global), minified variants
+bin/deploy.js         # release: version stamp, npm publish, release commit, push
+dist/                 # built output: ESM, IIFE (global), minified variants
 ```
 
 ## How it works
@@ -273,7 +276,9 @@ PostWind bundles the `tailwindcss` v4 compiler and is the only stylesheet genera
 3. `compiler.build(candidates)` produces one layered stylesheet, and rewritten classes are aliased onto their Tailwind rules with `:is(.p-\[10px\], .p-10px)` so they keep Tailwind's cascade order and specificity
 4. The result goes into `<style id="postwind">`; the body is revealed once it is in place
 
-A MutationObserver feeds dynamically added elements and class changes to the same pipeline; a late `<style type="text/tailwindcss">`, `shortcut()` or `breakpoint()` recompiles (about 10 ms).
+A MutationObserver feeds dynamically added elements and class changes to the same pipeline, batched to one rebuild per animation frame (before paint).
+A new class rebuilds the whole stylesheet (a few ms) while known classes cost nothing, so use inline styles, not `w-[${x}px]` classes, for values that change every frame.
+A late `<style type="text/tailwindcss">`, `shortcut()` or `breakpoint()` recompiles (about 10 ms).
 
 ## Browser support
 

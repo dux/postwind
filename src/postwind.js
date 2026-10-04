@@ -1,12 +1,20 @@
 import { createCompiler, loadDesignSystem } from "./engine.js";
+import { version } from "../package.json";
 
-const PostWind = (() => {
-  const breakpoints = {}; // name -> media query; registration order = variant order
+// server-side import (SSR): no DOM, every call is a no-op
+function serverStub() {
+  const noop = () => Promise.resolve(null);
+  return Object.assign(noop, { version, init: noop, ready: noop, shortcut: noop, breakpoint: noop, resolve: noop });
+}
+
+const PostWind = typeof document === "undefined" ? serverStub() : (() => {
+  const breakpoints = {}; // name -> media query
   const shortcuts = {}; // selector -> classes
   const cache = {}; // class -> Promise<css|null>, results of PostWind(cls)
   const candidates = new Set(); // canonical Tailwind candidates handed to build()
   const aliases = new Map(); // canonical -> Set of sugar class names sharing its rules
   const seen = new Set(); // raw class names already processed
+  const warned = new Set(); // classes already reported by warn: true
   const knownCache = new Map();
   let pending = []; // candidates not yet passed to build()
   let compiler = null;
@@ -23,6 +31,8 @@ const PostWind = (() => {
   let _revealResolve;
   // resolves once body.pw-ready is set; onload:/visible: animations wait for it
   const _revealed = new Promise((r) => (_revealResolve = r));
+
+  const initOptions = ["css", "preflight", "breakpoints", "shortcuts", "preload", "body", "warn", "nonce"];
 
   function applyNonce(el) {
     if (_nonce) el.nonce = _nonce;
@@ -47,14 +57,18 @@ const PostWind = (() => {
   const styleMain = createStyle("postwind");
   document.head.appendChild(styleMain);
 
-  // IntersectionObserver for visible: prefix
+  // IntersectionObserver for visible: prefix. Visible when half the element
+  // shows, or when it fills half the viewport: an element taller than 2x the
+  // viewport never reaches a 0.5 ratio.
   const visibleObserver = new IntersectionObserver(
     (entries) => {
       for (const entry of entries) {
-        entry.target.classList.toggle("pw-visible", entry.isIntersecting);
+        const vh = entry.rootBounds?.height || window.innerHeight;
+        const on = entry.isIntersecting && (entry.intersectionRatio >= 0.5 || entry.intersectionRect.height >= vh / 2);
+        entry.target.classList.toggle("pw-visible", on);
       }
     },
-    { threshold: 0.5 }
+    { threshold: Array.from({ length: 21 }, (_, i) => i / 20) }
   );
   const observedElements = new WeakSet();
 
@@ -131,21 +145,31 @@ const PostWind = (() => {
   const reSpecial = /[\\^$.*+?()[\]{}|]/g;
 
   // rewrite ".canonical" selectors to ":is(.canonical, .alias, ...)" so sugar
-  // classes share Tailwind's rules, cascade position and specificity
-  function aliasSelector(css, canon, names) {
-    const esc = CSS.escape(canon);
-    const re = new RegExp("\\." + esc.replace(reSpecial, "\\$&") + "(?![\\w\\\\-])", "g");
-    const list = [...names].map((n) => "." + CSS.escape(n)).join(", ");
-    return css.replace(re, `:is(.${esc}, ${list})`);
+  // classes share Tailwind's rules, cascade position and specificity.
+  // map: canonical -> iterable of alias names; one regex pass for all of them
+  function aliasRewriter(map) {
+    const lookup = new Map();
+    for (const [canon, names] of map) {
+      const esc = CSS.escape(canon);
+      const list = [...names].map((n) => "." + CSS.escape(n)).join(", ");
+      lookup.set(esc, `:is(.${esc}, ${list})`);
+    }
+    if (!lookup.size) return (css) => css;
+    const alt = [...lookup.keys()].map((e) => e.replace(reSpecial, "\\$&")).join("|");
+    const re = new RegExp(`\\.(${alt})(?![\\w\\\\-])`, "g");
+    return (css) => css.replace(re, (_, esc) => lookup.get(esc));
   }
 
+  let _aliasRewrite = null; // cached rewriter for `aliases`, reset when they change
+
   function applyAliases(css) {
-    for (const [canon, names] of aliases) css = aliasSelector(css, canon, names);
-    return css;
+    _aliasRewrite ||= aliasRewriter(aliases);
+    return _aliasRewrite(css);
   }
 
   // init({ warn: true }): explain why a PostWind class produced no CSS
   function warnIfUnresolved(cls, list) {
+    if (warned.has(cls)) return;
     const sugar = list.length !== 1 || list[0] !== cls;
     const sep = cls.indexOf(":");
     const prefix = sep > 0 ? cls.slice(0, sep) : null;
@@ -157,6 +181,7 @@ const PostWind = (() => {
     if (!list.length) hint = "expected 2 or 3 responsive segments";
     else if (prefix && breakpoints[prefix]) hint = `"${cls.slice(sep + 1)}" is not a Tailwind class`;
     else hint = `not Tailwind classes: ${missing.join(", ")}`;
+    warned.add(cls);
     console.warn(`[postwind] no CSS for "${cls}" (${hint})`);
   }
 
@@ -170,6 +195,7 @@ const PostWind = (() => {
       if (c !== cls) {
         if (!aliases.has(c)) aliases.set(c, new Set());
         aliases.get(c).add(cls);
+        _aliasRewrite = null;
       }
       if (!candidates.has(c)) {
         candidates.add(c);
@@ -182,10 +208,19 @@ const PostWind = (() => {
   // ---------------------------------------------------------------------------
   // compile + build
 
+  // bare class name 'btn' -> '.btn'; anything else is used as a selector
+  function shortcutKey(name) {
+    return /^[A-Za-z_][\w-]*$/.test(name) ? "." + name : name;
+  }
+
+  function addShortcuts(map) {
+    for (const [name, classes] of Object.entries(map)) shortcuts[shortcutKey(name)] = classes;
+  }
+
   function expandShortcut(sel, depth = 0) {
     const out = [];
     for (const cls of shortcuts[sel].split(/\s+/).filter(Boolean)) {
-      const nested = shortcuts[cls] ? cls : shortcuts["." + cls] ? "." + cls : null;
+      const nested = shortcuts["." + cls] ? "." + cls : null;
       if (nested && depth < 10) out.push(...expandShortcut(nested, depth + 1));
       else out.push(cls);
     }
@@ -207,6 +242,28 @@ const PostWind = (() => {
     return rules.length ? `@layer components {\n${rules.join("\n")}\n}` : "";
   }
 
+  // px value of a media query's min-width/max-width (rem/em at 16px), or null
+  function mediaWidth(media, kind) {
+    const m = media.match(new RegExp(`${kind}-width:\\s*(\\d+(?:\\.\\d+)?)(px|rem|em)`));
+    return m ? parseFloat(m[1]) * (m[2] === "px" ? 1 : 16) : null;
+  }
+
+  // Tailwind orders custom variants by declaration, and later rules win:
+  // max-width widest first, then min-width narrowest first, then the rest
+  function sortedBreakpoints() {
+    const rank = (media) => {
+      const min = mediaWidth(media, "min");
+      if (min !== null) return [1, min];
+      const max = mediaWidth(media, "max");
+      return max !== null ? [0, -max] : [2, 0];
+    };
+    return Object.entries(breakpoints).sort(([, a], [, b]) => {
+      const ra = rank(a);
+      const rb = rank(b);
+      return ra[0] - rb[0] || ra[1] - rb[1];
+    });
+  }
+
   function baseCss() {
     const parts = [
       // index.css declares the layer order; without preflight we must declare it ourselves
@@ -214,10 +271,10 @@ const PostWind = (() => {
         ? '@import "tailwindcss";'
         : '@layer theme, base, components, utilities;\n@import "tailwindcss/theme.css" layer(theme);\n@import "tailwindcss/utilities.css" layer(utilities);',
     ];
-    for (const [name, media] of Object.entries(breakpoints)) {
+    for (const [name, media] of sortedBreakpoints()) {
       parts.push(`@custom-variant ${name} (${media});`);
     }
-    parts.push("@custom-variant dark (&:where(body.dark, body.dark *));");
+    parts.push("@custom-variant dark (&:where(.dark, .dark *));");
     parts.push("@custom-variant visible (&:where(.pw-visible));");
     parts.push(_css);
     for (const el of document.querySelectorAll('style[type="text/tailwindcss"]')) {
@@ -236,6 +293,13 @@ const PostWind = (() => {
       console.error("[postwind] compile failed:", e.message);
       throw e;
     }
+    // canonical() depends on breakpoints and the design system, so re-run every class
+    const raw = [...seen];
+    seen.clear();
+    aliases.clear();
+    candidates.clear();
+    _aliasRewrite = null;
+    for (const cls of raw) addClass(cls);
     pending = [...candidates];
     _lastCss = "";
     rebuild();
@@ -256,11 +320,13 @@ const PostWind = (() => {
     styleMain.textContent = applyAliases(_lastCss);
   }
 
+  // one rebuild per frame: rAF runs before paint, so classes added in any task
+  // of this frame are styled before they are shown
   let scheduled = false;
   function schedule() {
     if (scheduled) return;
     scheduled = true;
-    queueMicrotask(() => {
+    requestAnimationFrame(() => {
       scheduled = false;
       rebuild();
     });
@@ -281,13 +347,6 @@ const PostWind = (() => {
     return null;
   }
 
-  // strip @media/@supports wrappers and the selector, keep the declaration block
-  function declarations(css) {
-    let s = css.trim();
-    while (s.startsWith("@")) s = s.slice(s.indexOf("{") + 1, s.lastIndexOf("}")).trim();
-    return s.slice(s.indexOf("{") + 1, s.lastIndexOf("}")).trim();
-  }
-
   // ---------------------------------------------------------------------------
   // public API
 
@@ -298,22 +357,17 @@ const PostWind = (() => {
 
   async function resolve(cls) {
     await ready();
-    if (shortcuts[cls]) {
+    const key = shortcutKey(cls);
+    if (shortcuts[key]) {
       rebuild();
-      return extractRule(_lastCss, cls);
+      return extractRule(_lastCss, key);
     }
     const list = canonical(cls);
     if (!list.length) return null;
     const out = ds.candidatesToCss(list).filter(Boolean);
     if (!out.length) return null;
-    let css = out.join("\n");
-    for (const c of list) if (c !== cls) css = aliasSelector(css, c, [cls]);
-    return css;
-  }
-
-  async function twCSS(cls) {
-    const css = await resolve(cls);
-    return css ? declarations(css) : null;
+    const own = list.filter((c) => c !== cls).map((c) => [c, [cls]]);
+    return aliasRewriter(new Map(own))(out.join("\n"));
   }
 
   function inject(cls) {
@@ -328,12 +382,12 @@ const PostWind = (() => {
 
   function breakpoint(name, media) {
     breakpoints[name] = media;
+    bindBodyClass();
     return _ready ? recompile() : Promise.resolve();
   }
 
   function shortcut(name, classes) {
-    if (typeof name === "object") Object.assign(shortcuts, name);
-    else shortcuts[name] = classes;
+    addShortcuts(typeof name === "object" ? name : { [name]: classes });
     return _ready ? recompile() : Promise.resolve();
   }
 
@@ -348,24 +402,67 @@ const PostWind = (() => {
     _revealed.then(() => visibleObserver.observe(el));
   }
 
-  // container query pattern: min-480:flex, max-320:hidden
-  const containerQueryElements = new WeakMap();
+  // container query pattern: min-480:flex, max-320:hidden, against the
+  // element's own width. Only classes added here are ever removed, so a class
+  // the author wrote stays put.
+  const cqState = new WeakMap(); // el -> { queries: Map<cls, query>, added: Set<class> }
+  const cqObserver = new ResizeObserver((entries) => {
+    for (const entry of entries) applyContainerQueries(entry.target, entry.contentRect.width);
+  });
 
-  function setupContainerQuery(el, mode, width, innerClass) {
-    if (!containerQueryElements.has(el)) {
-      containerQueryElements.set(el, []);
-      const ro = new ResizeObserver((entries) => {
-        for (const entry of entries) {
-          const w = entry.contentRect.width;
-          for (const q of containerQueryElements.get(el) || []) {
-            const active = q.mode === "min" ? w >= q.width : w <= q.width;
-            el.classList.toggle(q.innerClass, active);
-          }
-        }
-      });
-      ro.observe(el);
+  function applyContainerQueries(el, width) {
+    const state = cqState.get(el);
+    if (!state) return;
+    const on = new Set();
+    for (const q of state.queries.values()) {
+      if (q.mode === "min" ? width >= q.width : width <= q.width) on.add(q.cls);
     }
-    containerQueryElements.get(el).push({ mode, width, innerClass });
+    for (const { cls } of state.queries.values()) {
+      if (on.has(cls)) {
+        if (!el.classList.contains(cls)) {
+          el.classList.add(cls);
+          state.added.add(cls);
+        }
+      } else if (state.added.has(cls)) {
+        el.classList.remove(cls);
+        state.added.delete(cls);
+      }
+    }
+  }
+
+  // sync the element's min-N:/max-N: classes with its observed queries
+  function syncContainerQueries(el) {
+    const classes = [...el.classList].filter((c) => containerQueryRe.test(c));
+    let state = cqState.get(el);
+    if (!state) {
+      if (!classes.length) return;
+      state = { queries: new Map(), added: new Set() };
+      cqState.set(el, state);
+    }
+    let changed = false;
+    for (const cls of classes) {
+      if (state.queries.has(cls)) continue;
+      const [, mode, width, inner] = cls.match(containerQueryRe);
+      state.queries.set(cls, { mode, width: +width, cls: inner });
+      if (compiler) addClass(inner);
+      changed = true;
+    }
+    for (const cls of state.queries.keys()) {
+      if (classes.includes(cls)) continue;
+      state.queries.delete(cls);
+      changed = true;
+    }
+    if (!changed) return;
+    const targets = new Set([...state.queries.values()].map((q) => q.cls));
+    for (const cls of state.added) {
+      if (targets.has(cls)) continue;
+      el.classList.remove(cls);
+      state.added.delete(cls);
+    }
+    // re-observing reports the current size again, which applies new queries
+    cqObserver.unobserve(el);
+    if (state.queries.size) cqObserver.observe(el);
+    else cqState.delete(el);
   }
 
   // onload: prefix — adds class 100ms after the page is revealed
@@ -374,27 +471,25 @@ const PostWind = (() => {
     _revealed.then(() => setTimeout(() => el.classList.add(targetClass), 100));
   }
 
-  // per element, which JS-driven classes were already wired up
+  // per element, which onload: classes were already wired up
   const wired = new WeakMap();
 
   function processElement(el) {
     if (!el.classList) return;
     for (const cls of el.classList) {
-      if (cls.startsWith("onload:") || containerQueryRe.test(cls)) {
+      if (cls.startsWith("onload:")) {
         if (!wired.has(el)) wired.set(el, new Set());
-        if (wired.get(el).has(cls)) continue;
-        wired.get(el).add(cls);
-        if (cls.startsWith("onload:")) {
+        if (!wired.get(el).has(cls)) {
+          wired.get(el).add(cls);
           handleOnload(el, cls);
-        } else {
-          const m = cls.match(containerQueryRe);
-          setupContainerQuery(el, m[1], parseInt(m[2]), m[3]);
         }
         continue;
       }
+      if (containerQueryRe.test(cls)) continue;
       if (cls.startsWith("visible:")) observeVisible(el);
       if (compiler) addClass(cls);
     }
+    syncContainerQueries(el);
   }
 
   function initClasses(root) {
@@ -443,22 +538,29 @@ const PostWind = (() => {
     attributeFilter: ["class"],
   });
 
-  // body breakpoint class: adds mobile/tablet/desktop to <body> based on viewport width
+  // body class (init({ body: true })): mobile when m: matches, desktop when d:
+  // matches, tablet otherwise
+  let _bodyClass = false;
   let _bodyClassCurrent = null;
-  function _setupBodyClass() {
-    function update() {
-      if (!document.body) return;
-      const w = window.innerWidth;
-      const name = w < 768 ? "mobile" : w < 1024 ? "tablet" : "desktop";
-      if (name !== _bodyClassCurrent) {
-        if (_bodyClassCurrent) document.body.classList.remove(_bodyClassCurrent);
-        document.body.classList.add(name);
-        _bodyClassCurrent = name;
-      }
-    }
-    if (document.body) update();
-    else document.addEventListener("DOMContentLoaded", update);
-    window.addEventListener("resize", update);
+  let _bodyQueries = [];
+
+  function updateBodyClass() {
+    if (!document.body) return;
+    const [m, d] = _bodyQueries;
+    const name = m?.matches ? "mobile" : d?.matches ? "desktop" : "tablet";
+    if (name === _bodyClassCurrent) return;
+    if (_bodyClassCurrent) document.body.classList.remove(_bodyClassCurrent);
+    document.body.classList.add(name);
+    _bodyClassCurrent = name;
+  }
+
+  // (re)bind matchMedia listeners to the current m: and d: breakpoints
+  function bindBodyClass() {
+    if (!_bodyClass) return;
+    for (const q of _bodyQueries) q?.removeEventListener("change", updateBodyClass);
+    _bodyQueries = ["m", "d"].map((n) => breakpoints[n] && window.matchMedia(breakpoints[n].replace(/^@media\s*/, "")));
+    for (const q of _bodyQueries) q?.addEventListener("change", updateBodyClass);
+    updateBodyClass();
   }
 
   // dark-auto: mirror the OS preference into body.dark
@@ -475,6 +577,9 @@ const PostWind = (() => {
   }
 
   function init(opts = {}) {
+    for (const key of Object.keys(opts)) {
+      if (!initOptions.includes(key)) console.warn(`[postwind] unknown init option "${key}"`);
+    }
     if (opts.warn !== undefined) _warn = !!opts.warn;
     if (opts.nonce) {
       _nonce = opts.nonce;
@@ -495,7 +600,7 @@ const PostWind = (() => {
       dirty = true;
     }
     if (opts.shortcuts) {
-      Object.assign(shortcuts, opts.shortcuts);
+      addShortcuts(opts.shortcuts);
       dirty = true;
     }
     if (opts.preload) {
@@ -503,7 +608,8 @@ const PostWind = (() => {
       _preload.push(...list);
       if (_ready) list.forEach(inject);
     }
-    if (opts.body) _setupBodyClass();
+    if (opts.body) _bodyClass = true;
+    if (opts.body || opts.breakpoints) whenDom().then(bindBodyClass);
 
     if (_ready) {
       if (dirty) recompile();
@@ -532,17 +638,14 @@ const PostWind = (() => {
     queueMicrotask(() => _ready || init());
   }
 
+  inject.version = version;
   inject.init = init;
   inject.ready = ready;
   inject.breakpoint = breakpoint;
   inject.shortcut = shortcut;
   inject.resolve = resolve;
-  inject.twCSS = twCSS;
-  inject.cache = cache;
-  inject.observeVisible = observeVisible;
-  inject.processElement = processElement;
 
-  // default breakpoints, registered narrow to wide
+  // default breakpoints
   breakpoint("m", "@media (max-width: 767px)");
   breakpoint("t", "@media (min-width: 768px)");
   breakpoint("d", "@media (min-width: 1024px)");
@@ -550,6 +653,6 @@ const PostWind = (() => {
   return inject;
 })();
 
-window.PostWind = PostWind;
+if (typeof window !== "undefined") window.PostWind = PostWind;
 
 export default PostWind;

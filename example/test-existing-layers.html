@@ -88,8 +88,8 @@
         computed ? `display: ${computed.display}` : 'element not found')
 
       // Test 5: basic Tailwind utility still works
-      const r5 = await PostWind.twCSS('p-4')
-      log('twCSS("p-4") works alongside existing @layer rules',
+      const r5 = await PostWind.resolve('p-4')
+      log('resolve("p-4") works alongside existing @layer rules',
         r5 && r5.includes('padding'),
         r5)
 

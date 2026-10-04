@@ -125,10 +125,10 @@
             <li class="flex items-start gap-2"><a href="#shortcuts" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>Shortcuts</strong> &mdash; composable class aliases: <code class="bg-gray-100 px-1 rounded font-mono text-sm">btn-primary</code> expands to multiple classes</span></li>
             <li class="flex items-start gap-2"><a href="#visible" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>visible:</strong> prefix &mdash; IntersectionObserver scroll animations</span></li>
             <li class="flex items-start gap-2"><a href="#onload" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>onload:</strong> prefix &mdash; entrance animations, adds class 100ms after the page is revealed</span></li>
-            <li class="flex items-start gap-2"><a href="#dark-mode" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>dark:</strong> prefix &mdash; dark mode via <code class="bg-gray-100 px-1 rounded font-mono text-sm">body.dark</code> class</span></li>
+            <li class="flex items-start gap-2"><a href="#dark-mode" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>dark:</strong> prefix &mdash; dark mode via a <code class="bg-gray-100 px-1 rounded font-mono text-sm">.dark</code> class on html, body or any subtree</span></li>
             <li class="flex items-start gap-2"><a href="#dark-mode" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>dark-auto</strong> &mdash; auto-detect OS dark mode preference on <code class="bg-gray-100 px-1 rounded font-mono text-sm">body.dark-auto</code></span></li>
             <li class="flex items-start gap-2"><a href="#container-queries" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>Container queries</strong> &mdash; <code class="bg-gray-100 px-1 rounded font-mono text-sm">min-480:flex</code> / <code class="bg-gray-100 px-1 rounded font-mono text-sm">max-320:hidden</code> based on element width</span></li>
-            <li class="flex items-start gap-2"><span class="shrink-0 text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">JS API</span> <span><strong>Body class</strong> &mdash; <code class="bg-gray-100 px-1 rounded font-mono text-sm">init({ body: true })</code> adds mobile/tablet/desktop to <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;body&gt;</code></span></li>
+            <li class="flex items-start gap-2"><span class="shrink-0 text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded-full">JS API</span> <span><strong>Body class</strong> &mdash; <code class="bg-gray-100 px-1 rounded font-mono text-sm">init({ body: true })</code> adds mobile/tablet/desktop to <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;body&gt;</code>, following the m:/d: breakpoints</span></li>
             <li class="flex items-start gap-2"><a href="#postwind" class="shrink-0 text-xs bg-purple-100 text-purple-700 px-2 py-0.5 rounded-full hover:bg-purple-200 transition-colors">example</a> <span><strong>m: t: d:</strong> prefixes &mdash; explicit mobile / tablet / desktop breakpoints</span></li>
           </ul>
         </div>
@@ -250,17 +250,6 @@
           </div>
         </div>
 
-        <!-- twCSS -->
-        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <div class="bg-gray-50 border-b border-gray-200 px-6 py-3">
-            <code class="font-mono font-semibold text-purple-700">PostWind.twCSS(className)</code>
-            <span class="text-gray-400 text-sm ml-2">returns Promise&lt;string|null&gt;</span>
-          </div>
-          <div class="p-6">
-            <p class="text-gray-700">Extracts raw CSS properties from Tailwind for a single class. Creates a temp element, waits for Tailwind to process, returns the CSS text (e.g. <code class="font-mono bg-gray-100 px-1 rounded text-sm">padding: 1rem;</code>).</p>
-          </div>
-        </div>
-
         <!-- shortcut -->
         <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
           <div class="bg-gray-50 border-b border-gray-200 px-6 py-3">
@@ -273,7 +262,6 @@
               <div>PostWind.shortcut('btn-primary', 'btn bg-blue-600 text-white')</div>
               <div></div>
               <div><span class="text-gray-500">// then use:</span> &lt;button class="btn-primary"&gt;Click&lt;/button&gt;</div>
-              <div><span class="text-gray-500">// must call PostWind('btn-primary') to inject CSS</span></div>
             </div>
           </div>
         </div>
@@ -292,16 +280,6 @@
               <div><span class="text-gray-500">// then use:</span> await PostWind('xl:text-2xl')</div>
             </div>
             <p class="text-sm text-gray-500 mt-2"><strong>Defaults:</strong> m = max-width:767px, t = min-width:768px, d = min-width:1024px</p>
-          </div>
-        </div>
-
-        <!-- observeVisible -->
-        <div class="bg-white rounded-xl border border-gray-200 overflow-hidden">
-          <div class="bg-gray-50 border-b border-gray-200 px-6 py-3">
-            <code class="font-mono font-semibold text-purple-700">PostWind.observeVisible(element)</code>
-          </div>
-          <div class="p-6">
-            <p class="text-gray-700">Manually observe an element with the IntersectionObserver. Adds <code class="font-mono bg-gray-100 px-1 rounded text-sm">pw-visible</code> class when 50% visible. Usually not needed &mdash; auto-scan handles elements with <code class="font-mono bg-gray-100 px-1 rounded text-sm">visible:</code> classes.</p>
           </div>
         </div>
 
@@ -327,7 +305,7 @@
                 <tr class="border-b border-gray-100"><td class="py-2 pr-4">Tablet prefix</td><td class="py-2 pr-4">t:flex</td><td class="py-2">md:flex</td></tr>
                 <tr class="border-b border-gray-100"><td class="py-2 pr-4">Desktop prefix</td><td class="py-2 pr-4">d:flex</td><td class="py-2">lg:flex</td></tr>
                 <tr class="border-b border-gray-100"><td class="py-2 pr-4">Visible</td><td class="py-2 pr-4">visible:opacity-100</td><td class="py-2">IntersectionObserver</td></tr>
-                <tr class="border-b border-gray-100"><td class="py-2 pr-4">Dark mode</td><td class="py-2 pr-4">dark:bg-gray-900</td><td class="py-2">body.dark scoped</td></tr>
+                <tr class="border-b border-gray-100"><td class="py-2 pr-4">Dark mode</td><td class="py-2 pr-4">dark:bg-gray-900</td><td class="py-2">.dark scoped</td></tr>
                 <tr class="border-b border-gray-100"><td class="py-2 pr-4">@ notation</td><td class="py-2 pr-4">text-sm@m</td><td class="py-2">m:text-sm</td></tr>
                 <tr class="border-b border-gray-100"><td class="py-2 pr-4">Onload</td><td class="py-2 pr-4">onload:opacity-100</td><td class="py-2">class added after 100ms</td></tr>
                 <tr class="border-b border-gray-100"><td class="py-2 pr-4">Container min</td><td class="py-2 pr-4">min-480:flex</td><td class="py-2">ResizeObserver</td></tr>
@@ -1529,7 +1507,7 @@
     <!-- ============================== -->
     <section id="visible" class="mb-16">
       <h2 class="text-3xl font-bold mb-2">Visible: Prefix (IntersectionObserver)</h2>
-      <p class="text-gray-500 mb-8">Elements animate when they scroll into view (50% threshold). Scroll down to see them appear.</p>
+      <p class="text-gray-500 mb-8">Elements animate when half of them, or half of the viewport, is in view. Scroll down to see them appear.</p>
 
       <div class="space-y-8">
         <!-- Visible: fade in -->
@@ -1716,7 +1694,7 @@
     <!-- ============================== -->
     <section id="dark-mode" class="mb-16">
       <h2 class="text-3xl font-bold mb-2">Dark Mode</h2>
-      <p class="text-gray-500 mb-8">Toggle <code class="bg-gray-100 px-1 rounded font-mono text-sm">.dark</code> on <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;body&gt;</code> to activate <code class="bg-gray-100 px-1 rounded font-mono text-sm">dark:</code> prefixed classes.</p>
+      <p class="text-gray-500 mb-8">Add <code class="bg-gray-100 px-1 rounded font-mono text-sm">.dark</code> to <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;html&gt;</code>, <code class="bg-gray-100 px-1 rounded font-mono text-sm">&lt;body&gt;</code> or any element to activate <code class="bg-gray-100 px-1 rounded font-mono text-sm">dark:</code> prefixed classes.</p>
 
       <div class="space-y-6">
         <!-- Toggle button -->
@@ -1740,7 +1718,7 @@
         <div class="bg-white rounded-xl border border-gray-200 p-6">
           <h3 class="text-lg font-semibold mb-3">Usage</h3>
           <div class="bg-gray-50 rounded-lg p-4 font-mono text-sm space-y-2">
-            <div class="text-gray-500">&lt;!-- Add .dark to body --&gt;</div>
+            <div class="text-gray-500">&lt;!-- Add .dark to html, body or any element --&gt;</div>
             <div>&lt;body class="dark"&gt;</div>
             <div class="pl-4">&lt;div class="<span class="text-blue-600">bg-white dark:bg-gray-900 text-black dark:text-white</span>"&gt;</div>
             <div class="pl-8">adapts to dark mode</div>
@@ -1903,17 +1881,17 @@
       }
 
       PostWind.ready().then(async () => {
-        // ---- Test 1: twCSS returns CSS for a basic class ----
-        const css1 = await PostWind.twCSS('p-4')
-        log('twCSS("p-4") returns CSS', css1 && css1.includes('padding'), css1)
+        // ---- Test 1: resolve returns CSS for a basic class ----
+        const css1 = await PostWind.resolve('p-4')
+        log('resolve("p-4") returns padding', css1 && css1.includes('padding'), css1)
 
-        // ---- Test 2: twCSS for text class ----
-        const css2 = await PostWind.twCSS('text-xl')
-        log('twCSS("text-xl") returns font-size', css2 && css2.includes('font-size'), css2)
+        // ---- Test 2: resolve for text class ----
+        const css2 = await PostWind.resolve('text-xl')
+        log('resolve("text-xl") returns font-size', css2 && css2.includes('font-size'), css2)
 
-        // ---- Test 3: twCSS for color class ----
-        const css3 = await PostWind.twCSS('bg-red-500')
-        log('twCSS("bg-red-500") returns background', css3 && css3.includes('background'), css3)
+        // ---- Test 3: resolve for color class ----
+        const css3 = await PostWind.resolve('bg-red-500')
+        log('resolve("bg-red-500") returns background', css3 && css3.includes('background'), css3)
 
         // ---- Test 4: resolve m: prefix ----
         const r4 = await PostWind.resolve('m:p-4')
@@ -2032,7 +2010,6 @@
         testEl.className = 'visible:opacity-100'
         testEl.style.cssText = 'width:10px;height:10px;position:fixed;top:0;left:0;'
         document.body.appendChild(testEl)
-        PostWind.observeVisible(testEl)
         await PostWind('visible:opacity-100')
         // wait for observer to fire
         await new Promise(r => setTimeout(r, 200))
@@ -2135,28 +2112,29 @@
           r37 && r37.includes('@media') && r37.includes('max-width: 767px'),
           r37 ? r37.substring(0, 80) : null)
 
-        // ---- Test 38: dark: prefix generates body.dark scoped selector ----
+        // ---- Test 38: dark: prefix generates .dark scoped selector ----
+        const darkSel = ':where(.dark, .dark *)'
         const r38 = await PostWind.resolve('dark:bg-gray-900')
-        log('resolve("dark:bg-gray-900") generates body.dark scoped selector',
-          r38 && r38.includes('body.dark') && r38.includes('background'),
+        log('resolve("dark:bg-gray-900") generates .dark scoped selector',
+          r38 && r38.includes(darkSel) && r38.includes('background'),
           r38 ? r38.substring(0, 100) : null)
 
         // ---- Test 39: dark: text color ----
         const r39 = await PostWind.resolve('dark:text-white')
-        log('resolve("dark:text-white") generates body.dark scoped color',
-          r39 && r39.includes('body.dark'),
+        log('resolve("dark:text-white") generates .dark scoped color',
+          r39 && r39.includes(darkSel),
           r39 ? r39.substring(0, 100) : null)
 
         // ---- Test 40: dark: border color ----
         const r40 = await PostWind.resolve('dark:border-gray-700')
-        log('resolve("dark:border-gray-700") generates body.dark scoped border',
-          r40 && r40.includes('body.dark') && r40.includes('border'),
+        log('resolve("dark:border-gray-700") generates .dark scoped border',
+          r40 && r40.includes(darkSel) && r40.includes('border'),
           r40 ? r40.substring(0, 100) : null)
 
         // ---- Test 41: dark: classes auto-scanned ----
-        log('Auto-scan: dark: classes compiled with body.dark selector',
-          sheetCSS().includes('body.dark'),
-          'checked #postwind for body.dark rules')
+        log('Auto-scan: dark: classes compiled with .dark selector',
+          sheetCSS().includes(darkSel),
+          'checked #postwind for .dark rules')
 
         // ---- Test 42: dark: class actually applies when body has .dark ----
         const darkTestEl = document.createElement('div')
@@ -2193,7 +2171,6 @@
         const onloadEl = document.createElement('div')
         onloadEl.className = 'onload:test-onload-class'
         document.body.appendChild(onloadEl)
-        PostWind.processElement(onloadEl)
         const beforeOnload = onloadEl.classList.contains('test-onload-class')
         await new Promise(r => setTimeout(r, 200))
         const afterOnload = onloadEl.classList.contains('test-onload-class')
@@ -2207,7 +2184,6 @@
         cqEl.style.cssText = 'width:500px;'
         cqEl.className = 'min-480:flex'
         document.body.appendChild(cqEl)
-        PostWind.processElement(cqEl)
         await new Promise(r => setTimeout(r, 200))
         const hasFlex = cqEl.classList.contains('flex')
         log('Container query: min-480:flex adds flex class when width >= 480',
@@ -2218,21 +2194,33 @@
         cqEl2.style.cssText = 'width:300px;'
         cqEl2.className = 'max-400:hidden'
         document.body.appendChild(cqEl2)
-        PostWind.processElement(cqEl2)
         await new Promise(r => setTimeout(r, 200))
         const hasHidden = cqEl2.classList.contains('hidden')
         log('Container query: max-400:hidden adds hidden when width <= 400',
           hasHidden, `classList: ${cqEl2.className}`)
+
+        // ---- Test 48b: removing the query class removes the class it added ----
+        cqEl.classList.remove('min-480:flex')
+        await new Promise(r => setTimeout(r, 50))
+        log('Container query: removing min-480:flex drops the flex it added',
+          !cqEl.classList.contains('flex'), `classList: ${cqEl.className}`)
         cqEl.remove()
         cqEl2.remove()
 
+        // ---- Test 48c: a class written by the author is never removed ----
+        const cqEl3 = document.createElement('div')
+        cqEl3.style.cssText = 'width:300px;'
+        cqEl3.className = 'block min-480:block'
+        document.body.appendChild(cqEl3)
+        await new Promise(r => setTimeout(r, 200))
+        log('Container query: inactive min-480:block keeps the static block class',
+          cqEl3.classList.contains('block'), `classList: ${cqEl3.className}`)
+        cqEl3.remove()
+
         // ---- Test 49: preload option injects CSS for classes not in DOM ----
-        const preloadClass = 'mt-10px'
-        const preloadCss = PostWind.cache[preloadClass]
-        const preloadResolved = preloadCss ? await preloadCss : null
         log('init({ preload }) injects CSS for preloaded classes',
-          preloadResolved && preloadResolved.includes('margin-top'),
-          preloadResolved)
+          sheetCSS().includes('.mt-10px'),
+          'checked #postwind for .mt-10px')
 
         // ---- Test 50: f-row shortcut compiled into the components layer ----
         const scCSS = sheetCSS()
@@ -2427,6 +2415,100 @@
         log('group-hover:flex and max-md:p-2 stay Tailwind variants',
           r74 && r74.includes('.group') && r74.includes('display: flex') && r74b && r74b.includes('@media') && r74b.includes('padding'),
           `${r74 ? r74.substring(0, 60) : null} | ${r74b ? r74b.substring(0, 60) : null}`)
+
+        // ---- Test 75: bare shortcut key is a class, not an element selector ----
+        await PostWind.shortcut('pw-bare', 'p-3')
+        const r75 = await PostWind.resolve('pw-bare')
+        const css75 = sheetCSS()
+        log('shortcut("pw-bare") compiles to .pw-bare, not a pw-bare element selector',
+          r75 && r75.includes('padding') && css75.includes('.pw-bare {') && !/\n\s*pw-bare \{/.test(css75),
+          r75 ? r75.substring(0, 80) : null)
+
+        // ---- Test 76: late breakpoints are sorted by width, not registration ----
+        await PostWind.breakpoint('s', '@media (min-width: 640px)')
+        await PostWind.breakpoint('mm', '@media (max-width: 479px)')
+        await Promise.all(['s:p-1', 't:p-1', 'm:p-1', 'mm:p-1'].map(c => PostWind(c)))
+        const css76 = sheetCSS()
+        const at76 = c => css76.indexOf(`.${CSS.escape(c)}`)
+        log('late s: (640px) sorts before t:, late mm: (max 479px) after m:',
+          at76('s:p-1') > -1 && at76('s:p-1') < at76('t:p-1') && at76('m:p-1') > -1 && at76('m:p-1') < at76('mm:p-1'),
+          `s ${at76('s:p-1')}, t ${at76('t:p-1')}, m ${at76('m:p-1')}, mm ${at76('mm:p-1')}`)
+
+        // ---- Test 77: class seen before its breakpoint exists works after registration ----
+        const el77 = document.createElement('div')
+        el77.className = 'text-xs@zz'
+        document.body.appendChild(el77)
+        await new Promise(r => setTimeout(r, 0))
+        await PostWind.breakpoint('zz', '@media (min-width: 1px)')
+        await new Promise(r => requestAnimationFrame(r))
+        const fs77 = getComputedStyle(el77).fontSize
+        el77.remove()
+        log('text-xs@zz seen before breakpoint("zz") gets its rule after registration',
+          fs77 === '12px' && sheetCSS().includes('.text-xs\\@zz'), `font-size: ${fs77}`)
+
+        // ---- Test 78: dark: works inside any .dark subtree ----
+        const box78 = document.createElement('div')
+        box78.className = 'dark'
+        box78.innerHTML = '<span class="dark:bg-red-500">x</span>'
+        document.body.appendChild(box78)
+        await PostWind('dark:bg-red-500')
+        await new Promise(r => requestAnimationFrame(r))
+        const bg78 = getComputedStyle(box78.firstChild).backgroundColor
+        box78.remove()
+        log('dark: applies inside a .dark subtree (body not dark)',
+          !document.body.classList.contains('dark') && bg78 !== '' && bg78 !== 'rgba(0, 0, 0, 0)',
+          `computed bg: ${bg78}`)
+
+        // ---- Test 79: visible: fires for elements taller than 2x the viewport ----
+        const el79 = document.createElement('div')
+        el79.className = 'visible:opacity-100'
+        el79.style.cssText = 'width:10px;height:300vh;position:fixed;top:0;left:0;'
+        document.body.appendChild(el79)
+        await new Promise(r => setTimeout(r, 200))
+        const vis79 = el79.classList.contains('pw-visible')
+        el79.remove()
+        log('visible: tall element (300vh) gets pw-visible when it fills the viewport',
+          vis79, `pw-visible: ${vis79}`)
+
+        // ---- Test 80: unknown init options are reported ----
+        const warnings80 = []
+        const origWarn80 = console.warn
+        console.warn = (...a) => warnings80.push(a.join(' '))
+        PostWind.init({ tailwind: true })
+        console.warn = origWarn80
+        log('init({ tailwind: true }) warns about the unknown option',
+          warnings80.length === 1 && warnings80[0].includes('unknown init option "tailwind"'),
+          warnings80.join(' | ') || 'no warnings')
+
+        // ---- Test 81: body class follows the m:/d: breakpoints ----
+        await PostWind.init({ body: true })
+        await new Promise(r => setTimeout(r, 0))
+        const body81 = document.body.classList
+        const desktop81 = body81.contains('desktop')
+        await PostWind.breakpoint('d', '@media (min-width: 5000px)')
+        const tablet81 = body81.contains('tablet') && !body81.contains('desktop')
+        await PostWind.breakpoint('d', '@media (min-width: 1024px)')
+        log('init({ body: true }) sets desktop, switches to tablet when d: moves past the viewport',
+          desktop81 && tablet81 && body81.contains('desktop'),
+          `desktop: ${desktop81}, tablet after move: ${tablet81}, now: ${document.body.className}`)
+
+        // ---- Test 82: DOM-driven rebuilds are batched to the next frame ----
+        const el82 = document.createElement('div')
+        el82.className = 'm-[123px]'
+        document.body.appendChild(el82)
+        await Promise.resolve(); await Promise.resolve()
+        const before82 = sheetCSS().includes('.m-\\[123px\\]')
+        await new Promise(r => requestAnimationFrame(r))
+        const after82 = sheetCSS().includes('.m-\\[123px\\]')
+        const mt82 = getComputedStyle(el82).marginTop
+        el82.remove()
+        log('new DOM class is compiled in the next animation frame, before paint',
+          !before82 && after82 && mt82 === '123px',
+          `before rAF: ${before82}, after rAF: ${after82}, margin-top: ${mt82}`)
+
+        // ---- Test 83: PostWind.version is the dotted package version ----
+        log('PostWind.version is a dotted version',
+          /^\d+\.\d+\.\d+$/.test(PostWind.version || ''), PostWind.version)
 
         // ---- Done ----
         window.__TEST_RESULTS.done = true

@@ -3,27 +3,37 @@
   var __getOwnPropNames = Object.getOwnPropertyNames;
   var __getOwnPropDesc = Object.getOwnPropertyDescriptor;
   var __hasOwnProp = Object.prototype.hasOwnProperty;
-  var __moduleCache = /* @__PURE__ */ new WeakMap;
+  function __accessProp(key) {
+    return this[key];
+  }
   var __toCommonJS = (from) => {
-    var entry = __moduleCache.get(from), desc;
+    var entry = (__moduleCache ??= new WeakMap).get(from), desc;
     if (entry)
       return entry;
     entry = __defProp({}, "__esModule", { value: true });
-    if (from && typeof from === "object" || typeof from === "function")
-      __getOwnPropNames(from).map((key) => !__hasOwnProp.call(entry, key) && __defProp(entry, key, {
-        get: () => from[key],
-        enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
-      }));
+    if (from && typeof from === "object" || typeof from === "function") {
+      for (var key of __getOwnPropNames(from))
+        if (!__hasOwnProp.call(entry, key))
+          __defProp(entry, key, {
+            get: __accessProp.bind(from, key),
+            enumerable: !(desc = __getOwnPropDesc(from, key)) || desc.enumerable
+          });
+    }
     __moduleCache.set(from, entry);
     return entry;
   };
+  var __moduleCache;
+  var __returnValue = (v) => v;
+  function __exportSetter(name, newValue) {
+    this[name] = __returnValue.bind(null, newValue);
+  }
   var __export = (target, all) => {
     for (var name in all)
       __defProp(target, name, {
         get: all[name],
         enumerable: true,
         configurable: true,
-        set: (newValue) => all[name] = () => newValue
+        set: __exportSetter.bind(all, name)
       });
   };
 
@@ -67,11 +77,11 @@
           else
             break;
         }
-        let o2 = e.slice(i, n);
-        if (A.includes(o2)) {
+        let o = e.slice(i, n);
+        if (A.includes(o)) {
           r.unshift(true);
           continue;
-        } else if (r[0] && o2 === "") {
+        } else if (r[0] && o === "") {
           r.unshift(true);
           continue;
         }
@@ -86,18 +96,18 @@
         if (a === 32 && r[0] && t.charCodeAt(t.length - 1) === 32)
           continue;
         if ((a === 43 || a === 42 || a === 47 || a === 45) && r[0]) {
-          let i = t.trimEnd(), o2 = i.charCodeAt(i.length - 1), p = i.charCodeAt(i.length - 2), c = e.charCodeAt(n + 1);
-          if ((o2 === 101 || o2 === 69) && p >= 48 && p <= 57) {
+          let i = t.trimEnd(), o = i.charCodeAt(i.length - 1), p = i.charCodeAt(i.length - 2), c = e.charCodeAt(n + 1);
+          if ((o === 101 || o === 69) && p >= 48 && p <= 57) {
             t += e[n];
             continue;
-          } else if (o2 === 43 || o2 === 42 || o2 === 47 || o2 === 45) {
+          } else if (o === 43 || o === 42 || o === 47 || o === 45) {
             t += e[n];
             continue;
-          } else if (o2 === 40 || o2 === 44) {
+          } else if (o === 40 || o === 44) {
             t += e[n];
             continue;
           } else
-            e.charCodeAt(n - 1) === 32 ? t += `${e[n]} ` : o2 >= 48 && o2 <= 57 || c >= 48 && c <= 57 || o2 === 41 || c === 40 || c === 43 || c === 42 || c === 47 || c === 45 || m !== null && m === n - 1 ? t += ` ${e[n]} ` : t += e[n];
+            e.charCodeAt(n - 1) === 32 ? t += `${e[n]} ` : o >= 48 && o <= 57 || c >= 48 && c <= 57 || o === 41 || c === 40 || c === 43 || c === 42 || c === 47 || c === 45 || m !== null && m === n - 1 ? t += ` ${e[n]} ` : t += e[n];
         } else
           t += e[n];
       }
@@ -108,12 +118,12 @@
   function d(e, t) {
     let r = 0, s = [], m = 0, n = e.length, a = t.charCodeAt(0);
     for (let i = 0;i < n; i++) {
-      let o2 = e.charCodeAt(i);
-      if (r === 0 && o2 === a) {
+      let o = e.charCodeAt(i);
+      if (r === 0 && o === a) {
         s.push(e.slice(m, i)), m = i + 1;
         continue;
       }
-      switch (o2) {
+      switch (o) {
         case 92:
           i += 1;
           break;
@@ -125,7 +135,7 @@
               i += 1;
               continue;
             }
-            if (p === o2)
+            if (p === o)
               break;
           }
           break;
@@ -141,7 +151,7 @@
         case 93:
         case 125:
         case 41:
-          r > 0 && o2 === E[r - 1] && r--;
+          r > 0 && o === E[r - 1] && r--;
           break;
       }
     }
@@ -324,15 +334,15 @@
   function h2(n) {
     if (arguments.length === 0)
       throw new TypeError("`CSS.escape` requires an argument.");
-    let e = String(n), i = e.length, r = -1, t, s = "", l2 = e.charCodeAt(0);
-    if (i === 1 && l2 === 45)
+    let e = String(n), i = e.length, r = -1, t, s = "", l = e.charCodeAt(0);
+    if (i === 1 && l === 45)
       return "\\" + e;
     for (;++r < i; ) {
       if (t = e.charCodeAt(r), t === 0) {
         s += "�";
         continue;
       }
-      if (t >= 1 && t <= 31 || t === 127 || r === 0 && t >= 48 && t <= 57 || r === 1 && t >= 48 && t <= 57 && l2 === 45) {
+      if (t >= 1 && t <= 31 || t === 127 || r === 0 && t >= 48 && t <= 57 || r === 1 && t >= 48 && t <= 57 && l === 45) {
         s += "\\" + t.toString(16) + " ";
         continue;
       }
@@ -469,12 +479,12 @@
       if (!t)
         return null;
       let s = {};
-      for (let u2 of r) {
-        let f2 = `${t}${u2}`, o2 = this.values.get(f2);
-        o2 && (o2.options & 1 ? s[u2] = o2.value : s[u2] = this.#t(f2));
+      for (let u of r) {
+        let f = `${t}${u}`, o = this.values.get(f);
+        o && (o.options & 1 ? s[u] = o.value : s[u] = this.#t(f));
       }
-      let l2 = this.values.get(t);
-      return l2.options & 1 ? [l2.value, s] : [this.#t(t), s];
+      let l = this.values.get(t);
+      return l.options & 1 ? [l.value, s] : [this.#t(t), s];
     }
     namespace(e) {
       let i = new Map, r = `${e}-`;
@@ -583,25 +593,25 @@
     e = e.replaceAll(`\r
 `, `
 `);
-    let i = [], r = i, t = false, n = [], s = null, l2 = "", d2;
-    function f2(p2 = r) {
-      return p2.length === 1 ? p2[0] : t ? It(p2) : xr(p2);
+    let i = [], r = i, t = false, n = [], s = null, l = "", d;
+    function f(p = r) {
+      return p.length === 1 ? p[0] : t ? It(p) : xr(p);
     }
-    function c2(p2) {
+    function c(p) {
       let m = r[r.length - 1];
-      m?.kind === "compound" ? m.nodes.push(p2) : m && m.kind !== "list" && m.kind !== "combinator" ? r[r.length - 1] = xr([m, p2]) : r.push(p2);
+      m?.kind === "compound" ? m.nodes.push(p) : m && m.kind !== "list" && m.kind !== "combinator" ? r[r.length - 1] = xr([m, p]) : r.push(p);
     }
-    for (let p2 = 0;p2 < e.length; p2++) {
-      let m = e.charCodeAt(p2);
+    for (let p = 0;p < e.length; p++) {
+      let m = e.charCodeAt(p);
       switch (m) {
         case Vr: {
-          for (l2.length > 0 && (c2(be(l2)), l2 = "");p2 + 1 < e.length && (d2 = e.charCodeAt(p2 + 1), !(d2 !== Dt && d2 !== Kt && d2 !== Ut)); p2++)
+          for (l.length > 0 && (c(be(l)), l = "");p + 1 < e.length && (d = e.charCodeAt(p + 1), !(d !== Dt && d !== Kt && d !== Ut)); p++)
             ;
           if (s)
-            s.nodes.push(f2()), r = [], t = false;
+            s.nodes.push(f()), r = [], t = false;
           else {
-            let u2 = r.splice(0), v2 = f2(u2), h3 = hn([v2]);
-            r.push(h3), s = h3, r = [], t = false;
+            let u = r.splice(0), v = f(u), h = hn([v]);
+            r.push(h), s = h, r = [], t = false;
           }
           break;
         }
@@ -611,129 +621,129 @@
         case Nr:
         case Ut:
         case Er: {
-          l2.length > 0 && (c2(be(l2)), l2 = "");
-          let u2 = p2, v2 = p2 + 1;
-          for (;v2 < e.length && (d2 = e.charCodeAt(v2), !(d2 !== $r && d2 !== Dt && d2 !== Kt && d2 !== Nr && d2 !== Ut && d2 !== Er)); v2++)
+          l.length > 0 && (c(be(l)), l = "");
+          let u = p, v = p + 1;
+          for (;v < e.length && (d = e.charCodeAt(v), !(d !== $r && d !== Dt && d !== Kt && d !== Nr && d !== Ut && d !== Er)); v++)
             ;
-          p2 = v2 - 1;
-          let h3 = e.slice(u2, v2).trim();
-          if (h3 === "" && (r.length === 0 || v2 >= e.length || e.charCodeAt(v2) === Vr))
+          p = v - 1;
+          let h = e.slice(u, v).trim();
+          if (h === "" && (r.length === 0 || v >= e.length || e.charCodeAt(v) === Vr))
             break;
-          r.push(mn(h3 === "" ? " " : h3)), t = true;
+          r.push(mn(h === "" ? " " : h)), t = true;
           break;
         }
         case Tr: {
-          let u2 = gn(l2, []);
-          if (l2 = "", u2.value !== ":not" && u2.value !== ":where" && u2.value !== ":has" && u2.value !== ":is") {
-            let v2 = p2 + 1, h3 = 0;
-            for (let S2 = p2 + 1;S2 < e.length; S2++) {
-              if (d2 = e.charCodeAt(S2), d2 === Tr) {
-                h3++;
+          let u = gn(l, []);
+          if (l = "", u.value !== ":not" && u.value !== ":where" && u.value !== ":has" && u.value !== ":is") {
+            let v = p + 1, h = 0;
+            for (let S = p + 1;S < e.length; S++) {
+              if (d = e.charCodeAt(S), d === Tr) {
+                h++;
                 continue;
               }
-              if (d2 === Sr) {
-                if (h3 === 0) {
-                  p2 = S2;
+              if (d === Sr) {
+                if (h === 0) {
+                  p = S;
                   break;
                 }
-                h3--;
+                h--;
               }
             }
-            let k = p2, y2 = e.slice(v2, k);
-            if (u2.value === ":nth-child" || u2.value === ":nth-last-child") {
-              let S2 = y2.indexOf("of ");
-              if (S2 !== -1) {
-                u2.nodes.push(Ar(y2.slice(0, S2 + 3)), ...fe(y2.slice(S2 + 3))), l2 = "", p2 = k, c2(u2);
+            let k = p, y = e.slice(v, k);
+            if (u.value === ":nth-child" || u.value === ":nth-last-child") {
+              let S = y.indexOf("of ");
+              if (S !== -1) {
+                u.nodes.push(Ar(y.slice(0, S + 3)), ...fe(y.slice(S + 3))), l = "", p = k, c(u);
                 break;
               }
             }
-            u2.nodes.push(Ar(y2)), l2 = "", p2 = k, c2(u2);
+            u.nodes.push(Ar(y)), l = "", p = k, c(u);
             break;
           }
-          c2(u2), n.push({ target: r, currentList: s, containsCombinator: t }), r = u2.nodes, t = false, s = null;
+          c(u), n.push({ target: r, currentList: s, containsCombinator: t }), r = u.nodes, t = false, s = null;
           break;
         }
         case Sr: {
-          l2.length > 0 && (c2(be(l2)), l2 = ""), s ? s.nodes.push(f2()) : t && r.splice(0, r.length, It(r.splice(0)));
-          let u2 = n.pop();
-          r = u2?.target ?? i, s = u2?.currentList ?? null, t = u2?.containsCombinator ?? false;
+          l.length > 0 && (c(be(l)), l = ""), s ? s.nodes.push(f()) : t && r.splice(0, r.length, It(r.splice(0)));
+          let u = n.pop();
+          r = u?.target ?? i, s = u?.currentList ?? null, t = u?.containsCombinator ?? false;
           break;
         }
         case Rr:
         case Lt:
         case Pr: {
-          if (m === Lt && l2 === ":") {
-            l2 += e[p2];
+          if (m === Lt && l === ":") {
+            l += e[p];
             break;
           }
-          l2.length > 0 && c2(be(l2)), l2 = e[p2];
+          l.length > 0 && c(be(l)), l = e[p];
           break;
         }
         case zt: {
-          l2.length > 0 && (c2(be(l2)), l2 = "");
-          let u2 = p2, v2 = 0;
-          for (let h3 = p2 + 1;h3 < e.length; h3++) {
-            if (d2 = e.charCodeAt(h3), d2 === zt) {
-              v2++;
+          l.length > 0 && (c(be(l)), l = "");
+          let u = p, v = 0;
+          for (let h = p + 1;h < e.length; h++) {
+            if (d = e.charCodeAt(h), d === zt) {
+              v++;
               continue;
             }
-            if (d2 === vn) {
-              if (v2 === 0) {
-                p2 = h3;
+            if (d === vn) {
+              if (v === 0) {
+                p = h;
                 break;
               }
-              v2--;
+              v--;
             }
           }
-          c2(be(e.slice(u2, p2 + 1)));
+          c(be(e.slice(u, p + 1)));
           break;
         }
         case kn:
         case wn: {
-          let u2 = p2;
-          for (let v2 = p2 + 1;v2 < e.length; v2++)
-            if (d2 = e.charCodeAt(v2), d2 === Cr)
-              v2 += 1;
-            else if (d2 === m) {
-              p2 = v2;
+          let u = p;
+          for (let v = p + 1;v < e.length; v++)
+            if (d = e.charCodeAt(v), d === Cr)
+              v += 1;
+            else if (d === m) {
+              p = v;
               break;
             }
-          l2 += e.slice(u2, p2 + 1);
+          l += e.slice(u, p + 1);
           break;
         }
         case Or:
         case jt: {
-          l2.length > 0 && (c2(be(l2)), l2 = ""), c2(be(e[p2]));
+          l.length > 0 && (c(be(l)), l = ""), c(be(e[p]));
           break;
         }
         case Cr: {
-          l2 += e[p2] + e[p2 + 1], p2 += 1;
+          l += e[p] + e[p + 1], p += 1;
           break;
         }
         default:
-          l2 += e[p2];
+          l += e[p];
       }
     }
-    return l2.length > 0 && c2(be(l2)), s ? s.nodes.push(f2()) : t && r.splice(0, r.length, It(r.splice(0))), i;
+    return l.length > 0 && c(be(l)), s ? s.nodes.push(f()) : t && r.splice(0, r.length, It(r.splice(0))), i;
   }
   function ft(e) {
     let i = [0];
     for (let n = 0;n < e.length; n++)
       e.charCodeAt(n) === 10 && i.push(n + 1);
     function r(n) {
-      let s = 0, l2 = i.length;
-      for (;l2 > 0; ) {
-        let f2 = (l2 | 0) >> 1, c2 = s + f2;
-        i[c2] <= n ? (s = c2 + 1, l2 = l2 - f2 - 1) : l2 = f2;
+      let s = 0, l = i.length;
+      for (;l > 0; ) {
+        let f = (l | 0) >> 1, c = s + f;
+        i[c] <= n ? (s = c + 1, l = l - f - 1) : l = f;
       }
       s -= 1;
-      let d2 = n - i[s];
-      return { line: s + 1, column: d2 };
+      let d = n - i[s];
+      return { line: s + 1, column: d };
     }
     function t({ line: n, column: s }) {
       n -= 1, n = Math.min(Math.max(n, 0), i.length - 1);
-      let l2 = i[n], d2 = i[n + 1] ?? l2;
-      return Math.min(Math.max(l2 + s, 0), d2);
+      let l = i[n], d = i[n + 1] ?? l;
+      return Math.min(Math.max(l + s, 0), d);
     }
     return { find: r, findOffset: t };
   }
@@ -767,157 +777,157 @@
       super(i), this.name = "CssSyntaxError", this.loc = r, Error.captureStackTrace && Error.captureStackTrace(this, e);
     }
   };
-  function Te(e2, i) {
-    let r = i?.from ? { file: i.from, code: e2 } : null;
-    e2[0] === "\uFEFF" && (e2 = " " + e2.slice(1));
-    let t = [], n = [], s = [], l2 = null, d2 = null, f2 = "", c2 = "", p2 = 0, m;
-    for (let u2 = 0;u2 < e2.length; u2++) {
-      let v2 = e2.charCodeAt(u2);
-      if (!(v2 === mt && (m = e2.charCodeAt(u2 + 1), m === me)))
-        if (v2 === He)
-          f2 === "" && (p2 = u2), f2 += e2.slice(u2, u2 + 2), u2 += 1;
-        else if (v2 === ct && e2.charCodeAt(u2 + 1) === pt) {
-          let h3 = u2;
-          for (let y2 = u2 + 2;y2 < e2.length; y2++)
-            if (m = e2.charCodeAt(y2), m === He)
-              y2 += 1;
-            else if (m === pt && e2.charCodeAt(y2 + 1) === ct) {
-              u2 = y2 + 1;
+  function Te(e, i) {
+    let r = i?.from ? { file: i.from, code: e } : null;
+    e[0] === "\uFEFF" && (e = " " + e.slice(1));
+    let t = [], n = [], s = [], l = null, d = null, f = "", c = "", p = 0, m;
+    for (let u = 0;u < e.length; u++) {
+      let v = e.charCodeAt(u);
+      if (!(v === mt && (m = e.charCodeAt(u + 1), m === me)))
+        if (v === He)
+          f === "" && (p = u), f += e.slice(u, u + 2), u += 1;
+        else if (v === ct && e.charCodeAt(u + 1) === pt) {
+          let h = u;
+          for (let y = u + 2;y < e.length; y++)
+            if (m = e.charCodeAt(y), m === He)
+              y += 1;
+            else if (m === pt && e.charCodeAt(y + 1) === ct) {
+              u = y + 1;
               break;
             }
-          let k = e2.slice(h3, u2 + 1);
+          let k = e.slice(h, u + 1);
           if (k.charCodeAt(2) === An) {
-            let y2 = gt(k.slice(2, -2));
-            n.push(y2), r && (y2.src = [r, h3, u2 + 1], y2.dst = [r, h3, u2 + 1]);
+            let y = gt(k.slice(2, -2));
+            n.push(y), r && (y.src = [r, h, u + 1], y.dst = [r, h, u + 1]);
           }
-        } else if (v2 === Ir || v2 === _r) {
-          let h3 = Lr(e2, u2, v2, r);
-          f2 += e2.slice(u2, h3 + 1), u2 = h3;
+        } else if (v === Ir || v === _r) {
+          let h = Lr(e, u, v, r);
+          f += e.slice(u, h + 1), u = h;
         } else {
-          if ((v2 === Ze || v2 === me || v2 === Je) && (m = e2.charCodeAt(u2 + 1)) && (m === Ze || m === me || m === Je || m === mt && (m = e2.charCodeAt(u2 + 2)) && m == me))
+          if ((v === Ze || v === me || v === Je) && (m = e.charCodeAt(u + 1)) && (m === Ze || m === me || m === Je || m === mt && (m = e.charCodeAt(u + 2)) && m == me))
             continue;
-          if (v2 === me) {
-            if (f2.length === 0)
+          if (v === me) {
+            if (f.length === 0)
               continue;
-            m = f2.charCodeAt(f2.length - 1), m !== Ze && m !== me && m !== Je && (f2 += " ");
-          } else if (v2 === Ur && e2.charCodeAt(u2 + 1) === Ur && f2.length === 0) {
-            let h3 = "", k = u2, y2 = -1;
-            for (let x2 = u2 + 2;x2 < e2.length; x2++)
-              if (m = e2.charCodeAt(x2), m === He)
-                x2 += 1;
+            m = f.charCodeAt(f.length - 1), m !== Ze && m !== me && m !== Je && (f += " ");
+          } else if (v === Ur && e.charCodeAt(u + 1) === Ur && f.length === 0) {
+            let h = "", k = u, y = -1;
+            for (let x = u + 2;x < e.length; x++)
+              if (m = e.charCodeAt(x), m === He)
+                x += 1;
               else if (m === Ir || m === _r)
-                x2 = Lr(e2, x2, m, r);
-              else if (m === ct && e2.charCodeAt(x2 + 1) === pt) {
-                for (let b2 = x2 + 2;b2 < e2.length; b2++)
-                  if (m = e2.charCodeAt(b2), m === He)
-                    b2 += 1;
-                  else if (m === pt && e2.charCodeAt(b2 + 1) === ct) {
-                    x2 = b2 + 1;
+                x = Lr(e, x, m, r);
+              else if (m === ct && e.charCodeAt(x + 1) === pt) {
+                for (let b = x + 2;b < e.length; b++)
+                  if (m = e.charCodeAt(b), m === He)
+                    b += 1;
+                  else if (m === pt && e.charCodeAt(b + 1) === ct) {
+                    x = b + 1;
                     break;
                   }
-              } else if (y2 === -1 && m === bn)
-                y2 = f2.length + x2 - k;
-              else if (m === dt && h3.length === 0) {
-                f2 += e2.slice(k, x2), u2 = x2;
+              } else if (y === -1 && m === bn)
+                y = f.length + x - k;
+              else if (m === dt && h.length === 0) {
+                f += e.slice(k, x), u = x;
                 break;
               } else if (m === Yt)
-                h3 += ")";
+                h += ")";
               else if (m === yn)
-                h3 += "]";
+                h += "]";
               else if (m === Dr)
-                h3 += "}";
-              else if ((m === Ft || e2.length - 1 === x2) && h3.length === 0) {
-                u2 = x2 - 1, f2 += e2.slice(k, x2);
+                h += "}";
+              else if ((m === Ft || e.length - 1 === x) && h.length === 0) {
+                u = x - 1, f += e.slice(k, x);
                 break;
               } else
-                (m === Kr || m === xn || m === Ft) && h3.length > 0 && e2[x2] === h3[h3.length - 1] && (h3 = h3.slice(0, -1));
-            let S2 = Bt(f2, y2);
-            if (!S2)
-              throw new ge2("Invalid custom property, expected a value", r ? [r, k, u2] : null);
-            r && (S2.src = [r, k, u2], S2.dst = [r, k, u2]), l2 ? l2.nodes.push(S2) : t.push(S2), f2 = "";
-          } else if (v2 === dt && f2.charCodeAt(0) === Wt)
-            d2 = Qe(f2), r && (d2.src = [r, p2, u2], d2.dst = [r, p2, u2]), l2 ? l2.nodes.push(d2) : t.push(d2), f2 = "", d2 = null;
-          else if (v2 === dt && c2[c2.length - 1] !== ")") {
-            let h3 = Bt(f2);
-            if (!h3) {
-              if (f2.length === 0)
+                (m === Kr || m === xn || m === Ft) && h.length > 0 && e[x] === h[h.length - 1] && (h = h.slice(0, -1));
+            let S = Bt(f, y);
+            if (!S)
+              throw new ge2("Invalid custom property, expected a value", r ? [r, k, u] : null);
+            r && (S.src = [r, k, u], S.dst = [r, k, u]), l ? l.nodes.push(S) : t.push(S), f = "";
+          } else if (v === dt && f.charCodeAt(0) === Wt)
+            d = Qe(f), r && (d.src = [r, p, u], d.dst = [r, p, u]), l ? l.nodes.push(d) : t.push(d), f = "", d = null;
+          else if (v === dt && c[c.length - 1] !== ")") {
+            let h = Bt(f);
+            if (!h) {
+              if (f.length === 0)
                 continue;
-              throw new ge2(`Invalid declaration: \`${f2.trim()}\``, r ? [r, p2, u2] : null);
+              throw new ge2(`Invalid declaration: \`${f.trim()}\``, r ? [r, p, u] : null);
             }
-            r && (h3.src = [r, p2, u2], h3.dst = [r, p2, u2]), l2 ? l2.nodes.push(h3) : t.push(h3), f2 = "";
-          } else if (v2 === Dr && c2[c2.length - 1] !== ")")
-            c2 += "}", d2 = Z2(f2.trim()), r && (d2.src = [r, p2, u2], d2.dst = [r, p2, u2]), l2 && l2.nodes.push(d2), s.push(l2), l2 = d2, f2 = "", d2 = null;
-          else if (v2 === Ft && c2[c2.length - 1] !== ")") {
-            if (c2 === "")
-              throw new ge2("Missing opening {", r ? [r, u2, u2] : null);
-            if (c2 = c2.slice(0, -1), f2.length > 0)
-              if (f2.charCodeAt(0) === Wt)
-                d2 = Qe(f2), r && (d2.src = [r, p2, u2], d2.dst = [r, p2, u2]), l2 ? l2.nodes.push(d2) : t.push(d2), f2 = "", d2 = null;
+            r && (h.src = [r, p, u], h.dst = [r, p, u]), l ? l.nodes.push(h) : t.push(h), f = "";
+          } else if (v === Dr && c[c.length - 1] !== ")")
+            c += "}", d = Z2(f.trim()), r && (d.src = [r, p, u], d.dst = [r, p, u]), l && l.nodes.push(d), s.push(l), l = d, f = "", d = null;
+          else if (v === Ft && c[c.length - 1] !== ")") {
+            if (c === "")
+              throw new ge2("Missing opening {", r ? [r, u, u] : null);
+            if (c = c.slice(0, -1), f.length > 0)
+              if (f.charCodeAt(0) === Wt)
+                d = Qe(f), r && (d.src = [r, p, u], d.dst = [r, p, u]), l ? l.nodes.push(d) : t.push(d), f = "", d = null;
               else {
-                let k = f2.indexOf(":");
-                if (l2) {
-                  let y2 = Bt(f2, k);
-                  if (!y2)
-                    throw new ge2(`Invalid declaration: \`${f2.trim()}\``, r ? [r, p2, u2] : null);
-                  r && (y2.src = [r, p2, u2], y2.dst = [r, p2, u2]), l2.nodes.push(y2);
+                let k = f.indexOf(":");
+                if (l) {
+                  let y = Bt(f, k);
+                  if (!y)
+                    throw new ge2(`Invalid declaration: \`${f.trim()}\``, r ? [r, p, u] : null);
+                  r && (y.src = [r, p, u], y.dst = [r, p, u]), l.nodes.push(y);
                 }
               }
-            let h3 = s.pop() ?? null;
-            h3 === null && l2 && t.push(l2), l2 = h3, f2 = "", d2 = null;
-          } else if (v2 === Yt)
-            c2 += ")", f2 += "(";
-          else if (v2 === Kr) {
-            if (c2[c2.length - 1] !== ")")
-              throw new ge2("Missing opening (", r ? [r, u2, u2] : null);
-            c2 = c2.slice(0, -1), f2 += ")";
+            let h = s.pop() ?? null;
+            h === null && l && t.push(l), l = h, f = "", d = null;
+          } else if (v === Yt)
+            c += ")", f += "(";
+          else if (v === Kr) {
+            if (c[c.length - 1] !== ")")
+              throw new ge2("Missing opening (", r ? [r, u, u] : null);
+            c = c.slice(0, -1), f += ")";
           } else {
-            if (f2.length === 0 && (v2 === Ze || v2 === me || v2 === Je))
+            if (f.length === 0 && (v === Ze || v === me || v === Je))
               continue;
-            f2 === "" && (p2 = u2), f2 += String.fromCharCode(v2);
+            f === "" && (p = u), f += String.fromCharCode(v);
           }
         }
     }
-    if (f2.charCodeAt(0) === Wt) {
-      let u2 = Qe(f2);
-      r && (u2.src = [r, p2, e2.length], u2.dst = [r, p2, e2.length]), t.push(u2);
+    if (f.charCodeAt(0) === Wt) {
+      let u = Qe(f);
+      r && (u.src = [r, p, e.length], u.dst = [r, p, e.length]), t.push(u);
     }
-    if (c2.length > 0 && l2) {
-      if (l2.kind === "rule")
-        throw new ge2(`Missing closing } at ${l2.selector}`, l2.src ? [l2.src[0], l2.src[1], l2.src[1]] : null);
-      if (l2.kind === "at-rule")
-        throw new ge2(`Missing closing } at ${l2.name} ${l2.params}`, l2.src ? [l2.src[0], l2.src[1], l2.src[1]] : null);
+    if (c.length > 0 && l) {
+      if (l.kind === "rule")
+        throw new ge2(`Missing closing } at ${l.selector}`, l.src ? [l.src[0], l.src[1], l.src[1]] : null);
+      if (l.kind === "at-rule")
+        throw new ge2(`Missing closing } at ${l.name} ${l.params}`, l.src ? [l.src[0], l.src[1], l.src[1]] : null);
     }
     return n.length > 0 ? n.concat(t) : t;
   }
-  function Qe(e2, i = []) {
-    let r = e2, t = "";
-    for (let n = 5;n < e2.length; n++) {
-      let s = e2.charCodeAt(n);
+  function Qe(e, i = []) {
+    let r = e, t = "";
+    for (let n = 5;n < e.length; n++) {
+      let s = e.charCodeAt(n);
       if (s === Ze || s === Je || s === Yt) {
-        r = e2.slice(0, n), t = e2.slice(n);
+        r = e.slice(0, n), t = e.slice(n);
         break;
       }
     }
     return B2(r.trim(), t.trim(), i);
   }
-  function Bt(e2, i = e2.indexOf(":")) {
+  function Bt(e, i = e.indexOf(":")) {
     if (i === -1)
       return null;
-    let r = e2.indexOf("!important", i + 1);
-    return a2(e2.slice(0, i).trim(), e2.slice(i + 1, r === -1 ? e2.length : r).trim(), r !== -1);
+    let r = e.indexOf("!important", i + 1);
+    return a2(e.slice(0, i).trim(), e.slice(i + 1, r === -1 ? e.length : r).trim(), r !== -1);
   }
-  function Lr(e2, i, r, t = null) {
+  function Lr(e, i, r, t = null) {
     let n;
-    for (let s = i + 1;s < e2.length; s++)
-      if (n = e2.charCodeAt(s), n === He)
+    for (let s = i + 1;s < e.length; s++)
+      if (n = e.charCodeAt(s), n === He)
         s += 1;
       else {
         if (n === r)
           return s;
-        if (n === dt && (e2.charCodeAt(s + 1) === me || e2.charCodeAt(s + 1) === mt && e2.charCodeAt(s + 2) === me))
-          throw new ge2(`Unterminated string: ${e2.slice(i, s + 1) + String.fromCharCode(r)}`, t ? [t, i, s + 1] : null);
-        if (n === me || n === mt && e2.charCodeAt(s + 1) === me)
-          throw new ge2(`Unterminated string: ${e2.slice(i, s) + String.fromCharCode(r)}`, t ? [t, i, s + 1] : null);
+        if (n === dt && (e.charCodeAt(s + 1) === me || e.charCodeAt(s + 1) === mt && e.charCodeAt(s + 2) === me))
+          throw new ge2(`Unterminated string: ${e.slice(i, s + 1) + String.fromCharCode(r)}`, t ? [t, i, s + 1] : null);
+        if (n === me || n === mt && e.charCodeAt(s + 1) === me)
+          throw new ge2(`Unterminated string: ${e.slice(i, s) + String.fromCharCode(r)}`, t ? [t, i, s + 1] : null);
       }
     return i;
   }
@@ -932,18 +942,18 @@
       return t === undefined && (t = this.factory(r, this), this.set(r, t)), t;
     }
   };
-  function ne2(e2) {
-    return { kind: "word", value: e2 };
+  function ne2(e) {
+    return { kind: "word", value: e };
   }
-  function Cn(e2, i) {
-    return { kind: "function", value: e2, nodes: i };
+  function Cn(e, i) {
+    return { kind: "function", value: e, nodes: i };
   }
-  function Sn(e2) {
-    return { kind: "separator", value: e2 };
+  function Sn(e) {
+    return { kind: "separator", value: e };
   }
-  function F2(e2) {
+  function F2(e) {
     let i = "";
-    for (let r of e2)
+    for (let r of e)
       switch (r.kind) {
         case "word":
         case "separator": {
@@ -969,25 +979,25 @@
   var En = 47;
   var Gr = 32;
   var qr = 9;
-  function M2(e2) {
-    e2 = e2.replaceAll(`\r
+  function M2(e) {
+    e = e.replaceAll(`\r
 `, `
 `);
     let i = [], r = [], t = null, n = "", s;
-    for (let l2 = 0;l2 < e2.length; l2++) {
-      let d2 = e2.charCodeAt(l2);
-      switch (d2) {
+    for (let l = 0;l < e.length; l++) {
+      let d = e.charCodeAt(l);
+      switch (d) {
         case zr: {
-          n += e2[l2] + e2[l2 + 1], l2++;
+          n += e[l] + e[l + 1], l++;
           break;
         }
         case En: {
           if (n.length > 0) {
-            let c2 = ne2(n);
-            t ? t.nodes.push(c2) : i.push(c2), n = "";
+            let c = ne2(n);
+            t ? t.nodes.push(c) : i.push(c), n = "";
           }
-          let f2 = ne2(e2[l2]);
-          t ? t.nodes.push(f2) : i.push(f2);
+          let f = ne2(e[l]);
+          t ? t.nodes.push(f) : i.push(f);
           break;
         }
         case jr:
@@ -1002,116 +1012,116 @@
             let m = ne2(n);
             t ? t.nodes.push(m) : i.push(m), n = "";
           }
-          let f2 = l2, c2 = l2 + 1;
-          for (;c2 < e2.length && (s = e2.charCodeAt(c2), !(s !== jr && s !== Mr && s !== Fr && s !== Wr && s !== Br && s !== Yr && s !== Gr && s !== qr)); c2++)
+          let f = l, c = l + 1;
+          for (;c < e.length && (s = e.charCodeAt(c), !(s !== jr && s !== Mr && s !== Fr && s !== Wr && s !== Br && s !== Yr && s !== Gr && s !== qr)); c++)
             ;
-          l2 = c2 - 1;
-          let p2 = Sn(e2.slice(f2, c2));
-          t ? t.nodes.push(p2) : i.push(p2);
+          l = c - 1;
+          let p = Sn(e.slice(f, c));
+          t ? t.nodes.push(p) : i.push(p);
           break;
         }
         case Nn:
         case $n: {
-          let f2 = l2;
-          for (let c2 = l2 + 1;c2 < e2.length; c2++)
-            if (s = e2.charCodeAt(c2), s === zr)
-              c2 += 1;
-            else if (s === d2) {
-              l2 = c2;
+          let f = l;
+          for (let c = l + 1;c < e.length; c++)
+            if (s = e.charCodeAt(c), s === zr)
+              c += 1;
+            else if (s === d) {
+              l = c;
               break;
             }
-          n += e2.slice(f2, l2 + 1);
+          n += e.slice(f, l + 1);
           break;
         }
         case Tn: {
-          let f2 = Cn(n, []);
-          n = "", t ? t.nodes.push(f2) : i.push(f2), r.push(f2), t = f2;
+          let f = Cn(n, []);
+          n = "", t ? t.nodes.push(f) : i.push(f), r.push(f), t = f;
           break;
         }
         case Vn: {
-          let f2 = r.pop();
+          let f = r.pop();
           if (n.length > 0) {
-            let c2 = ne2(n);
-            f2?.nodes.push(c2), n = "";
+            let c = ne2(n);
+            f?.nodes.push(c), n = "";
           }
           r.length > 0 ? t = r[r.length - 1] : t = null;
           break;
         }
         default:
-          n += String.fromCharCode(d2);
+          n += String.fromCharCode(d);
       }
     }
     return n.length > 0 && i.push(ne2(n)), i;
   }
-  var qt = ((l2) => (l2[l2.Continue = 0] = "Continue", l2[l2.Skip = 1] = "Skip", l2[l2.Stop = 2] = "Stop", l2[l2.Replace = 3] = "Replace", l2[l2.ReplaceSkip = 4] = "ReplaceSkip", l2[l2.ReplaceStop = 5] = "ReplaceStop", l2))(qt || {});
-  var V2 = { Continue: { kind: 0 }, Skip: { kind: 1 }, Stop: { kind: 2 }, Replace: (e2) => ({ kind: 3, nodes: Array.isArray(e2) ? e2 : [e2] }), ReplaceSkip: (e2) => ({ kind: 4, nodes: Array.isArray(e2) ? e2 : [e2] }), ReplaceStop: (e2) => ({ kind: 5, nodes: Array.isArray(e2) ? e2 : [e2] }) };
-  function P2(e2, i) {
-    typeof i == "function" ? Hr(e2, i) : Hr(e2, i.enter, i.exit);
+  var qt = ((l) => (l[l.Continue = 0] = "Continue", l[l.Skip = 1] = "Skip", l[l.Stop = 2] = "Stop", l[l.Replace = 3] = "Replace", l[l.ReplaceSkip = 4] = "ReplaceSkip", l[l.ReplaceStop = 5] = "ReplaceStop", l))(qt || {});
+  var V2 = { Continue: { kind: 0 }, Skip: { kind: 1 }, Stop: { kind: 2 }, Replace: (e) => ({ kind: 3, nodes: Array.isArray(e) ? e : [e] }), ReplaceSkip: (e) => ({ kind: 4, nodes: Array.isArray(e) ? e : [e] }), ReplaceStop: (e) => ({ kind: 5, nodes: Array.isArray(e) ? e : [e] }) };
+  function P2(e, i) {
+    typeof i == "function" ? Hr(e, i) : Hr(e, i.enter, i.exit);
   }
-  function Hr(e2, i = () => V2.Continue, r = () => V2.Continue) {
-    let t = { value: [e2, 0, null], prev: null }, n = { parent: null, depth: 0, index: 0, siblings: e2, path() {
-      let s = [], l2 = t;
-      for (;l2; ) {
-        let d2 = l2.value[2];
-        d2 && s.push(d2), l2 = l2.prev;
+  function Hr(e, i = () => V2.Continue, r = () => V2.Continue) {
+    let t = { value: [e, 0, null], prev: null }, n = { parent: null, depth: 0, index: 0, siblings: e, path() {
+      let s = [], l = t;
+      for (;l; ) {
+        let d = l.value[2];
+        d && s.push(d), l = l.prev;
       }
       return s.reverse(), s;
     } };
     for (;t !== null; ) {
-      let s = t.value, l2 = s[0], d2 = s[1], f2 = s[2];
-      if (d2 >= l2.length) {
+      let s = t.value, l = s[0], d = s[1], f = s[2];
+      if (d >= l.length) {
         t = t.prev, n.depth -= 1;
         continue;
       }
-      if (n.parent = f2, n.siblings = l2, d2 >= 0) {
-        n.index = d2;
-        let u2 = l2[d2], v2 = i(u2, n) ?? V2.Continue;
-        switch (v2.kind) {
+      if (n.parent = f, n.siblings = l, d >= 0) {
+        n.index = d;
+        let u = l[d], v = i(u, n) ?? V2.Continue;
+        switch (v.kind) {
           case 0: {
-            u2.nodes && u2.nodes.length > 0 && (n.depth += 1, t = { value: [u2.nodes, 0, u2], prev: t }), s[1] = ~d2;
+            u.nodes && u.nodes.length > 0 && (n.depth += 1, t = { value: [u.nodes, 0, u], prev: t }), s[1] = ~d;
             continue;
           }
           case 2:
             return;
           case 1: {
-            s[1] = ~d2;
+            s[1] = ~d;
             continue;
           }
           case 3: {
-            l2.splice(d2, 1, ...v2.nodes);
+            l.splice(d, 1, ...v.nodes);
             continue;
           }
           case 5: {
-            l2.splice(d2, 1, ...v2.nodes);
+            l.splice(d, 1, ...v.nodes);
             return;
           }
           case 4: {
-            l2.splice(d2, 1, ...v2.nodes), s[1] += v2.nodes.length;
+            l.splice(d, 1, ...v.nodes), s[1] += v.nodes.length;
             continue;
           }
           default:
-            throw new Error(`Invalid \`WalkAction.${qt[v2.kind] ?? `Unknown(${v2.kind})`}\` in enter.`);
+            throw new Error(`Invalid \`WalkAction.${qt[v.kind] ?? `Unknown(${v.kind})`}\` in enter.`);
         }
       }
-      let c2 = ~d2;
-      n.index = c2;
-      let p2 = l2[c2], m = r(p2, n) ?? V2.Continue;
+      let c = ~d;
+      n.index = c;
+      let p = l[c], m = r(p, n) ?? V2.Continue;
       switch (m.kind) {
         case 0:
-          s[1] = c2 + 1;
+          s[1] = c + 1;
           continue;
         case 2:
           return;
         case 3: {
-          l2.splice(c2, 1, ...m.nodes), s[1] = c2 + m.nodes.length;
+          l.splice(c, 1, ...m.nodes), s[1] = c + m.nodes.length;
           continue;
         }
         case 5: {
-          l2.splice(c2, 1, ...m.nodes);
+          l.splice(c, 1, ...m.nodes);
           return;
         }
         case 4: {
-          l2.splice(c2, 1, ...m.nodes), s[1] = c2 + m.nodes.length;
+          l.splice(c, 1, ...m.nodes), s[1] = c + m.nodes.length;
           continue;
         }
         default:
@@ -1119,351 +1129,351 @@
       }
     }
   }
-  var Rn = new U2((e2) => {
+  var Rn = new U2((e) => {
     let i = [];
-    return P2(M2(e2), (r) => {
+    return P2(M2(e), (r) => {
       if (!(r.kind !== "function" || r.value !== "var"))
         return P2(r.nodes, (t) => {
           t.kind !== "word" || t.value[0] !== "-" || t.value[1] !== "-" || i.push(t.value);
         }), V2.Skip;
     }), i;
   });
-  function ht(e2) {
-    return Rn.get(e2);
+  function ht(e) {
+    return Rn.get(e);
   }
   var Pn = 64;
   var On = 124;
-  function H2(e2, i = []) {
-    return { kind: "rule", selector: e2, nodes: i };
+  function H2(e, i = []) {
+    return { kind: "rule", selector: e, nodes: i };
   }
-  function B2(e2, i = "", r = []) {
-    return { kind: "at-rule", name: e2, params: i, nodes: r };
+  function B2(e, i = "", r = []) {
+    return { kind: "at-rule", name: e, params: i, nodes: r };
   }
-  function Z2(e2, i = []) {
-    return e2.charCodeAt(0) === Pn ? Qe(e2, i) : H2(e2, i);
+  function Z2(e, i = []) {
+    return e.charCodeAt(0) === Pn ? Qe(e, i) : H2(e, i);
   }
-  function a2(e2, i, r = false) {
-    return { kind: "declaration", property: e2, value: i, important: r };
+  function a2(e, i, r = false) {
+    return { kind: "declaration", property: e, value: i, important: r };
   }
-  function gt(e2) {
-    return { kind: "comment", value: e2 };
+  function gt(e) {
+    return { kind: "comment", value: e };
   }
-  function ve(e2, i) {
-    return { kind: "context", context: e2, nodes: i };
+  function ve(e, i) {
+    return { kind: "context", context: e, nodes: i };
   }
-  function Y2(e2) {
-    return { kind: "at-root", nodes: e2 };
+  function Y2(e) {
+    return { kind: "at-root", nodes: e };
   }
-  function re2(e2) {
-    switch (e2.kind) {
+  function re2(e) {
+    switch (e.kind) {
       case "rule":
-        return { kind: e2.kind, selector: e2.selector, nodes: e2.nodes.map(re2), src: e2.src, dst: e2.dst };
+        return { kind: e.kind, selector: e.selector, nodes: e.nodes.map(re2), src: e.src, dst: e.dst };
       case "at-rule":
-        return { kind: e2.kind, name: e2.name, params: e2.params, nodes: e2.nodes.map(re2), src: e2.src, dst: e2.dst };
+        return { kind: e.kind, name: e.name, params: e.params, nodes: e.nodes.map(re2), src: e.src, dst: e.dst };
       case "at-root":
-        return { kind: e2.kind, nodes: e2.nodes.map(re2), src: e2.src, dst: e2.dst };
+        return { kind: e.kind, nodes: e.nodes.map(re2), src: e.src, dst: e.dst };
       case "context":
-        return { kind: e2.kind, context: { ...e2.context }, nodes: e2.nodes.map(re2), src: e2.src, dst: e2.dst };
+        return { kind: e.kind, context: { ...e.context }, nodes: e.nodes.map(re2), src: e.src, dst: e.dst };
       case "declaration":
-        return { kind: e2.kind, property: e2.property, value: e2.value, important: e2.important, src: e2.src, dst: e2.dst };
+        return { kind: e.kind, property: e.property, value: e.value, important: e.important, src: e.src, dst: e.dst };
       case "comment":
-        return { kind: e2.kind, value: e2.value, src: e2.src, dst: e2.dst };
+        return { kind: e.kind, value: e.value, src: e.src, dst: e.dst };
       default:
-        throw new Error(`Unknown node kind: ${e2.kind}`);
+        throw new Error(`Unknown node kind: ${e.kind}`);
     }
   }
-  function et(e2) {
-    return { depth: e2.depth, index: e2.index, siblings: e2.siblings, get context() {
+  function et(e) {
+    return { depth: e.depth, index: e.index, siblings: e.siblings, get context() {
       let i = {};
-      for (let r of e2.path())
+      for (let r of e.path())
         r.kind === "context" && Object.assign(i, r.context);
       return Object.defineProperty(this, "context", { value: i }), i;
     }, get parent() {
       let i = this.path().pop() ?? null;
       return Object.defineProperty(this, "parent", { value: i }), i;
     }, path() {
-      return e2.path().filter((i) => i.kind !== "context");
+      return e.path().filter((i) => i.kind !== "context");
     } };
   }
-  function Ne(e2, i, r = 3) {
-    let t = [], n = new Set, s = new U2(() => new Set), l2 = new U2(() => new Set), d2 = new Set, f2 = new Set, c2 = [], p2 = [], m = new U2(() => new Set);
-    function u2(h3, k, y2 = {}, S2 = 0) {
-      if (h3.kind === "declaration") {
-        if (h3.property === "--tw-sort" || h3.value === undefined || h3.value === null)
+  function Ne(e, i, r = 3) {
+    let t = [], n = new Set, s = new U2(() => new Set), l = new U2(() => new Set), d = new Set, f = new Set, c = [], p = [], m = new U2(() => new Set);
+    function u(h, k, y = {}, S = 0) {
+      if (h.kind === "declaration") {
+        if (h.property === "--tw-sort" || h.value === undefined || h.value === null)
           return;
-        if (y2.theme && h3.property[0] === "-" && h3.property[1] === "-") {
-          if (h3.value === "initial") {
-            h3.value = undefined;
+        if (y.theme && h.property[0] === "-" && h.property[1] === "-") {
+          if (h.value === "initial") {
+            h.value = undefined;
             return;
           }
-          y2.keyframes || s.get(k).add(h3);
+          y.keyframes || s.get(k).add(h);
         }
-        if (h3.value.includes("var("))
-          if (y2.theme && h3.property[0] === "-" && h3.property[1] === "-")
-            for (let x2 of ht(h3.value))
-              m.get(x2).add(h3.property);
+        if (h.value.includes("var("))
+          if (y.theme && h.property[0] === "-" && h.property[1] === "-")
+            for (let x of ht(h.value))
+              m.get(x).add(h.property);
           else
-            i.trackUsedVariables(h3.value);
-        if (h3.property === "animation")
-          for (let x2 of Zr(h3.value))
-            f2.add(x2);
-        r & 2 && !y2.supportsColorMix && !y2.keyframes && h3.value.includes("color-mix(") && l2.get(k).add(h3), k.push(h3);
-      } else if (h3.kind === "rule") {
-        let x2 = [];
-        for (let b2 of h3.nodes)
-          u2(b2, x2, y2, S2 + 1);
-        x2.length > 0 && k.push({ ...h3, nodes: x2 });
-      } else if (h3.kind === "at-rule" && h3.name === "@property" && S2 === 0) {
-        if (n.has(h3.params))
+            i.trackUsedVariables(h.value);
+        if (h.property === "animation")
+          for (let x of Zr(h.value))
+            f.add(x);
+        r & 2 && !y.supportsColorMix && !y.keyframes && h.value.includes("color-mix(") && l.get(k).add(h), k.push(h);
+      } else if (h.kind === "rule") {
+        let x = [];
+        for (let b of h.nodes)
+          u(b, x, y, S + 1);
+        x.length > 0 && k.push({ ...h, nodes: x });
+      } else if (h.kind === "at-rule" && h.name === "@property" && S === 0) {
+        if (n.has(h.params))
           return;
         if (r & 1) {
-          let b2 = h3.params, I2 = null, D2 = false;
-          for (let L2 of h3.nodes)
-            L2.kind === "declaration" && (L2.property === "initial-value" ? I2 = L2.value : L2.property === "inherits" && (D2 = L2.value === "true"));
-          let O2 = a2(b2, I2 ?? "initial");
-          O2.src = h3.src, D2 ? c2.push(O2) : p2.push(O2);
+          let b = h.params, I = null, D = false;
+          for (let L of h.nodes)
+            L.kind === "declaration" && (L.property === "initial-value" ? I = L.value : L.property === "inherits" && (D = L.value === "true"));
+          let O = a2(b, I ?? "initial");
+          O.src = h.src, D ? c.push(O) : p.push(O);
         }
-        n.add(h3.params);
-        let x2 = { ...h3, nodes: [] };
-        for (let b2 of h3.nodes)
-          u2(b2, x2.nodes, y2, S2 + 1);
-        k.push(x2);
-      } else if (h3.kind === "at-rule") {
-        h3.name === "@keyframes" ? y2 = { ...y2, keyframes: true } : h3.name === "@supports" && h3.params.includes("color-mix(") && (y2 = { ...y2, supportsColorMix: true });
-        let x2 = { ...h3, nodes: [] };
-        for (let b2 of h3.nodes)
-          u2(b2, x2.nodes, y2, S2 + 1);
-        h3.name === "@keyframes" && y2.theme && d2.add(x2), (x2.nodes.length > 0 || x2.name === "@layer" || x2.name === "@charset" || x2.name === "@custom-media" || x2.name === "@namespace" || x2.name === "@import" || x2.name === "@apply") && k.push(x2);
-      } else if (h3.kind === "at-root")
-        for (let x2 of h3.nodes) {
-          let b2 = [];
-          u2(x2, b2, y2, 0);
-          for (let I2 of b2)
-            t.push(I2);
+        n.add(h.params);
+        let x = { ...h, nodes: [] };
+        for (let b of h.nodes)
+          u(b, x.nodes, y, S + 1);
+        k.push(x);
+      } else if (h.kind === "at-rule") {
+        h.name === "@keyframes" ? y = { ...y, keyframes: true } : h.name === "@supports" && h.params.includes("color-mix(") && (y = { ...y, supportsColorMix: true });
+        let x = { ...h, nodes: [] };
+        for (let b of h.nodes)
+          u(b, x.nodes, y, S + 1);
+        h.name === "@keyframes" && y.theme && d.add(x), (x.nodes.length > 0 || x.name === "@layer" || x.name === "@charset" || x.name === "@custom-media" || x.name === "@namespace" || x.name === "@import" || x.name === "@apply") && k.push(x);
+      } else if (h.kind === "at-root")
+        for (let x of h.nodes) {
+          let b = [];
+          u(x, b, y, 0);
+          for (let I of b)
+            t.push(I);
         }
-      else if (h3.kind === "context") {
-        if (h3.context.reference)
+      else if (h.kind === "context") {
+        if (h.context.reference)
           return;
-        for (let x2 of h3.nodes)
-          u2(x2, k, { ...y2, ...h3.context }, S2);
+        for (let x of h.nodes)
+          u(x, k, { ...y, ...h.context }, S);
       } else
-        h3.kind === "comment" && k.push(h3);
+        h.kind === "comment" && k.push(h);
     }
-    let v2 = [];
-    for (let h3 of e2)
-      u2(h3, v2, {}, 0);
+    let v = [];
+    for (let h of e)
+      u(h, v, {}, 0);
     e:
-      for (let [h3, k] of s)
-        for (let y2 of k) {
-          if (Jr(y2.property, i.theme, m)) {
-            if (y2.property.startsWith(i.theme.prefixKey("--animate-")))
-              for (let b2 of Zr(y2.value))
-                f2.add(b2);
+      for (let [h, k] of s)
+        for (let y of k) {
+          if (Jr(y.property, i.theme, m)) {
+            if (y.property.startsWith(i.theme.prefixKey("--animate-")))
+              for (let b of Zr(y.value))
+                f.add(b);
             continue;
           }
-          let x2 = h3.indexOf(y2);
-          if (h3.splice(x2, 1), h3.length === 0) {
-            let b2 = Kn(v2, (I2) => I2.kind === "rule" && I2.nodes === h3);
-            if (!b2 || b2.length === 0)
+          let x = h.indexOf(y);
+          if (h.splice(x, 1), h.length === 0) {
+            let b = Kn(v, (I) => I.kind === "rule" && I.nodes === h);
+            if (!b || b.length === 0)
               continue e;
-            b2.unshift({ kind: "at-root", nodes: v2 });
+            b.unshift({ kind: "at-root", nodes: v });
             do {
-              let I2 = b2.pop();
-              if (!I2)
+              let I = b.pop();
+              if (!I)
                 break;
-              let D2 = b2[b2.length - 1];
-              if (!D2 || D2.kind !== "at-root" && D2.kind !== "at-rule")
+              let D = b[b.length - 1];
+              if (!D || D.kind !== "at-root" && D.kind !== "at-rule")
                 break;
-              let O2 = D2.nodes.indexOf(I2);
-              if (O2 === -1)
+              let O = D.nodes.indexOf(I);
+              if (O === -1)
                 break;
-              D2.nodes.splice(O2, 1);
+              D.nodes.splice(O, 1);
             } while (true);
             continue e;
           }
         }
-    for (let h3 of d2)
-      if (!f2.has(h3.params)) {
-        let k = t.indexOf(h3);
+    for (let h of d)
+      if (!f.has(h.params)) {
+        let k = t.indexOf(h);
         t.splice(k, 1);
       }
-    if (v2 = v2.concat(t), r & 2)
-      for (let [h3, k] of l2)
-        for (let y2 of k) {
-          let S2 = h3.indexOf(y2);
-          if (S2 === -1 || y2.value == null)
+    if (v = v.concat(t), r & 2)
+      for (let [h, k] of l)
+        for (let y of k) {
+          let S = h.indexOf(y);
+          if (S === -1 || y.value == null)
             continue;
-          let x2 = M2(y2.value), b2 = false;
-          if (P2(x2, (O2) => {
-            if (O2.kind !== "function" || O2.value !== "color-mix")
+          let x = M2(y.value), b = false;
+          if (P2(x, (O) => {
+            if (O.kind !== "function" || O.value !== "color-mix")
               return;
-            let L2 = false, E2 = false;
-            if (P2(O2.nodes, (j2) => {
-              if (j2.kind == "word" && j2.value.toLowerCase() === "currentcolor") {
-                E2 = true, b2 = true;
+            let L = false, E = false;
+            if (P2(O.nodes, (j) => {
+              if (j.kind == "word" && j.value.toLowerCase() === "currentcolor") {
+                E = true, b = true;
                 return;
               }
-              let q2 = j2, G2 = null, ee2 = new Set;
+              let q = j, G = null, ee = new Set;
               do {
-                if (q2.kind !== "function" || q2.value !== "var")
+                if (q.kind !== "function" || q.value !== "var")
                   return;
-                let ie = q2.nodes[0];
+                let ie = q.nodes[0];
                 if (!ie || ie.kind !== "word")
                   return;
-                let o2 = ie.value;
-                if (ee2.has(o2)) {
-                  L2 = true;
+                let o = ie.value;
+                if (ee.has(o)) {
+                  L = true;
                   return;
                 }
-                if (ee2.add(o2), b2 = true, G2 = i.theme.resolveValue(null, [ie.value]), !G2) {
-                  L2 = true;
+                if (ee.add(o), b = true, G = i.theme.resolveValue(null, [ie.value]), !G) {
+                  L = true;
                   return;
                 }
-                if (G2.toLowerCase() === "currentcolor") {
-                  E2 = true;
+                if (G.toLowerCase() === "currentcolor") {
+                  E = true;
                   return;
                 }
-                G2.startsWith("var(") ? q2 = M2(G2)[0] : q2 = null;
-              } while (q2);
-              return V2.Replace({ kind: "word", value: G2 });
-            }), L2 || E2) {
-              let j2 = O2.nodes.findIndex((G2) => G2.kind === "separator" && G2.value.trim().includes(","));
-              if (j2 === -1)
+                G.startsWith("var(") ? q = M2(G)[0] : q = null;
+              } while (q);
+              return V2.Replace({ kind: "word", value: G });
+            }), L || E) {
+              let j = O.nodes.findIndex((G) => G.kind === "separator" && G.value.trim().includes(","));
+              if (j === -1)
                 return;
-              let q2 = O2.nodes.length > j2 ? O2.nodes[j2 + 1] : null;
-              return q2 ? V2.Replace(q2) : undefined;
-            } else if (b2) {
-              let j2 = O2.nodes[2];
-              j2.kind === "word" && (j2.value === "oklab" || j2.value === "oklch" || j2.value === "lab" || j2.value === "lch") && (j2.value = "srgb");
+              let q = O.nodes.length > j ? O.nodes[j + 1] : null;
+              return q ? V2.Replace(q) : undefined;
+            } else if (b) {
+              let j = O.nodes[2];
+              j.kind === "word" && (j.value === "oklab" || j.value === "oklch" || j.value === "lab" || j.value === "lch") && (j.value = "srgb");
             }
-          }), !b2)
+          }), !b)
             continue;
-          let I2 = { ...y2, value: F2(x2) }, D2 = Z2("@supports (color: color-mix(in lab, red, red))", [y2]);
-          D2.src = y2.src, h3.splice(S2, 1, I2, D2);
+          let I = { ...y, value: F2(x) }, D = Z2("@supports (color: color-mix(in lab, red, red))", [y]);
+          D.src = y.src, h.splice(S, 1, I, D);
         }
     if (r & 1) {
-      let h3 = [];
-      if (c2.length > 0) {
-        let k = Z2(":root, :host", c2);
-        k.src = c2[0].src, h3.push(k);
+      let h = [];
+      if (c.length > 0) {
+        let k = Z2(":root, :host", c);
+        k.src = c[0].src, h.push(k);
       }
-      if (p2.length > 0) {
-        let k = Z2("*, ::before, ::after, ::backdrop", p2);
-        k.src = p2[0].src, h3.push(k);
+      if (p.length > 0) {
+        let k = Z2("*, ::before, ::after, ::backdrop", p);
+        k.src = p[0].src, h.push(k);
       }
-      if (h3.length > 0) {
-        let k = v2.findIndex((x2) => !(x2.kind === "comment" || x2.kind === "at-rule" && (x2.name === "@charset" || x2.name === "@import"))), y2 = B2("@layer", "properties", []);
-        y2.src = h3[0].src, v2.splice(k < 0 ? v2.length : k, 0, y2);
-        let S2 = Z2("@layer properties", [B2("@supports", "((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b))))", h3)]);
-        S2.src = h3[0].src, S2.nodes[0].src = h3[0].src, v2.push(S2);
+      if (h.length > 0) {
+        let k = v.findIndex((x) => !(x.kind === "comment" || x.kind === "at-rule" && (x.name === "@charset" || x.name === "@import"))), y = B2("@layer", "properties", []);
+        y.src = h[0].src, v.splice(k < 0 ? v.length : k, 0, y);
+        let S = Z2("@layer properties", [B2("@supports", "((-webkit-hyphens: none) and (not (margin-trim: inline))) or ((-moz-orient: inline) and (not (color:rgb(from red r g b))))", h)]);
+        S.src = h[0].src, S.nodes[0].src = h[0].src, v.push(S);
       }
     }
-    return _n(v2);
+    return _n(v);
   }
-  function _n(e2) {
-    let i = new U2(fe), r = [], t = [], n = null, s = new Set, l2 = new Set, d2 = [], f2 = new Set;
-    P2(e2, { enter(p2) {
-      switch (p2.kind) {
+  function _n(e) {
+    let i = new U2(fe), r = [], t = [], n = null, s = new Set, l = new Set, d2 = [], f = new Set;
+    P2(e, { enter(p) {
+      switch (p.kind) {
         case "rule": {
           if (n = null, r.length === 0)
-            if (p2.selector.includes("&")) {
-              let m = fe(p2.selector), u2 = false;
-              P2(m, (v2) => {
-                v2.kind === "selector" && v2.value === "&" && (u2 = true, v2.value = ":scope");
-              }), u2 ? r.push([oe2(m), p2.src, p2.dst]) : r.push([p2.selector, p2.src, p2.dst]);
+            if (p.selector.includes("&")) {
+              let m = fe(p.selector), u = false;
+              P2(m, (v) => {
+                v.kind === "selector" && v.value === "&" && (u = true, v.value = ":scope");
+              }), u ? r.push([oe2(m), p.src, p.dst]) : r.push([p.selector, p.src, p.dst]);
             } else
-              r.push([p2.selector, p2.src, p2.dst]);
+              r.push([p.selector, p.src, p.dst]);
           else {
-            if (p2.selector === "&") {
-              f2.add(p2);
+            if (p.selector === "&") {
+              f.add(p);
               return;
             }
-            let m = r[r.length - 1][0], u2 = d(p2.selector, ",").map((v2) => {
-              if (!v2.includes("&")) {
-                let h3 = i.get(m);
-                return `${h3.length === 1 && h3[0].kind === "list" ? `:is(${m})` : m} ${v2}`;
+            let m = r[r.length - 1][0], u = d(p.selector, ",").map((v) => {
+              if (!v.includes("&")) {
+                let h = i.get(m);
+                return `${h.length === 1 && h[0].kind === "list" ? `:is(${m})` : m} ${v}`;
               }
               {
-                let h3 = fe(v2), k = false;
-                if (P2(h3, { enter(S2, x2) {
-                  if (S2.kind !== "selector" || S2.value !== "&" || (k = true, S2.value = `:is(${m})`, x2.parent === null))
+                let h = fe(v), k = false;
+                if (P2(h, { enter(S, x) {
+                  if (S.kind !== "selector" || S.value !== "&" || (k = true, S.value = `:is(${m})`, x.parent === null))
                     return;
-                  let b2 = i.get(m);
-                  if (!(b2.length === 1 && b2[0].kind === "list")) {
-                    if (x2.parent.kind === "complex")
-                      if (x2.index === 0) {
-                        S2.value = m;
+                  let b = i.get(m);
+                  if (!(b.length === 1 && b[0].kind === "list")) {
+                    if (x.parent.kind === "complex")
+                      if (x.index === 0) {
+                        S.value = m;
                         return;
-                      } else if (x2.index === x2.siblings.length - 1) {
-                        if (b2[0].kind === "complex")
+                      } else if (x.index === x.siblings.length - 1) {
+                        if (b[0].kind === "complex")
                           return;
-                        S2.value = m;
+                        S.value = m;
                         return;
                       } else {
-                        if (b2[0].kind === "complex")
+                        if (b[0].kind === "complex")
                           return;
-                        S2.value = m;
+                        S.value = m;
                         return;
                       }
-                    else if (x2.parent.kind === "compound") {
-                      if (b2[0].kind === "complex") {
-                        let I2 = x2.path(), D2 = I2[I2.length - 2];
-                        if (D2 && D2.kind === "complex" && D2.nodes[0] !== x2.parent)
+                    else if (x.parent.kind === "compound") {
+                      if (b[0].kind === "complex") {
+                        let I = x.path(), D = I[I.length - 2];
+                        if (D && D.kind === "complex" && D.nodes[0] !== x.parent)
                           return;
                       }
-                      if (x2.siblings.slice(x2.index + 1).some((I2) => qe(I2) || ut(I2)))
+                      if (x.siblings.slice(x.index + 1).some((I) => qe(I) || ut(I)))
                         return;
-                      if (x2.index === 0) {
-                        S2.value = m;
+                      if (x.index === 0) {
+                        S.value = m;
                         return;
-                      } else if (x2.index === x2.siblings.length - 1) {
-                        if (b2[0].kind === "complex" || qe(b2[0]) || ut(b2[0]))
+                      } else if (x.index === x.siblings.length - 1) {
+                        if (b[0].kind === "complex" || qe(b[0]) || ut(b[0]))
                           return;
-                        S2.value = m;
+                        S.value = m;
                         return;
                       } else {
-                        if (b2[0].kind === "complex" || qe(b2[0]) || ut(b2[0]))
+                        if (b[0].kind === "complex" || qe(b[0]) || ut(b[0]))
                           return;
-                        S2.value = m;
+                        S.value = m;
                         return;
                       }
-                    } else if (x2.parent.kind === "function") {
-                      S2.value = m;
+                    } else if (x.parent.kind === "function") {
+                      S.value = m;
                       return;
                     }
                   }
-                }, exit(S2, x2) {
-                  if (x2.index === 0 && x2.siblings.length > 1 && x2.parent?.kind === "compound" && qe(S2)) {
-                    let b2 = x2.siblings[1];
-                    return b2.kind === "selector" && b2.value.charCodeAt(0) === On ? undefined : V2.ReplaceSkip([]);
+                }, exit(S, x) {
+                  if (x.index === 0 && x.siblings.length > 1 && x.parent?.kind === "compound" && qe(S)) {
+                    let b = x.siblings[1];
+                    return b.kind === "selector" && b.value.charCodeAt(0) === On ? undefined : V2.ReplaceSkip([]);
                   }
                 } }), k)
-                  return oe2(h3);
-                let y2 = i.get(m);
-                return `${y2.length === 1 && y2[0].kind === "list" ? `:is(${m})` : m} ${v2}`;
+                  return oe2(h);
+                let y = i.get(m);
+                return `${y.length === 1 && y[0].kind === "list" ? `:is(${m})` : m} ${v}`;
               }
             }).join(", ");
-            r.push([u2, p2.src, p2.dst]);
+            r.push([u, p.src, p.dst]);
           }
-          if (p2.nodes.some((m) => m.kind === "declaration")) {
-            for (let m of p2.nodes)
-              c2(m);
+          if (p.nodes.some((m) => m.kind === "declaration")) {
+            for (let m of p.nodes)
+              c(m);
             return V2.Skip;
           }
           break;
         }
         case "at-rule": {
-          if (n = null, p2.nodes.length === 0 && !Dn.has(p2.name))
-            return c2(p2), f2.add(p2), V2.Skip;
-          if (In.has(p2.name))
-            t.push([p2.name, p2.params, p2.src, p2.dst]);
+          if (n = null, p.nodes.length === 0 && !Dn.has(p.name))
+            return c(p), f.add(p), V2.Skip;
+          if (In.has(p.name))
+            t.push([p.name, p.params, p.src, p.dst]);
           else
-            return c2(p2), f2.add(p2), V2.Skip;
+            return c(p), f.add(p), V2.Skip;
           break;
         }
         case "declaration":
         case "comment": {
-          c2(p2);
+          c(p);
           break;
         }
         case "context":
@@ -1472,9 +1482,9 @@
         default:
           break;
       }
-    }, exit(p2) {
-      if (!f2.delete(p2))
-        switch (p2.kind) {
+    }, exit(p) {
+      if (!f.delete(p))
+        switch (p.kind) {
           case "rule": {
             n = null, r.pop();
             break;
@@ -1492,169 +1502,169 @@
             break;
         }
     } });
-    for (let p2 of l2) {
+    for (let p of l) {
       let m = new Set;
-      for (let u2 = p2.length - 1;u2 >= 0; --u2) {
-        let v2 = p2[u2];
-        if (v2.kind !== "declaration")
+      for (let u = p.length - 1;u >= 0; --u) {
+        let v = p[u];
+        if (v.kind !== "declaration")
           continue;
-        let h3 = `${v2.property}\x00${v2.value}\x00${v2.important}`;
-        m.has(h3) ? p2.splice(u2, 1) : m.add(h3);
+        let h = `${v.property}\x00${v.value}\x00${v.important}`;
+        m.has(h) ? p.splice(u, 1) : m.add(h);
       }
     }
     return d2;
-    function c2(p2) {
+    function c(p) {
       if (n) {
-        p2.kind === "declaration" && (s.has(p2.property) ? l2.add(n) : s.add(p2.property)), n.push(p2);
+        p.kind === "declaration" && (s.has(p.property) ? l.add(n) : s.add(p.property)), n.push(p);
         return;
       }
       {
         if (r.length === 0 && t.length === 0) {
-          let h3 = d2, k = h3[h3.length - 1];
-          if (k && k.kind === "at-rule" && p2.kind === "at-rule" && k.nodes.length === 0 && p2.nodes.length === 0 && k.name === p2.name && k.params === p2.params)
+          let h = d2, k = h[h.length - 1];
+          if (k && k.kind === "at-rule" && p.kind === "at-rule" && k.nodes.length === 0 && p.nodes.length === 0 && k.name === p.name && k.params === p.params)
             return;
-          d2.push(p2);
+          d2.push(p);
           return;
         }
-        n = [p2], s.clear(), p2.kind === "declaration" && s.add(p2.property);
-        let m = null, u2 = d2, v2 = 0;
+        n = [p], s.clear(), p.kind === "declaration" && s.add(p.property);
+        let m = null, u = d2, v = 0;
         {
-          let h3 = u2[u2.length - 1];
-          if (h3 && h3.kind === "at-rule")
+          let h = u[u.length - 1];
+          if (h && h.kind === "at-rule")
             for (let k = 0;k < t.length; k++) {
-              let y2 = t[k];
-              if (!h3 || h3.kind !== "at-rule" || h3.name !== y2[0] || h3.params !== y2[1])
+              let y = t[k];
+              if (!h || h.kind !== "at-rule" || h.name !== y[0] || h.params !== y[1])
                 break;
-              v2++, u2 = h3.nodes, h3 = h3.nodes[h3.nodes.length - 1];
+              v++, u = h.nodes, h = h.nodes[h.nodes.length - 1];
             }
         }
         if (r.length > 0) {
-          let [h3, k, y2] = r[r.length - 1];
-          if (t.length - v2 <= 0) {
-            let S2 = u2[u2.length - 1];
-            if (S2 && S2.kind === "rule" && S2.selector === h3) {
-              S2.nodes.push(...n), n = S2.nodes, l2.add(n);
+          let [h, k, y] = r[r.length - 1];
+          if (t.length - v <= 0) {
+            let S = u[u.length - 1];
+            if (S && S.kind === "rule" && S.selector === h) {
+              S.nodes.push(...n), n = S.nodes, l.add(n);
               return;
             }
           }
-          m = Z2(h3, n), (k || y2) && Object.assign(m, { src: k, dst: y2 });
+          m = Z2(h, n), (k || y) && Object.assign(m, { src: k, dst: y });
         }
-        for (let h3 = t.length - 1;h3 >= v2; --h3) {
-          let [k, y2, S2, x2] = t[h3];
-          m = B2(k, y2, m ? [m] : n), (S2 || x2) && Object.assign(m, { src: S2, dst: x2 });
+        for (let h = t.length - 1;h >= v; --h) {
+          let [k, y, S, x] = t[h];
+          m = B2(k, y, m ? [m] : n), (S || x) && Object.assign(m, { src: S, dst: x });
         }
-        m ? u2.push(m) : u2.push(...n);
+        m ? u.push(m) : u.push(...n);
       }
     }
   }
   var In = new Set(["@container", "@layer", "@media", "@page", "@starting-style", "@supports", "@view-transition"]);
   var Dn = new Set(["@container", "@media", "@page", "@starting-style", "@supports", "@view-transition"]);
-  function se(e2, i) {
+  function se(e, i) {
     let r = 0, t = { file: null, code: "" };
-    function n(l2, d2 = 0) {
-      let f2 = "", c2 = "  ".repeat(d2);
-      if (l2.kind === "declaration") {
-        if (f2 += `${c2}${l2.property}: ${l2.value}${l2.important ? " !important" : ""};
+    function n(l, d = 0) {
+      let f = "", c = "  ".repeat(d);
+      if (l.kind === "declaration") {
+        if (f += `${c}${l.property}: ${l.value}${l.important ? " !important" : ""};
 `, i) {
-          r += c2.length;
-          let p2 = r;
-          r += l2.property.length, r += 2, r += l2.value?.length ?? 0, l2.important && (r += 11);
+          r += c.length;
+          let p = r;
+          r += l.property.length, r += 2, r += l.value?.length ?? 0, l.important && (r += 11);
           let m = r;
-          r += 2, l2.dst = [t, p2, m];
+          r += 2, l.dst = [t, p, m];
         }
-      } else if (l2.kind === "rule") {
-        if (f2 += `${c2}${l2.selector} {
+      } else if (l.kind === "rule") {
+        if (f += `${c}${l.selector} {
 `, i) {
-          r += c2.length;
-          let p2 = r;
-          r += l2.selector.length, r += 1;
+          r += c.length;
+          let p = r;
+          r += l.selector.length, r += 1;
           let m = r;
-          l2.dst = [t, p2, m], r += 2;
+          l.dst = [t, p, m], r += 2;
         }
-        for (let p2 of l2.nodes)
-          f2 += n(p2, d2 + 1);
-        f2 += `${c2}}
-`, i && (r += c2.length, r += 2);
-      } else if (l2.kind === "at-rule") {
-        if (l2.nodes.length === 0) {
-          let p2 = `${c2}${l2.name} ${l2.params};
+        for (let p of l.nodes)
+          f += n(p, d + 1);
+        f += `${c}}
+`, i && (r += c.length, r += 2);
+      } else if (l.kind === "at-rule") {
+        if (l.nodes.length === 0) {
+          let p = `${c}${l.name} ${l.params};
 `;
           if (i) {
-            r += c2.length;
+            r += c.length;
             let m = r;
-            r += l2.name.length, r += 1, r += l2.params.length;
-            let u2 = r;
-            r += 2, l2.dst = [t, m, u2];
+            r += l.name.length, r += 1, r += l.params.length;
+            let u = r;
+            r += 2, l.dst = [t, m, u];
           }
-          return p2;
+          return p;
         }
-        if (f2 += `${c2}${l2.name}${l2.params ? ` ${l2.params} ` : " "}{
+        if (f += `${c}${l.name}${l.params ? ` ${l.params} ` : " "}{
 `, i) {
-          r += c2.length;
-          let p2 = r;
-          r += l2.name.length, l2.params && (r += 1, r += l2.params.length), r += 1;
+          r += c.length;
+          let p = r;
+          r += l.name.length, l.params && (r += 1, r += l.params.length), r += 1;
           let m = r;
-          l2.dst = [t, p2, m], r += 2;
+          l.dst = [t, p, m], r += 2;
         }
-        for (let p2 of l2.nodes)
-          f2 += n(p2, d2 + 1);
-        f2 += `${c2}}
-`, i && (r += c2.length, r += 2);
-      } else if (l2.kind === "comment") {
-        if (f2 += `${c2}/*${l2.value}*/
+        for (let p of l.nodes)
+          f += n(p, d + 1);
+        f += `${c}}
+`, i && (r += c.length, r += 2);
+      } else if (l.kind === "comment") {
+        if (f += `${c}/*${l.value}*/
 `, i) {
-          r += c2.length;
-          let p2 = r;
-          r += 2 + l2.value.length + 2;
+          r += c.length;
+          let p = r;
+          r += 2 + l.value.length + 2;
           let m = r;
-          l2.dst = [t, p2, m], r += 1;
+          l.dst = [t, p, m], r += 1;
         }
-      } else if (l2.kind === "context" || l2.kind === "at-root")
+      } else if (l.kind === "context" || l.kind === "at-root")
         return "";
-      return f2;
+      return f;
     }
     let s = "";
-    for (let l2 of e2)
-      s += n(l2, 0);
+    for (let l of e)
+      s += n(l, 0);
     return t.code = s, s;
   }
-  function Kn(e2, i) {
+  function Kn(e, i) {
     let r = [];
-    return P2(e2, (t, n) => {
+    return P2(e, (t, n) => {
       if (i(t))
         return r = n.path(), r.push(t), V2.Stop;
     }), r;
   }
-  function Jr(e2, i, r, t = new Set) {
-    if (t.has(e2) || (t.add(e2), i.getOptions(e2) & 24))
+  function Jr(e, i, r, t = new Set) {
+    if (t.has(e) || (t.add(e), i.getOptions(e) & 24))
       return true;
     {
-      let s = r.get(e2) ?? [];
-      for (let l2 of s)
-        if (Jr(l2, i, r, t))
+      let s = r.get(e) ?? [];
+      for (let l of s)
+        if (Jr(l, i, r, t))
           return true;
     }
     return false;
   }
-  function Zr(e2) {
-    return e2.split(/[\s,]+/);
+  function Zr(e) {
+    return e.split(/[\s,]+/);
   }
-  function Ce(e2) {
-    if (e2.indexOf("(") === -1)
-      return De(e2);
-    let i = M2(e2);
-    return Zt(i), e2 = F2(i), e2 = ae(e2), e2;
+  function Ce(e) {
+    if (e.indexOf("(") === -1)
+      return De(e);
+    let i = M2(e);
+    return Zt(i), e = F2(i), e = ae(e), e;
   }
-  function De(e2, i = false) {
+  function De(e, i = false) {
     let r = "";
-    for (let t = 0;t < e2.length; t++) {
-      let n = e2[t];
-      n === "\\" && e2[t + 1] === "_" ? (r += "_", t += 1) : n === "_" && !i ? r += " " : r += n;
+    for (let t = 0;t < e.length; t++) {
+      let n = e[t];
+      n === "\\" && e[t + 1] === "_" ? (r += "_", t += 1) : n === "_" && !i ? r += " " : r += n;
     }
     return r;
   }
-  function Zt(e2) {
-    for (let i of e2)
+  function Zt(e) {
+    for (let i of e)
       switch (i.kind) {
         case "function": {
           if (i.value === "url" || i.value.endsWith("_url")) {
@@ -1684,14 +1694,14 @@
           Un(i);
       }
   }
-  function Un(e2) {
-    throw new Error(`Unexpected value: ${e2}`);
+  function Un(e) {
+    throw new Error(`Unexpected value: ${e}`);
   }
   var Jt = new Uint8Array(256);
-  function ye2(e2) {
-    let i = 0, r = e2.length;
+  function ye2(e) {
+    let i = 0, r = e.length;
     for (let t = 0;t < r; t++) {
-      let n = e2.charCodeAt(t);
+      let n = e.charCodeAt(t);
       switch (n) {
         case 92:
           t += 1;
@@ -1699,7 +1709,7 @@
         case 39:
         case 34:
           for (;++t < r; ) {
-            let s = e2.charCodeAt(t);
+            let s = e.charCodeAt(t);
             if (s === 92) {
               t += 1;
               continue;
@@ -1736,34 +1746,34 @@
   var Xr = 97;
   var ei = 122;
   var er = /^[a-zA-Z0-9_.%-]+$/;
-  function Ue(e2) {
-    switch (e2.kind) {
+  function Ue(e) {
+    switch (e.kind) {
       case "arbitrary":
-        return { kind: e2.kind, property: e2.property, value: e2.value, modifier: e2.modifier ? { kind: e2.modifier.kind, value: e2.modifier.value } : null, variants: e2.variants.map(Ke), important: e2.important, raw: e2.raw };
+        return { kind: e.kind, property: e.property, value: e.value, modifier: e.modifier ? { kind: e.modifier.kind, value: e.modifier.value } : null, variants: e.variants.map(Ke), important: e.important, raw: e.raw };
       case "static":
-        return { kind: e2.kind, root: e2.root, variants: e2.variants.map(Ke), important: e2.important, raw: e2.raw };
+        return { kind: e.kind, root: e.root, variants: e.variants.map(Ke), important: e.important, raw: e.raw };
       case "functional":
-        return { kind: e2.kind, root: e2.root, value: e2.value ? e2.value.kind === "arbitrary" ? { kind: e2.value.kind, dataType: e2.value.dataType, value: e2.value.value } : { kind: e2.value.kind, value: e2.value.value, fraction: e2.value.fraction } : null, modifier: e2.modifier ? { kind: e2.modifier.kind, value: e2.modifier.value } : null, variants: e2.variants.map(Ke), important: e2.important, raw: e2.raw };
+        return { kind: e.kind, root: e.root, value: e.value ? e.value.kind === "arbitrary" ? { kind: e.value.kind, dataType: e.value.dataType, value: e.value.value } : { kind: e.value.kind, value: e.value.value, fraction: e.value.fraction } : null, modifier: e.modifier ? { kind: e.modifier.kind, value: e.modifier.value } : null, variants: e.variants.map(Ke), important: e.important, raw: e.raw };
       default:
         throw new Error("Unknown candidate kind");
     }
   }
-  function Ke(e2) {
-    switch (e2.kind) {
+  function Ke(e) {
+    switch (e.kind) {
       case "arbitrary":
-        return { kind: e2.kind, selector: e2.selector, relative: e2.relative };
+        return { kind: e.kind, selector: e.selector, relative: e.relative };
       case "static":
-        return { kind: e2.kind, root: e2.root };
+        return { kind: e.kind, root: e.root };
       case "functional":
-        return { kind: e2.kind, root: e2.root, value: e2.value ? { kind: e2.value.kind, value: e2.value.value } : null, modifier: e2.modifier ? { kind: e2.modifier.kind, value: e2.modifier.value } : null };
+        return { kind: e.kind, root: e.root, value: e.value ? { kind: e.value.kind, value: e.value.value } : null, modifier: e.modifier ? { kind: e.modifier.kind, value: e.modifier.value } : null };
       case "compound":
-        return { kind: e2.kind, root: e2.root, variant: Ke(e2.variant), modifier: e2.modifier ? { kind: e2.modifier.kind, value: e2.modifier.value } : null };
+        return { kind: e.kind, root: e.root, variant: Ke(e.variant), modifier: e.modifier ? { kind: e.modifier.kind, value: e.modifier.value } : null };
       default:
         throw new Error("Unknown variant kind");
     }
   }
-  function* ti(e2, i) {
-    let r = d(e2, ":");
+  function* ti(e, i) {
+    let r = d(e, ":");
     if (i.theme.prefix) {
       if (r.length === 1 || r[0] !== i.theme.prefix)
         return null;
@@ -1771,263 +1781,263 @@
     }
     let t = r.pop(), n = [];
     for (let m = r.length - 1;m >= 0; --m) {
-      let u2 = i.parseVariant(r[m]);
-      if (u2 === null)
+      let u = i.parseVariant(r[m]);
+      if (u === null)
         return;
-      n.push(u2);
+      n.push(u);
     }
     let s = false;
-    t[t.length - 1] === "!" ? (s = true, t = t.slice(0, -1)) : t[0] === "!" && (s = true, t = t.slice(1)), i.utilities.has(t, "static") && !t.includes("[") && (yield { kind: "static", root: t, variants: n, important: s, raw: e2 });
-    let [l2, d2 = null, f2] = d(t, "/");
-    if (f2)
+    t[t.length - 1] === "!" ? (s = true, t = t.slice(0, -1)) : t[0] === "!" && (s = true, t = t.slice(1)), i.utilities.has(t, "static") && !t.includes("[") && (yield { kind: "static", root: t, variants: n, important: s, raw: e });
+    let [l, d2 = null, f] = d(t, "/");
+    if (f)
       return;
-    let c2 = d2 === null ? null : Qt(d2);
-    if (d2 !== null && c2 === null)
+    let c = d2 === null ? null : Qt(d2);
+    if (d2 !== null && c === null)
       return;
-    if (l2[0] === "[") {
-      if (l2[l2.length - 1] !== "]")
+    if (l[0] === "[") {
+      if (l[l.length - 1] !== "]")
         return;
-      let m = l2.charCodeAt(1);
+      let m = l.charCodeAt(1);
       if (m !== Qr && !(m >= Xr && m <= ei))
         return;
-      l2 = l2.slice(1, -1);
-      let u2 = l2.indexOf(":");
-      if (u2 === -1 || u2 === 0 || u2 === l2.length - 1)
+      l = l.slice(1, -1);
+      let u = l.indexOf(":");
+      if (u === -1 || u === 0 || u === l.length - 1)
         return;
-      let v2 = l2.slice(0, u2), h3 = Ce(l2.slice(u2 + 1));
-      if (!ye2(h3))
+      let v = l.slice(0, u), h = Ce(l.slice(u + 1));
+      if (!ye2(h))
         return;
-      yield { kind: "arbitrary", property: v2, value: h3, modifier: c2, variants: n, important: s, raw: e2 };
+      yield { kind: "arbitrary", property: v, value: h, modifier: c, variants: n, important: s, raw: e };
       return;
     }
-    let p2;
-    if (l2[l2.length - 1] === "]") {
-      let m = l2.indexOf("-[");
+    let p;
+    if (l[l.length - 1] === "]") {
+      let m = l.indexOf("-[");
       if (m === -1)
         return;
-      let u2 = l2.slice(0, m);
-      if (!i.utilities.has(u2, "functional"))
+      let u = l.slice(0, m);
+      if (!i.utilities.has(u, "functional"))
         return;
-      let v2 = l2.slice(m + 1);
-      p2 = [[u2, v2]];
-    } else if (l2[l2.length - 1] === ")") {
-      let m = l2.indexOf("-(");
+      let v = l.slice(m + 1);
+      p = [[u, v]];
+    } else if (l[l.length - 1] === ")") {
+      let m = l.indexOf("-(");
       if (m === -1)
         return;
-      let u2 = l2.slice(0, m);
-      if (!i.utilities.has(u2, "functional"))
+      let u = l.slice(0, m);
+      if (!i.utilities.has(u, "functional"))
         return;
-      let v2 = l2.slice(m + 2, -1), h3 = d(v2, ":"), k = null;
-      if (h3.length === 2 && (k = h3[0], v2 = h3[1]), v2[0] !== "-" || v2[1] !== "-" || !ye2(v2))
+      let v = l.slice(m + 2, -1), h = d(v, ":"), k = null;
+      if (h.length === 2 && (k = h[0], v = h[1]), v[0] !== "-" || v[1] !== "-" || !ye2(v))
         return;
-      p2 = [[u2, k === null ? `[var(${v2})]` : `[${k}:var(${v2})]`]];
+      p = [[u, k === null ? `[var(${v})]` : `[${k}:var(${v})]`]];
     } else
-      p2 = ii(l2, (m) => i.utilities.has(m, "functional"));
-    for (let [m, u2] of p2) {
-      let v2 = { kind: "functional", root: m, modifier: c2, value: null, variants: n, important: s, raw: e2 };
-      if (u2 === null) {
-        yield v2;
+      p = ii(l, (m) => i.utilities.has(m, "functional"));
+    for (let [m, u] of p) {
+      let v = { kind: "functional", root: m, modifier: c, value: null, variants: n, important: s, raw: e };
+      if (u === null) {
+        yield v;
         continue;
       }
       {
-        let h3 = u2.indexOf("[");
-        if (h3 !== -1) {
-          if (u2[u2.length - 1] !== "]")
+        let h = u.indexOf("[");
+        if (h !== -1) {
+          if (u[u.length - 1] !== "]")
             return;
-          let y2 = Ce(u2.slice(h3 + 1, -1));
-          if (!ye2(y2))
+          let y = Ce(u.slice(h + 1, -1));
+          if (!ye2(y))
             continue;
-          let S2 = null;
-          for (let x2 = 0;x2 < y2.length; x2++) {
-            let b2 = y2.charCodeAt(x2);
-            if (b2 === Ln) {
-              S2 = y2.slice(0, x2), y2 = y2.slice(x2 + 1);
+          let S = null;
+          for (let x = 0;x < y.length; x++) {
+            let b = y.charCodeAt(x);
+            if (b === Ln) {
+              S = y.slice(0, x), y = y.slice(x + 1);
               break;
             }
-            if (!(b2 === Qr || b2 >= Xr && b2 <= ei))
+            if (!(b === Qr || b >= Xr && b <= ei))
               break;
           }
-          if (y2.length === 0 || y2.trim().length === 0 || S2 === "")
+          if (y.length === 0 || y.trim().length === 0 || S === "")
             continue;
-          v2.value = { kind: "arbitrary", dataType: S2 || null, value: y2 };
+          v.value = { kind: "arbitrary", dataType: S || null, value: y };
         } else {
-          let y2 = d2 === null || v2.modifier?.kind === "arbitrary" ? null : `${u2}/${d2}`;
-          if (!er.test(u2))
+          let y = d2 === null || v.modifier?.kind === "arbitrary" ? null : `${u}/${d2}`;
+          if (!er.test(u))
             continue;
-          v2.value = { kind: "named", value: u2, fraction: y2 };
+          v.value = { kind: "named", value: u, fraction: y };
         }
       }
-      yield v2;
+      yield v;
     }
   }
-  function Qt(e2) {
-    if (e2[0] === "[" && e2[e2.length - 1] === "]") {
-      let i = Ce(e2.slice(1, -1));
+  function Qt(e) {
+    if (e[0] === "[" && e[e.length - 1] === "]") {
+      let i = Ce(e.slice(1, -1));
       return !ye2(i) || i.length === 0 || i.trim().length === 0 ? null : { kind: "arbitrary", value: i };
     }
-    return e2[0] === "(" && e2[e2.length - 1] === ")" ? (e2 = e2.slice(1, -1), e2[0] !== "-" || e2[1] !== "-" || !ye2(e2) ? null : (e2 = `var(${e2})`, { kind: "arbitrary", value: Ce(e2) })) : er.test(e2) ? { kind: "named", value: e2 } : null;
+    return e[0] === "(" && e[e.length - 1] === ")" ? (e = e.slice(1, -1), e[0] !== "-" || e[1] !== "-" || !ye2(e) ? null : (e = `var(${e})`, { kind: "arbitrary", value: Ce(e) })) : er.test(e) ? { kind: "named", value: e } : null;
   }
-  function ri(e2, i) {
-    if (e2[0] === "[" && e2[e2.length - 1] === "]") {
-      if (e2[1] === "@" && e2.includes("&"))
+  function ri(e, i) {
+    if (e[0] === "[" && e[e.length - 1] === "]") {
+      if (e[1] === "@" && e.includes("&"))
         return null;
-      let r = Ce(e2.slice(1, -1));
+      let r = Ce(e.slice(1, -1));
       if (!ye2(r) || r.length === 0 || r.trim().length === 0)
         return null;
       let t = r[0] === ">" || r[0] === "+" || r[0] === "~";
       return !t && r[0] !== "@" && !r.includes("&") && (r = `&:is(${r})`), { kind: "arbitrary", selector: r, relative: t };
     }
     {
-      let [r, t = null, n] = d(e2, "/");
+      let [r, t = null, n] = d(e, "/");
       if (n)
         return null;
-      let s = ii(r, (l2) => i.variants.has(l2));
-      for (let [l2, d2] of s)
-        switch (i.variants.kind(l2)) {
+      let s = ii(r, (l) => i.variants.has(l));
+      for (let [l, d] of s)
+        switch (i.variants.kind(l)) {
           case "static":
-            return d2 !== null || t !== null ? null : { kind: "static", root: l2 };
+            return d !== null || t !== null ? null : { kind: "static", root: l };
           case "functional": {
-            let f2 = t === null ? null : Qt(t);
-            if (t !== null && f2 === null)
+            let f = t === null ? null : Qt(t);
+            if (t !== null && f === null)
               return null;
-            if (d2 === null)
-              return { kind: "functional", root: l2, modifier: f2, value: null };
-            if (d2[d2.length - 1] === "]") {
-              if (d2[0] !== "[")
+            if (d === null)
+              return { kind: "functional", root: l, modifier: f, value: null };
+            if (d[d.length - 1] === "]") {
+              if (d[0] !== "[")
                 continue;
-              let c2 = Ce(d2.slice(1, -1));
-              return !ye2(c2) || c2.length === 0 || c2.trim().length === 0 ? null : { kind: "functional", root: l2, modifier: f2, value: { kind: "arbitrary", value: c2 } };
+              let c = Ce(d.slice(1, -1));
+              return !ye2(c) || c.length === 0 || c.trim().length === 0 ? null : { kind: "functional", root: l, modifier: f, value: { kind: "arbitrary", value: c } };
             }
-            if (d2[d2.length - 1] === ")") {
-              if (d2[0] !== "(")
+            if (d[d.length - 1] === ")") {
+              if (d[0] !== "(")
                 continue;
-              let c2 = Ce(d2.slice(1, -1));
-              return !ye2(c2) || c2.length === 0 || c2.trim().length === 0 || c2[0] !== "-" || c2[1] !== "-" ? null : { kind: "functional", root: l2, modifier: f2, value: { kind: "arbitrary", value: `var(${c2})` } };
+              let c = Ce(d.slice(1, -1));
+              return !ye2(c) || c.length === 0 || c.trim().length === 0 || c[0] !== "-" || c[1] !== "-" ? null : { kind: "functional", root: l, modifier: f, value: { kind: "arbitrary", value: `var(${c})` } };
             }
-            if (!er.test(d2))
+            if (!er.test(d))
               continue;
-            return { kind: "functional", root: l2, modifier: f2, value: { kind: "named", value: d2 } };
+            return { kind: "functional", root: l, modifier: f, value: { kind: "named", value: d } };
           }
           case "compound": {
-            if (d2 === null)
+            if (d === null)
               return null;
-            t && (l2 === "not" || l2 === "has" || l2 === "in") && (d2 = `${d2}/${t}`, t = null);
-            let f2 = i.parseVariant(d2);
-            if (f2 === null || !i.variants.compoundsWith(l2, f2))
+            t && (l === "not" || l === "has" || l === "in") && (d = `${d}/${t}`, t = null);
+            let f = i.parseVariant(d);
+            if (f === null || !i.variants.compoundsWith(l, f))
               return null;
-            let c2 = t === null ? null : Qt(t);
-            return t !== null && c2 === null ? null : { kind: "compound", root: l2, modifier: c2, variant: f2 };
+            let c = t === null ? null : Qt(t);
+            return t !== null && c === null ? null : { kind: "compound", root: l, modifier: c, variant: f };
           }
         }
     }
     return null;
   }
-  function* ii(e2, i) {
-    i(e2) && (yield [e2, null]);
-    let r = e2.lastIndexOf("-");
+  function* ii(e, i) {
+    i(e) && (yield [e, null]);
+    let r = e.lastIndexOf("-");
     for (;r > 0; ) {
-      let t = e2.slice(0, r);
+      let t = e.slice(0, r);
       if (i(t)) {
-        let n = [t, e2.slice(r + 1)];
-        if (n[1] === "" || n[0] === "@" && i("@") && e2[r] === "-")
+        let n = [t, e.slice(r + 1)];
+        if (n[1] === "" || n[0] === "@" && i("@") && e[r] === "-")
           break;
         yield n;
       }
-      r = e2.lastIndexOf("-", r - 1);
+      r = e.lastIndexOf("-", r - 1);
     }
-    e2[0] === "@" && i("@") && (yield ["@", e2.slice(1)]);
+    e[0] === "@" && i("@") && (yield ["@", e.slice(1)]);
   }
-  function ni(e2, i) {
+  function ni(e, i) {
     let r = [];
     for (let n of i.variants)
       r.unshift(vt(n));
-    e2.theme.prefix && r.unshift(e2.theme.prefix);
+    e.theme.prefix && r.unshift(e.theme.prefix);
     let t = "";
     if (i.kind === "static" && (t += i.root), i.kind === "functional" && (t += i.root, i.value))
       if (i.value.kind === "arbitrary") {
         if (i.value !== null) {
-          let n = tr(i.value.value), s = n ? i.value.value.slice(4, -1) : i.value.value, [l2, d2] = n ? ["(", ")"] : ["[", "]"];
-          i.value.dataType ? t += `-${l2}${i.value.dataType}:${Se(s)}${d2}` : t += `-${l2}${Se(s)}${d2}`;
+          let n = tr(i.value.value), s = n ? i.value.value.slice(4, -1) : i.value.value, [l, d] = n ? ["(", ")"] : ["[", "]"];
+          i.value.dataType ? t += `-${l}${i.value.dataType}:${Se(s)}${d}` : t += `-${l}${Se(s)}${d}`;
         }
       } else
         i.value.kind === "named" && (t += `-${i.value.value}`);
     return i.kind === "arbitrary" && (t += `[${i.property}:${Se(i.value)}]`), (i.kind === "arbitrary" || i.kind === "functional") && (t += rt(i.modifier)), i.important && (t += "!"), r.push(t), r.join(":");
   }
-  function rt(e2) {
-    if (e2 === null)
+  function rt(e) {
+    if (e === null)
       return "";
-    let i = tr(e2.value), r = i ? e2.value.slice(4, -1) : e2.value, [t, n] = i ? ["(", ")"] : ["[", "]"];
-    return e2.kind === "arbitrary" ? `/${t}${Se(r)}${n}` : e2.kind === "named" ? `/${e2.value}` : "";
+    let i = tr(e.value), r = i ? e.value.slice(4, -1) : e.value, [t, n] = i ? ["(", ")"] : ["[", "]"];
+    return e.kind === "arbitrary" ? `/${t}${Se(r)}${n}` : e.kind === "named" ? `/${e.value}` : "";
   }
-  function vt(e2) {
-    if (e2.kind === "static")
-      return e2.root;
-    if (e2.kind === "arbitrary")
-      return `[${Se(Mn(e2.selector))}]`;
+  function vt(e) {
+    if (e.kind === "static")
+      return e.root;
+    if (e.kind === "arbitrary")
+      return `[${Se(Mn(e.selector))}]`;
     let i = "";
-    if (e2.kind === "functional") {
-      i += e2.root;
-      let r = e2.root !== "@";
-      if (e2.value)
-        if (e2.value.kind === "arbitrary") {
-          let t = tr(e2.value.value), n = t ? e2.value.value.slice(4, -1) : e2.value.value, [s, l2] = t ? ["(", ")"] : ["[", "]"];
-          i += `${r ? "-" : ""}${s}${Se(n)}${l2}`;
+    if (e.kind === "functional") {
+      i += e.root;
+      let r = e.root !== "@";
+      if (e.value)
+        if (e.value.kind === "arbitrary") {
+          let t = tr(e.value.value), n = t ? e.value.value.slice(4, -1) : e.value.value, [s, l] = t ? ["(", ")"] : ["[", "]"];
+          i += `${r ? "-" : ""}${s}${Se(n)}${l}`;
         } else
-          e2.value.kind === "named" && (i += `${r ? "-" : ""}${e2.value.value}`);
+          e.value.kind === "named" && (i += `${r ? "-" : ""}${e.value.value}`);
     }
-    return e2.kind === "compound" && (i += e2.root, i += "-", i += vt(e2.variant)), (e2.kind === "functional" || e2.kind === "compound") && (i += rt(e2.modifier)), i;
+    return e.kind === "compound" && (i += e.root, i += "-", i += vt(e.variant)), (e.kind === "functional" || e.kind === "compound") && (i += rt(e.modifier)), i;
   }
-  var zn = new U2((e2) => {
-    let i = M2(e2), r = new Set, t = new Set(["~", ">", "+", "-", "*", "/"]);
+  var zn = new U2((e) => {
+    let i = M2(e), r = new Set, t = new Set(["~", ">", "+", "-", "*", "/"]);
     return P2(i, (n, s) => {
       if (n.kind === "word" && t.has(n.value)) {
-        let l2 = s.index;
-        if (l2 === -1)
+        let l = s.index;
+        if (l === -1)
           return;
-        let d2 = s.siblings[l2 - 1];
-        if (d2?.kind !== "separator" || d2.value !== " ")
+        let d = s.siblings[l - 1];
+        if (d?.kind !== "separator" || d.value !== " ")
           return;
-        let f2 = s.siblings[l2 + 1];
-        if (f2?.kind !== "separator" || f2.value !== " ")
+        let f = s.siblings[l + 1];
+        if (f?.kind !== "separator" || f.value !== " ")
           return;
-        let c2 = s.siblings[l2 - 2];
-        if (c2 && t.has(c2.value))
+        let c = s.siblings[l - 2];
+        if (c && t.has(c.value))
           return;
-        let p2 = s.siblings[l2 + 2];
-        if (p2 && t.has(p2.value))
+        let p = s.siblings[l + 2];
+        if (p && t.has(p.value))
           return;
-        r.add(d2), r.add(f2);
+        r.add(d), r.add(f);
       } else if (n.kind === "separator" && n.value.length > 0 && n.value.trim() === "")
         (s.siblings[0] === n || s.siblings[s.siblings.length - 1] === n) && r.add(n);
       else if (n.kind === "separator" && n.value.trim() === ",")
         n.value = ",";
       else if (n.kind === "function" && n.value.startsWith("--")) {
-        let l2 = s.index;
-        if (l2 <= 0)
+        let l = s.index;
+        if (l <= 0)
           return;
-        let d2 = s.siblings[l2 - 1];
-        if (d2?.kind === "separator" && d2.value === ",")
+        let d = s.siblings[l - 1];
+        if (d?.kind === "separator" && d.value === ",")
           return;
-        let f2 = s.siblings[l2 - 2];
-        return f2 && !t.has(f2.value) ? undefined : V2.ReplaceSkip({ kind: "function", value: "", nodes: [n] });
+        let f = s.siblings[l - 2];
+        return f && !t.has(f.value) ? undefined : V2.ReplaceSkip({ kind: "function", value: "", nodes: [n] });
       }
     }), r.size > 0 && P2(i, (n) => {
       if (r.has(n))
         return r.delete(n), V2.ReplaceSkip([]);
     }), Xt(i), F2(i);
   });
-  function Se(e2) {
-    return zn.get(e2);
+  function Se(e) {
+    return zn.get(e);
   }
-  var jn = new U2((e2) => {
-    let i = M2(e2);
-    return i.length === 3 && i[0].kind === "word" && i[0].value === "&" && i[1].kind === "separator" && i[1].value === ":" && i[2].kind === "function" && i[2].value === "is" ? F2(i[2].nodes) : e2;
+  var jn = new U2((e) => {
+    let i = M2(e);
+    return i.length === 3 && i[0].kind === "word" && i[0].value === "&" && i[1].kind === "separator" && i[1].value === ":" && i[2].kind === "function" && i[2].value === "is" ? F2(i[2].nodes) : e;
   });
-  function Mn(e2) {
-    return jn.get(e2);
+  function Mn(e) {
+    return jn.get(e);
   }
-  function Xt(e2) {
-    for (let i of e2)
+  function Xt(e) {
+    for (let i of e)
       switch (i.kind) {
         case "function": {
           if (i.value === "url" || i.value.endsWith("_url")) {
@@ -2054,28 +2064,28 @@
           Wn(i);
       }
   }
-  var Fn = new U2((e2) => {
-    let i = M2(e2);
+  var Fn = new U2((e) => {
+    let i = M2(e);
     return i.length === 1 && i[0].kind === "function" && i[0].value === "var";
   });
-  function tr(e2) {
-    return Fn.get(e2);
+  function tr(e) {
+    return Fn.get(e);
   }
-  function Wn(e2) {
-    throw new Error(`Unexpected value: ${e2}`);
+  function Wn(e) {
+    throw new Error(`Unexpected value: ${e}`);
   }
-  function tt(e2) {
-    return e2.replaceAll("_", String.raw`\_`).replaceAll(" ", "_");
+  function tt(e) {
+    return e.replaceAll("_", String.raw`\_`).replaceAll(" ", "_");
   }
-  function Ee(e2, i, r) {
-    if (e2 === i)
+  function Ee(e, i, r) {
+    if (e === i)
       return 0;
-    let t = e2.indexOf("("), n = i.indexOf("("), s = t === -1 ? e2.replace(/[\d.]+/g, "") : e2.slice(0, t), l2 = n === -1 ? i.replace(/[\d.]+/g, "") : i.slice(0, n), d2 = (s === l2 ? 0 : s < l2 ? -1 : 1) || (r === "asc" ? parseInt(e2) - parseInt(i) : parseInt(i) - parseInt(e2));
-    return Number.isNaN(d2) ? e2 < i ? -1 : 1 : d2;
+    let t = e.indexOf("("), n = i.indexOf("("), s = t === -1 ? e.replace(/[\d.]+/g, "") : e.slice(0, t), l = n === -1 ? i.replace(/[\d.]+/g, "") : i.slice(0, n), d = (s === l ? 0 : s < l ? -1 : 1) || (r === "asc" ? parseInt(e) - parseInt(i) : parseInt(i) - parseInt(e));
+    return Number.isNaN(d) ? e < i ? -1 : 1 : d;
   }
   var Bn = /^(?<value>[-+]?(?:\d*\.)?\d+)(?<unit>[a-z]+|%)?$/i;
-  var le = new U2((e2) => {
-    let i = Bn.exec(e2);
+  var le = new U2((e) => {
+    let i = Bn.exec(e);
     if (!i)
       return null;
     let r = i.groups?.value;
@@ -2091,33 +2101,33 @@
   var Gn = new Set(["calc", "clamp", "max", "min", "--spacing"]);
   var qn = new Set(["color", "color-mix", "contrast-color", "device-cmyk", "hsl", "hsla", "hwb", "lab", "lch", "light-dark", "oklab", "oklch", "rgb", "rgba", "--alpha"]);
   var Hn = /^-?(\d+|\.\d+)(.*?)$/;
-  function it(e2, i) {
+  function it(e, i) {
     function r(n) {
-      let s = F2([n]), l2 = i(s);
-      return M2(l2);
+      let s = F2([n]), l = i(s);
+      return M2(l);
     }
-    return d(e2, ",").map((n) => {
+    return d(e, ",").map((n) => {
       n = n.trim();
-      let s = M2(n), l2 = null, d2 = 0, f2 = 0, c2 = false;
-      return P2(s, (p2) => {
-        switch (p2.kind) {
+      let s = M2(n), l = null, d = 0, f = 0, c = false;
+      return P2(s, (p) => {
+        switch (p.kind) {
           case "word": {
-            if (Yn.has(p2.value.toLowerCase()))
+            if (Yn.has(p.value.toLowerCase()))
               return V2.Continue;
-            if (Hn.test(p2.value.toLowerCase()))
-              return f2++, V2.Continue;
-            if (p2.value[0] === "#" || oe(p2.value))
-              return c2 = true, V2.ReplaceStop(r(p2));
-            l2 = p2, d2++;
+            if (Hn.test(p.value.toLowerCase()))
+              return f++, V2.Continue;
+            if (p.value[0] === "#" || oe(p.value))
+              return c = true, V2.ReplaceStop(r(p));
+            l = p, d++;
             break;
           }
           case "function":
-            return qn.has(p2.value.toLowerCase()) ? (c2 = true, V2.ReplaceStop(r(p2))) : Gn.has(p2.value.toLowerCase()) ? (f2++, V2.Skip) : (l2 = p2, d2++, V2.Skip);
+            return qn.has(p.value.toLowerCase()) ? (c = true, V2.ReplaceStop(r(p))) : Gn.has(p.value.toLowerCase()) ? (f++, V2.Skip) : (l = p, d++, V2.Skip);
           case "separator":
             return V2.Continue;
           default:
         }
-      }), c2 ? F2(s) : f2 < 2 ? n : d2 === 0 ? `${n} ${i("currentcolor")}` : (d2 === 1 && P2(s, (p2) => p2 === l2 ? (c2 = true, V2.ReplaceStop(r(p2))) : V2.Skip), c2 ? F2(s) : n);
+      }), c ? F2(s) : f < 2 ? n : d === 0 ? `${n} ${i("currentcolor")}` : (d === 1 && P2(s, (p) => p === l ? (c = true, V2.ReplaceStop(r(p))) : V2.Skip), c ? F2(s) : n);
     }).join(", ");
   }
   var yt = ["0", "0.5", "1", "1.5", "2", "2.5", "3", "3.5", "4", "5", "6", "7", "8", "9", "10", "11", "12", "14", "16", "20", "24", "28", "32", "36", "40", "44", "48", "52", "56", "60", "64", "72", "80", "96"];
@@ -2154,30 +2164,30 @@
       return r;
     }
   };
-  function $2(e2, i, r) {
-    return B2("@property", e2, [a2("syntax", r ? `"${r}"` : '"*"'), a2("inherits", "false"), ...i ? [a2("initial-value", i)] : []]);
+  function $2(e, i, r) {
+    return B2("@property", e, [a2("syntax", r ? `"${r}"` : '"*"'), a2("inherits", "false"), ...i ? [a2("initial-value", i)] : []]);
   }
-  function X2(e2, i) {
+  function X2(e, i) {
     if (i === null)
-      return e2;
+      return e;
     let r = Number(i);
-    return Number.isNaN(r) || (i = `${r * 100}%`), i === "100%" ? e2 : `color-mix(in oklab, ${e2} ${i}, transparent)`;
+    return Number.isNaN(r) || (i = `${r * 100}%`), i === "100%" ? e : `color-mix(in oklab, ${e} ${i}, transparent)`;
   }
-  function ai(e2, i) {
+  function ai(e, i) {
     let r = Number(i);
-    return Number.isNaN(r) || (i = `${r * 100}%`), `oklab(from ${e2} l a b / ${i})`;
+    return Number.isNaN(r) || (i = `${r * 100}%`), `oklab(from ${e} l a b / ${i})`;
   }
-  function te2(e2, i, r) {
+  function te2(e, i, r) {
     if (!i)
-      return e2;
+      return e;
     if (i.kind === "arbitrary")
-      return X2(e2, i.value);
+      return X2(e, i.value);
     let t = r.resolve(i.value, ["--opacity"]);
-    return t ? X2(e2, t) : xe(i.value) ? X2(e2, `${i.value}%`) : null;
+    return t ? X2(e, t) : xe(i.value) ? X2(e, `${i.value}%`) : null;
   }
-  function ae2(e2, i, r) {
+  function ae2(e, i, r) {
     let t = null;
-    switch (e2.value.value) {
+    switch (e.value.value) {
       case "inherit": {
         t = "inherit";
         break;
@@ -2191,1099 +2201,1099 @@
         break;
       }
       default: {
-        t = i.resolve(e2.value.value, r);
+        t = i.resolve(e.value.value, r);
         break;
       }
     }
-    return t ? te2(t, e2.modifier, i) : null;
+    return t ? te2(t, e.modifier, i) : null;
   }
   var oi = /(\d+)_(\d+)/g;
-  function si(e2) {
+  function si(e) {
     let i = new rr;
-    function r(o2, g3) {
-      function* w2(A2) {
-        for (let T2 of e2.keysInNamespaces(A2))
-          yield T2.replace(oi, (K2, N2, R2) => `${N2}.${R2}`);
+    function r(o, g) {
+      function* w(A) {
+        for (let T of e.keysInNamespaces(A))
+          yield T.replace(oi, (K, N, R) => `${N}.${R}`);
       }
-      let C2 = ["1/2", "1/3", "2/3", "1/4", "2/4", "3/4", "1/5", "2/5", "3/5", "4/5", "1/6", "2/6", "3/6", "4/6", "5/6", "1/12", "2/12", "3/12", "4/12", "5/12", "6/12", "7/12", "8/12", "9/12", "10/12", "11/12"];
-      i.suggest(o2, () => {
-        let A2 = [];
-        for (let T2 of g3()) {
-          if (typeof T2 == "string") {
-            A2.push({ values: [T2], modifiers: [] });
+      let C = ["1/2", "1/3", "2/3", "1/4", "2/4", "3/4", "1/5", "2/5", "3/5", "4/5", "1/6", "2/6", "3/6", "4/6", "5/6", "1/12", "2/12", "3/12", "4/12", "5/12", "6/12", "7/12", "8/12", "9/12", "10/12", "11/12"];
+      i.suggest(o, () => {
+        let A = [];
+        for (let T of g()) {
+          if (typeof T == "string") {
+            A.push({ values: [T], modifiers: [] });
             continue;
           }
-          let K2 = [...T2.values ?? [], ...w2(T2.valueThemeKeys ?? [])], N2 = [...T2.modifiers ?? [], ...w2(T2.modifierThemeKeys ?? [])];
-          T2.supportsFractions && K2.push(...C2), T2.hasDefaultValue && K2.unshift(null), A2.push({ supportsNegative: T2.supportsNegative, values: K2, modifiers: N2 });
+          let K = [...T.values ?? [], ...w(T.valueThemeKeys ?? [])], N = [...T.modifiers ?? [], ...w(T.modifierThemeKeys ?? [])];
+          T.supportsFractions && K.push(...C), T.hasDefaultValue && K.unshift(null), A.push({ supportsNegative: T.supportsNegative, values: K, modifiers: N });
         }
-        return A2;
+        return A;
       });
     }
-    function t(o2, g3) {
-      i.static(o2, () => g3.map((w2) => typeof w2 == "function" ? w2() : a2(w2[0], w2[1])));
+    function t(o, g) {
+      i.static(o, () => g.map((w) => typeof w == "function" ? w() : a2(w[0], w[1])));
     }
-    function n(o2, g3) {
-      g3.staticValues && (g3.staticValues = Object.assign(Object.create(null), g3.staticValues));
-      function w2({ negative: C2 }) {
-        return (A2) => {
-          let T2 = null, K2 = null;
-          if (A2.value)
-            if (A2.value.kind === "arbitrary") {
-              if (A2.modifier)
+    function n(o, g) {
+      g.staticValues && (g.staticValues = Object.assign(Object.create(null), g.staticValues));
+      function w({ negative: C }) {
+        return (A) => {
+          let T = null, K = null;
+          if (A.value)
+            if (A.value.kind === "arbitrary") {
+              if (A.modifier)
                 return;
-              T2 = A2.value.value, K2 = A2.value.dataType;
+              T = A.value.value, K = A.value.dataType;
             } else {
-              if (T2 = e2.resolve(A2.value.fraction ?? A2.value.value, g3.themeKeys ?? []), T2 === null && g3.supportsFractions && A2.value.fraction) {
-                let [N2, R2] = d(A2.value.fraction, "/");
-                if (!u(N2) || !u(R2))
+              if (T = e.resolve(A.value.fraction ?? A.value.value, g.themeKeys ?? []), T === null && g.supportsFractions && A.value.fraction) {
+                let [N, R] = d(A.value.fraction, "/");
+                if (!u(N) || !u(R))
                   return;
-                T2 = `calc(${N2} / ${R2} * 100%)`;
+                T = `calc(${N} / ${R} * 100%)`;
               }
-              if (T2 === null && C2 && g3.handleNegativeBareValue) {
-                if (T2 = g3.handleNegativeBareValue(A2.value), !T2?.includes("/") && A2.modifier)
+              if (T === null && C && g.handleNegativeBareValue) {
+                if (T = g.handleNegativeBareValue(A.value), !T?.includes("/") && A.modifier)
                   return;
-                if (T2 !== null)
-                  return g3.handle(T2, null);
+                if (T !== null)
+                  return g.handle(T, null);
               }
-              if (T2 === null && g3.handleBareValue && (T2 = g3.handleBareValue(A2.value), !T2?.includes("/") && A2.modifier))
+              if (T === null && g.handleBareValue && (T = g.handleBareValue(A.value), !T?.includes("/") && A.modifier))
                 return;
-              if (T2 === null && !C2 && g3.staticValues && !A2.modifier) {
-                let N2 = g3.staticValues[A2.value.value];
-                if (N2)
-                  return N2.map(re2);
+              if (T === null && !C && g.staticValues && !A.modifier) {
+                let N = g.staticValues[A.value.value];
+                if (N)
+                  return N.map(re2);
               }
             }
           else {
-            if (A2.modifier)
+            if (A.modifier)
               return;
-            T2 = g3.defaultValue !== undefined ? g3.defaultValue : e2.resolve(null, g3.themeKeys ?? []);
+            T = g.defaultValue !== undefined ? g.defaultValue : e.resolve(null, g.themeKeys ?? []);
           }
-          if (T2 !== null)
-            return g3.handle(C2 ? ae(`calc(${T2} * -1)`) : T2, K2);
+          if (T !== null)
+            return g.handle(C ? ae(`calc(${T} * -1)`) : T, K);
         };
       }
-      if (g3.supportsNegative && i.functional(`-${o2}`, w2({ negative: true })), i.functional(o2, w2({ negative: false })), r(o2, () => [{ supportsNegative: g3.supportsNegative, valueThemeKeys: g3.themeKeys ?? [], hasDefaultValue: g3.defaultValue !== undefined && g3.defaultValue !== null, supportsFractions: g3.supportsFractions }]), g3.staticValues && Object.keys(g3.staticValues).length > 0) {
-        let C2 = Object.keys(g3.staticValues);
-        r(o2, () => [{ values: C2 }]);
+      if (g.supportsNegative && i.functional(`-${o}`, w({ negative: true })), i.functional(o, w({ negative: false })), r(o, () => [{ supportsNegative: g.supportsNegative, valueThemeKeys: g.themeKeys ?? [], hasDefaultValue: g.defaultValue !== undefined && g.defaultValue !== null, supportsFractions: g.supportsFractions }]), g.staticValues && Object.keys(g.staticValues).length > 0) {
+        let C = Object.keys(g.staticValues);
+        r(o, () => [{ values: C }]);
       }
     }
-    function s(o2, g3) {
-      i.functional(o2, (w2) => {
-        if (!w2.value)
+    function s(o, g) {
+      i.functional(o, (w) => {
+        if (!w.value)
           return;
-        let C2 = null;
-        if (w2.value.kind === "arbitrary" ? (C2 = w2.value.value, C2 = te2(C2, w2.modifier, e2)) : C2 = ae2(w2, e2, g3.themeKeys), C2 !== null)
-          return g3.handle(C2);
-      }), r(o2, () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: g3.themeKeys, modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (w2, C2) => `${C2 * 5}`) }]);
+        let C = null;
+        if (w.value.kind === "arbitrary" ? (C = w.value.value, C = te2(C, w.modifier, e)) : C = ae2(w, e, g.themeKeys), C !== null)
+          return g.handle(C);
+      }), r(o, () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: g.themeKeys, modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (w, C) => `${C * 5}`) }]);
     }
-    function l2(o2, g3, w2, { supportsNegative: C2 = false, supportsFractions: A2 = false, staticValues: T2 } = {}) {
-      C2 && i.static(`-${o2}-px`, () => w2("-1px")), i.static(`${o2}-px`, () => w2("1px")), n(o2, { themeKeys: g3, supportsFractions: A2, supportsNegative: C2, defaultValue: null, handleBareValue: ({ value: K2 }) => !e2.resolve(null, ["--spacing"]) || !de(K2) ? null : `--spacing(${K2})`, handleNegativeBareValue: ({ value: K2 }) => !e2.resolve(null, ["--spacing"]) || !de(K2) ? null : `--spacing(-${K2})`, handle: w2, staticValues: T2 }), r(o2, () => [{ values: e2.get(["--spacing"]) ? yt : [], supportsNegative: C2, supportsFractions: A2, valueThemeKeys: g3 }]);
+    function l(o, g, w, { supportsNegative: C = false, supportsFractions: A = false, staticValues: T } = {}) {
+      C && i.static(`-${o}-px`, () => w("-1px")), i.static(`${o}-px`, () => w("1px")), n(o, { themeKeys: g, supportsFractions: A, supportsNegative: C, defaultValue: null, handleBareValue: ({ value: K }) => !e.resolve(null, ["--spacing"]) || !de(K) ? null : `--spacing(${K})`, handleNegativeBareValue: ({ value: K }) => !e.resolve(null, ["--spacing"]) || !de(K) ? null : `--spacing(-${K})`, handle: w, staticValues: T }), r(o, () => [{ values: e.get(["--spacing"]) ? yt : [], supportsNegative: C, supportsFractions: A, valueThemeKeys: g }]);
     }
     t("sr-only", [["position", "absolute"], ["width", "1px"], ["height", "1px"], ["padding", "0"], ["margin", "-1px"], ["overflow", "hidden"], ["clip-path", "inset(50%)"], ["white-space", "nowrap"], ["border-width", "0"]]), t("not-sr-only", [["position", "static"], ["width", "auto"], ["height", "auto"], ["padding", "0"], ["margin", "0"], ["overflow", "visible"], ["clip-path", "none"], ["white-space", "normal"]]), t("pointer-events-none", [["pointer-events", "none"]]), t("pointer-events-auto", [["pointer-events", "auto"]]), t("visible", [["visibility", "visible"]]), t("invisible", [["visibility", "hidden"]]), t("collapse", [["visibility", "collapse"]]), t("static", [["position", "static"]]), t("fixed", [["position", "fixed"]]), t("absolute", [["position", "absolute"]]), t("relative", [["position", "relative"]]), t("sticky", [["position", "sticky"]]);
-    for (let [o2, g3] of [["inset", "inset"], ["inset-x", "inset-inline"], ["inset-y", "inset-block"], ["inset-s", "inset-inline-start"], ["inset-e", "inset-inline-end"], ["inset-bs", "inset-block-start"], ["inset-be", "inset-block-end"], ["top", "top"], ["right", "right"], ["bottom", "bottom"], ["left", "left"]])
-      t(`${o2}-auto`, [[g3, "auto"]]), t(`${o2}-full`, [[g3, "100%"]]), t(`-${o2}-full`, [[g3, "-100%"]]), l2(o2, ["--inset", "--spacing"], (w2) => [a2(g3, w2)], { supportsNegative: true, supportsFractions: true });
-    t("isolate", [["isolation", "isolate"]]), t("isolation-auto", [["isolation", "auto"]]), n("z", { supportsNegative: true, handleBareValue: ({ value: o2 }) => u(o2) ? o2 : null, themeKeys: ["--z-index"], handle: (o2) => [a2("z-index", o2)], staticValues: { auto: [a2("z-index", "auto")] } }), r("z", () => [{ supportsNegative: true, values: ["0", "10", "20", "30", "40", "50"], valueThemeKeys: ["--z-index"] }]), n("order", { supportsNegative: true, handleBareValue: ({ value: o2 }) => u(o2) ? o2 : null, themeKeys: ["--order"], handle: (o2) => [a2("order", o2)], staticValues: { first: [a2("order", "-9999")], last: [a2("order", "9999")] } }), r("order", () => [{ supportsNegative: true, values: Array.from({ length: 12 }, (o2, g3) => `${g3 + 1}`), valueThemeKeys: ["--order"] }]), n("col", { supportsNegative: true, handleBareValue: ({ value: o2 }) => u(o2) ? o2 : null, themeKeys: ["--grid-column"], handle: (o2) => [a2("grid-column", o2)], staticValues: { auto: [a2("grid-column", "auto")] } }), n("col-span", { handleBareValue: ({ value: o2 }) => u(o2) ? o2 : null, handle: (o2) => [a2("grid-column", `span ${o2} / span ${o2}`)], staticValues: { full: [a2("grid-column", "1 / -1")] } }), n("col-start", { supportsNegative: true, handleBareValue: ({ value: o2 }) => u(o2) ? o2 : null, themeKeys: ["--grid-column-start"], handle: (o2) => [a2("grid-column-start", o2)], staticValues: { auto: [a2("grid-column-start", "auto")] } }), n("col-end", { supportsNegative: true, handleBareValue: ({ value: o2 }) => u(o2) ? o2 : null, themeKeys: ["--grid-column-end"], handle: (o2) => [a2("grid-column-end", o2)], staticValues: { auto: [a2("grid-column-end", "auto")] } }), r("col-span", () => [{ values: Array.from({ length: 12 }, (o2, g3) => `${g3 + 1}`), valueThemeKeys: [] }]), r("col-start", () => [{ supportsNegative: true, values: Array.from({ length: 13 }, (o2, g3) => `${g3 + 1}`), valueThemeKeys: ["--grid-column-start"] }]), r("col-end", () => [{ supportsNegative: true, values: Array.from({ length: 13 }, (o2, g3) => `${g3 + 1}`), valueThemeKeys: ["--grid-column-end"] }]), n("row", { supportsNegative: true, handleBareValue: ({ value: o2 }) => u(o2) ? o2 : null, themeKeys: ["--grid-row"], handle: (o2) => [a2("grid-row", o2)], staticValues: { auto: [a2("grid-row", "auto")] } }), n("row-span", { themeKeys: [], handleBareValue: ({ value: o2 }) => u(o2) ? o2 : null, handle: (o2) => [a2("grid-row", `span ${o2} / span ${o2}`)], staticValues: { full: [a2("grid-row", "1 / -1")] } }), n("row-start", { supportsNegative: true, handleBareValue: ({ value: o2 }) => u(o2) ? o2 : null, themeKeys: ["--grid-row-start"], handle: (o2) => [a2("grid-row-start", o2)], staticValues: { auto: [a2("grid-row-start", "auto")] } }), n("row-end", { supportsNegative: true, handleBareValue: ({ value: o2 }) => u(o2) ? o2 : null, themeKeys: ["--grid-row-end"], handle: (o2) => [a2("grid-row-end", o2)], staticValues: { auto: [a2("grid-row-end", "auto")] } }), r("row-span", () => [{ values: Array.from({ length: 12 }, (o2, g3) => `${g3 + 1}`), valueThemeKeys: [] }]), r("row-start", () => [{ supportsNegative: true, values: Array.from({ length: 13 }, (o2, g3) => `${g3 + 1}`), valueThemeKeys: ["--grid-row-start"] }]), r("row-end", () => [{ supportsNegative: true, values: Array.from({ length: 13 }, (o2, g3) => `${g3 + 1}`), valueThemeKeys: ["--grid-row-end"] }]), t("float-start", [["float", "inline-start"]]), t("float-end", [["float", "inline-end"]]), t("float-right", [["float", "right"]]), t("float-left", [["float", "left"]]), t("float-none", [["float", "none"]]), t("clear-start", [["clear", "inline-start"]]), t("clear-end", [["clear", "inline-end"]]), t("clear-right", [["clear", "right"]]), t("clear-left", [["clear", "left"]]), t("clear-both", [["clear", "both"]]), t("clear-none", [["clear", "none"]]);
-    for (let [o2, g3] of [["m", "margin"], ["mx", "margin-inline"], ["my", "margin-block"], ["ms", "margin-inline-start"], ["me", "margin-inline-end"], ["mbs", "margin-block-start"], ["mbe", "margin-block-end"], ["mt", "margin-top"], ["mr", "margin-right"], ["mb", "margin-bottom"], ["ml", "margin-left"]])
-      t(`${o2}-auto`, [[g3, "auto"]]), l2(o2, ["--margin", "--spacing"], (w2) => [a2(g3, w2)], { supportsNegative: true });
-    t("box-border", [["box-sizing", "border-box"]]), t("box-content", [["box-sizing", "content-box"]]), n("line-clamp", { themeKeys: ["--line-clamp"], handleBareValue: ({ value: o2 }) => u(o2) ? o2 : null, handle: (o2) => [a2("overflow", "hidden"), a2("display", "-webkit-box"), a2("-webkit-box-orient", "vertical"), a2("-webkit-line-clamp", o2)], staticValues: { none: [a2("overflow", "visible"), a2("display", "block"), a2("-webkit-box-orient", "horizontal"), a2("-webkit-line-clamp", "unset")] } }), r("line-clamp", () => [{ values: ["1", "2", "3", "4", "5", "6"], valueThemeKeys: ["--line-clamp"] }]), t("block", [["display", "block"]]), t("inline-block", [["display", "inline-block"]]), t("inline", [["display", "inline"]]), t("hidden", [["display", "none"]]), t("inline-flex", [["display", "inline-flex"]]), t("table", [["display", "table"]]), t("inline-table", [["display", "inline-table"]]), t("table-caption", [["display", "table-caption"]]), t("table-cell", [["display", "table-cell"]]), t("table-column", [["display", "table-column"]]), t("table-column-group", [["display", "table-column-group"]]), t("table-footer-group", [["display", "table-footer-group"]]), t("table-header-group", [["display", "table-header-group"]]), t("table-row-group", [["display", "table-row-group"]]), t("table-row", [["display", "table-row"]]), t("flow-root", [["display", "flow-root"]]), t("flex", [["display", "flex"]]), t("grid", [["display", "grid"]]), t("inline-grid", [["display", "inline-grid"]]), t("contents", [["display", "contents"]]), t("list-item", [["display", "list-item"]]), t("field-sizing-content", [["field-sizing", "content"]]), t("field-sizing-fixed", [["field-sizing", "fixed"]]), n("aspect", { themeKeys: ["--aspect"], handleBareValue: ({ fraction: o2 }) => {
-      if (o2 === null)
+    for (let [o, g] of [["inset", "inset"], ["inset-x", "inset-inline"], ["inset-y", "inset-block"], ["inset-s", "inset-inline-start"], ["inset-e", "inset-inline-end"], ["inset-bs", "inset-block-start"], ["inset-be", "inset-block-end"], ["top", "top"], ["right", "right"], ["bottom", "bottom"], ["left", "left"]])
+      t(`${o}-auto`, [[g, "auto"]]), t(`${o}-full`, [[g, "100%"]]), t(`-${o}-full`, [[g, "-100%"]]), l(o, ["--inset", "--spacing"], (w) => [a2(g, w)], { supportsNegative: true, supportsFractions: true });
+    t("isolate", [["isolation", "isolate"]]), t("isolation-auto", [["isolation", "auto"]]), n("z", { supportsNegative: true, handleBareValue: ({ value: o }) => u(o) ? o : null, themeKeys: ["--z-index"], handle: (o) => [a2("z-index", o)], staticValues: { auto: [a2("z-index", "auto")] } }), r("z", () => [{ supportsNegative: true, values: ["0", "10", "20", "30", "40", "50"], valueThemeKeys: ["--z-index"] }]), n("order", { supportsNegative: true, handleBareValue: ({ value: o }) => u(o) ? o : null, themeKeys: ["--order"], handle: (o) => [a2("order", o)], staticValues: { first: [a2("order", "-9999")], last: [a2("order", "9999")] } }), r("order", () => [{ supportsNegative: true, values: Array.from({ length: 12 }, (o, g) => `${g + 1}`), valueThemeKeys: ["--order"] }]), n("col", { supportsNegative: true, handleBareValue: ({ value: o }) => u(o) ? o : null, themeKeys: ["--grid-column"], handle: (o) => [a2("grid-column", o)], staticValues: { auto: [a2("grid-column", "auto")] } }), n("col-span", { handleBareValue: ({ value: o }) => u(o) ? o : null, handle: (o) => [a2("grid-column", `span ${o} / span ${o}`)], staticValues: { full: [a2("grid-column", "1 / -1")] } }), n("col-start", { supportsNegative: true, handleBareValue: ({ value: o }) => u(o) ? o : null, themeKeys: ["--grid-column-start"], handle: (o) => [a2("grid-column-start", o)], staticValues: { auto: [a2("grid-column-start", "auto")] } }), n("col-end", { supportsNegative: true, handleBareValue: ({ value: o }) => u(o) ? o : null, themeKeys: ["--grid-column-end"], handle: (o) => [a2("grid-column-end", o)], staticValues: { auto: [a2("grid-column-end", "auto")] } }), r("col-span", () => [{ values: Array.from({ length: 12 }, (o, g) => `${g + 1}`), valueThemeKeys: [] }]), r("col-start", () => [{ supportsNegative: true, values: Array.from({ length: 13 }, (o, g) => `${g + 1}`), valueThemeKeys: ["--grid-column-start"] }]), r("col-end", () => [{ supportsNegative: true, values: Array.from({ length: 13 }, (o, g) => `${g + 1}`), valueThemeKeys: ["--grid-column-end"] }]), n("row", { supportsNegative: true, handleBareValue: ({ value: o }) => u(o) ? o : null, themeKeys: ["--grid-row"], handle: (o) => [a2("grid-row", o)], staticValues: { auto: [a2("grid-row", "auto")] } }), n("row-span", { themeKeys: [], handleBareValue: ({ value: o }) => u(o) ? o : null, handle: (o) => [a2("grid-row", `span ${o} / span ${o}`)], staticValues: { full: [a2("grid-row", "1 / -1")] } }), n("row-start", { supportsNegative: true, handleBareValue: ({ value: o }) => u(o) ? o : null, themeKeys: ["--grid-row-start"], handle: (o) => [a2("grid-row-start", o)], staticValues: { auto: [a2("grid-row-start", "auto")] } }), n("row-end", { supportsNegative: true, handleBareValue: ({ value: o }) => u(o) ? o : null, themeKeys: ["--grid-row-end"], handle: (o) => [a2("grid-row-end", o)], staticValues: { auto: [a2("grid-row-end", "auto")] } }), r("row-span", () => [{ values: Array.from({ length: 12 }, (o, g) => `${g + 1}`), valueThemeKeys: [] }]), r("row-start", () => [{ supportsNegative: true, values: Array.from({ length: 13 }, (o, g) => `${g + 1}`), valueThemeKeys: ["--grid-row-start"] }]), r("row-end", () => [{ supportsNegative: true, values: Array.from({ length: 13 }, (o, g) => `${g + 1}`), valueThemeKeys: ["--grid-row-end"] }]), t("float-start", [["float", "inline-start"]]), t("float-end", [["float", "inline-end"]]), t("float-right", [["float", "right"]]), t("float-left", [["float", "left"]]), t("float-none", [["float", "none"]]), t("clear-start", [["clear", "inline-start"]]), t("clear-end", [["clear", "inline-end"]]), t("clear-right", [["clear", "right"]]), t("clear-left", [["clear", "left"]]), t("clear-both", [["clear", "both"]]), t("clear-none", [["clear", "none"]]);
+    for (let [o, g] of [["m", "margin"], ["mx", "margin-inline"], ["my", "margin-block"], ["ms", "margin-inline-start"], ["me", "margin-inline-end"], ["mbs", "margin-block-start"], ["mbe", "margin-block-end"], ["mt", "margin-top"], ["mr", "margin-right"], ["mb", "margin-bottom"], ["ml", "margin-left"]])
+      t(`${o}-auto`, [[g, "auto"]]), l(o, ["--margin", "--spacing"], (w) => [a2(g, w)], { supportsNegative: true });
+    t("box-border", [["box-sizing", "border-box"]]), t("box-content", [["box-sizing", "content-box"]]), n("line-clamp", { themeKeys: ["--line-clamp"], handleBareValue: ({ value: o }) => u(o) ? o : null, handle: (o) => [a2("overflow", "hidden"), a2("display", "-webkit-box"), a2("-webkit-box-orient", "vertical"), a2("-webkit-line-clamp", o)], staticValues: { none: [a2("overflow", "visible"), a2("display", "block"), a2("-webkit-box-orient", "horizontal"), a2("-webkit-line-clamp", "unset")] } }), r("line-clamp", () => [{ values: ["1", "2", "3", "4", "5", "6"], valueThemeKeys: ["--line-clamp"] }]), t("block", [["display", "block"]]), t("inline-block", [["display", "inline-block"]]), t("inline", [["display", "inline"]]), t("hidden", [["display", "none"]]), t("inline-flex", [["display", "inline-flex"]]), t("table", [["display", "table"]]), t("inline-table", [["display", "inline-table"]]), t("table-caption", [["display", "table-caption"]]), t("table-cell", [["display", "table-cell"]]), t("table-column", [["display", "table-column"]]), t("table-column-group", [["display", "table-column-group"]]), t("table-footer-group", [["display", "table-footer-group"]]), t("table-header-group", [["display", "table-header-group"]]), t("table-row-group", [["display", "table-row-group"]]), t("table-row", [["display", "table-row"]]), t("flow-root", [["display", "flow-root"]]), t("flex", [["display", "flex"]]), t("grid", [["display", "grid"]]), t("inline-grid", [["display", "inline-grid"]]), t("contents", [["display", "contents"]]), t("list-item", [["display", "list-item"]]), t("field-sizing-content", [["field-sizing", "content"]]), t("field-sizing-fixed", [["field-sizing", "fixed"]]), n("aspect", { themeKeys: ["--aspect"], handleBareValue: ({ fraction: o }) => {
+      if (o === null)
         return null;
-      let [g3, w2] = d(o2, "/");
-      return !de(g3) || !de(w2) ? null : o2;
-    }, handle: (o2) => [a2("aspect-ratio", o2)], staticValues: { auto: [a2("aspect-ratio", "auto")], square: [a2("aspect-ratio", "1 / 1")] } });
-    for (let [o2, g3] of [["full", "100%"], ["svw", "100svw"], ["lvw", "100lvw"], ["dvw", "100dvw"], ["svh", "100svh"], ["lvh", "100lvh"], ["dvh", "100dvh"], ["min", "min-content"], ["max", "max-content"], ["fit", "fit-content"]])
-      t(`size-${o2}`, [["--tw-sort", "size"], ["width", g3], ["height", g3]]), t(`w-${o2}`, [["width", g3]]), t(`h-${o2}`, [["height", g3]]), t(`min-w-${o2}`, [["min-width", g3]]), t(`min-h-${o2}`, [["min-height", g3]]), t(`max-w-${o2}`, [["max-width", g3]]), t(`max-h-${o2}`, [["max-height", g3]]);
-    t("size-auto", [["--tw-sort", "size"], ["width", "auto"], ["height", "auto"]]), t("w-auto", [["width", "auto"]]), t("h-auto", [["height", "auto"]]), t("min-w-auto", [["min-width", "auto"]]), t("min-h-auto", [["min-height", "auto"]]), t("h-lh", [["height", "1lh"]]), t("min-h-lh", [["min-height", "1lh"]]), t("max-h-lh", [["max-height", "1lh"]]), t("w-screen", [["width", "100vw"]]), t("min-w-screen", [["min-width", "100vw"]]), t("max-w-screen", [["max-width", "100vw"]]), t("h-screen", [["height", "100vh"]]), t("min-h-screen", [["min-height", "100vh"]]), t("max-h-screen", [["max-height", "100vh"]]), t("max-w-none", [["max-width", "none"]]), t("max-h-none", [["max-height", "none"]]), l2("size", ["--size", "--spacing"], (o2) => [a2("--tw-sort", "size"), a2("width", o2), a2("height", o2)], { supportsFractions: true });
-    for (let [o2, g3, w2] of [["w", ["--width", "--spacing", "--container"], "width"], ["min-w", ["--min-width", "--spacing", "--container"], "min-width"], ["max-w", ["--max-width", "--spacing", "--container"], "max-width"], ["h", ["--height", "--spacing"], "height"], ["min-h", ["--min-height", "--height", "--spacing"], "min-height"], ["max-h", ["--max-height", "--height", "--spacing"], "max-height"]])
-      l2(o2, g3, (C2) => [a2(w2, C2)], { supportsFractions: true });
-    for (let [o2, g3] of [["full", "100%"], ["min", "min-content"], ["max", "max-content"], ["fit", "fit-content"]])
-      t(`inline-${o2}`, [["inline-size", g3]]), t(`block-${o2}`, [["block-size", g3]]), t(`min-inline-${o2}`, [["min-inline-size", g3]]), t(`min-block-${o2}`, [["min-block-size", g3]]), t(`max-inline-${o2}`, [["max-inline-size", g3]]), t(`max-block-${o2}`, [["max-block-size", g3]]);
-    for (let [o2, g3] of [["svw", "100svw"], ["lvw", "100lvw"], ["dvw", "100dvw"]])
-      t(`inline-${o2}`, [["inline-size", g3]]), t(`min-inline-${o2}`, [["min-inline-size", g3]]), t(`max-inline-${o2}`, [["max-inline-size", g3]]);
-    for (let [o2, g3] of [["svh", "100svh"], ["lvh", "100lvh"], ["dvh", "100dvh"]])
-      t(`block-${o2}`, [["block-size", g3]]), t(`min-block-${o2}`, [["min-block-size", g3]]), t(`max-block-${o2}`, [["max-block-size", g3]]);
+      let [g, w] = d(o, "/");
+      return !de(g) || !de(w) ? null : o;
+    }, handle: (o) => [a2("aspect-ratio", o)], staticValues: { auto: [a2("aspect-ratio", "auto")], square: [a2("aspect-ratio", "1 / 1")] } });
+    for (let [o, g] of [["full", "100%"], ["svw", "100svw"], ["lvw", "100lvw"], ["dvw", "100dvw"], ["svh", "100svh"], ["lvh", "100lvh"], ["dvh", "100dvh"], ["min", "min-content"], ["max", "max-content"], ["fit", "fit-content"]])
+      t(`size-${o}`, [["--tw-sort", "size"], ["width", g], ["height", g]]), t(`w-${o}`, [["width", g]]), t(`h-${o}`, [["height", g]]), t(`min-w-${o}`, [["min-width", g]]), t(`min-h-${o}`, [["min-height", g]]), t(`max-w-${o}`, [["max-width", g]]), t(`max-h-${o}`, [["max-height", g]]);
+    t("size-auto", [["--tw-sort", "size"], ["width", "auto"], ["height", "auto"]]), t("w-auto", [["width", "auto"]]), t("h-auto", [["height", "auto"]]), t("min-w-auto", [["min-width", "auto"]]), t("min-h-auto", [["min-height", "auto"]]), t("h-lh", [["height", "1lh"]]), t("min-h-lh", [["min-height", "1lh"]]), t("max-h-lh", [["max-height", "1lh"]]), t("w-screen", [["width", "100vw"]]), t("min-w-screen", [["min-width", "100vw"]]), t("max-w-screen", [["max-width", "100vw"]]), t("h-screen", [["height", "100vh"]]), t("min-h-screen", [["min-height", "100vh"]]), t("max-h-screen", [["max-height", "100vh"]]), t("max-w-none", [["max-width", "none"]]), t("max-h-none", [["max-height", "none"]]), l("size", ["--size", "--spacing"], (o) => [a2("--tw-sort", "size"), a2("width", o), a2("height", o)], { supportsFractions: true });
+    for (let [o, g, w] of [["w", ["--width", "--spacing", "--container"], "width"], ["min-w", ["--min-width", "--spacing", "--container"], "min-width"], ["max-w", ["--max-width", "--spacing", "--container"], "max-width"], ["h", ["--height", "--spacing"], "height"], ["min-h", ["--min-height", "--height", "--spacing"], "min-height"], ["max-h", ["--max-height", "--height", "--spacing"], "max-height"]])
+      l(o, g, (C) => [a2(w, C)], { supportsFractions: true });
+    for (let [o, g] of [["full", "100%"], ["min", "min-content"], ["max", "max-content"], ["fit", "fit-content"]])
+      t(`inline-${o}`, [["inline-size", g]]), t(`block-${o}`, [["block-size", g]]), t(`min-inline-${o}`, [["min-inline-size", g]]), t(`min-block-${o}`, [["min-block-size", g]]), t(`max-inline-${o}`, [["max-inline-size", g]]), t(`max-block-${o}`, [["max-block-size", g]]);
+    for (let [o, g] of [["svw", "100svw"], ["lvw", "100lvw"], ["dvw", "100dvw"]])
+      t(`inline-${o}`, [["inline-size", g]]), t(`min-inline-${o}`, [["min-inline-size", g]]), t(`max-inline-${o}`, [["max-inline-size", g]]);
+    for (let [o, g] of [["svh", "100svh"], ["lvh", "100lvh"], ["dvh", "100dvh"]])
+      t(`block-${o}`, [["block-size", g]]), t(`min-block-${o}`, [["min-block-size", g]]), t(`max-block-${o}`, [["max-block-size", g]]);
     t("inline-auto", [["inline-size", "auto"]]), t("block-auto", [["block-size", "auto"]]), t("min-inline-auto", [["min-inline-size", "auto"]]), t("min-block-auto", [["min-block-size", "auto"]]), t("block-lh", [["block-size", "1lh"]]), t("min-block-lh", [["min-block-size", "1lh"]]), t("max-block-lh", [["max-block-size", "1lh"]]), t("inline-screen", [["inline-size", "100vw"]]), t("min-inline-screen", [["min-inline-size", "100vw"]]), t("max-inline-screen", [["max-inline-size", "100vw"]]), t("block-screen", [["block-size", "100vh"]]), t("min-block-screen", [["min-block-size", "100vh"]]), t("max-block-screen", [["max-block-size", "100vh"]]), t("max-inline-none", [["max-inline-size", "none"]]), t("max-block-none", [["max-block-size", "none"]]);
-    for (let [o2, g3, w2] of [["inline", ["--spacing", "--container"], "inline-size"], ["min-inline", ["--spacing", "--container"], "min-inline-size"], ["max-inline", ["--spacing", "--container"], "max-inline-size"], ["block", ["--spacing"], "block-size"], ["min-block", ["--spacing"], "min-block-size"], ["max-block", ["--spacing"], "max-block-size"]])
-      l2(o2, g3, (C2) => [a2(w2, C2)], { supportsFractions: true });
+    for (let [o, g, w] of [["inline", ["--spacing", "--container"], "inline-size"], ["min-inline", ["--spacing", "--container"], "min-inline-size"], ["max-inline", ["--spacing", "--container"], "max-inline-size"], ["block", ["--spacing"], "block-size"], ["min-block", ["--spacing"], "min-block-size"], ["max-block", ["--spacing"], "max-block-size"]])
+      l(o, g, (C) => [a2(w, C)], { supportsFractions: true });
     i.static("container", () => {
-      let o2 = [...e2.namespace("--breakpoint").values()];
-      o2.sort((w2, C2) => Ee(w2, C2, "asc"));
-      let g3 = [a2("--tw-sort", "--tw-container-component"), a2("width", "100%")];
-      for (let w2 of o2)
-        g3.push(B2("@media", `(width >= ${w2})`, [a2("max-width", w2)]));
-      return g3;
-    }), t("flex-auto", [["flex", "auto"]]), t("flex-initial", [["flex", "0 auto"]]), t("flex-none", [["flex", "none"]]), i.functional("flex", (o2) => {
-      if (o2.value) {
-        if (o2.value.kind === "arbitrary")
-          return o2.modifier ? undefined : [a2("flex", o2.value.value)];
-        if (o2.value.fraction) {
-          let [g3, w2] = d(o2.value.fraction, "/");
-          return !u(g3) || !u(w2) ? undefined : [a2("flex", `calc(${o2.value.fraction} * 100%)`)];
+      let o = [...e.namespace("--breakpoint").values()];
+      o.sort((w, C) => Ee(w, C, "asc"));
+      let g = [a2("--tw-sort", "--tw-container-component"), a2("width", "100%")];
+      for (let w of o)
+        g.push(B2("@media", `(width >= ${w})`, [a2("max-width", w)]));
+      return g;
+    }), t("flex-auto", [["flex", "auto"]]), t("flex-initial", [["flex", "0 auto"]]), t("flex-none", [["flex", "none"]]), i.functional("flex", (o) => {
+      if (o.value) {
+        if (o.value.kind === "arbitrary")
+          return o.modifier ? undefined : [a2("flex", o.value.value)];
+        if (o.value.fraction) {
+          let [g, w] = d(o.value.fraction, "/");
+          return !u(g) || !u(w) ? undefined : [a2("flex", `calc(${o.value.fraction} * 100%)`)];
         }
-        if (u(o2.value.value))
-          return o2.modifier ? undefined : [a2("flex", o2.value.value)];
+        if (u(o.value.value))
+          return o.modifier ? undefined : [a2("flex", o.value.value)];
       }
-    }), r("flex", () => [{ supportsFractions: true }, { values: Array.from({ length: 12 }, (o2, g3) => `${g3 + 1}`) }]), n("shrink", { defaultValue: "1", handleBareValue: ({ value: o2 }) => u(o2) ? o2 : null, handle: (o2) => [a2("flex-shrink", o2)] }), n("grow", { defaultValue: "1", handleBareValue: ({ value: o2 }) => u(o2) ? o2 : null, handle: (o2) => [a2("flex-grow", o2)] }), r("shrink", () => [{ values: ["0"], valueThemeKeys: [], hasDefaultValue: true }]), r("grow", () => [{ values: ["0"], valueThemeKeys: [], hasDefaultValue: true }]), t("basis-auto", [["flex-basis", "auto"]]), t("basis-full", [["flex-basis", "100%"]]), l2("basis", ["--flex-basis", "--spacing", "--container"], (o2) => [a2("flex-basis", o2)], { supportsFractions: true }), t("table-auto", [["table-layout", "auto"]]), t("table-fixed", [["table-layout", "fixed"]]), t("caption-top", [["caption-side", "top"]]), t("caption-bottom", [["caption-side", "bottom"]]), t("border-collapse", [["border-collapse", "collapse"]]), t("border-separate", [["border-collapse", "separate"]]);
+    }), r("flex", () => [{ supportsFractions: true }, { values: Array.from({ length: 12 }, (o, g) => `${g + 1}`) }]), n("shrink", { defaultValue: "1", handleBareValue: ({ value: o }) => u(o) ? o : null, handle: (o) => [a2("flex-shrink", o)] }), n("grow", { defaultValue: "1", handleBareValue: ({ value: o }) => u(o) ? o : null, handle: (o) => [a2("flex-grow", o)] }), r("shrink", () => [{ values: ["0"], valueThemeKeys: [], hasDefaultValue: true }]), r("grow", () => [{ values: ["0"], valueThemeKeys: [], hasDefaultValue: true }]), t("basis-auto", [["flex-basis", "auto"]]), t("basis-full", [["flex-basis", "100%"]]), l("basis", ["--flex-basis", "--spacing", "--container"], (o) => [a2("flex-basis", o)], { supportsFractions: true }), t("table-auto", [["table-layout", "auto"]]), t("table-fixed", [["table-layout", "fixed"]]), t("caption-top", [["caption-side", "top"]]), t("caption-bottom", [["caption-side", "bottom"]]), t("border-collapse", [["border-collapse", "collapse"]]), t("border-separate", [["border-collapse", "separate"]]);
     let d2 = () => Y2([$2("--tw-border-spacing-x", "0", "<length>"), $2("--tw-border-spacing-y", "0", "<length>")]);
-    l2("border-spacing", ["--border-spacing", "--spacing"], (o2) => [d2(), a2("--tw-border-spacing-x", o2), a2("--tw-border-spacing-y", o2), a2("border-spacing", "var(--tw-border-spacing-x) var(--tw-border-spacing-y)")]), l2("border-spacing-x", ["--border-spacing", "--spacing"], (o2) => [d2(), a2("--tw-border-spacing-x", o2), a2("border-spacing", "var(--tw-border-spacing-x) var(--tw-border-spacing-y)")]), l2("border-spacing-y", ["--border-spacing", "--spacing"], (o2) => [d2(), a2("--tw-border-spacing-y", o2), a2("border-spacing", "var(--tw-border-spacing-x) var(--tw-border-spacing-y)")]), n("origin", { themeKeys: ["--transform-origin"], handle: (o2) => [a2("transform-origin", o2)], staticValues: { center: [a2("transform-origin", "center")], top: [a2("transform-origin", "top")], "top-right": [a2("transform-origin", "100% 0")], right: [a2("transform-origin", "100%")], "bottom-right": [a2("transform-origin", "100% 100%")], bottom: [a2("transform-origin", "bottom")], "bottom-left": [a2("transform-origin", "0 100%")], left: [a2("transform-origin", "0")], "top-left": [a2("transform-origin", "0 0")] } }), n("perspective-origin", { themeKeys: ["--perspective-origin"], handle: (o2) => [a2("perspective-origin", o2)], staticValues: { center: [a2("perspective-origin", "center")], top: [a2("perspective-origin", "top")], "top-right": [a2("perspective-origin", "100% 0")], right: [a2("perspective-origin", "100%")], "bottom-right": [a2("perspective-origin", "100% 100%")], bottom: [a2("perspective-origin", "bottom")], "bottom-left": [a2("perspective-origin", "0 100%")], left: [a2("perspective-origin", "0")], "top-left": [a2("perspective-origin", "0 0")] } }), n("perspective", { themeKeys: ["--perspective"], handle: (o2) => [a2("perspective", o2)], staticValues: { none: [a2("perspective", "none")] } });
-    let f2 = () => Y2([$2("--tw-translate-x", "0"), $2("--tw-translate-y", "0"), $2("--tw-translate-z", "0")]);
-    t("translate-none", [["translate", "none"]]), t("-translate-full", [f2, ["--tw-translate-x", "-100%"], ["--tw-translate-y", "-100%"], ["translate", "var(--tw-translate-x) var(--tw-translate-y)"]]), t("translate-full", [f2, ["--tw-translate-x", "100%"], ["--tw-translate-y", "100%"], ["translate", "var(--tw-translate-x) var(--tw-translate-y)"]]), l2("translate", ["--translate", "--spacing"], (o2) => [f2(), a2("--tw-translate-x", o2), a2("--tw-translate-y", o2), a2("translate", "var(--tw-translate-x) var(--tw-translate-y)")], { supportsNegative: true, supportsFractions: true });
-    for (let o2 of ["x", "y"])
-      t(`-translate-${o2}-full`, [f2, [`--tw-translate-${o2}`, "-100%"], ["translate", "var(--tw-translate-x) var(--tw-translate-y)"]]), t(`translate-${o2}-full`, [f2, [`--tw-translate-${o2}`, "100%"], ["translate", "var(--tw-translate-x) var(--tw-translate-y)"]]), l2(`translate-${o2}`, ["--translate", "--spacing"], (g3) => [f2(), a2(`--tw-translate-${o2}`, g3), a2("translate", "var(--tw-translate-x) var(--tw-translate-y)")], { supportsNegative: true, supportsFractions: true });
-    l2("translate-z", ["--translate", "--spacing"], (o2) => [f2(), a2("--tw-translate-z", o2), a2("translate", "var(--tw-translate-x) var(--tw-translate-y) var(--tw-translate-z)")], { supportsNegative: true }), t("translate-3d", [f2, ["translate", "var(--tw-translate-x) var(--tw-translate-y) var(--tw-translate-z)"]]);
-    let c2 = () => Y2([$2("--tw-scale-x", "1"), $2("--tw-scale-y", "1"), $2("--tw-scale-z", "1")]);
+    l("border-spacing", ["--border-spacing", "--spacing"], (o) => [d2(), a2("--tw-border-spacing-x", o), a2("--tw-border-spacing-y", o), a2("border-spacing", "var(--tw-border-spacing-x) var(--tw-border-spacing-y)")]), l("border-spacing-x", ["--border-spacing", "--spacing"], (o) => [d2(), a2("--tw-border-spacing-x", o), a2("border-spacing", "var(--tw-border-spacing-x) var(--tw-border-spacing-y)")]), l("border-spacing-y", ["--border-spacing", "--spacing"], (o) => [d2(), a2("--tw-border-spacing-y", o), a2("border-spacing", "var(--tw-border-spacing-x) var(--tw-border-spacing-y)")]), n("origin", { themeKeys: ["--transform-origin"], handle: (o) => [a2("transform-origin", o)], staticValues: { center: [a2("transform-origin", "center")], top: [a2("transform-origin", "top")], "top-right": [a2("transform-origin", "100% 0")], right: [a2("transform-origin", "100%")], "bottom-right": [a2("transform-origin", "100% 100%")], bottom: [a2("transform-origin", "bottom")], "bottom-left": [a2("transform-origin", "0 100%")], left: [a2("transform-origin", "0")], "top-left": [a2("transform-origin", "0 0")] } }), n("perspective-origin", { themeKeys: ["--perspective-origin"], handle: (o) => [a2("perspective-origin", o)], staticValues: { center: [a2("perspective-origin", "center")], top: [a2("perspective-origin", "top")], "top-right": [a2("perspective-origin", "100% 0")], right: [a2("perspective-origin", "100%")], "bottom-right": [a2("perspective-origin", "100% 100%")], bottom: [a2("perspective-origin", "bottom")], "bottom-left": [a2("perspective-origin", "0 100%")], left: [a2("perspective-origin", "0")], "top-left": [a2("perspective-origin", "0 0")] } }), n("perspective", { themeKeys: ["--perspective"], handle: (o) => [a2("perspective", o)], staticValues: { none: [a2("perspective", "none")] } });
+    let f = () => Y2([$2("--tw-translate-x", "0"), $2("--tw-translate-y", "0"), $2("--tw-translate-z", "0")]);
+    t("translate-none", [["translate", "none"]]), t("-translate-full", [f, ["--tw-translate-x", "-100%"], ["--tw-translate-y", "-100%"], ["translate", "var(--tw-translate-x) var(--tw-translate-y)"]]), t("translate-full", [f, ["--tw-translate-x", "100%"], ["--tw-translate-y", "100%"], ["translate", "var(--tw-translate-x) var(--tw-translate-y)"]]), l("translate", ["--translate", "--spacing"], (o) => [f(), a2("--tw-translate-x", o), a2("--tw-translate-y", o), a2("translate", "var(--tw-translate-x) var(--tw-translate-y)")], { supportsNegative: true, supportsFractions: true });
+    for (let o of ["x", "y"])
+      t(`-translate-${o}-full`, [f, [`--tw-translate-${o}`, "-100%"], ["translate", "var(--tw-translate-x) var(--tw-translate-y)"]]), t(`translate-${o}-full`, [f, [`--tw-translate-${o}`, "100%"], ["translate", "var(--tw-translate-x) var(--tw-translate-y)"]]), l(`translate-${o}`, ["--translate", "--spacing"], (g) => [f(), a2(`--tw-translate-${o}`, g), a2("translate", "var(--tw-translate-x) var(--tw-translate-y)")], { supportsNegative: true, supportsFractions: true });
+    l("translate-z", ["--translate", "--spacing"], (o) => [f(), a2("--tw-translate-z", o), a2("translate", "var(--tw-translate-x) var(--tw-translate-y) var(--tw-translate-z)")], { supportsNegative: true }), t("translate-3d", [f, ["translate", "var(--tw-translate-x) var(--tw-translate-y) var(--tw-translate-z)"]]);
+    let c = () => Y2([$2("--tw-scale-x", "1"), $2("--tw-scale-y", "1"), $2("--tw-scale-z", "1")]);
     t("scale-none", [["scale", "none"]]);
-    function p2({ negative: o2 }) {
-      return (g3) => {
-        if (!g3.value || g3.modifier)
+    function p({ negative: o }) {
+      return (g) => {
+        if (!g.value || g.modifier)
           return;
-        let w2;
-        return g3.value.kind === "arbitrary" ? (w2 = g3.value.value, w2 = o2 ? `calc(${w2} * -1)` : w2, [a2("scale", w2)]) : (w2 = e2.resolve(g3.value.value, ["--scale"]), !w2 && u(g3.value.value) && (w2 = `${g3.value.value}%`), w2 ? (w2 = o2 ? `calc(${w2} * -1)` : w2, [c2(), a2("--tw-scale-x", w2), a2("--tw-scale-y", w2), a2("--tw-scale-z", w2), a2("scale", "var(--tw-scale-x) var(--tw-scale-y)")]) : undefined);
+        let w;
+        return g.value.kind === "arbitrary" ? (w = g.value.value, w = o ? `calc(${w} * -1)` : w, [a2("scale", w)]) : (w = e.resolve(g.value.value, ["--scale"]), !w && u(g.value.value) && (w = `${g.value.value}%`), w ? (w = o ? `calc(${w} * -1)` : w, [c(), a2("--tw-scale-x", w), a2("--tw-scale-y", w), a2("--tw-scale-z", w), a2("scale", "var(--tw-scale-x) var(--tw-scale-y)")]) : undefined);
       };
     }
-    i.functional("-scale", p2({ negative: true })), i.functional("scale", p2({ negative: false })), r("scale", () => [{ supportsNegative: true, values: ["0", "50", "75", "90", "95", "100", "105", "110", "125", "150", "200"], valueThemeKeys: ["--scale"] }]);
-    for (let o2 of ["x", "y", "z"])
-      n(`scale-${o2}`, { supportsNegative: true, themeKeys: ["--scale"], handleBareValue: ({ value: g3 }) => u(g3) ? `${g3}%` : null, handle: (g3) => [c2(), a2(`--tw-scale-${o2}`, g3), a2("scale", `var(--tw-scale-x) var(--tw-scale-y)${o2 === "z" ? " var(--tw-scale-z)" : ""}`)] }), r(`scale-${o2}`, () => [{ supportsNegative: true, values: ["0", "50", "75", "90", "95", "100", "105", "110", "125", "150", "200"], valueThemeKeys: ["--scale"] }]);
-    t("scale-3d", [c2, ["scale", "var(--tw-scale-x) var(--tw-scale-y) var(--tw-scale-z)"]]), t("rotate-none", [["rotate", "none"]]);
-    function m({ negative: o2 }) {
-      return (g3) => {
-        if (!g3.value || g3.modifier)
+    i.functional("-scale", p({ negative: true })), i.functional("scale", p({ negative: false })), r("scale", () => [{ supportsNegative: true, values: ["0", "50", "75", "90", "95", "100", "105", "110", "125", "150", "200"], valueThemeKeys: ["--scale"] }]);
+    for (let o of ["x", "y", "z"])
+      n(`scale-${o}`, { supportsNegative: true, themeKeys: ["--scale"], handleBareValue: ({ value: g }) => u(g) ? `${g}%` : null, handle: (g) => [c(), a2(`--tw-scale-${o}`, g), a2("scale", `var(--tw-scale-x) var(--tw-scale-y)${o === "z" ? " var(--tw-scale-z)" : ""}`)] }), r(`scale-${o}`, () => [{ supportsNegative: true, values: ["0", "50", "75", "90", "95", "100", "105", "110", "125", "150", "200"], valueThemeKeys: ["--scale"] }]);
+    t("scale-3d", [c, ["scale", "var(--tw-scale-x) var(--tw-scale-y) var(--tw-scale-z)"]]), t("rotate-none", [["rotate", "none"]]);
+    function m({ negative: o }) {
+      return (g) => {
+        if (!g.value || g.modifier)
           return;
-        let w2;
-        if (g3.value.kind === "arbitrary") {
-          w2 = g3.value.value;
-          let C2 = g3.value.dataType ?? ge(w2, ["angle", "vector"]);
-          if (C2 === "vector")
-            return [a2("rotate", `${w2} var(--tw-rotate)`)];
-          if (C2 !== "angle")
-            return [a2("rotate", o2 ? `calc(${w2} * -1)` : w2)];
-        } else if (w2 = e2.resolve(g3.value.value, ["--rotate"]), !w2 && u(g3.value.value) && (w2 = `${g3.value.value}deg`), !w2)
+        let w;
+        if (g.value.kind === "arbitrary") {
+          w = g.value.value;
+          let C = g.value.dataType ?? ge(w, ["angle", "vector"]);
+          if (C === "vector")
+            return [a2("rotate", `${w} var(--tw-rotate)`)];
+          if (C !== "angle")
+            return [a2("rotate", o ? `calc(${w} * -1)` : w)];
+        } else if (w = e.resolve(g.value.value, ["--rotate"]), !w && u(g.value.value) && (w = `${g.value.value}deg`), !w)
           return;
-        return [a2("rotate", o2 ? `calc(${w2} * -1)` : w2)];
+        return [a2("rotate", o ? `calc(${w} * -1)` : w)];
       };
     }
     i.functional("-rotate", m({ negative: true })), i.functional("rotate", m({ negative: false })), r("rotate", () => [{ supportsNegative: true, values: ["0", "1", "2", "3", "6", "12", "45", "90", "180"], valueThemeKeys: ["--rotate"] }]);
     {
-      let o2 = ["var(--tw-rotate-x,)", "var(--tw-rotate-y,)", "var(--tw-rotate-z,)", "var(--tw-skew-x,)", "var(--tw-skew-y,)"].join(" "), g3 = () => Y2([$2("--tw-rotate-x"), $2("--tw-rotate-y"), $2("--tw-rotate-z"), $2("--tw-skew-x"), $2("--tw-skew-y")]);
-      for (let w2 of ["x", "y", "z"])
-        n(`rotate-${w2}`, { supportsNegative: true, themeKeys: ["--rotate"], handleBareValue: ({ value: C2 }) => u(C2) ? `${C2}deg` : null, handle: (C2) => [g3(), a2(`--tw-rotate-${w2}`, `rotate${w2.toUpperCase()}(${C2})`), a2("transform", o2)] }), r(`rotate-${w2}`, () => [{ supportsNegative: true, values: ["0", "1", "2", "3", "6", "12", "45", "90", "180"], valueThemeKeys: ["--rotate"] }]);
-      n("skew", { supportsNegative: true, themeKeys: ["--skew"], handleBareValue: ({ value: w2 }) => u(w2) ? `${w2}deg` : null, handle: (w2) => [g3(), a2("--tw-skew-x", `skewX(${w2})`), a2("--tw-skew-y", `skewY(${w2})`), a2("transform", o2)] }), n("skew-x", { supportsNegative: true, themeKeys: ["--skew"], handleBareValue: ({ value: w2 }) => u(w2) ? `${w2}deg` : null, handle: (w2) => [g3(), a2("--tw-skew-x", `skewX(${w2})`), a2("transform", o2)] }), n("skew-y", { supportsNegative: true, themeKeys: ["--skew"], handleBareValue: ({ value: w2 }) => u(w2) ? `${w2}deg` : null, handle: (w2) => [g3(), a2("--tw-skew-y", `skewY(${w2})`), a2("transform", o2)] }), r("skew", () => [{ supportsNegative: true, values: ["0", "1", "2", "3", "6", "12"], valueThemeKeys: ["--skew"] }]), r("skew-x", () => [{ supportsNegative: true, values: ["0", "1", "2", "3", "6", "12"], valueThemeKeys: ["--skew"] }]), r("skew-y", () => [{ supportsNegative: true, values: ["0", "1", "2", "3", "6", "12"], valueThemeKeys: ["--skew"] }]), i.functional("transform", (w2) => {
-        if (w2.modifier)
+      let o = ["var(--tw-rotate-x,)", "var(--tw-rotate-y,)", "var(--tw-rotate-z,)", "var(--tw-skew-x,)", "var(--tw-skew-y,)"].join(" "), g = () => Y2([$2("--tw-rotate-x"), $2("--tw-rotate-y"), $2("--tw-rotate-z"), $2("--tw-skew-x"), $2("--tw-skew-y")]);
+      for (let w of ["x", "y", "z"])
+        n(`rotate-${w}`, { supportsNegative: true, themeKeys: ["--rotate"], handleBareValue: ({ value: C }) => u(C) ? `${C}deg` : null, handle: (C) => [g(), a2(`--tw-rotate-${w}`, `rotate${w.toUpperCase()}(${C})`), a2("transform", o)] }), r(`rotate-${w}`, () => [{ supportsNegative: true, values: ["0", "1", "2", "3", "6", "12", "45", "90", "180"], valueThemeKeys: ["--rotate"] }]);
+      n("skew", { supportsNegative: true, themeKeys: ["--skew"], handleBareValue: ({ value: w }) => u(w) ? `${w}deg` : null, handle: (w) => [g(), a2("--tw-skew-x", `skewX(${w})`), a2("--tw-skew-y", `skewY(${w})`), a2("transform", o)] }), n("skew-x", { supportsNegative: true, themeKeys: ["--skew"], handleBareValue: ({ value: w }) => u(w) ? `${w}deg` : null, handle: (w) => [g(), a2("--tw-skew-x", `skewX(${w})`), a2("transform", o)] }), n("skew-y", { supportsNegative: true, themeKeys: ["--skew"], handleBareValue: ({ value: w }) => u(w) ? `${w}deg` : null, handle: (w) => [g(), a2("--tw-skew-y", `skewY(${w})`), a2("transform", o)] }), r("skew", () => [{ supportsNegative: true, values: ["0", "1", "2", "3", "6", "12"], valueThemeKeys: ["--skew"] }]), r("skew-x", () => [{ supportsNegative: true, values: ["0", "1", "2", "3", "6", "12"], valueThemeKeys: ["--skew"] }]), r("skew-y", () => [{ supportsNegative: true, values: ["0", "1", "2", "3", "6", "12"], valueThemeKeys: ["--skew"] }]), i.functional("transform", (w) => {
+        if (w.modifier)
           return;
-        let C2 = null;
-        if (w2.value ? w2.value.kind === "arbitrary" && (C2 = w2.value.value) : C2 = o2, C2 !== null)
-          return [g3(), a2("transform", C2)];
-      }), r("transform", () => [{ hasDefaultValue: true }]), t("transform-cpu", [["transform", o2]]), t("transform-gpu", [["transform", `translateZ(0) ${o2}`]]), t("transform-none", [["transform", "none"]]);
+        let C = null;
+        if (w.value ? w.value.kind === "arbitrary" && (C = w.value.value) : C = o, C !== null)
+          return [g(), a2("transform", C)];
+      }), r("transform", () => [{ hasDefaultValue: true }]), t("transform-cpu", [["transform", o]]), t("transform-gpu", [["transform", `translateZ(0) ${o}`]]), t("transform-none", [["transform", "none"]]);
     }
-    n("zoom", { handleBareValue: ({ value: o2 }) => u(o2) ? `${o2}%` : null, handle: (o2) => [a2("zoom", o2)] }), r("zoom", () => [{ values: ["50", "75", "90", "95", "100", "105", "110", "125", "150", "200"] }]), t("transform-flat", [["transform-style", "flat"]]), t("transform-3d", [["transform-style", "preserve-3d"]]), t("transform-content", [["transform-box", "content-box"]]), t("transform-border", [["transform-box", "border-box"]]), t("transform-fill", [["transform-box", "fill-box"]]), t("transform-stroke", [["transform-box", "stroke-box"]]), t("transform-view", [["transform-box", "view-box"]]), t("backface-visible", [["backface-visibility", "visible"]]), t("backface-hidden", [["backface-visibility", "hidden"]]);
-    for (let o2 of ["auto", "default", "pointer", "wait", "text", "move", "help", "not-allowed", "none", "context-menu", "progress", "cell", "crosshair", "vertical-text", "alias", "copy", "no-drop", "grab", "grabbing", "all-scroll", "col-resize", "row-resize", "n-resize", "e-resize", "s-resize", "w-resize", "ne-resize", "nw-resize", "se-resize", "sw-resize", "ew-resize", "ns-resize", "nesw-resize", "nwse-resize", "zoom-in", "zoom-out"])
-      t(`cursor-${o2}`, [["cursor", o2]]);
-    n("cursor", { themeKeys: ["--cursor"], handle: (o2) => [a2("cursor", o2)] });
-    for (let o2 of ["auto", "none", "manipulation"])
-      t(`touch-${o2}`, [["touch-action", o2]]);
+    n("zoom", { handleBareValue: ({ value: o }) => u(o) ? `${o}%` : null, handle: (o) => [a2("zoom", o)] }), r("zoom", () => [{ values: ["50", "75", "90", "95", "100", "105", "110", "125", "150", "200"] }]), t("transform-flat", [["transform-style", "flat"]]), t("transform-3d", [["transform-style", "preserve-3d"]]), t("transform-content", [["transform-box", "content-box"]]), t("transform-border", [["transform-box", "border-box"]]), t("transform-fill", [["transform-box", "fill-box"]]), t("transform-stroke", [["transform-box", "stroke-box"]]), t("transform-view", [["transform-box", "view-box"]]), t("backface-visible", [["backface-visibility", "visible"]]), t("backface-hidden", [["backface-visibility", "hidden"]]);
+    for (let o of ["auto", "default", "pointer", "wait", "text", "move", "help", "not-allowed", "none", "context-menu", "progress", "cell", "crosshair", "vertical-text", "alias", "copy", "no-drop", "grab", "grabbing", "all-scroll", "col-resize", "row-resize", "n-resize", "e-resize", "s-resize", "w-resize", "ne-resize", "nw-resize", "se-resize", "sw-resize", "ew-resize", "ns-resize", "nesw-resize", "nwse-resize", "zoom-in", "zoom-out"])
+      t(`cursor-${o}`, [["cursor", o]]);
+    n("cursor", { themeKeys: ["--cursor"], handle: (o) => [a2("cursor", o)] });
+    for (let o of ["auto", "none", "manipulation"])
+      t(`touch-${o}`, [["touch-action", o]]);
     let u2 = () => Y2([$2("--tw-pan-x"), $2("--tw-pan-y"), $2("--tw-pinch-zoom")]);
-    for (let o2 of ["x", "left", "right"])
-      t(`touch-pan-${o2}`, [u2, ["--tw-pan-x", `pan-${o2}`], ["touch-action", "var(--tw-pan-x,) var(--tw-pan-y,) var(--tw-pinch-zoom,)"]]);
-    for (let o2 of ["y", "up", "down"])
-      t(`touch-pan-${o2}`, [u2, ["--tw-pan-y", `pan-${o2}`], ["touch-action", "var(--tw-pan-x,) var(--tw-pan-y,) var(--tw-pinch-zoom,)"]]);
+    for (let o of ["x", "left", "right"])
+      t(`touch-pan-${o}`, [u2, ["--tw-pan-x", `pan-${o}`], ["touch-action", "var(--tw-pan-x,) var(--tw-pan-y,) var(--tw-pinch-zoom,)"]]);
+    for (let o of ["y", "up", "down"])
+      t(`touch-pan-${o}`, [u2, ["--tw-pan-y", `pan-${o}`], ["touch-action", "var(--tw-pan-x,) var(--tw-pan-y,) var(--tw-pinch-zoom,)"]]);
     t("touch-pinch-zoom", [u2, ["--tw-pinch-zoom", "pinch-zoom"], ["touch-action", "var(--tw-pan-x,) var(--tw-pan-y,) var(--tw-pinch-zoom,)"]]);
-    for (let o2 of ["none", "text", "all", "auto"])
-      t(`select-${o2}`, [["-webkit-user-select", o2], ["user-select", o2]]);
+    for (let o of ["none", "text", "all", "auto"])
+      t(`select-${o}`, [["-webkit-user-select", o], ["user-select", o]]);
     t("resize-none", [["resize", "none"]]), t("resize-x", [["resize", "horizontal"]]), t("resize-y", [["resize", "vertical"]]), t("resize", [["resize", "both"]]), t("snap-none", [["scroll-snap-type", "none"]]);
-    let v2 = () => Y2([$2("--tw-scroll-snap-strictness", "proximity", "*")]);
-    for (let o2 of ["x", "y", "both"])
-      t(`snap-${o2}`, [v2, ["scroll-snap-type", `${o2} var(--tw-scroll-snap-strictness)`]]);
-    t("snap-mandatory", [v2, ["--tw-scroll-snap-strictness", "mandatory"]]), t("snap-proximity", [v2, ["--tw-scroll-snap-strictness", "proximity"]]), t("snap-align-none", [["scroll-snap-align", "none"]]), t("snap-start", [["scroll-snap-align", "start"]]), t("snap-end", [["scroll-snap-align", "end"]]), t("snap-center", [["scroll-snap-align", "center"]]), t("snap-normal", [["scroll-snap-stop", "normal"]]), t("snap-always", [["scroll-snap-stop", "always"]]);
-    for (let [o2, g3] of [["scroll-m", "scroll-margin"], ["scroll-mx", "scroll-margin-inline"], ["scroll-my", "scroll-margin-block"], ["scroll-ms", "scroll-margin-inline-start"], ["scroll-me", "scroll-margin-inline-end"], ["scroll-mbs", "scroll-margin-block-start"], ["scroll-mbe", "scroll-margin-block-end"], ["scroll-mt", "scroll-margin-top"], ["scroll-mr", "scroll-margin-right"], ["scroll-mb", "scroll-margin-bottom"], ["scroll-ml", "scroll-margin-left"]])
-      l2(o2, ["--scroll-margin", "--spacing"], (w2) => [a2(g3, w2)], { supportsNegative: true });
-    for (let [o2, g3] of [["scroll-p", "scroll-padding"], ["scroll-px", "scroll-padding-inline"], ["scroll-py", "scroll-padding-block"], ["scroll-ps", "scroll-padding-inline-start"], ["scroll-pe", "scroll-padding-inline-end"], ["scroll-pbs", "scroll-padding-block-start"], ["scroll-pbe", "scroll-padding-block-end"], ["scroll-pt", "scroll-padding-top"], ["scroll-pr", "scroll-padding-right"], ["scroll-pb", "scroll-padding-bottom"], ["scroll-pl", "scroll-padding-left"]])
-      l2(o2, ["--scroll-padding", "--spacing"], (w2) => [a2(g3, w2)]);
-    t("list-inside", [["list-style-position", "inside"]]), t("list-outside", [["list-style-position", "outside"]]), n("list", { themeKeys: ["--list-style-type"], handle: (o2) => [a2("list-style-type", o2)], staticValues: { none: [a2("list-style-type", "none")], disc: [a2("list-style-type", "disc")], decimal: [a2("list-style-type", "decimal")] } }), n("list-image", { themeKeys: ["--list-style-image"], handle: (o2) => [a2("list-style-image", o2)], staticValues: { none: [a2("list-style-image", "none")] } }), t("appearance-none", [["appearance", "none"]]), t("appearance-auto", [["appearance", "auto"]]), t("scheme-normal", [["color-scheme", "normal"]]), t("scheme-dark", [["color-scheme", "dark"]]), t("scheme-light", [["color-scheme", "light"]]), t("scheme-light-dark", [["color-scheme", "light dark"]]), t("scheme-only-dark", [["color-scheme", "only dark"]]), t("scheme-only-light", [["color-scheme", "only light"]]), n("columns", { themeKeys: ["--columns", "--container"], handleBareValue: ({ value: o2 }) => u(o2) ? o2 : null, handle: (o2) => [a2("columns", o2)], staticValues: { auto: [a2("columns", "auto")] } }), r("columns", () => [{ values: Array.from({ length: 12 }, (o2, g3) => `${g3 + 1}`), valueThemeKeys: ["--columns", "--container"] }]);
-    for (let o2 of ["auto", "avoid", "all", "avoid-page", "page", "left", "right", "column"])
-      t(`break-before-${o2}`, [["break-before", o2]]);
-    for (let o2 of ["auto", "avoid", "avoid-page", "avoid-column"])
-      t(`break-inside-${o2}`, [["break-inside", o2]]);
-    for (let o2 of ["auto", "avoid", "all", "avoid-page", "page", "left", "right", "column"])
-      t(`break-after-${o2}`, [["break-after", o2]]);
-    t("grid-flow-row", [["grid-auto-flow", "row"]]), t("grid-flow-col", [["grid-auto-flow", "column"]]), t("grid-flow-dense", [["grid-auto-flow", "dense"]]), t("grid-flow-row-dense", [["grid-auto-flow", "row dense"]]), t("grid-flow-col-dense", [["grid-auto-flow", "column dense"]]), n("auto-cols", { themeKeys: ["--grid-auto-columns"], handleBareValue: ({ value: o2 }) => !e2.resolve(null, ["--spacing"]) || !de(o2) ? null : `--spacing(${o2})`, handle: (o2) => [a2("grid-auto-columns", o2)], staticValues: { auto: [a2("grid-auto-columns", "auto")], min: [a2("grid-auto-columns", "min-content")], max: [a2("grid-auto-columns", "max-content")], fr: [a2("grid-auto-columns", "minmax(0, 1fr)")] } }), n("auto-rows", { themeKeys: ["--grid-auto-rows"], handleBareValue: ({ value: o2 }) => !e2.resolve(null, ["--spacing"]) || !de(o2) ? null : `--spacing(${o2})`, handle: (o2) => [a2("grid-auto-rows", o2)], staticValues: { auto: [a2("grid-auto-rows", "auto")], min: [a2("grid-auto-rows", "min-content")], max: [a2("grid-auto-rows", "max-content")], fr: [a2("grid-auto-rows", "minmax(0, 1fr)")] } }), n("grid-cols", { themeKeys: ["--grid-template-columns"], handleBareValue: ({ value: o2 }) => ue(o2) ? `repeat(${o2}, minmax(0, 1fr))` : null, handle: (o2) => [a2("grid-template-columns", o2)], staticValues: { none: [a2("grid-template-columns", "none")], subgrid: [a2("grid-template-columns", "subgrid")] } }), n("grid-rows", { themeKeys: ["--grid-template-rows"], handleBareValue: ({ value: o2 }) => ue(o2) ? `repeat(${o2}, minmax(0, 1fr))` : null, handle: (o2) => [a2("grid-template-rows", o2)], staticValues: { none: [a2("grid-template-rows", "none")], subgrid: [a2("grid-template-rows", "subgrid")] } }), r("grid-cols", () => [{ values: Array.from({ length: 12 }, (o2, g3) => `${g3 + 1}`), valueThemeKeys: ["--grid-template-columns"] }]), r("grid-rows", () => [{ values: Array.from({ length: 12 }, (o2, g3) => `${g3 + 1}`), valueThemeKeys: ["--grid-template-rows"] }]), t("flex-row", [["flex-direction", "row"]]), t("flex-row-reverse", [["flex-direction", "row-reverse"]]), t("flex-col", [["flex-direction", "column"]]), t("flex-col-reverse", [["flex-direction", "column-reverse"]]), t("flex-wrap", [["flex-wrap", "wrap"]]), t("flex-nowrap", [["flex-wrap", "nowrap"]]), t("flex-wrap-reverse", [["flex-wrap", "wrap-reverse"]]), t("place-content-center", [["place-content", "center"]]), t("place-content-start", [["place-content", "start"]]), t("place-content-end", [["place-content", "end"]]), t("place-content-center-safe", [["place-content", "safe center"]]), t("place-content-end-safe", [["place-content", "safe end"]]), t("place-content-between", [["place-content", "space-between"]]), t("place-content-around", [["place-content", "space-around"]]), t("place-content-evenly", [["place-content", "space-evenly"]]), t("place-content-baseline", [["place-content", "baseline"]]), t("place-content-stretch", [["place-content", "stretch"]]), t("place-items-center", [["place-items", "center"]]), t("place-items-start", [["place-items", "start"]]), t("place-items-end", [["place-items", "end"]]), t("place-items-center-safe", [["place-items", "safe center"]]), t("place-items-end-safe", [["place-items", "safe end"]]), t("place-items-baseline", [["place-items", "baseline"]]), t("place-items-stretch", [["place-items", "stretch"]]), t("content-normal", [["align-content", "normal"]]), t("content-center", [["align-content", "center"]]), t("content-start", [["align-content", "flex-start"]]), t("content-end", [["align-content", "flex-end"]]), t("content-center-safe", [["align-content", "safe center"]]), t("content-end-safe", [["align-content", "safe flex-end"]]), t("content-between", [["align-content", "space-between"]]), t("content-around", [["align-content", "space-around"]]), t("content-evenly", [["align-content", "space-evenly"]]), t("content-baseline", [["align-content", "baseline"]]), t("content-stretch", [["align-content", "stretch"]]), t("items-center", [["align-items", "center"]]), t("items-start", [["align-items", "flex-start"]]), t("items-end", [["align-items", "flex-end"]]), t("items-center-safe", [["align-items", "safe center"]]), t("items-end-safe", [["align-items", "safe flex-end"]]), t("items-baseline", [["align-items", "baseline"]]), t("items-baseline-last", [["align-items", "last baseline"]]), t("items-stretch", [["align-items", "stretch"]]), t("justify-normal", [["justify-content", "normal"]]), t("justify-center", [["justify-content", "center"]]), t("justify-start", [["justify-content", "flex-start"]]), t("justify-end", [["justify-content", "flex-end"]]), t("justify-center-safe", [["justify-content", "safe center"]]), t("justify-end-safe", [["justify-content", "safe flex-end"]]), t("justify-between", [["justify-content", "space-between"]]), t("justify-around", [["justify-content", "space-around"]]), t("justify-evenly", [["justify-content", "space-evenly"]]), t("justify-baseline", [["justify-content", "baseline"]]), t("justify-stretch", [["justify-content", "stretch"]]), t("justify-items-normal", [["justify-items", "normal"]]), t("justify-items-center", [["justify-items", "center"]]), t("justify-items-start", [["justify-items", "start"]]), t("justify-items-end", [["justify-items", "end"]]), t("justify-items-center-safe", [["justify-items", "safe center"]]), t("justify-items-end-safe", [["justify-items", "safe end"]]), t("justify-items-stretch", [["justify-items", "stretch"]]), l2("gap", ["--gap", "--spacing"], (o2) => [a2("gap", o2)]), l2("gap-x", ["--gap", "--spacing"], (o2) => [a2("column-gap", o2)]), l2("gap-y", ["--gap", "--spacing"], (o2) => [a2("row-gap", o2)]), l2("space-x", ["--space", "--spacing"], (o2) => {
-      let g3 = (() => {
-        if (o2 === "--spacing(0)" || o2 === "--spacing(-0)")
+    let v = () => Y2([$2("--tw-scroll-snap-strictness", "proximity", "*")]);
+    for (let o of ["x", "y", "both"])
+      t(`snap-${o}`, [v, ["scroll-snap-type", `${o} var(--tw-scroll-snap-strictness)`]]);
+    t("snap-mandatory", [v, ["--tw-scroll-snap-strictness", "mandatory"]]), t("snap-proximity", [v, ["--tw-scroll-snap-strictness", "proximity"]]), t("snap-align-none", [["scroll-snap-align", "none"]]), t("snap-start", [["scroll-snap-align", "start"]]), t("snap-end", [["scroll-snap-align", "end"]]), t("snap-center", [["scroll-snap-align", "center"]]), t("snap-normal", [["scroll-snap-stop", "normal"]]), t("snap-always", [["scroll-snap-stop", "always"]]);
+    for (let [o, g] of [["scroll-m", "scroll-margin"], ["scroll-mx", "scroll-margin-inline"], ["scroll-my", "scroll-margin-block"], ["scroll-ms", "scroll-margin-inline-start"], ["scroll-me", "scroll-margin-inline-end"], ["scroll-mbs", "scroll-margin-block-start"], ["scroll-mbe", "scroll-margin-block-end"], ["scroll-mt", "scroll-margin-top"], ["scroll-mr", "scroll-margin-right"], ["scroll-mb", "scroll-margin-bottom"], ["scroll-ml", "scroll-margin-left"]])
+      l(o, ["--scroll-margin", "--spacing"], (w) => [a2(g, w)], { supportsNegative: true });
+    for (let [o, g] of [["scroll-p", "scroll-padding"], ["scroll-px", "scroll-padding-inline"], ["scroll-py", "scroll-padding-block"], ["scroll-ps", "scroll-padding-inline-start"], ["scroll-pe", "scroll-padding-inline-end"], ["scroll-pbs", "scroll-padding-block-start"], ["scroll-pbe", "scroll-padding-block-end"], ["scroll-pt", "scroll-padding-top"], ["scroll-pr", "scroll-padding-right"], ["scroll-pb", "scroll-padding-bottom"], ["scroll-pl", "scroll-padding-left"]])
+      l(o, ["--scroll-padding", "--spacing"], (w) => [a2(g, w)]);
+    t("list-inside", [["list-style-position", "inside"]]), t("list-outside", [["list-style-position", "outside"]]), n("list", { themeKeys: ["--list-style-type"], handle: (o) => [a2("list-style-type", o)], staticValues: { none: [a2("list-style-type", "none")], disc: [a2("list-style-type", "disc")], decimal: [a2("list-style-type", "decimal")] } }), n("list-image", { themeKeys: ["--list-style-image"], handle: (o) => [a2("list-style-image", o)], staticValues: { none: [a2("list-style-image", "none")] } }), t("appearance-none", [["appearance", "none"]]), t("appearance-auto", [["appearance", "auto"]]), t("scheme-normal", [["color-scheme", "normal"]]), t("scheme-dark", [["color-scheme", "dark"]]), t("scheme-light", [["color-scheme", "light"]]), t("scheme-light-dark", [["color-scheme", "light dark"]]), t("scheme-only-dark", [["color-scheme", "only dark"]]), t("scheme-only-light", [["color-scheme", "only light"]]), n("columns", { themeKeys: ["--columns", "--container"], handleBareValue: ({ value: o }) => u(o) ? o : null, handle: (o) => [a2("columns", o)], staticValues: { auto: [a2("columns", "auto")] } }), r("columns", () => [{ values: Array.from({ length: 12 }, (o, g) => `${g + 1}`), valueThemeKeys: ["--columns", "--container"] }]);
+    for (let o of ["auto", "avoid", "all", "avoid-page", "page", "left", "right", "column"])
+      t(`break-before-${o}`, [["break-before", o]]);
+    for (let o of ["auto", "avoid", "avoid-page", "avoid-column"])
+      t(`break-inside-${o}`, [["break-inside", o]]);
+    for (let o of ["auto", "avoid", "all", "avoid-page", "page", "left", "right", "column"])
+      t(`break-after-${o}`, [["break-after", o]]);
+    t("grid-flow-row", [["grid-auto-flow", "row"]]), t("grid-flow-col", [["grid-auto-flow", "column"]]), t("grid-flow-dense", [["grid-auto-flow", "dense"]]), t("grid-flow-row-dense", [["grid-auto-flow", "row dense"]]), t("grid-flow-col-dense", [["grid-auto-flow", "column dense"]]), n("auto-cols", { themeKeys: ["--grid-auto-columns"], handleBareValue: ({ value: o }) => !e.resolve(null, ["--spacing"]) || !de(o) ? null : `--spacing(${o})`, handle: (o) => [a2("grid-auto-columns", o)], staticValues: { auto: [a2("grid-auto-columns", "auto")], min: [a2("grid-auto-columns", "min-content")], max: [a2("grid-auto-columns", "max-content")], fr: [a2("grid-auto-columns", "minmax(0, 1fr)")] } }), n("auto-rows", { themeKeys: ["--grid-auto-rows"], handleBareValue: ({ value: o }) => !e.resolve(null, ["--spacing"]) || !de(o) ? null : `--spacing(${o})`, handle: (o) => [a2("grid-auto-rows", o)], staticValues: { auto: [a2("grid-auto-rows", "auto")], min: [a2("grid-auto-rows", "min-content")], max: [a2("grid-auto-rows", "max-content")], fr: [a2("grid-auto-rows", "minmax(0, 1fr)")] } }), n("grid-cols", { themeKeys: ["--grid-template-columns"], handleBareValue: ({ value: o }) => ue(o) ? `repeat(${o}, minmax(0, 1fr))` : null, handle: (o) => [a2("grid-template-columns", o)], staticValues: { none: [a2("grid-template-columns", "none")], subgrid: [a2("grid-template-columns", "subgrid")] } }), n("grid-rows", { themeKeys: ["--grid-template-rows"], handleBareValue: ({ value: o }) => ue(o) ? `repeat(${o}, minmax(0, 1fr))` : null, handle: (o) => [a2("grid-template-rows", o)], staticValues: { none: [a2("grid-template-rows", "none")], subgrid: [a2("grid-template-rows", "subgrid")] } }), r("grid-cols", () => [{ values: Array.from({ length: 12 }, (o, g) => `${g + 1}`), valueThemeKeys: ["--grid-template-columns"] }]), r("grid-rows", () => [{ values: Array.from({ length: 12 }, (o, g) => `${g + 1}`), valueThemeKeys: ["--grid-template-rows"] }]), t("flex-row", [["flex-direction", "row"]]), t("flex-row-reverse", [["flex-direction", "row-reverse"]]), t("flex-col", [["flex-direction", "column"]]), t("flex-col-reverse", [["flex-direction", "column-reverse"]]), t("flex-wrap", [["flex-wrap", "wrap"]]), t("flex-nowrap", [["flex-wrap", "nowrap"]]), t("flex-wrap-reverse", [["flex-wrap", "wrap-reverse"]]), t("place-content-center", [["place-content", "center"]]), t("place-content-start", [["place-content", "start"]]), t("place-content-end", [["place-content", "end"]]), t("place-content-center-safe", [["place-content", "safe center"]]), t("place-content-end-safe", [["place-content", "safe end"]]), t("place-content-between", [["place-content", "space-between"]]), t("place-content-around", [["place-content", "space-around"]]), t("place-content-evenly", [["place-content", "space-evenly"]]), t("place-content-baseline", [["place-content", "baseline"]]), t("place-content-stretch", [["place-content", "stretch"]]), t("place-items-center", [["place-items", "center"]]), t("place-items-start", [["place-items", "start"]]), t("place-items-end", [["place-items", "end"]]), t("place-items-center-safe", [["place-items", "safe center"]]), t("place-items-end-safe", [["place-items", "safe end"]]), t("place-items-baseline", [["place-items", "baseline"]]), t("place-items-stretch", [["place-items", "stretch"]]), t("content-normal", [["align-content", "normal"]]), t("content-center", [["align-content", "center"]]), t("content-start", [["align-content", "flex-start"]]), t("content-end", [["align-content", "flex-end"]]), t("content-center-safe", [["align-content", "safe center"]]), t("content-end-safe", [["align-content", "safe flex-end"]]), t("content-between", [["align-content", "space-between"]]), t("content-around", [["align-content", "space-around"]]), t("content-evenly", [["align-content", "space-evenly"]]), t("content-baseline", [["align-content", "baseline"]]), t("content-stretch", [["align-content", "stretch"]]), t("items-center", [["align-items", "center"]]), t("items-start", [["align-items", "flex-start"]]), t("items-end", [["align-items", "flex-end"]]), t("items-center-safe", [["align-items", "safe center"]]), t("items-end-safe", [["align-items", "safe flex-end"]]), t("items-baseline", [["align-items", "baseline"]]), t("items-baseline-last", [["align-items", "last baseline"]]), t("items-stretch", [["align-items", "stretch"]]), t("justify-normal", [["justify-content", "normal"]]), t("justify-center", [["justify-content", "center"]]), t("justify-start", [["justify-content", "flex-start"]]), t("justify-end", [["justify-content", "flex-end"]]), t("justify-center-safe", [["justify-content", "safe center"]]), t("justify-end-safe", [["justify-content", "safe flex-end"]]), t("justify-between", [["justify-content", "space-between"]]), t("justify-around", [["justify-content", "space-around"]]), t("justify-evenly", [["justify-content", "space-evenly"]]), t("justify-baseline", [["justify-content", "baseline"]]), t("justify-stretch", [["justify-content", "stretch"]]), t("justify-items-normal", [["justify-items", "normal"]]), t("justify-items-center", [["justify-items", "center"]]), t("justify-items-start", [["justify-items", "start"]]), t("justify-items-end", [["justify-items", "end"]]), t("justify-items-center-safe", [["justify-items", "safe center"]]), t("justify-items-end-safe", [["justify-items", "safe end"]]), t("justify-items-stretch", [["justify-items", "stretch"]]), l("gap", ["--gap", "--spacing"], (o) => [a2("gap", o)]), l("gap-x", ["--gap", "--spacing"], (o) => [a2("column-gap", o)]), l("gap-y", ["--gap", "--spacing"], (o) => [a2("row-gap", o)]), l("space-x", ["--space", "--spacing"], (o) => {
+      let g = (() => {
+        if (o === "--spacing(0)" || o === "--spacing(-0)")
           return true;
-        let w2 = le.get(o2);
-        return !!(w2 && w2[0] === 0 && (w2[1] === null || y(o2)));
+        let w = le.get(o);
+        return !!(w && w[0] === 0 && (w[1] === null || y(o)));
       })();
-      return [Y2([$2("--tw-space-x-reverse", "0")]), H2(":where(& > :not(:last-child))", [a2("--tw-sort", "row-gap"), a2("--tw-space-x-reverse", "0"), a2("margin-inline-start", g3 ? "0" : `calc(${o2} * var(--tw-space-x-reverse))`), a2("margin-inline-end", g3 ? "0" : `calc(${o2} * calc(1 - var(--tw-space-x-reverse)))`)])];
-    }, { supportsNegative: true }), l2("space-y", ["--space", "--spacing"], (o2) => {
-      let g3 = (() => {
-        if (o2 === "--spacing(0)" || o2 === "--spacing(-0)")
+      return [Y2([$2("--tw-space-x-reverse", "0")]), H2(":where(& > :not(:last-child))", [a2("--tw-sort", "row-gap"), a2("--tw-space-x-reverse", "0"), a2("margin-inline-start", g ? "0" : `calc(${o} * var(--tw-space-x-reverse))`), a2("margin-inline-end", g ? "0" : `calc(${o} * calc(1 - var(--tw-space-x-reverse)))`)])];
+    }, { supportsNegative: true }), l("space-y", ["--space", "--spacing"], (o) => {
+      let g = (() => {
+        if (o === "--spacing(0)" || o === "--spacing(-0)")
           return true;
-        let w2 = le.get(o2);
-        return !!(w2 && w2[0] === 0 && (w2[1] === null || y(o2)));
+        let w = le.get(o);
+        return !!(w && w[0] === 0 && (w[1] === null || y(o)));
       })();
-      return [Y2([$2("--tw-space-y-reverse", "0")]), H2(":where(& > :not(:last-child))", [a2("--tw-sort", "column-gap"), a2("--tw-space-y-reverse", "0"), a2("margin-block-start", g3 ? "0" : `calc(${o2} * var(--tw-space-y-reverse))`), a2("margin-block-end", g3 ? "0" : `calc(${o2} * calc(1 - var(--tw-space-y-reverse)))`)])];
-    }, { supportsNegative: true }), t("space-x-reverse", [() => Y2([$2("--tw-space-x-reverse", "0")]), () => H2(":where(& > :not(:last-child))", [a2("--tw-sort", "row-gap"), a2("--tw-space-x-reverse", "1")])]), t("space-y-reverse", [() => Y2([$2("--tw-space-y-reverse", "0")]), () => H2(":where(& > :not(:last-child))", [a2("--tw-sort", "column-gap"), a2("--tw-space-y-reverse", "1")])]), t("accent-auto", [["accent-color", "auto"]]), s("accent", { themeKeys: ["--accent-color", "--color"], handle: (o2) => [a2("accent-color", o2)] }), s("caret", { themeKeys: ["--caret-color", "--color"], handle: (o2) => [a2("caret-color", o2)] }), s("divide", { themeKeys: ["--divide-color", "--border-color", "--color"], handle: (o2) => [H2(":where(& > :not(:last-child))", [a2("--tw-sort", "divide-color"), a2("border-color", o2)])] }), t("place-self-auto", [["place-self", "auto"]]), t("place-self-start", [["place-self", "start"]]), t("place-self-end", [["place-self", "end"]]), t("place-self-center", [["place-self", "center"]]), t("place-self-end-safe", [["place-self", "safe end"]]), t("place-self-center-safe", [["place-self", "safe center"]]), t("place-self-stretch", [["place-self", "stretch"]]), t("self-auto", [["align-self", "auto"]]), t("self-start", [["align-self", "flex-start"]]), t("self-end", [["align-self", "flex-end"]]), t("self-center", [["align-self", "center"]]), t("self-end-safe", [["align-self", "safe flex-end"]]), t("self-center-safe", [["align-self", "safe center"]]), t("self-stretch", [["align-self", "stretch"]]), t("self-baseline", [["align-self", "baseline"]]), t("self-baseline-last", [["align-self", "last baseline"]]), t("justify-self-auto", [["justify-self", "auto"]]), t("justify-self-start", [["justify-self", "flex-start"]]), t("justify-self-end", [["justify-self", "flex-end"]]), t("justify-self-center", [["justify-self", "center"]]), t("justify-self-end-safe", [["justify-self", "safe flex-end"]]), t("justify-self-center-safe", [["justify-self", "safe center"]]), t("justify-self-stretch", [["justify-self", "stretch"]]);
-    for (let o2 of ["auto", "hidden", "clip", "visible", "scroll"])
-      t(`overflow-${o2}`, [["overflow", o2]]), t(`overflow-x-${o2}`, [["overflow-x", o2]]), t(`overflow-y-${o2}`, [["overflow-y", o2]]);
-    for (let o2 of ["auto", "contain", "none"])
-      t(`overscroll-${o2}`, [["overscroll-behavior", o2]]), t(`overscroll-x-${o2}`, [["overscroll-behavior-x", o2]]), t(`overscroll-y-${o2}`, [["overscroll-behavior-y", o2]]);
+      return [Y2([$2("--tw-space-y-reverse", "0")]), H2(":where(& > :not(:last-child))", [a2("--tw-sort", "column-gap"), a2("--tw-space-y-reverse", "0"), a2("margin-block-start", g ? "0" : `calc(${o} * var(--tw-space-y-reverse))`), a2("margin-block-end", g ? "0" : `calc(${o} * calc(1 - var(--tw-space-y-reverse)))`)])];
+    }, { supportsNegative: true }), t("space-x-reverse", [() => Y2([$2("--tw-space-x-reverse", "0")]), () => H2(":where(& > :not(:last-child))", [a2("--tw-sort", "row-gap"), a2("--tw-space-x-reverse", "1")])]), t("space-y-reverse", [() => Y2([$2("--tw-space-y-reverse", "0")]), () => H2(":where(& > :not(:last-child))", [a2("--tw-sort", "column-gap"), a2("--tw-space-y-reverse", "1")])]), t("accent-auto", [["accent-color", "auto"]]), s("accent", { themeKeys: ["--accent-color", "--color"], handle: (o) => [a2("accent-color", o)] }), s("caret", { themeKeys: ["--caret-color", "--color"], handle: (o) => [a2("caret-color", o)] }), s("divide", { themeKeys: ["--divide-color", "--border-color", "--color"], handle: (o) => [H2(":where(& > :not(:last-child))", [a2("--tw-sort", "divide-color"), a2("border-color", o)])] }), t("place-self-auto", [["place-self", "auto"]]), t("place-self-start", [["place-self", "start"]]), t("place-self-end", [["place-self", "end"]]), t("place-self-center", [["place-self", "center"]]), t("place-self-end-safe", [["place-self", "safe end"]]), t("place-self-center-safe", [["place-self", "safe center"]]), t("place-self-stretch", [["place-self", "stretch"]]), t("self-auto", [["align-self", "auto"]]), t("self-start", [["align-self", "flex-start"]]), t("self-end", [["align-self", "flex-end"]]), t("self-center", [["align-self", "center"]]), t("self-end-safe", [["align-self", "safe flex-end"]]), t("self-center-safe", [["align-self", "safe center"]]), t("self-stretch", [["align-self", "stretch"]]), t("self-baseline", [["align-self", "baseline"]]), t("self-baseline-last", [["align-self", "last baseline"]]), t("justify-self-auto", [["justify-self", "auto"]]), t("justify-self-start", [["justify-self", "flex-start"]]), t("justify-self-end", [["justify-self", "flex-end"]]), t("justify-self-center", [["justify-self", "center"]]), t("justify-self-end-safe", [["justify-self", "safe flex-end"]]), t("justify-self-center-safe", [["justify-self", "safe center"]]), t("justify-self-stretch", [["justify-self", "stretch"]]);
+    for (let o of ["auto", "hidden", "clip", "visible", "scroll"])
+      t(`overflow-${o}`, [["overflow", o]]), t(`overflow-x-${o}`, [["overflow-x", o]]), t(`overflow-y-${o}`, [["overflow-y", o]]);
+    for (let o of ["auto", "contain", "none"])
+      t(`overscroll-${o}`, [["overscroll-behavior", o]]), t(`overscroll-x-${o}`, [["overscroll-behavior-x", o]]), t(`overscroll-y-${o}`, [["overscroll-behavior-y", o]]);
     t("scroll-auto", [["scroll-behavior", "auto"]]), t("scroll-smooth", [["scroll-behavior", "smooth"]]), t("scrollbar-auto", [["scrollbar-width", "auto"]]), t("scrollbar-thin", [["scrollbar-width", "thin"]]), t("scrollbar-none", [["scrollbar-width", "none"]]);
     {
-      let o2 = () => Y2([$2("--tw-scrollbar-thumb", "#0000", "<color>"), $2("--tw-scrollbar-track", "#0000", "<color>")]);
-      s("scrollbar-thumb", { themeKeys: ["--color"], handle: (g3) => [o2(), a2("--tw-scrollbar-thumb", g3), a2("scrollbar-color", "var(--tw-scrollbar-thumb) var(--tw-scrollbar-track)")] }), s("scrollbar-track", { themeKeys: ["--color"], handle: (g3) => [o2(), a2("--tw-scrollbar-track", g3), a2("scrollbar-color", "var(--tw-scrollbar-thumb) var(--tw-scrollbar-track)")] });
+      let o = () => Y2([$2("--tw-scrollbar-thumb", "#0000", "<color>"), $2("--tw-scrollbar-track", "#0000", "<color>")]);
+      s("scrollbar-thumb", { themeKeys: ["--color"], handle: (g) => [o(), a2("--tw-scrollbar-thumb", g), a2("scrollbar-color", "var(--tw-scrollbar-thumb) var(--tw-scrollbar-track)")] }), s("scrollbar-track", { themeKeys: ["--color"], handle: (g) => [o(), a2("--tw-scrollbar-track", g), a2("scrollbar-color", "var(--tw-scrollbar-thumb) var(--tw-scrollbar-track)")] });
     }
-    t("scrollbar-gutter-auto", [["scrollbar-gutter", "auto"]]), t("scrollbar-gutter-stable", [["scrollbar-gutter", "stable"]]), t("scrollbar-gutter-both", [["scrollbar-gutter", "stable both-edges"]]), t("truncate", [["overflow", "hidden"], ["text-overflow", "ellipsis"], ["white-space", "nowrap"]]), t("text-ellipsis", [["text-overflow", "ellipsis"]]), t("text-clip", [["text-overflow", "clip"]]), t("hyphens-none", [["-webkit-hyphens", "none"], ["hyphens", "none"]]), t("hyphens-manual", [["-webkit-hyphens", "manual"], ["hyphens", "manual"]]), t("hyphens-auto", [["-webkit-hyphens", "auto"], ["hyphens", "auto"]]), t("whitespace-normal", [["white-space", "normal"]]), t("whitespace-nowrap", [["white-space", "nowrap"]]), t("whitespace-pre", [["white-space", "pre"]]), t("whitespace-pre-line", [["white-space", "pre-line"]]), t("whitespace-pre-wrap", [["white-space", "pre-wrap"]]), t("whitespace-break-spaces", [["white-space", "break-spaces"]]), n("tab", { handleBareValue: ({ value: o2 }) => u(o2) ? o2 : null, handle: (o2) => [a2("tab-size", o2)] }), r("tab", () => [{ values: ["2", "4", "8"] }]), t("text-wrap", [["text-wrap", "wrap"]]), t("text-nowrap", [["text-wrap", "nowrap"]]), t("text-balance", [["text-wrap", "balance"]]), t("text-pretty", [["text-wrap", "pretty"]]), t("break-normal", [["overflow-wrap", "normal"], ["word-break", "normal"]]), t("break-all", [["word-break", "break-all"]]), t("break-keep", [["word-break", "keep-all"]]), t("wrap-anywhere", [["overflow-wrap", "anywhere"]]), t("wrap-break-word", [["overflow-wrap", "break-word"]]), t("wrap-normal", [["overflow-wrap", "normal"]]);
-    for (let [o2, g3] of [["rounded", ["border-radius"]], ["rounded-s", ["border-start-start-radius", "border-end-start-radius"]], ["rounded-e", ["border-start-end-radius", "border-end-end-radius"]], ["rounded-t", ["border-top-left-radius", "border-top-right-radius"]], ["rounded-r", ["border-top-right-radius", "border-bottom-right-radius"]], ["rounded-b", ["border-bottom-right-radius", "border-bottom-left-radius"]], ["rounded-l", ["border-top-left-radius", "border-bottom-left-radius"]], ["rounded-ss", ["border-start-start-radius"]], ["rounded-se", ["border-start-end-radius"]], ["rounded-ee", ["border-end-end-radius"]], ["rounded-es", ["border-end-start-radius"]], ["rounded-tl", ["border-top-left-radius"]], ["rounded-tr", ["border-top-right-radius"]], ["rounded-br", ["border-bottom-right-radius"]], ["rounded-bl", ["border-bottom-left-radius"]]])
-      n(o2, { themeKeys: ["--radius"], handle: (w2) => g3.map((C2) => a2(C2, w2)), staticValues: { none: g3.map((w2) => a2(w2, "0")), full: g3.map((w2) => a2(w2, "calc(infinity * 1px)")) } });
+    t("scrollbar-gutter-auto", [["scrollbar-gutter", "auto"]]), t("scrollbar-gutter-stable", [["scrollbar-gutter", "stable"]]), t("scrollbar-gutter-both", [["scrollbar-gutter", "stable both-edges"]]), t("truncate", [["overflow", "hidden"], ["text-overflow", "ellipsis"], ["white-space", "nowrap"]]), t("text-ellipsis", [["text-overflow", "ellipsis"]]), t("text-clip", [["text-overflow", "clip"]]), t("hyphens-none", [["-webkit-hyphens", "none"], ["hyphens", "none"]]), t("hyphens-manual", [["-webkit-hyphens", "manual"], ["hyphens", "manual"]]), t("hyphens-auto", [["-webkit-hyphens", "auto"], ["hyphens", "auto"]]), t("whitespace-normal", [["white-space", "normal"]]), t("whitespace-nowrap", [["white-space", "nowrap"]]), t("whitespace-pre", [["white-space", "pre"]]), t("whitespace-pre-line", [["white-space", "pre-line"]]), t("whitespace-pre-wrap", [["white-space", "pre-wrap"]]), t("whitespace-break-spaces", [["white-space", "break-spaces"]]), n("tab", { handleBareValue: ({ value: o }) => u(o) ? o : null, handle: (o) => [a2("tab-size", o)] }), r("tab", () => [{ values: ["2", "4", "8"] }]), t("text-wrap", [["text-wrap", "wrap"]]), t("text-nowrap", [["text-wrap", "nowrap"]]), t("text-balance", [["text-wrap", "balance"]]), t("text-pretty", [["text-wrap", "pretty"]]), t("break-normal", [["overflow-wrap", "normal"], ["word-break", "normal"]]), t("break-all", [["word-break", "break-all"]]), t("break-keep", [["word-break", "keep-all"]]), t("wrap-anywhere", [["overflow-wrap", "anywhere"]]), t("wrap-break-word", [["overflow-wrap", "break-word"]]), t("wrap-normal", [["overflow-wrap", "normal"]]);
+    for (let [o, g] of [["rounded", ["border-radius"]], ["rounded-s", ["border-start-start-radius", "border-end-start-radius"]], ["rounded-e", ["border-start-end-radius", "border-end-end-radius"]], ["rounded-t", ["border-top-left-radius", "border-top-right-radius"]], ["rounded-r", ["border-top-right-radius", "border-bottom-right-radius"]], ["rounded-b", ["border-bottom-right-radius", "border-bottom-left-radius"]], ["rounded-l", ["border-top-left-radius", "border-bottom-left-radius"]], ["rounded-ss", ["border-start-start-radius"]], ["rounded-se", ["border-start-end-radius"]], ["rounded-ee", ["border-end-end-radius"]], ["rounded-es", ["border-end-start-radius"]], ["rounded-tl", ["border-top-left-radius"]], ["rounded-tr", ["border-top-right-radius"]], ["rounded-br", ["border-bottom-right-radius"]], ["rounded-bl", ["border-bottom-left-radius"]]])
+      n(o, { themeKeys: ["--radius"], handle: (w) => g.map((C) => a2(C, w)), staticValues: { none: g.map((w) => a2(w, "0")), full: g.map((w) => a2(w, "calc(infinity * 1px)")) } });
     t("border-solid", [["--tw-border-style", "solid"], ["border-style", "solid"]]), t("border-dashed", [["--tw-border-style", "dashed"], ["border-style", "dashed"]]), t("border-dotted", [["--tw-border-style", "dotted"], ["border-style", "dotted"]]), t("border-double", [["--tw-border-style", "double"], ["border-style", "double"]]), t("border-hidden", [["--tw-border-style", "hidden"], ["border-style", "hidden"]]), t("border-none", [["--tw-border-style", "none"], ["border-style", "none"]]);
     {
-      let g3 = function(w2, C2) {
-        i.functional(w2, (A2) => {
-          if (!A2.value) {
-            if (A2.modifier)
+      let g = function(w, C) {
+        i.functional(w, (A) => {
+          if (!A.value) {
+            if (A.modifier)
               return;
-            let T2 = e2.get(["--default-border-width"]) ?? "1px", K2 = C2.width(T2);
-            return K2 ? [o2(), ...K2] : undefined;
+            let T = e.get(["--default-border-width"]) ?? "1px", K = C.width(T);
+            return K ? [o(), ...K] : undefined;
           }
-          if (A2.value.kind === "arbitrary") {
-            let T2 = A2.value.value;
-            switch (A2.value.dataType ?? ge(T2, ["color", "line-width", "length"])) {
+          if (A.value.kind === "arbitrary") {
+            let T = A.value.value;
+            switch (A.value.dataType ?? ge(T, ["color", "line-width", "length"])) {
               case "line-width":
               case "length": {
-                if (A2.modifier)
+                if (A.modifier)
                   return;
-                let N2 = C2.width(T2);
-                return N2 ? [o2(), ...N2] : undefined;
+                let N = C.width(T);
+                return N ? [o(), ...N] : undefined;
               }
               default:
-                return T2 = te2(T2, A2.modifier, e2), T2 === null ? undefined : C2.color(T2);
+                return T = te2(T, A.modifier, e), T === null ? undefined : C.color(T);
             }
           }
           {
-            let T2 = ae2(A2, e2, ["--border-color", "--color"]);
-            if (T2)
-              return C2.color(T2);
+            let T = ae2(A, e, ["--border-color", "--color"]);
+            if (T)
+              return C.color(T);
           }
           {
-            if (A2.modifier)
+            if (A.modifier)
               return;
-            let T2 = e2.resolve(A2.value.value, ["--border-width"]);
-            if (T2) {
-              let K2 = C2.width(T2);
-              return K2 ? [o2(), ...K2] : undefined;
+            let T = e.resolve(A.value.value, ["--border-width"]);
+            if (T) {
+              let K = C.width(T);
+              return K ? [o(), ...K] : undefined;
             }
-            if (u(A2.value.value)) {
-              let K2 = C2.width(`${A2.value.value}px`);
-              return K2 ? [o2(), ...K2] : undefined;
+            if (u(A.value.value)) {
+              let K = C.width(`${A.value.value}px`);
+              return K ? [o(), ...K] : undefined;
             }
           }
-        }), r(w2, () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--border-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (A2, T2) => `${T2 * 5}`), hasDefaultValue: true }, { values: ["0", "2", "4", "8"], valueThemeKeys: ["--border-width"] }]);
+        }), r(w, () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--border-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (A, T) => `${T * 5}`), hasDefaultValue: true }, { values: ["0", "2", "4", "8"], valueThemeKeys: ["--border-width"] }]);
       };
-      var E2 = g3;
-      let o2 = () => Y2([$2("--tw-border-style", "solid")]);
-      g3("border", { width: (w2) => [a2("border-style", "var(--tw-border-style)"), a2("border-width", w2)], color: (w2) => [a2("border-color", w2)] }), g3("border-x", { width: (w2) => [a2("border-inline-style", "var(--tw-border-style)"), a2("border-inline-width", w2)], color: (w2) => [a2("border-inline-color", w2)] }), g3("border-y", { width: (w2) => [a2("border-block-style", "var(--tw-border-style)"), a2("border-block-width", w2)], color: (w2) => [a2("border-block-color", w2)] }), g3("border-s", { width: (w2) => [a2("border-inline-start-style", "var(--tw-border-style)"), a2("border-inline-start-width", w2)], color: (w2) => [a2("border-inline-start-color", w2)] }), g3("border-e", { width: (w2) => [a2("border-inline-end-style", "var(--tw-border-style)"), a2("border-inline-end-width", w2)], color: (w2) => [a2("border-inline-end-color", w2)] }), g3("border-bs", { width: (w2) => [a2("border-block-start-style", "var(--tw-border-style)"), a2("border-block-start-width", w2)], color: (w2) => [a2("border-block-start-color", w2)] }), g3("border-be", { width: (w2) => [a2("border-block-end-style", "var(--tw-border-style)"), a2("border-block-end-width", w2)], color: (w2) => [a2("border-block-end-color", w2)] }), g3("border-t", { width: (w2) => [a2("border-top-style", "var(--tw-border-style)"), a2("border-top-width", w2)], color: (w2) => [a2("border-top-color", w2)] }), g3("border-r", { width: (w2) => [a2("border-right-style", "var(--tw-border-style)"), a2("border-right-width", w2)], color: (w2) => [a2("border-right-color", w2)] }), g3("border-b", { width: (w2) => [a2("border-bottom-style", "var(--tw-border-style)"), a2("border-bottom-width", w2)], color: (w2) => [a2("border-bottom-color", w2)] }), g3("border-l", { width: (w2) => [a2("border-left-style", "var(--tw-border-style)"), a2("border-left-width", w2)], color: (w2) => [a2("border-left-color", w2)] }), n("divide-x", { defaultValue: e2.get(["--default-border-width"]) ?? "1px", themeKeys: ["--divide-width", "--border-width"], handleBareValue: ({ value: w2 }) => u(w2) ? `${w2}px` : null, handle: (w2) => [Y2([$2("--tw-divide-x-reverse", "0")]), H2(":where(& > :not(:last-child))", [a2("--tw-sort", "divide-x-width"), o2(), a2("--tw-divide-x-reverse", "0"), a2("border-inline-style", "var(--tw-border-style)"), a2("border-inline-start-width", `calc(${w2} * var(--tw-divide-x-reverse))`), a2("border-inline-end-width", `calc(${w2} * calc(1 - var(--tw-divide-x-reverse)))`)])] }), n("divide-y", { defaultValue: e2.get(["--default-border-width"]) ?? "1px", themeKeys: ["--divide-width", "--border-width"], handleBareValue: ({ value: w2 }) => u(w2) ? `${w2}px` : null, handle: (w2) => [Y2([$2("--tw-divide-y-reverse", "0")]), H2(":where(& > :not(:last-child))", [a2("--tw-sort", "divide-y-width"), o2(), a2("--tw-divide-y-reverse", "0"), a2("border-bottom-style", "var(--tw-border-style)"), a2("border-top-style", "var(--tw-border-style)"), a2("border-top-width", `calc(${w2} * var(--tw-divide-y-reverse))`), a2("border-bottom-width", `calc(${w2} * calc(1 - var(--tw-divide-y-reverse)))`)])] }), r("divide-x", () => [{ values: ["0", "2", "4", "8"], valueThemeKeys: ["--divide-width", "--border-width"], hasDefaultValue: true }]), r("divide-y", () => [{ values: ["0", "2", "4", "8"], valueThemeKeys: ["--divide-width", "--border-width"], hasDefaultValue: true }]), t("divide-x-reverse", [() => Y2([$2("--tw-divide-x-reverse", "0")]), () => H2(":where(& > :not(:last-child))", [a2("--tw-divide-x-reverse", "1")])]), t("divide-y-reverse", [() => Y2([$2("--tw-divide-y-reverse", "0")]), () => H2(":where(& > :not(:last-child))", [a2("--tw-divide-y-reverse", "1")])]);
-      for (let w2 of ["solid", "dashed", "dotted", "double", "none"])
-        t(`divide-${w2}`, [() => H2(":where(& > :not(:last-child))", [a2("--tw-sort", "divide-style"), a2("--tw-border-style", w2), a2("border-style", w2)])]);
+      var E = g;
+      let o = () => Y2([$2("--tw-border-style", "solid")]);
+      g("border", { width: (w) => [a2("border-style", "var(--tw-border-style)"), a2("border-width", w)], color: (w) => [a2("border-color", w)] }), g("border-x", { width: (w) => [a2("border-inline-style", "var(--tw-border-style)"), a2("border-inline-width", w)], color: (w) => [a2("border-inline-color", w)] }), g("border-y", { width: (w) => [a2("border-block-style", "var(--tw-border-style)"), a2("border-block-width", w)], color: (w) => [a2("border-block-color", w)] }), g("border-s", { width: (w) => [a2("border-inline-start-style", "var(--tw-border-style)"), a2("border-inline-start-width", w)], color: (w) => [a2("border-inline-start-color", w)] }), g("border-e", { width: (w) => [a2("border-inline-end-style", "var(--tw-border-style)"), a2("border-inline-end-width", w)], color: (w) => [a2("border-inline-end-color", w)] }), g("border-bs", { width: (w) => [a2("border-block-start-style", "var(--tw-border-style)"), a2("border-block-start-width", w)], color: (w) => [a2("border-block-start-color", w)] }), g("border-be", { width: (w) => [a2("border-block-end-style", "var(--tw-border-style)"), a2("border-block-end-width", w)], color: (w) => [a2("border-block-end-color", w)] }), g("border-t", { width: (w) => [a2("border-top-style", "var(--tw-border-style)"), a2("border-top-width", w)], color: (w) => [a2("border-top-color", w)] }), g("border-r", { width: (w) => [a2("border-right-style", "var(--tw-border-style)"), a2("border-right-width", w)], color: (w) => [a2("border-right-color", w)] }), g("border-b", { width: (w) => [a2("border-bottom-style", "var(--tw-border-style)"), a2("border-bottom-width", w)], color: (w) => [a2("border-bottom-color", w)] }), g("border-l", { width: (w) => [a2("border-left-style", "var(--tw-border-style)"), a2("border-left-width", w)], color: (w) => [a2("border-left-color", w)] }), n("divide-x", { defaultValue: e.get(["--default-border-width"]) ?? "1px", themeKeys: ["--divide-width", "--border-width"], handleBareValue: ({ value: w }) => u(w) ? `${w}px` : null, handle: (w) => [Y2([$2("--tw-divide-x-reverse", "0")]), H2(":where(& > :not(:last-child))", [a2("--tw-sort", "divide-x-width"), o(), a2("--tw-divide-x-reverse", "0"), a2("border-inline-style", "var(--tw-border-style)"), a2("border-inline-start-width", `calc(${w} * var(--tw-divide-x-reverse))`), a2("border-inline-end-width", `calc(${w} * calc(1 - var(--tw-divide-x-reverse)))`)])] }), n("divide-y", { defaultValue: e.get(["--default-border-width"]) ?? "1px", themeKeys: ["--divide-width", "--border-width"], handleBareValue: ({ value: w }) => u(w) ? `${w}px` : null, handle: (w) => [Y2([$2("--tw-divide-y-reverse", "0")]), H2(":where(& > :not(:last-child))", [a2("--tw-sort", "divide-y-width"), o(), a2("--tw-divide-y-reverse", "0"), a2("border-bottom-style", "var(--tw-border-style)"), a2("border-top-style", "var(--tw-border-style)"), a2("border-top-width", `calc(${w} * var(--tw-divide-y-reverse))`), a2("border-bottom-width", `calc(${w} * calc(1 - var(--tw-divide-y-reverse)))`)])] }), r("divide-x", () => [{ values: ["0", "2", "4", "8"], valueThemeKeys: ["--divide-width", "--border-width"], hasDefaultValue: true }]), r("divide-y", () => [{ values: ["0", "2", "4", "8"], valueThemeKeys: ["--divide-width", "--border-width"], hasDefaultValue: true }]), t("divide-x-reverse", [() => Y2([$2("--tw-divide-x-reverse", "0")]), () => H2(":where(& > :not(:last-child))", [a2("--tw-divide-x-reverse", "1")])]), t("divide-y-reverse", [() => Y2([$2("--tw-divide-y-reverse", "0")]), () => H2(":where(& > :not(:last-child))", [a2("--tw-divide-y-reverse", "1")])]);
+      for (let w of ["solid", "dashed", "dotted", "double", "none"])
+        t(`divide-${w}`, [() => H2(":where(& > :not(:last-child))", [a2("--tw-sort", "divide-style"), a2("--tw-border-style", w), a2("border-style", w)])]);
     }
-    t("bg-auto", [["background-size", "auto"]]), t("bg-cover", [["background-size", "cover"]]), t("bg-contain", [["background-size", "contain"]]), n("bg-size", { handle(o2) {
-      if (o2)
-        return [a2("background-size", o2)];
-    } }), t("bg-fixed", [["background-attachment", "fixed"]]), t("bg-local", [["background-attachment", "local"]]), t("bg-scroll", [["background-attachment", "scroll"]]), t("bg-top", [["background-position", "top"]]), t("bg-top-left", [["background-position", "left top"]]), t("bg-top-right", [["background-position", "right top"]]), t("bg-bottom", [["background-position", "bottom"]]), t("bg-bottom-left", [["background-position", "left bottom"]]), t("bg-bottom-right", [["background-position", "right bottom"]]), t("bg-left", [["background-position", "left"]]), t("bg-right", [["background-position", "right"]]), t("bg-center", [["background-position", "center"]]), n("bg-position", { handle(o2) {
-      if (o2)
-        return [a2("background-position", o2)];
+    t("bg-auto", [["background-size", "auto"]]), t("bg-cover", [["background-size", "cover"]]), t("bg-contain", [["background-size", "contain"]]), n("bg-size", { handle(o) {
+      if (o)
+        return [a2("background-size", o)];
+    } }), t("bg-fixed", [["background-attachment", "fixed"]]), t("bg-local", [["background-attachment", "local"]]), t("bg-scroll", [["background-attachment", "scroll"]]), t("bg-top", [["background-position", "top"]]), t("bg-top-left", [["background-position", "left top"]]), t("bg-top-right", [["background-position", "right top"]]), t("bg-bottom", [["background-position", "bottom"]]), t("bg-bottom-left", [["background-position", "left bottom"]]), t("bg-bottom-right", [["background-position", "right bottom"]]), t("bg-left", [["background-position", "left"]]), t("bg-right", [["background-position", "right"]]), t("bg-center", [["background-position", "center"]]), n("bg-position", { handle(o) {
+      if (o)
+        return [a2("background-position", o)];
     } }), t("bg-repeat", [["background-repeat", "repeat"]]), t("bg-no-repeat", [["background-repeat", "no-repeat"]]), t("bg-repeat-x", [["background-repeat", "repeat-x"]]), t("bg-repeat-y", [["background-repeat", "repeat-y"]]), t("bg-repeat-round", [["background-repeat", "round"]]), t("bg-repeat-space", [["background-repeat", "space"]]), t("bg-none", [["background-image", "none"]]);
     {
-      let w2 = function(T2) {
-        let K2 = "in oklab";
-        if (T2?.kind === "named")
-          switch (T2.value) {
+      let w = function(T) {
+        let K = "in oklab";
+        if (T?.kind === "named")
+          switch (T.value) {
             case "longer":
             case "shorter":
             case "increasing":
             case "decreasing":
-              K2 = `in oklch ${T2.value} hue`;
+              K = `in oklch ${T.value} hue`;
               break;
             default:
-              K2 = `in ${T2.value}`;
+              K = `in ${T.value}`;
           }
         else
-          T2?.kind === "arbitrary" && (K2 = T2.value);
-        return K2;
-      }, C2 = function({ negative: T2 }) {
-        return (K2) => {
-          if (!K2.value)
+          T?.kind === "arbitrary" && (K = T.value);
+        return K;
+      }, C = function({ negative: T }) {
+        return (K) => {
+          if (!K.value)
             return;
-          if (K2.value.kind === "arbitrary") {
-            if (K2.modifier)
+          if (K.value.kind === "arbitrary") {
+            if (K.modifier)
               return;
-            let W2 = K2.value.value;
-            return (K2.value.dataType ?? ge(W2, ["angle"])) === "angle" ? (W2 = T2 ? `calc(${W2} * -1)` : `${W2}`, [a2("--tw-gradient-position", W2), a2("background-image", `linear-gradient(var(--tw-gradient-stops,${W2}))`)]) : T2 ? undefined : [a2("--tw-gradient-position", W2), a2("background-image", `linear-gradient(var(--tw-gradient-stops,${W2}))`)];
+            let W = K.value.value;
+            return (K.value.dataType ?? ge(W, ["angle"])) === "angle" ? (W = T ? `calc(${W} * -1)` : `${W}`, [a2("--tw-gradient-position", W), a2("background-image", `linear-gradient(var(--tw-gradient-stops,${W}))`)]) : T ? undefined : [a2("--tw-gradient-position", W), a2("background-image", `linear-gradient(var(--tw-gradient-stops,${W}))`)];
           }
-          let N2 = K2.value.value;
-          if (!T2 && g3.has(N2))
-            N2 = g3.get(N2);
-          else if (u(N2))
-            N2 = T2 ? `calc(${N2}deg * -1)` : `${N2}deg`;
+          let N = K.value.value;
+          if (!T && g.has(N))
+            N = g.get(N);
+          else if (u(N))
+            N = T ? `calc(${N}deg * -1)` : `${N}deg`;
           else
             return;
-          let R2 = w2(K2.modifier);
-          return [a2("--tw-gradient-position", `${N2}`), Z2("@supports (background-image: linear-gradient(in lab, red, red))", [a2("--tw-gradient-position", `${N2} ${R2}`)]), a2("background-image", "linear-gradient(var(--tw-gradient-stops))")];
+          let R = w(K.modifier);
+          return [a2("--tw-gradient-position", `${N}`), Z2("@supports (background-image: linear-gradient(in lab, red, red))", [a2("--tw-gradient-position", `${N} ${R}`)]), a2("background-image", "linear-gradient(var(--tw-gradient-stops))")];
         };
-      }, A2 = function({ negative: T2 }) {
-        return (K2) => {
-          if (K2.value?.kind === "arbitrary") {
-            if (K2.modifier)
+      }, A = function({ negative: T }) {
+        return (K) => {
+          if (K.value?.kind === "arbitrary") {
+            if (K.modifier)
               return;
-            let W2 = K2.value.value;
-            return [a2("--tw-gradient-position", W2), a2("background-image", `conic-gradient(var(--tw-gradient-stops,${W2}))`)];
+            let W = K.value.value;
+            return [a2("--tw-gradient-position", W), a2("background-image", `conic-gradient(var(--tw-gradient-stops,${W}))`)];
           }
-          let N2 = w2(K2.modifier);
-          if (!K2.value)
-            return [a2("--tw-gradient-position", N2), a2("background-image", "conic-gradient(var(--tw-gradient-stops))")];
-          let R2 = K2.value.value;
-          if (u(R2))
-            return R2 = T2 ? `calc(${R2}deg * -1)` : `${R2}deg`, [a2("--tw-gradient-position", `from ${R2} ${N2}`), a2("background-image", "conic-gradient(var(--tw-gradient-stops))")];
+          let N = w(K.modifier);
+          if (!K.value)
+            return [a2("--tw-gradient-position", N), a2("background-image", "conic-gradient(var(--tw-gradient-stops))")];
+          let R = K.value.value;
+          if (u(R))
+            return R = T ? `calc(${R}deg * -1)` : `${R}deg`, [a2("--tw-gradient-position", `from ${R} ${N}`), a2("background-image", "conic-gradient(var(--tw-gradient-stops))")];
         };
       };
-      var j2 = w2, q2 = C2, G2 = A2;
-      let o2 = ["oklab", "oklch", "srgb", "hsl", "longer", "shorter", "increasing", "decreasing"], g3 = new Map([["to-t", "to top"], ["to-tr", "to top right"], ["to-r", "to right"], ["to-br", "to bottom right"], ["to-b", "to bottom"], ["to-bl", "to bottom left"], ["to-l", "to left"], ["to-tl", "to top left"]]);
-      i.functional("-bg-linear", C2({ negative: true })), i.functional("bg-linear", C2({ negative: false })), r("bg-linear", () => [{ values: [...g3.keys()], modifiers: o2 }, { values: ["0", "30", "60", "90", "120", "150", "180", "210", "240", "270", "300", "330"], supportsNegative: true, modifiers: o2 }]), i.functional("-bg-conic", A2({ negative: true })), i.functional("bg-conic", A2({ negative: false })), r("bg-conic", () => [{ hasDefaultValue: true, modifiers: o2 }, { values: ["0", "30", "60", "90", "120", "150", "180", "210", "240", "270", "300", "330"], supportsNegative: true, modifiers: o2 }]), i.functional("bg-radial", (T2) => {
-        if (!T2.value) {
-          let K2 = w2(T2.modifier);
-          return [a2("--tw-gradient-position", K2), a2("background-image", "radial-gradient(var(--tw-gradient-stops))")];
+      var j = w, q = C, G = A;
+      let o = ["oklab", "oklch", "srgb", "hsl", "longer", "shorter", "increasing", "decreasing"], g = new Map([["to-t", "to top"], ["to-tr", "to top right"], ["to-r", "to right"], ["to-br", "to bottom right"], ["to-b", "to bottom"], ["to-bl", "to bottom left"], ["to-l", "to left"], ["to-tl", "to top left"]]);
+      i.functional("-bg-linear", C({ negative: true })), i.functional("bg-linear", C({ negative: false })), r("bg-linear", () => [{ values: [...g.keys()], modifiers: o }, { values: ["0", "30", "60", "90", "120", "150", "180", "210", "240", "270", "300", "330"], supportsNegative: true, modifiers: o }]), i.functional("-bg-conic", A({ negative: true })), i.functional("bg-conic", A({ negative: false })), r("bg-conic", () => [{ hasDefaultValue: true, modifiers: o }, { values: ["0", "30", "60", "90", "120", "150", "180", "210", "240", "270", "300", "330"], supportsNegative: true, modifiers: o }]), i.functional("bg-radial", (T) => {
+        if (!T.value) {
+          let K = w(T.modifier);
+          return [a2("--tw-gradient-position", K), a2("background-image", "radial-gradient(var(--tw-gradient-stops))")];
         }
-        if (T2.value.kind === "arbitrary") {
-          if (T2.modifier)
+        if (T.value.kind === "arbitrary") {
+          if (T.modifier)
             return;
-          let K2 = T2.value.value;
-          return [a2("--tw-gradient-position", K2), a2("background-image", `radial-gradient(var(--tw-gradient-stops,${K2}))`)];
+          let K = T.value.value;
+          return [a2("--tw-gradient-position", K), a2("background-image", `radial-gradient(var(--tw-gradient-stops,${K}))`)];
         }
-      }), r("bg-radial", () => [{ hasDefaultValue: true, modifiers: o2 }]);
+      }), r("bg-radial", () => [{ hasDefaultValue: true, modifiers: o }]);
     }
-    i.functional("bg", (o2) => {
-      if (o2.value) {
-        if (o2.value.kind === "arbitrary") {
-          let g3 = o2.value.value;
-          switch (o2.value.dataType ?? ge(g3, ["image", "color", "percentage", "position", "bg-size", "length", "url"])) {
+    i.functional("bg", (o) => {
+      if (o.value) {
+        if (o.value.kind === "arbitrary") {
+          let g = o.value.value;
+          switch (o.value.dataType ?? ge(g, ["image", "color", "percentage", "position", "bg-size", "length", "url"])) {
             case "percentage":
             case "position":
-              return o2.modifier ? undefined : [a2("background-position", g3)];
+              return o.modifier ? undefined : [a2("background-position", g)];
             case "bg-size":
             case "length":
             case "size":
-              return o2.modifier ? undefined : [a2("background-size", g3)];
+              return o.modifier ? undefined : [a2("background-size", g)];
             case "image":
             case "url":
-              return o2.modifier ? undefined : [a2("background-image", g3)];
+              return o.modifier ? undefined : [a2("background-image", g)];
             default:
-              return g3 = te2(g3, o2.modifier, e2), g3 === null ? undefined : [a2("background-color", g3)];
+              return g = te2(g, o.modifier, e), g === null ? undefined : [a2("background-color", g)];
           }
         }
         {
-          let g3 = ae2(o2, e2, ["--background-color", "--color"]);
-          if (g3)
-            return [a2("background-color", g3)];
+          let g = ae2(o, e, ["--background-color", "--color"]);
+          if (g)
+            return [a2("background-color", g)];
         }
         {
-          if (o2.modifier)
+          if (o.modifier)
             return;
-          let g3 = e2.resolve(o2.value.value, ["--background-image"]);
-          if (g3)
-            return [a2("background-image", g3)];
+          let g = e.resolve(o.value.value, ["--background-image"]);
+          if (g)
+            return [a2("background-image", g)];
         }
       }
-    }), r("bg", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--background-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (o2, g3) => `${g3 * 5}`) }, { values: [], valueThemeKeys: ["--background-image"] }]);
-    let h3 = () => Y2([$2("--tw-gradient-position"), $2("--tw-gradient-from", "#0000", "<color>"), $2("--tw-gradient-via", "#0000", "<color>"), $2("--tw-gradient-to", "#0000", "<color>"), $2("--tw-gradient-stops"), $2("--tw-gradient-via-stops"), $2("--tw-gradient-from-position", "0%", "<length-percentage>"), $2("--tw-gradient-via-position", "50%", "<length-percentage>"), $2("--tw-gradient-to-position", "100%", "<length-percentage>")]);
-    function k(o2, g3) {
-      i.functional(o2, (w2) => {
-        if (w2.value) {
-          if (w2.value.kind === "arbitrary") {
-            let C2 = w2.value.value;
-            switch (w2.value.dataType ?? ge(C2, ["color", "length", "percentage"])) {
+    }), r("bg", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--background-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (o, g) => `${g * 5}`) }, { values: [], valueThemeKeys: ["--background-image"] }]);
+    let h = () => Y2([$2("--tw-gradient-position"), $2("--tw-gradient-from", "#0000", "<color>"), $2("--tw-gradient-via", "#0000", "<color>"), $2("--tw-gradient-to", "#0000", "<color>"), $2("--tw-gradient-stops"), $2("--tw-gradient-via-stops"), $2("--tw-gradient-from-position", "0%", "<length-percentage>"), $2("--tw-gradient-via-position", "50%", "<length-percentage>"), $2("--tw-gradient-to-position", "100%", "<length-percentage>")]);
+    function k(o, g) {
+      i.functional(o, (w) => {
+        if (w.value) {
+          if (w.value.kind === "arbitrary") {
+            let C = w.value.value;
+            switch (w.value.dataType ?? ge(C, ["color", "length", "percentage"])) {
               case "length":
               case "percentage":
-                return w2.modifier ? undefined : g3.position(C2);
+                return w.modifier ? undefined : g.position(C);
               default:
-                return C2 = te2(C2, w2.modifier, e2), C2 === null ? undefined : g3.color(C2);
+                return C = te2(C, w.modifier, e), C === null ? undefined : g.color(C);
             }
           }
           {
-            let C2 = ae2(w2, e2, ["--background-color", "--color"]);
-            if (C2)
-              return g3.color(C2);
+            let C = ae2(w, e, ["--background-color", "--color"]);
+            if (C)
+              return g.color(C);
           }
           {
-            if (w2.modifier)
+            if (w.modifier)
               return;
-            let C2 = e2.resolve(w2.value.value, ["--gradient-color-stop-positions"]);
-            if (C2)
-              return g3.position(C2);
-            if (w2.value.value[w2.value.value.length - 1] === "%" && u(w2.value.value.slice(0, -1)))
-              return g3.position(w2.value.value);
+            let C = e.resolve(w.value.value, ["--gradient-color-stop-positions"]);
+            if (C)
+              return g.position(C);
+            if (w.value.value[w.value.value.length - 1] === "%" && u(w.value.value.slice(0, -1)))
+              return g.position(w.value.value);
           }
         }
-      }), r(o2, () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--background-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (w2, C2) => `${C2 * 5}`) }, { values: Array.from({ length: 21 }, (w2, C2) => `${C2 * 5}%`), valueThemeKeys: ["--gradient-color-stop-positions"] }]);
+      }), r(o, () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--background-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (w, C) => `${C * 5}`) }, { values: Array.from({ length: 21 }, (w, C) => `${C * 5}%`), valueThemeKeys: ["--gradient-color-stop-positions"] }]);
     }
-    k("from", { color: (o2) => [h3(), a2("--tw-sort", "--tw-gradient-from"), a2("--tw-gradient-from", o2), a2("--tw-gradient-stops", "var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))")], position: (o2) => [h3(), a2("--tw-gradient-from-position", o2)] }), t("via-none", [["--tw-gradient-via-stops", "initial"]]), k("via", { color: (o2) => [h3(), a2("--tw-sort", "--tw-gradient-via"), a2("--tw-gradient-via", o2), a2("--tw-gradient-via-stops", "var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-via) var(--tw-gradient-via-position), var(--tw-gradient-to) var(--tw-gradient-to-position)"), a2("--tw-gradient-stops", "var(--tw-gradient-via-stops)")], position: (o2) => [h3(), a2("--tw-gradient-via-position", o2)] }), k("to", { color: (o2) => [h3(), a2("--tw-sort", "--tw-gradient-to"), a2("--tw-gradient-to", o2), a2("--tw-gradient-stops", "var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))")], position: (o2) => [h3(), a2("--tw-gradient-to-position", o2)] }), t("mask-none", [["mask-image", "none"]]), i.functional("mask", (o2) => {
-      if (!o2.value || o2.modifier || o2.value.kind !== "arbitrary")
+    k("from", { color: (o) => [h(), a2("--tw-sort", "--tw-gradient-from"), a2("--tw-gradient-from", o), a2("--tw-gradient-stops", "var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))")], position: (o) => [h(), a2("--tw-gradient-from-position", o)] }), t("via-none", [["--tw-gradient-via-stops", "initial"]]), k("via", { color: (o) => [h(), a2("--tw-sort", "--tw-gradient-via"), a2("--tw-gradient-via", o), a2("--tw-gradient-via-stops", "var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-via) var(--tw-gradient-via-position), var(--tw-gradient-to) var(--tw-gradient-to-position)"), a2("--tw-gradient-stops", "var(--tw-gradient-via-stops)")], position: (o) => [h(), a2("--tw-gradient-via-position", o)] }), k("to", { color: (o) => [h(), a2("--tw-sort", "--tw-gradient-to"), a2("--tw-gradient-to", o), a2("--tw-gradient-stops", "var(--tw-gradient-via-stops, var(--tw-gradient-position), var(--tw-gradient-from) var(--tw-gradient-from-position), var(--tw-gradient-to) var(--tw-gradient-to-position))")], position: (o) => [h(), a2("--tw-gradient-to-position", o)] }), t("mask-none", [["mask-image", "none"]]), i.functional("mask", (o) => {
+      if (!o.value || o.modifier || o.value.kind !== "arbitrary")
         return;
-      let g3 = o2.value.value;
-      switch (o2.value.dataType ?? ge(g3, ["image", "percentage", "position", "bg-size", "length", "url"])) {
+      let g = o.value.value;
+      switch (o.value.dataType ?? ge(g, ["image", "percentage", "position", "bg-size", "length", "url"])) {
         case "percentage":
         case "position":
-          return o2.modifier ? undefined : [a2("mask-position", g3)];
+          return o.modifier ? undefined : [a2("mask-position", g)];
         case "bg-size":
         case "length":
         case "size":
-          return [a2("mask-size", g3)];
+          return [a2("mask-size", g)];
         default:
-          return [a2("mask-image", g3)];
+          return [a2("mask-image", g)];
       }
-    }), t("mask-add", [["mask-composite", "add"]]), t("mask-subtract", [["mask-composite", "subtract"]]), t("mask-intersect", [["mask-composite", "intersect"]]), t("mask-exclude", [["mask-composite", "exclude"]]), t("mask-alpha", [["mask-mode", "alpha"]]), t("mask-luminance", [["mask-mode", "luminance"]]), t("mask-match", [["mask-mode", "match-source"]]), t("mask-type-alpha", [["mask-type", "alpha"]]), t("mask-type-luminance", [["mask-type", "luminance"]]), t("mask-auto", [["mask-size", "auto"]]), t("mask-cover", [["mask-size", "cover"]]), t("mask-contain", [["mask-size", "contain"]]), n("mask-size", { handle(o2) {
-      if (o2)
-        return [a2("mask-size", o2)];
-    } }), t("mask-top", [["mask-position", "top"]]), t("mask-top-left", [["mask-position", "left top"]]), t("mask-top-right", [["mask-position", "right top"]]), t("mask-bottom", [["mask-position", "bottom"]]), t("mask-bottom-left", [["mask-position", "left bottom"]]), t("mask-bottom-right", [["mask-position", "right bottom"]]), t("mask-left", [["mask-position", "left"]]), t("mask-right", [["mask-position", "right"]]), t("mask-center", [["mask-position", "center"]]), n("mask-position", { handle(o2) {
-      if (o2)
-        return [a2("mask-position", o2)];
+    }), t("mask-add", [["mask-composite", "add"]]), t("mask-subtract", [["mask-composite", "subtract"]]), t("mask-intersect", [["mask-composite", "intersect"]]), t("mask-exclude", [["mask-composite", "exclude"]]), t("mask-alpha", [["mask-mode", "alpha"]]), t("mask-luminance", [["mask-mode", "luminance"]]), t("mask-match", [["mask-mode", "match-source"]]), t("mask-type-alpha", [["mask-type", "alpha"]]), t("mask-type-luminance", [["mask-type", "luminance"]]), t("mask-auto", [["mask-size", "auto"]]), t("mask-cover", [["mask-size", "cover"]]), t("mask-contain", [["mask-size", "contain"]]), n("mask-size", { handle(o) {
+      if (o)
+        return [a2("mask-size", o)];
+    } }), t("mask-top", [["mask-position", "top"]]), t("mask-top-left", [["mask-position", "left top"]]), t("mask-top-right", [["mask-position", "right top"]]), t("mask-bottom", [["mask-position", "bottom"]]), t("mask-bottom-left", [["mask-position", "left bottom"]]), t("mask-bottom-right", [["mask-position", "right bottom"]]), t("mask-left", [["mask-position", "left"]]), t("mask-right", [["mask-position", "right"]]), t("mask-center", [["mask-position", "center"]]), n("mask-position", { handle(o) {
+      if (o)
+        return [a2("mask-position", o)];
     } }), t("mask-repeat", [["mask-repeat", "repeat"]]), t("mask-no-repeat", [["mask-repeat", "no-repeat"]]), t("mask-repeat-x", [["mask-repeat", "repeat-x"]]), t("mask-repeat-y", [["mask-repeat", "repeat-y"]]), t("mask-repeat-round", [["mask-repeat", "round"]]), t("mask-repeat-space", [["mask-repeat", "space"]]), t("mask-clip-border", [["mask-clip", "border-box"]]), t("mask-clip-padding", [["mask-clip", "padding-box"]]), t("mask-clip-content", [["mask-clip", "content-box"]]), t("mask-clip-fill", [["mask-clip", "fill-box"]]), t("mask-clip-stroke", [["mask-clip", "stroke-box"]]), t("mask-clip-view", [["mask-clip", "view-box"]]), t("mask-no-clip", [["mask-clip", "no-clip"]]), t("mask-origin-border", [["mask-origin", "border-box"]]), t("mask-origin-padding", [["mask-origin", "padding-box"]]), t("mask-origin-content", [["mask-origin", "content-box"]]), t("mask-origin-fill", [["mask-origin", "fill-box"]]), t("mask-origin-stroke", [["mask-origin", "stroke-box"]]), t("mask-origin-view", [["mask-origin", "view-box"]]);
     let y2 = () => Y2([$2("--tw-mask-linear", "linear-gradient(#fff, #fff)"), $2("--tw-mask-radial", "linear-gradient(#fff, #fff)"), $2("--tw-mask-conic", "linear-gradient(#fff, #fff)")]);
-    function S2(o2, g3) {
-      i.functional(o2, (w2) => {
-        if (w2.value) {
-          if (w2.value.kind === "arbitrary") {
-            let C2 = w2.value.value;
-            switch (w2.value.dataType ?? ge(C2, ["length", "percentage", "color"])) {
+    function S(o, g) {
+      i.functional(o, (w) => {
+        if (w.value) {
+          if (w.value.kind === "arbitrary") {
+            let C = w.value.value;
+            switch (w.value.dataType ?? ge(C, ["length", "percentage", "color"])) {
               case "color":
-                return C2 = te2(C2, w2.modifier, e2), C2 === null ? undefined : g3.color(C2);
+                return C = te2(C, w.modifier, e), C === null ? undefined : g.color(C);
               case "percentage":
-                return w2.modifier || !u(C2.slice(0, -1)) ? undefined : g3.position(C2);
+                return w.modifier || !u(C.slice(0, -1)) ? undefined : g.position(C);
               default:
-                return w2.modifier ? undefined : g3.position(C2);
+                return w.modifier ? undefined : g.position(C);
             }
           }
           {
-            let C2 = ae2(w2, e2, ["--background-color", "--color"]);
-            if (C2)
-              return g3.color(C2);
+            let C = ae2(w, e, ["--background-color", "--color"]);
+            if (C)
+              return g.color(C);
           }
           {
-            if (w2.modifier)
+            if (w.modifier)
               return;
-            let C2 = ge(w2.value.value, ["number", "percentage"]);
-            if (!C2)
+            let C = ge(w.value.value, ["number", "percentage"]);
+            if (!C)
               return;
-            switch (C2) {
+            switch (C) {
               case "number":
-                return !e2.resolve(null, ["--spacing"]) || !de(w2.value.value) ? undefined : g3.position(`--spacing(${w2.value.value})`);
+                return !e.resolve(null, ["--spacing"]) || !de(w.value.value) ? undefined : g.position(`--spacing(${w.value.value})`);
               case "percentage":
-                return u(w2.value.value.slice(0, -1)) ? g3.position(w2.value.value) : undefined;
+                return u(w.value.value.slice(0, -1)) ? g.position(w.value.value) : undefined;
               default:
                 return;
             }
           }
         }
-      }), r(o2, () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--background-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (w2, C2) => `${C2 * 5}`) }, { values: Array.from({ length: 21 }, (w2, C2) => `${C2 * 5}%`), valueThemeKeys: ["--gradient-color-stop-positions"] }]), r(o2, () => [{ values: Array.from({ length: 21 }, (w2, C2) => `${C2 * 5}%`) }, { values: e2.get(["--spacing"]) ? yt : [] }, { values: ["current", "inherit", "transparent"], valueThemeKeys: ["--background-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (w2, C2) => `${C2 * 5}`) }]);
+      }), r(o, () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--background-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (w, C) => `${C * 5}`) }, { values: Array.from({ length: 21 }, (w, C) => `${C * 5}%`), valueThemeKeys: ["--gradient-color-stop-positions"] }]), r(o, () => [{ values: Array.from({ length: 21 }, (w, C) => `${C * 5}%`) }, { values: e.get(["--spacing"]) ? yt : [] }, { values: ["current", "inherit", "transparent"], valueThemeKeys: ["--background-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (w, C) => `${C * 5}`) }]);
     }
-    let x2 = () => Y2([$2("--tw-mask-left", "linear-gradient(#fff, #fff)"), $2("--tw-mask-right", "linear-gradient(#fff, #fff)"), $2("--tw-mask-bottom", "linear-gradient(#fff, #fff)"), $2("--tw-mask-top", "linear-gradient(#fff, #fff)")]);
-    function b2(o2, g3, w2) {
-      S2(o2, { color(C2) {
-        let A2 = [y2(), x2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-linear", "var(--tw-mask-left), var(--tw-mask-right), var(--tw-mask-bottom), var(--tw-mask-top)")];
-        for (let T2 of ["top", "right", "bottom", "left"])
-          w2[T2] && (A2.push(a2(`--tw-mask-${T2}`, `linear-gradient(to ${T2}, var(--tw-mask-${T2}-from-color) var(--tw-mask-${T2}-from-position), var(--tw-mask-${T2}-to-color) var(--tw-mask-${T2}-to-position))`)), A2.push(Y2([$2(`--tw-mask-${T2}-from-position`, "0%"), $2(`--tw-mask-${T2}-to-position`, "100%"), $2(`--tw-mask-${T2}-from-color`, "black"), $2(`--tw-mask-${T2}-to-color`, "transparent")])), A2.push(a2(`--tw-mask-${T2}-${g3}-color`, C2)));
-        return A2;
-      }, position(C2) {
-        let A2 = [y2(), x2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-linear", "var(--tw-mask-left), var(--tw-mask-right), var(--tw-mask-bottom), var(--tw-mask-top)")];
-        for (let T2 of ["top", "right", "bottom", "left"])
-          w2[T2] && (A2.push(a2(`--tw-mask-${T2}`, `linear-gradient(to ${T2}, var(--tw-mask-${T2}-from-color) var(--tw-mask-${T2}-from-position), var(--tw-mask-${T2}-to-color) var(--tw-mask-${T2}-to-position))`)), A2.push(Y2([$2(`--tw-mask-${T2}-from-position`, "0%"), $2(`--tw-mask-${T2}-to-position`, "100%"), $2(`--tw-mask-${T2}-from-color`, "black"), $2(`--tw-mask-${T2}-to-color`, "transparent")])), A2.push(a2(`--tw-mask-${T2}-${g3}-position`, C2)));
-        return A2;
+    let x = () => Y2([$2("--tw-mask-left", "linear-gradient(#fff, #fff)"), $2("--tw-mask-right", "linear-gradient(#fff, #fff)"), $2("--tw-mask-bottom", "linear-gradient(#fff, #fff)"), $2("--tw-mask-top", "linear-gradient(#fff, #fff)")]);
+    function b(o, g, w) {
+      S(o, { color(C) {
+        let A = [y2(), x(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-linear", "var(--tw-mask-left), var(--tw-mask-right), var(--tw-mask-bottom), var(--tw-mask-top)")];
+        for (let T of ["top", "right", "bottom", "left"])
+          w[T] && (A.push(a2(`--tw-mask-${T}`, `linear-gradient(to ${T}, var(--tw-mask-${T}-from-color) var(--tw-mask-${T}-from-position), var(--tw-mask-${T}-to-color) var(--tw-mask-${T}-to-position))`)), A.push(Y2([$2(`--tw-mask-${T}-from-position`, "0%"), $2(`--tw-mask-${T}-to-position`, "100%"), $2(`--tw-mask-${T}-from-color`, "black"), $2(`--tw-mask-${T}-to-color`, "transparent")])), A.push(a2(`--tw-mask-${T}-${g}-color`, C)));
+        return A;
+      }, position(C) {
+        let A = [y2(), x(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-linear", "var(--tw-mask-left), var(--tw-mask-right), var(--tw-mask-bottom), var(--tw-mask-top)")];
+        for (let T of ["top", "right", "bottom", "left"])
+          w[T] && (A.push(a2(`--tw-mask-${T}`, `linear-gradient(to ${T}, var(--tw-mask-${T}-from-color) var(--tw-mask-${T}-from-position), var(--tw-mask-${T}-to-color) var(--tw-mask-${T}-to-position))`)), A.push(Y2([$2(`--tw-mask-${T}-from-position`, "0%"), $2(`--tw-mask-${T}-to-position`, "100%"), $2(`--tw-mask-${T}-from-color`, "black"), $2(`--tw-mask-${T}-to-color`, "transparent")])), A.push(a2(`--tw-mask-${T}-${g}-position`, C)));
+        return A;
       } });
     }
-    b2("mask-x-from", "from", { top: false, right: true, bottom: false, left: true }), b2("mask-x-to", "to", { top: false, right: true, bottom: false, left: true }), b2("mask-y-from", "from", { top: true, right: false, bottom: true, left: false }), b2("mask-y-to", "to", { top: true, right: false, bottom: true, left: false }), b2("mask-t-from", "from", { top: true, right: false, bottom: false, left: false }), b2("mask-t-to", "to", { top: true, right: false, bottom: false, left: false }), b2("mask-r-from", "from", { top: false, right: true, bottom: false, left: false }), b2("mask-r-to", "to", { top: false, right: true, bottom: false, left: false }), b2("mask-b-from", "from", { top: false, right: false, bottom: true, left: false }), b2("mask-b-to", "to", { top: false, right: false, bottom: true, left: false }), b2("mask-l-from", "from", { top: false, right: false, bottom: false, left: true }), b2("mask-l-to", "to", { top: false, right: false, bottom: false, left: true });
-    let I2 = () => Y2([$2("--tw-mask-linear-position", "0deg"), $2("--tw-mask-linear-from-position", "0%"), $2("--tw-mask-linear-to-position", "100%"), $2("--tw-mask-linear-from-color", "black"), $2("--tw-mask-linear-to-color", "transparent")]);
-    n("mask-linear", { defaultValue: null, supportsNegative: true, supportsFractions: false, handleBareValue({ value: o2 }) {
-      if (!u(o2))
+    b("mask-x-from", "from", { top: false, right: true, bottom: false, left: true }), b("mask-x-to", "to", { top: false, right: true, bottom: false, left: true }), b("mask-y-from", "from", { top: true, right: false, bottom: true, left: false }), b("mask-y-to", "to", { top: true, right: false, bottom: true, left: false }), b("mask-t-from", "from", { top: true, right: false, bottom: false, left: false }), b("mask-t-to", "to", { top: true, right: false, bottom: false, left: false }), b("mask-r-from", "from", { top: false, right: true, bottom: false, left: false }), b("mask-r-to", "to", { top: false, right: true, bottom: false, left: false }), b("mask-b-from", "from", { top: false, right: false, bottom: true, left: false }), b("mask-b-to", "to", { top: false, right: false, bottom: true, left: false }), b("mask-l-from", "from", { top: false, right: false, bottom: false, left: true }), b("mask-l-to", "to", { top: false, right: false, bottom: false, left: true });
+    let I = () => Y2([$2("--tw-mask-linear-position", "0deg"), $2("--tw-mask-linear-from-position", "0%"), $2("--tw-mask-linear-to-position", "100%"), $2("--tw-mask-linear-from-color", "black"), $2("--tw-mask-linear-to-color", "transparent")]);
+    n("mask-linear", { defaultValue: null, supportsNegative: true, supportsFractions: false, handleBareValue({ value: o }) {
+      if (!u(o))
         return null;
-      let g3 = Number(o2);
-      return g3 === 0 ? "0deg" : g3 === 1 ? "1deg" : `calc(1deg * ${o2})`;
-    }, handleNegativeBareValue({ value: o2 }) {
-      if (!u(o2))
+      let g = Number(o);
+      return g === 0 ? "0deg" : g === 1 ? "1deg" : `calc(1deg * ${o})`;
+    }, handleNegativeBareValue({ value: o }) {
+      if (!u(o))
         return null;
-      let g3 = Number(o2);
-      return g3 === 0 ? "0deg" : g3 === 1 ? "-1deg" : `calc(1deg * -${o2})`;
-    }, handle: (o2) => [y2(), I2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-linear", "linear-gradient(var(--tw-mask-linear-stops, var(--tw-mask-linear-position)))"), a2("--tw-mask-linear-position", o2)] }), r("mask-linear", () => [{ supportsNegative: true, values: ["0", "1", "2", "3", "6", "12", "45", "90", "180"] }]), S2("mask-linear-from", { color: (o2) => [y2(), I2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-linear-stops", "var(--tw-mask-linear-position), var(--tw-mask-linear-from-color) var(--tw-mask-linear-from-position), var(--tw-mask-linear-to-color) var(--tw-mask-linear-to-position)"), a2("--tw-mask-linear", "linear-gradient(var(--tw-mask-linear-stops))"), a2("--tw-mask-linear-from-color", o2)], position: (o2) => [y2(), I2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-linear-stops", "var(--tw-mask-linear-position), var(--tw-mask-linear-from-color) var(--tw-mask-linear-from-position), var(--tw-mask-linear-to-color) var(--tw-mask-linear-to-position)"), a2("--tw-mask-linear", "linear-gradient(var(--tw-mask-linear-stops))"), a2("--tw-mask-linear-from-position", o2)] }), S2("mask-linear-to", { color: (o2) => [y2(), I2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-linear-stops", "var(--tw-mask-linear-position), var(--tw-mask-linear-from-color) var(--tw-mask-linear-from-position), var(--tw-mask-linear-to-color) var(--tw-mask-linear-to-position)"), a2("--tw-mask-linear", "linear-gradient(var(--tw-mask-linear-stops))"), a2("--tw-mask-linear-to-color", o2)], position: (o2) => [y2(), I2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-linear-stops", "var(--tw-mask-linear-position), var(--tw-mask-linear-from-color) var(--tw-mask-linear-from-position), var(--tw-mask-linear-to-color) var(--tw-mask-linear-to-position)"), a2("--tw-mask-linear", "linear-gradient(var(--tw-mask-linear-stops))"), a2("--tw-mask-linear-to-position", o2)] });
-    let D2 = () => Y2([$2("--tw-mask-radial-from-position", "0%"), $2("--tw-mask-radial-to-position", "100%"), $2("--tw-mask-radial-from-color", "black"), $2("--tw-mask-radial-to-color", "transparent"), $2("--tw-mask-radial-shape", "ellipse"), $2("--tw-mask-radial-size", "farthest-corner"), $2("--tw-mask-radial-position", "center")]);
-    t("mask-circle", [["--tw-mask-radial-shape", "circle"]]), t("mask-ellipse", [["--tw-mask-radial-shape", "ellipse"]]), t("mask-radial-closest-side", [["--tw-mask-radial-size", "closest-side"]]), t("mask-radial-farthest-side", [["--tw-mask-radial-size", "farthest-side"]]), t("mask-radial-closest-corner", [["--tw-mask-radial-size", "closest-corner"]]), t("mask-radial-farthest-corner", [["--tw-mask-radial-size", "farthest-corner"]]), t("mask-radial-at-top", [["--tw-mask-radial-position", "top"]]), t("mask-radial-at-top-left", [["--tw-mask-radial-position", "top left"]]), t("mask-radial-at-top-right", [["--tw-mask-radial-position", "top right"]]), t("mask-radial-at-bottom", [["--tw-mask-radial-position", "bottom"]]), t("mask-radial-at-bottom-left", [["--tw-mask-radial-position", "bottom left"]]), t("mask-radial-at-bottom-right", [["--tw-mask-radial-position", "bottom right"]]), t("mask-radial-at-left", [["--tw-mask-radial-position", "left"]]), t("mask-radial-at-right", [["--tw-mask-radial-position", "right"]]), t("mask-radial-at-center", [["--tw-mask-radial-position", "center"]]), n("mask-radial-at", { defaultValue: null, supportsNegative: false, supportsFractions: false, handle: (o2) => [a2("--tw-mask-radial-position", o2)] }), n("mask-radial", { defaultValue: null, supportsNegative: false, supportsFractions: false, handle: (o2) => [y2(), D2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-radial", "radial-gradient(var(--tw-mask-radial-stops, var(--tw-mask-radial-size)))"), a2("--tw-mask-radial-size", o2)] }), S2("mask-radial-from", { color: (o2) => [y2(), D2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-radial-stops", "var(--tw-mask-radial-shape) var(--tw-mask-radial-size) at var(--tw-mask-radial-position), var(--tw-mask-radial-from-color) var(--tw-mask-radial-from-position), var(--tw-mask-radial-to-color) var(--tw-mask-radial-to-position)"), a2("--tw-mask-radial", "radial-gradient(var(--tw-mask-radial-stops))"), a2("--tw-mask-radial-from-color", o2)], position: (o2) => [y2(), D2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-radial-stops", "var(--tw-mask-radial-shape) var(--tw-mask-radial-size) at var(--tw-mask-radial-position), var(--tw-mask-radial-from-color) var(--tw-mask-radial-from-position), var(--tw-mask-radial-to-color) var(--tw-mask-radial-to-position)"), a2("--tw-mask-radial", "radial-gradient(var(--tw-mask-radial-stops))"), a2("--tw-mask-radial-from-position", o2)] }), S2("mask-radial-to", { color: (o2) => [y2(), D2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-radial-stops", "var(--tw-mask-radial-shape) var(--tw-mask-radial-size) at var(--tw-mask-radial-position), var(--tw-mask-radial-from-color) var(--tw-mask-radial-from-position), var(--tw-mask-radial-to-color) var(--tw-mask-radial-to-position)"), a2("--tw-mask-radial", "radial-gradient(var(--tw-mask-radial-stops))"), a2("--tw-mask-radial-to-color", o2)], position: (o2) => [y2(), D2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-radial-stops", "var(--tw-mask-radial-shape) var(--tw-mask-radial-size) at var(--tw-mask-radial-position), var(--tw-mask-radial-from-color) var(--tw-mask-radial-from-position), var(--tw-mask-radial-to-color) var(--tw-mask-radial-to-position)"), a2("--tw-mask-radial", "radial-gradient(var(--tw-mask-radial-stops))"), a2("--tw-mask-radial-to-position", o2)] });
-    let O2 = () => Y2([$2("--tw-mask-conic-position", "0deg"), $2("--tw-mask-conic-from-position", "0%"), $2("--tw-mask-conic-to-position", "100%"), $2("--tw-mask-conic-from-color", "black"), $2("--tw-mask-conic-to-color", "transparent")]);
-    n("mask-conic", { defaultValue: null, supportsNegative: true, supportsFractions: false, handleBareValue({ value: o2 }) {
-      if (!u(o2))
+      let g = Number(o);
+      return g === 0 ? "0deg" : g === 1 ? "-1deg" : `calc(1deg * -${o})`;
+    }, handle: (o) => [y2(), I(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-linear", "linear-gradient(var(--tw-mask-linear-stops, var(--tw-mask-linear-position)))"), a2("--tw-mask-linear-position", o)] }), r("mask-linear", () => [{ supportsNegative: true, values: ["0", "1", "2", "3", "6", "12", "45", "90", "180"] }]), S("mask-linear-from", { color: (o) => [y2(), I(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-linear-stops", "var(--tw-mask-linear-position), var(--tw-mask-linear-from-color) var(--tw-mask-linear-from-position), var(--tw-mask-linear-to-color) var(--tw-mask-linear-to-position)"), a2("--tw-mask-linear", "linear-gradient(var(--tw-mask-linear-stops))"), a2("--tw-mask-linear-from-color", o)], position: (o) => [y2(), I(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-linear-stops", "var(--tw-mask-linear-position), var(--tw-mask-linear-from-color) var(--tw-mask-linear-from-position), var(--tw-mask-linear-to-color) var(--tw-mask-linear-to-position)"), a2("--tw-mask-linear", "linear-gradient(var(--tw-mask-linear-stops))"), a2("--tw-mask-linear-from-position", o)] }), S("mask-linear-to", { color: (o) => [y2(), I(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-linear-stops", "var(--tw-mask-linear-position), var(--tw-mask-linear-from-color) var(--tw-mask-linear-from-position), var(--tw-mask-linear-to-color) var(--tw-mask-linear-to-position)"), a2("--tw-mask-linear", "linear-gradient(var(--tw-mask-linear-stops))"), a2("--tw-mask-linear-to-color", o)], position: (o) => [y2(), I(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-linear-stops", "var(--tw-mask-linear-position), var(--tw-mask-linear-from-color) var(--tw-mask-linear-from-position), var(--tw-mask-linear-to-color) var(--tw-mask-linear-to-position)"), a2("--tw-mask-linear", "linear-gradient(var(--tw-mask-linear-stops))"), a2("--tw-mask-linear-to-position", o)] });
+    let D = () => Y2([$2("--tw-mask-radial-from-position", "0%"), $2("--tw-mask-radial-to-position", "100%"), $2("--tw-mask-radial-from-color", "black"), $2("--tw-mask-radial-to-color", "transparent"), $2("--tw-mask-radial-shape", "ellipse"), $2("--tw-mask-radial-size", "farthest-corner"), $2("--tw-mask-radial-position", "center")]);
+    t("mask-circle", [["--tw-mask-radial-shape", "circle"]]), t("mask-ellipse", [["--tw-mask-radial-shape", "ellipse"]]), t("mask-radial-closest-side", [["--tw-mask-radial-size", "closest-side"]]), t("mask-radial-farthest-side", [["--tw-mask-radial-size", "farthest-side"]]), t("mask-radial-closest-corner", [["--tw-mask-radial-size", "closest-corner"]]), t("mask-radial-farthest-corner", [["--tw-mask-radial-size", "farthest-corner"]]), t("mask-radial-at-top", [["--tw-mask-radial-position", "top"]]), t("mask-radial-at-top-left", [["--tw-mask-radial-position", "top left"]]), t("mask-radial-at-top-right", [["--tw-mask-radial-position", "top right"]]), t("mask-radial-at-bottom", [["--tw-mask-radial-position", "bottom"]]), t("mask-radial-at-bottom-left", [["--tw-mask-radial-position", "bottom left"]]), t("mask-radial-at-bottom-right", [["--tw-mask-radial-position", "bottom right"]]), t("mask-radial-at-left", [["--tw-mask-radial-position", "left"]]), t("mask-radial-at-right", [["--tw-mask-radial-position", "right"]]), t("mask-radial-at-center", [["--tw-mask-radial-position", "center"]]), n("mask-radial-at", { defaultValue: null, supportsNegative: false, supportsFractions: false, handle: (o) => [a2("--tw-mask-radial-position", o)] }), n("mask-radial", { defaultValue: null, supportsNegative: false, supportsFractions: false, handle: (o) => [y2(), D(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-radial", "radial-gradient(var(--tw-mask-radial-stops, var(--tw-mask-radial-size)))"), a2("--tw-mask-radial-size", o)] }), S("mask-radial-from", { color: (o) => [y2(), D(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-radial-stops", "var(--tw-mask-radial-shape) var(--tw-mask-radial-size) at var(--tw-mask-radial-position), var(--tw-mask-radial-from-color) var(--tw-mask-radial-from-position), var(--tw-mask-radial-to-color) var(--tw-mask-radial-to-position)"), a2("--tw-mask-radial", "radial-gradient(var(--tw-mask-radial-stops))"), a2("--tw-mask-radial-from-color", o)], position: (o) => [y2(), D(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-radial-stops", "var(--tw-mask-radial-shape) var(--tw-mask-radial-size) at var(--tw-mask-radial-position), var(--tw-mask-radial-from-color) var(--tw-mask-radial-from-position), var(--tw-mask-radial-to-color) var(--tw-mask-radial-to-position)"), a2("--tw-mask-radial", "radial-gradient(var(--tw-mask-radial-stops))"), a2("--tw-mask-radial-from-position", o)] }), S("mask-radial-to", { color: (o) => [y2(), D(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-radial-stops", "var(--tw-mask-radial-shape) var(--tw-mask-radial-size) at var(--tw-mask-radial-position), var(--tw-mask-radial-from-color) var(--tw-mask-radial-from-position), var(--tw-mask-radial-to-color) var(--tw-mask-radial-to-position)"), a2("--tw-mask-radial", "radial-gradient(var(--tw-mask-radial-stops))"), a2("--tw-mask-radial-to-color", o)], position: (o) => [y2(), D(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-radial-stops", "var(--tw-mask-radial-shape) var(--tw-mask-radial-size) at var(--tw-mask-radial-position), var(--tw-mask-radial-from-color) var(--tw-mask-radial-from-position), var(--tw-mask-radial-to-color) var(--tw-mask-radial-to-position)"), a2("--tw-mask-radial", "radial-gradient(var(--tw-mask-radial-stops))"), a2("--tw-mask-radial-to-position", o)] });
+    let O = () => Y2([$2("--tw-mask-conic-position", "0deg"), $2("--tw-mask-conic-from-position", "0%"), $2("--tw-mask-conic-to-position", "100%"), $2("--tw-mask-conic-from-color", "black"), $2("--tw-mask-conic-to-color", "transparent")]);
+    n("mask-conic", { defaultValue: null, supportsNegative: true, supportsFractions: false, handleBareValue({ value: o }) {
+      if (!u(o))
         return null;
-      let g3 = Number(o2);
-      return g3 === 0 ? "0deg" : g3 === 1 ? "1deg" : `calc(1deg * ${o2})`;
-    }, handleNegativeBareValue({ value: o2 }) {
-      if (!u(o2))
+      let g = Number(o);
+      return g === 0 ? "0deg" : g === 1 ? "1deg" : `calc(1deg * ${o})`;
+    }, handleNegativeBareValue({ value: o }) {
+      if (!u(o))
         return null;
-      let g3 = Number(o2);
-      return g3 === 0 ? "0deg" : g3 === 1 ? "-1deg" : `calc(1deg * -${o2})`;
-    }, handle: (o2) => [y2(), O2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-conic", "conic-gradient(var(--tw-mask-conic-stops, var(--tw-mask-conic-position)))"), a2("--tw-mask-conic-position", o2)] }), r("mask-conic", () => [{ supportsNegative: true, values: ["0", "1", "2", "3", "6", "12", "45", "90", "180"] }]), S2("mask-conic-from", { color: (o2) => [y2(), O2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-conic-stops", "from var(--tw-mask-conic-position), var(--tw-mask-conic-from-color) var(--tw-mask-conic-from-position), var(--tw-mask-conic-to-color) var(--tw-mask-conic-to-position)"), a2("--tw-mask-conic", "conic-gradient(var(--tw-mask-conic-stops))"), a2("--tw-mask-conic-from-color", o2)], position: (o2) => [y2(), O2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-conic-stops", "from var(--tw-mask-conic-position), var(--tw-mask-conic-from-color) var(--tw-mask-conic-from-position), var(--tw-mask-conic-to-color) var(--tw-mask-conic-to-position)"), a2("--tw-mask-conic", "conic-gradient(var(--tw-mask-conic-stops))"), a2("--tw-mask-conic-from-position", o2)] }), S2("mask-conic-to", { color: (o2) => [y2(), O2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-conic-stops", "from var(--tw-mask-conic-position), var(--tw-mask-conic-from-color) var(--tw-mask-conic-from-position), var(--tw-mask-conic-to-color) var(--tw-mask-conic-to-position)"), a2("--tw-mask-conic", "conic-gradient(var(--tw-mask-conic-stops))"), a2("--tw-mask-conic-to-color", o2)], position: (o2) => [y2(), O2(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-conic-stops", "from var(--tw-mask-conic-position), var(--tw-mask-conic-from-color) var(--tw-mask-conic-from-position), var(--tw-mask-conic-to-color) var(--tw-mask-conic-to-position)"), a2("--tw-mask-conic", "conic-gradient(var(--tw-mask-conic-stops))"), a2("--tw-mask-conic-to-position", o2)] }), t("box-decoration-slice", [["-webkit-box-decoration-break", "slice"], ["box-decoration-break", "slice"]]), t("box-decoration-clone", [["-webkit-box-decoration-break", "clone"], ["box-decoration-break", "clone"]]), t("bg-clip-text", [["background-clip", "text"]]), t("bg-clip-border", [["background-clip", "border-box"]]), t("bg-clip-padding", [["background-clip", "padding-box"]]), t("bg-clip-content", [["background-clip", "content-box"]]), t("bg-origin-border", [["background-origin", "border-box"]]), t("bg-origin-padding", [["background-origin", "padding-box"]]), t("bg-origin-content", [["background-origin", "content-box"]]);
-    for (let o2 of ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"])
-      t(`bg-blend-${o2}`, [["background-blend-mode", o2]]), t(`mix-blend-${o2}`, [["mix-blend-mode", o2]]);
-    t("mix-blend-plus-darker", [["mix-blend-mode", "plus-darker"]]), t("mix-blend-plus-lighter", [["mix-blend-mode", "plus-lighter"]]), t("fill-none", [["fill", "none"]]), i.functional("fill", (o2) => {
-      if (!o2.value)
+      let g = Number(o);
+      return g === 0 ? "0deg" : g === 1 ? "-1deg" : `calc(1deg * -${o})`;
+    }, handle: (o) => [y2(), O(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-conic", "conic-gradient(var(--tw-mask-conic-stops, var(--tw-mask-conic-position)))"), a2("--tw-mask-conic-position", o)] }), r("mask-conic", () => [{ supportsNegative: true, values: ["0", "1", "2", "3", "6", "12", "45", "90", "180"] }]), S("mask-conic-from", { color: (o) => [y2(), O(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-conic-stops", "from var(--tw-mask-conic-position), var(--tw-mask-conic-from-color) var(--tw-mask-conic-from-position), var(--tw-mask-conic-to-color) var(--tw-mask-conic-to-position)"), a2("--tw-mask-conic", "conic-gradient(var(--tw-mask-conic-stops))"), a2("--tw-mask-conic-from-color", o)], position: (o) => [y2(), O(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-conic-stops", "from var(--tw-mask-conic-position), var(--tw-mask-conic-from-color) var(--tw-mask-conic-from-position), var(--tw-mask-conic-to-color) var(--tw-mask-conic-to-position)"), a2("--tw-mask-conic", "conic-gradient(var(--tw-mask-conic-stops))"), a2("--tw-mask-conic-from-position", o)] }), S("mask-conic-to", { color: (o) => [y2(), O(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-conic-stops", "from var(--tw-mask-conic-position), var(--tw-mask-conic-from-color) var(--tw-mask-conic-from-position), var(--tw-mask-conic-to-color) var(--tw-mask-conic-to-position)"), a2("--tw-mask-conic", "conic-gradient(var(--tw-mask-conic-stops))"), a2("--tw-mask-conic-to-color", o)], position: (o) => [y2(), O(), a2("mask-image", "var(--tw-mask-linear), var(--tw-mask-radial), var(--tw-mask-conic)"), a2("mask-composite", "intersect"), a2("--tw-mask-conic-stops", "from var(--tw-mask-conic-position), var(--tw-mask-conic-from-color) var(--tw-mask-conic-from-position), var(--tw-mask-conic-to-color) var(--tw-mask-conic-to-position)"), a2("--tw-mask-conic", "conic-gradient(var(--tw-mask-conic-stops))"), a2("--tw-mask-conic-to-position", o)] }), t("box-decoration-slice", [["-webkit-box-decoration-break", "slice"], ["box-decoration-break", "slice"]]), t("box-decoration-clone", [["-webkit-box-decoration-break", "clone"], ["box-decoration-break", "clone"]]), t("bg-clip-text", [["background-clip", "text"]]), t("bg-clip-border", [["background-clip", "border-box"]]), t("bg-clip-padding", [["background-clip", "padding-box"]]), t("bg-clip-content", [["background-clip", "content-box"]]), t("bg-origin-border", [["background-origin", "border-box"]]), t("bg-origin-padding", [["background-origin", "padding-box"]]), t("bg-origin-content", [["background-origin", "content-box"]]);
+    for (let o of ["normal", "multiply", "screen", "overlay", "darken", "lighten", "color-dodge", "color-burn", "hard-light", "soft-light", "difference", "exclusion", "hue", "saturation", "color", "luminosity"])
+      t(`bg-blend-${o}`, [["background-blend-mode", o]]), t(`mix-blend-${o}`, [["mix-blend-mode", o]]);
+    t("mix-blend-plus-darker", [["mix-blend-mode", "plus-darker"]]), t("mix-blend-plus-lighter", [["mix-blend-mode", "plus-lighter"]]), t("fill-none", [["fill", "none"]]), i.functional("fill", (o) => {
+      if (!o.value)
         return;
-      if (o2.value.kind === "arbitrary") {
-        let w2 = te2(o2.value.value, o2.modifier, e2);
-        return w2 === null ? undefined : [a2("fill", w2)];
+      if (o.value.kind === "arbitrary") {
+        let w = te2(o.value.value, o.modifier, e);
+        return w === null ? undefined : [a2("fill", w)];
       }
-      let g3 = ae2(o2, e2, ["--fill", "--color"]);
-      if (g3)
-        return [a2("fill", g3)];
-    }), r("fill", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--fill", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (o2, g3) => `${g3 * 5}`) }]), t("stroke-none", [["stroke", "none"]]), i.functional("stroke", (o2) => {
-      if (o2.value) {
-        if (o2.value.kind === "arbitrary") {
-          let g3 = o2.value.value;
-          switch (o2.value.dataType ?? ge(g3, ["color", "number", "length", "percentage"])) {
+      let g = ae2(o, e, ["--fill", "--color"]);
+      if (g)
+        return [a2("fill", g)];
+    }), r("fill", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--fill", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (o, g) => `${g * 5}`) }]), t("stroke-none", [["stroke", "none"]]), i.functional("stroke", (o) => {
+      if (o.value) {
+        if (o.value.kind === "arbitrary") {
+          let g = o.value.value;
+          switch (o.value.dataType ?? ge(g, ["color", "number", "length", "percentage"])) {
             case "number":
             case "length":
             case "percentage":
-              return o2.modifier ? undefined : [a2("stroke-width", g3)];
+              return o.modifier ? undefined : [a2("stroke-width", g)];
             default:
-              return g3 = te2(o2.value.value, o2.modifier, e2), g3 === null ? undefined : [a2("stroke", g3)];
+              return g = te2(o.value.value, o.modifier, e), g === null ? undefined : [a2("stroke", g)];
           }
         }
         {
-          let g3 = ae2(o2, e2, ["--stroke", "--color"]);
-          if (g3)
-            return [a2("stroke", g3)];
+          let g = ae2(o, e, ["--stroke", "--color"]);
+          if (g)
+            return [a2("stroke", g)];
         }
         {
-          let g3 = e2.resolve(o2.value.value, ["--stroke-width"]);
-          if (g3)
-            return [a2("stroke-width", g3)];
-          if (u(o2.value.value))
-            return [a2("stroke-width", o2.value.value)];
+          let g = e.resolve(o.value.value, ["--stroke-width"]);
+          if (g)
+            return [a2("stroke-width", g)];
+          if (u(o.value.value))
+            return [a2("stroke-width", o.value.value)];
         }
       }
-    }), r("stroke", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--stroke", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (o2, g3) => `${g3 * 5}`) }, { values: ["0", "1", "2", "3"], valueThemeKeys: ["--stroke-width"] }]), t("object-contain", [["object-fit", "contain"]]), t("object-cover", [["object-fit", "cover"]]), t("object-fill", [["object-fit", "fill"]]), t("object-none", [["object-fit", "none"]]), t("object-scale-down", [["object-fit", "scale-down"]]), n("object", { themeKeys: ["--object-position"], handle: (o2) => [a2("object-position", o2)], staticValues: { top: [a2("object-position", "top")], "top-left": [a2("object-position", "left top")], "top-right": [a2("object-position", "right top")], bottom: [a2("object-position", "bottom")], "bottom-left": [a2("object-position", "left bottom")], "bottom-right": [a2("object-position", "right bottom")], left: [a2("object-position", "left")], right: [a2("object-position", "right")], center: [a2("object-position", "center")] } });
-    for (let [o2, g3] of [["p", "padding"], ["px", "padding-inline"], ["py", "padding-block"], ["ps", "padding-inline-start"], ["pe", "padding-inline-end"], ["pbs", "padding-block-start"], ["pbe", "padding-block-end"], ["pt", "padding-top"], ["pr", "padding-right"], ["pb", "padding-bottom"], ["pl", "padding-left"]])
-      l2(o2, ["--padding", "--spacing"], (w2) => [a2(g3, w2)]);
-    t("text-left", [["text-align", "left"]]), t("text-center", [["text-align", "center"]]), t("text-right", [["text-align", "right"]]), t("text-justify", [["text-align", "justify"]]), t("text-start", [["text-align", "start"]]), t("text-end", [["text-align", "end"]]), l2("indent", ["--text-indent", "--spacing"], (o2) => [a2("text-indent", o2)], { supportsNegative: true }), t("align-baseline", [["vertical-align", "baseline"]]), t("align-top", [["vertical-align", "top"]]), t("align-middle", [["vertical-align", "middle"]]), t("align-bottom", [["vertical-align", "bottom"]]), t("align-text-top", [["vertical-align", "text-top"]]), t("align-text-bottom", [["vertical-align", "text-bottom"]]), t("align-sub", [["vertical-align", "sub"]]), t("align-super", [["vertical-align", "super"]]), n("align", { themeKeys: [], handle: (o2) => [a2("vertical-align", o2)] }), i.functional("font", (o2) => {
-      if (!(!o2.value || o2.modifier)) {
-        if (o2.value.kind === "arbitrary") {
-          let g3 = o2.value.value;
-          switch (o2.value.dataType ?? ge(g3, ["number", "generic-name", "family-name"])) {
+    }), r("stroke", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--stroke", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (o, g) => `${g * 5}`) }, { values: ["0", "1", "2", "3"], valueThemeKeys: ["--stroke-width"] }]), t("object-contain", [["object-fit", "contain"]]), t("object-cover", [["object-fit", "cover"]]), t("object-fill", [["object-fit", "fill"]]), t("object-none", [["object-fit", "none"]]), t("object-scale-down", [["object-fit", "scale-down"]]), n("object", { themeKeys: ["--object-position"], handle: (o) => [a2("object-position", o)], staticValues: { top: [a2("object-position", "top")], "top-left": [a2("object-position", "left top")], "top-right": [a2("object-position", "right top")], bottom: [a2("object-position", "bottom")], "bottom-left": [a2("object-position", "left bottom")], "bottom-right": [a2("object-position", "right bottom")], left: [a2("object-position", "left")], right: [a2("object-position", "right")], center: [a2("object-position", "center")] } });
+    for (let [o, g] of [["p", "padding"], ["px", "padding-inline"], ["py", "padding-block"], ["ps", "padding-inline-start"], ["pe", "padding-inline-end"], ["pbs", "padding-block-start"], ["pbe", "padding-block-end"], ["pt", "padding-top"], ["pr", "padding-right"], ["pb", "padding-bottom"], ["pl", "padding-left"]])
+      l(o, ["--padding", "--spacing"], (w) => [a2(g, w)]);
+    t("text-left", [["text-align", "left"]]), t("text-center", [["text-align", "center"]]), t("text-right", [["text-align", "right"]]), t("text-justify", [["text-align", "justify"]]), t("text-start", [["text-align", "start"]]), t("text-end", [["text-align", "end"]]), l("indent", ["--text-indent", "--spacing"], (o) => [a2("text-indent", o)], { supportsNegative: true }), t("align-baseline", [["vertical-align", "baseline"]]), t("align-top", [["vertical-align", "top"]]), t("align-middle", [["vertical-align", "middle"]]), t("align-bottom", [["vertical-align", "bottom"]]), t("align-text-top", [["vertical-align", "text-top"]]), t("align-text-bottom", [["vertical-align", "text-bottom"]]), t("align-sub", [["vertical-align", "sub"]]), t("align-super", [["vertical-align", "super"]]), n("align", { themeKeys: [], handle: (o) => [a2("vertical-align", o)] }), i.functional("font", (o) => {
+      if (!(!o.value || o.modifier)) {
+        if (o.value.kind === "arbitrary") {
+          let g = o.value.value;
+          switch (o.value.dataType ?? ge(g, ["number", "generic-name", "family-name"])) {
             case "generic-name":
             case "family-name":
-              return [a2("font-family", g3)];
+              return [a2("font-family", g)];
             default:
-              return [Y2([$2("--tw-font-weight")]), a2("--tw-font-weight", g3), a2("font-weight", g3)];
+              return [Y2([$2("--tw-font-weight")]), a2("--tw-font-weight", g), a2("font-weight", g)];
           }
         }
         {
-          let g3 = e2.resolveWith(o2.value.value, ["--font"], ["--font-feature-settings", "--font-variation-settings"]);
-          if (g3) {
-            let [w2, C2 = {}] = g3;
-            return [a2("font-family", w2), a2("font-feature-settings", C2["--font-feature-settings"]), a2("font-variation-settings", C2["--font-variation-settings"])];
+          let g = e.resolveWith(o.value.value, ["--font"], ["--font-feature-settings", "--font-variation-settings"]);
+          if (g) {
+            let [w, C = {}] = g;
+            return [a2("font-family", w), a2("font-feature-settings", C["--font-feature-settings"]), a2("font-variation-settings", C["--font-variation-settings"])];
           }
         }
         {
-          let g3 = e2.resolve(o2.value.value, ["--font-weight"]);
-          if (g3)
-            return [Y2([$2("--tw-font-weight")]), a2("--tw-font-weight", g3), a2("font-weight", g3)];
+          let g = e.resolve(o.value.value, ["--font-weight"]);
+          if (g)
+            return [Y2([$2("--tw-font-weight")]), a2("--tw-font-weight", g), a2("font-weight", g)];
         }
       }
-    }), r("font", () => [{ values: [], valueThemeKeys: ["--font"] }, { values: [], valueThemeKeys: ["--font-weight"] }]), n("font-features", { themeKeys: [], handle: (o2) => [a2("font-feature-settings", o2)] }), t("uppercase", [["text-transform", "uppercase"]]), t("lowercase", [["text-transform", "lowercase"]]), t("capitalize", [["text-transform", "capitalize"]]), t("normal-case", [["text-transform", "none"]]), t("italic", [["font-style", "italic"]]), t("not-italic", [["font-style", "normal"]]), t("underline", [["text-decoration-line", "underline"]]), t("overline", [["text-decoration-line", "overline"]]), t("line-through", [["text-decoration-line", "line-through"]]), t("no-underline", [["text-decoration-line", "none"]]), t("font-stretch-normal", [["font-stretch", "normal"]]), t("font-stretch-ultra-condensed", [["font-stretch", "ultra-condensed"]]), t("font-stretch-extra-condensed", [["font-stretch", "extra-condensed"]]), t("font-stretch-condensed", [["font-stretch", "condensed"]]), t("font-stretch-semi-condensed", [["font-stretch", "semi-condensed"]]), t("font-stretch-semi-expanded", [["font-stretch", "semi-expanded"]]), t("font-stretch-expanded", [["font-stretch", "expanded"]]), t("font-stretch-extra-expanded", [["font-stretch", "extra-expanded"]]), t("font-stretch-ultra-expanded", [["font-stretch", "ultra-expanded"]]), n("font-stretch", { handleBareValue: ({ value: o2 }) => {
-      if (!o2.endsWith("%"))
+    }), r("font", () => [{ values: [], valueThemeKeys: ["--font"] }, { values: [], valueThemeKeys: ["--font-weight"] }]), n("font-features", { themeKeys: [], handle: (o) => [a2("font-feature-settings", o)] }), t("uppercase", [["text-transform", "uppercase"]]), t("lowercase", [["text-transform", "lowercase"]]), t("capitalize", [["text-transform", "capitalize"]]), t("normal-case", [["text-transform", "none"]]), t("italic", [["font-style", "italic"]]), t("not-italic", [["font-style", "normal"]]), t("underline", [["text-decoration-line", "underline"]]), t("overline", [["text-decoration-line", "overline"]]), t("line-through", [["text-decoration-line", "line-through"]]), t("no-underline", [["text-decoration-line", "none"]]), t("font-stretch-normal", [["font-stretch", "normal"]]), t("font-stretch-ultra-condensed", [["font-stretch", "ultra-condensed"]]), t("font-stretch-extra-condensed", [["font-stretch", "extra-condensed"]]), t("font-stretch-condensed", [["font-stretch", "condensed"]]), t("font-stretch-semi-condensed", [["font-stretch", "semi-condensed"]]), t("font-stretch-semi-expanded", [["font-stretch", "semi-expanded"]]), t("font-stretch-expanded", [["font-stretch", "expanded"]]), t("font-stretch-extra-expanded", [["font-stretch", "extra-expanded"]]), t("font-stretch-ultra-expanded", [["font-stretch", "ultra-expanded"]]), n("font-stretch", { handleBareValue: ({ value: o }) => {
+      if (!o.endsWith("%"))
         return null;
-      let g3 = Number(o2.slice(0, -1));
-      return !u(g3) || Number.isNaN(g3) || g3 < 50 || g3 > 200 ? null : o2;
-    }, handle: (o2) => [a2("font-stretch", o2)] }), r("font-stretch", () => [{ values: ["50%", "75%", "90%", "95%", "100%", "105%", "110%", "125%", "150%", "200%"] }]), s("placeholder", { themeKeys: ["--placeholder-color", "--color"], handle: (o2) => [H2("&::placeholder", [a2("--tw-sort", "placeholder-color"), a2("color", o2)])] }), t("decoration-solid", [["text-decoration-style", "solid"]]), t("decoration-double", [["text-decoration-style", "double"]]), t("decoration-dotted", [["text-decoration-style", "dotted"]]), t("decoration-dashed", [["text-decoration-style", "dashed"]]), t("decoration-wavy", [["text-decoration-style", "wavy"]]), t("decoration-auto", [["text-decoration-thickness", "auto"]]), t("decoration-from-font", [["text-decoration-thickness", "from-font"]]), i.functional("decoration", (o2) => {
-      if (o2.value) {
-        if (o2.value.kind === "arbitrary") {
-          let g3 = o2.value.value;
-          switch (o2.value.dataType ?? ge(g3, ["color", "length", "percentage"])) {
+      let g = Number(o.slice(0, -1));
+      return !u(g) || Number.isNaN(g) || g < 50 || g > 200 ? null : o;
+    }, handle: (o) => [a2("font-stretch", o)] }), r("font-stretch", () => [{ values: ["50%", "75%", "90%", "95%", "100%", "105%", "110%", "125%", "150%", "200%"] }]), s("placeholder", { themeKeys: ["--placeholder-color", "--color"], handle: (o) => [H2("&::placeholder", [a2("--tw-sort", "placeholder-color"), a2("color", o)])] }), t("decoration-solid", [["text-decoration-style", "solid"]]), t("decoration-double", [["text-decoration-style", "double"]]), t("decoration-dotted", [["text-decoration-style", "dotted"]]), t("decoration-dashed", [["text-decoration-style", "dashed"]]), t("decoration-wavy", [["text-decoration-style", "wavy"]]), t("decoration-auto", [["text-decoration-thickness", "auto"]]), t("decoration-from-font", [["text-decoration-thickness", "from-font"]]), i.functional("decoration", (o) => {
+      if (o.value) {
+        if (o.value.kind === "arbitrary") {
+          let g = o.value.value;
+          switch (o.value.dataType ?? ge(g, ["color", "length", "percentage"])) {
             case "length":
             case "percentage":
-              return o2.modifier ? undefined : [a2("text-decoration-thickness", g3)];
+              return o.modifier ? undefined : [a2("text-decoration-thickness", g)];
             default:
-              return g3 = te2(g3, o2.modifier, e2), g3 === null ? undefined : [a2("text-decoration-color", g3)];
+              return g = te2(g, o.modifier, e), g === null ? undefined : [a2("text-decoration-color", g)];
           }
         }
         {
-          let g3 = e2.resolve(o2.value.value, ["--text-decoration-thickness"]);
-          if (g3)
-            return o2.modifier ? undefined : [a2("text-decoration-thickness", g3)];
-          if (u(o2.value.value))
-            return o2.modifier ? undefined : [a2("text-decoration-thickness", `${o2.value.value}px`)];
+          let g = e.resolve(o.value.value, ["--text-decoration-thickness"]);
+          if (g)
+            return o.modifier ? undefined : [a2("text-decoration-thickness", g)];
+          if (u(o.value.value))
+            return o.modifier ? undefined : [a2("text-decoration-thickness", `${o.value.value}px`)];
         }
         {
-          let g3 = ae2(o2, e2, ["--text-decoration-color", "--color"]);
-          if (g3)
-            return [a2("text-decoration-color", g3)];
+          let g = ae2(o, e, ["--text-decoration-color", "--color"]);
+          if (g)
+            return [a2("text-decoration-color", g)];
         }
       }
-    }), r("decoration", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--text-decoration-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (o2, g3) => `${g3 * 5}`) }, { values: ["0", "1", "2"], valueThemeKeys: ["--text-decoration-thickness"] }]), n("animate", { themeKeys: ["--animate"], handle: (o2) => [a2("animation", o2)], staticValues: { none: [a2("animation", "none")] } });
+    }), r("decoration", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--text-decoration-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (o, g) => `${g * 5}`) }, { values: ["0", "1", "2"], valueThemeKeys: ["--text-decoration-thickness"] }]), n("animate", { themeKeys: ["--animate"], handle: (o) => [a2("animation", o)], staticValues: { none: [a2("animation", "none")] } });
     {
-      let o2 = ["var(--tw-blur,)", "var(--tw-brightness,)", "var(--tw-contrast,)", "var(--tw-grayscale,)", "var(--tw-hue-rotate,)", "var(--tw-invert,)", "var(--tw-saturate,)", "var(--tw-sepia,)", "var(--tw-drop-shadow,)"].join(" "), g3 = ["var(--tw-backdrop-blur,)", "var(--tw-backdrop-brightness,)", "var(--tw-backdrop-contrast,)", "var(--tw-backdrop-grayscale,)", "var(--tw-backdrop-hue-rotate,)", "var(--tw-backdrop-invert,)", "var(--tw-backdrop-opacity,)", "var(--tw-backdrop-saturate,)", "var(--tw-backdrop-sepia,)"].join(" "), w2 = () => Y2([$2("--tw-blur"), $2("--tw-brightness"), $2("--tw-contrast"), $2("--tw-grayscale"), $2("--tw-hue-rotate"), $2("--tw-invert"), $2("--tw-opacity"), $2("--tw-saturate"), $2("--tw-sepia"), $2("--tw-drop-shadow"), $2("--tw-drop-shadow-color"), $2("--tw-drop-shadow-alpha", "100%", "<percentage>"), $2("--tw-drop-shadow-size")]), C2 = () => Y2([$2("--tw-backdrop-blur"), $2("--tw-backdrop-brightness"), $2("--tw-backdrop-contrast"), $2("--tw-backdrop-grayscale"), $2("--tw-backdrop-hue-rotate"), $2("--tw-backdrop-invert"), $2("--tw-backdrop-opacity"), $2("--tw-backdrop-saturate"), $2("--tw-backdrop-sepia")]);
-      i.functional("filter", (A2) => {
-        if (!A2.modifier) {
-          if (A2.value === null)
-            return [w2(), a2("filter", o2)];
-          if (A2.value.kind === "arbitrary")
-            return [a2("filter", A2.value.value)];
-          if (A2.value.value === "none")
+      let o = ["var(--tw-blur,)", "var(--tw-brightness,)", "var(--tw-contrast,)", "var(--tw-grayscale,)", "var(--tw-hue-rotate,)", "var(--tw-invert,)", "var(--tw-saturate,)", "var(--tw-sepia,)", "var(--tw-drop-shadow,)"].join(" "), g = ["var(--tw-backdrop-blur,)", "var(--tw-backdrop-brightness,)", "var(--tw-backdrop-contrast,)", "var(--tw-backdrop-grayscale,)", "var(--tw-backdrop-hue-rotate,)", "var(--tw-backdrop-invert,)", "var(--tw-backdrop-opacity,)", "var(--tw-backdrop-saturate,)", "var(--tw-backdrop-sepia,)"].join(" "), w = () => Y2([$2("--tw-blur"), $2("--tw-brightness"), $2("--tw-contrast"), $2("--tw-grayscale"), $2("--tw-hue-rotate"), $2("--tw-invert"), $2("--tw-opacity"), $2("--tw-saturate"), $2("--tw-sepia"), $2("--tw-drop-shadow"), $2("--tw-drop-shadow-color"), $2("--tw-drop-shadow-alpha", "100%", "<percentage>"), $2("--tw-drop-shadow-size")]), C = () => Y2([$2("--tw-backdrop-blur"), $2("--tw-backdrop-brightness"), $2("--tw-backdrop-contrast"), $2("--tw-backdrop-grayscale"), $2("--tw-backdrop-hue-rotate"), $2("--tw-backdrop-invert"), $2("--tw-backdrop-opacity"), $2("--tw-backdrop-saturate"), $2("--tw-backdrop-sepia")]);
+      i.functional("filter", (A) => {
+        if (!A.modifier) {
+          if (A.value === null)
+            return [w(), a2("filter", o)];
+          if (A.value.kind === "arbitrary")
+            return [a2("filter", A.value.value)];
+          if (A.value.value === "none")
             return [a2("filter", "none")];
         }
-      }), i.functional("backdrop-filter", (A2) => {
-        if (!A2.modifier) {
-          if (A2.value === null)
-            return [C2(), a2("-webkit-backdrop-filter", g3), a2("backdrop-filter", g3)];
-          if (A2.value.kind === "arbitrary")
-            return [a2("-webkit-backdrop-filter", A2.value.value), a2("backdrop-filter", A2.value.value)];
-          if (A2.value.value === "none")
+      }), i.functional("backdrop-filter", (A) => {
+        if (!A.modifier) {
+          if (A.value === null)
+            return [C(), a2("-webkit-backdrop-filter", g), a2("backdrop-filter", g)];
+          if (A.value.kind === "arbitrary")
+            return [a2("-webkit-backdrop-filter", A.value.value), a2("backdrop-filter", A.value.value)];
+          if (A.value.value === "none")
             return [a2("-webkit-backdrop-filter", "none"), a2("backdrop-filter", "none")];
         }
-      }), n("blur", { themeKeys: ["--blur"], handle: (A2) => [w2(), a2("--tw-blur", `blur(${A2})`), a2("filter", o2)], staticValues: { none: [w2(), a2("--tw-blur", " "), a2("filter", o2)] } }), n("backdrop-blur", { themeKeys: ["--backdrop-blur", "--blur"], handle: (A2) => [C2(), a2("--tw-backdrop-blur", `blur(${A2})`), a2("-webkit-backdrop-filter", g3), a2("backdrop-filter", g3)], staticValues: { none: [C2(), a2("--tw-backdrop-blur", " "), a2("-webkit-backdrop-filter", g3), a2("backdrop-filter", g3)] } }), n("brightness", { themeKeys: ["--brightness"], handleBareValue: ({ value: A2 }) => u(A2) ? `${A2}%` : null, handle: (A2) => [w2(), a2("--tw-brightness", `brightness(${A2})`), a2("filter", o2)] }), n("backdrop-brightness", { themeKeys: ["--backdrop-brightness", "--brightness"], handleBareValue: ({ value: A2 }) => u(A2) ? `${A2}%` : null, handle: (A2) => [C2(), a2("--tw-backdrop-brightness", `brightness(${A2})`), a2("-webkit-backdrop-filter", g3), a2("backdrop-filter", g3)] }), r("brightness", () => [{ values: ["0", "50", "75", "90", "95", "100", "105", "110", "125", "150", "200"], valueThemeKeys: ["--brightness"] }]), r("backdrop-brightness", () => [{ values: ["0", "50", "75", "90", "95", "100", "105", "110", "125", "150", "200"], valueThemeKeys: ["--backdrop-brightness", "--brightness"] }]), n("contrast", { themeKeys: ["--contrast"], handleBareValue: ({ value: A2 }) => u(A2) ? `${A2}%` : null, handle: (A2) => [w2(), a2("--tw-contrast", `contrast(${A2})`), a2("filter", o2)] }), n("backdrop-contrast", { themeKeys: ["--backdrop-contrast", "--contrast"], handleBareValue: ({ value: A2 }) => u(A2) ? `${A2}%` : null, handle: (A2) => [C2(), a2("--tw-backdrop-contrast", `contrast(${A2})`), a2("-webkit-backdrop-filter", g3), a2("backdrop-filter", g3)] }), r("contrast", () => [{ values: ["0", "50", "75", "100", "125", "150", "200"], valueThemeKeys: ["--contrast"] }]), r("backdrop-contrast", () => [{ values: ["0", "50", "75", "100", "125", "150", "200"], valueThemeKeys: ["--backdrop-contrast", "--contrast"] }]), n("grayscale", { themeKeys: ["--grayscale"], handleBareValue: ({ value: A2 }) => u(A2) ? `${A2}%` : null, defaultValue: "100%", handle: (A2) => [w2(), a2("--tw-grayscale", `grayscale(${A2})`), a2("filter", o2)] }), n("backdrop-grayscale", { themeKeys: ["--backdrop-grayscale", "--grayscale"], handleBareValue: ({ value: A2 }) => u(A2) ? `${A2}%` : null, defaultValue: "100%", handle: (A2) => [C2(), a2("--tw-backdrop-grayscale", `grayscale(${A2})`), a2("-webkit-backdrop-filter", g3), a2("backdrop-filter", g3)] }), r("grayscale", () => [{ values: ["0", "25", "50", "75", "100"], valueThemeKeys: ["--grayscale"], hasDefaultValue: true }]), r("backdrop-grayscale", () => [{ values: ["0", "25", "50", "75", "100"], valueThemeKeys: ["--backdrop-grayscale", "--grayscale"], hasDefaultValue: true }]), n("hue-rotate", { supportsNegative: true, themeKeys: ["--hue-rotate"], handleBareValue: ({ value: A2 }) => u(A2) ? `${A2}deg` : null, handle: (A2) => [w2(), a2("--tw-hue-rotate", `hue-rotate(${A2})`), a2("filter", o2)] }), n("backdrop-hue-rotate", { supportsNegative: true, themeKeys: ["--backdrop-hue-rotate", "--hue-rotate"], handleBareValue: ({ value: A2 }) => u(A2) ? `${A2}deg` : null, handle: (A2) => [C2(), a2("--tw-backdrop-hue-rotate", `hue-rotate(${A2})`), a2("-webkit-backdrop-filter", g3), a2("backdrop-filter", g3)] }), r("hue-rotate", () => [{ values: ["0", "15", "30", "60", "90", "180"], valueThemeKeys: ["--hue-rotate"] }]), r("backdrop-hue-rotate", () => [{ values: ["0", "15", "30", "60", "90", "180"], valueThemeKeys: ["--backdrop-hue-rotate", "--hue-rotate"] }]), n("invert", { themeKeys: ["--invert"], handleBareValue: ({ value: A2 }) => u(A2) ? `${A2}%` : null, defaultValue: "100%", handle: (A2) => [w2(), a2("--tw-invert", `invert(${A2})`), a2("filter", o2)] }), n("backdrop-invert", { themeKeys: ["--backdrop-invert", "--invert"], handleBareValue: ({ value: A2 }) => u(A2) ? `${A2}%` : null, defaultValue: "100%", handle: (A2) => [C2(), a2("--tw-backdrop-invert", `invert(${A2})`), a2("-webkit-backdrop-filter", g3), a2("backdrop-filter", g3)] }), r("invert", () => [{ values: ["0", "25", "50", "75", "100"], valueThemeKeys: ["--invert"], hasDefaultValue: true }]), r("backdrop-invert", () => [{ values: ["0", "25", "50", "75", "100"], valueThemeKeys: ["--backdrop-invert", "--invert"], hasDefaultValue: true }]), n("saturate", { themeKeys: ["--saturate"], handleBareValue: ({ value: A2 }) => u(A2) ? `${A2}%` : null, handle: (A2) => [w2(), a2("--tw-saturate", `saturate(${A2})`), a2("filter", o2)] }), n("backdrop-saturate", { themeKeys: ["--backdrop-saturate", "--saturate"], handleBareValue: ({ value: A2 }) => u(A2) ? `${A2}%` : null, handle: (A2) => [C2(), a2("--tw-backdrop-saturate", `saturate(${A2})`), a2("-webkit-backdrop-filter", g3), a2("backdrop-filter", g3)] }), r("saturate", () => [{ values: ["0", "50", "100", "150", "200"], valueThemeKeys: ["--saturate"] }]), r("backdrop-saturate", () => [{ values: ["0", "50", "100", "150", "200"], valueThemeKeys: ["--backdrop-saturate", "--saturate"] }]), n("sepia", { themeKeys: ["--sepia"], handleBareValue: ({ value: A2 }) => u(A2) ? `${A2}%` : null, defaultValue: "100%", handle: (A2) => [w2(), a2("--tw-sepia", `sepia(${A2})`), a2("filter", o2)] }), n("backdrop-sepia", { themeKeys: ["--backdrop-sepia", "--sepia"], handleBareValue: ({ value: A2 }) => u(A2) ? `${A2}%` : null, defaultValue: "100%", handle: (A2) => [C2(), a2("--tw-backdrop-sepia", `sepia(${A2})`), a2("-webkit-backdrop-filter", g3), a2("backdrop-filter", g3)] }), r("sepia", () => [{ values: ["0", "50", "100"], valueThemeKeys: ["--sepia"], hasDefaultValue: true }]), r("backdrop-sepia", () => [{ values: ["0", "50", "100"], valueThemeKeys: ["--backdrop-sepia", "--sepia"], hasDefaultValue: true }]), t("drop-shadow-none", [w2, ["--tw-drop-shadow", " "], ["filter", o2]]), i.functional("drop-shadow", (A2) => {
-        let T2;
-        if (A2.modifier && (A2.modifier.kind === "arbitrary" ? T2 = A2.modifier.value : xe(A2.modifier.value) && (T2 = `${A2.modifier.value}%`)), !A2.value) {
-          let K2 = e2.get(["--drop-shadow"]), N2 = e2.resolve(null, ["--drop-shadow"]);
-          return K2 === null || N2 === null ? undefined : [w2(), a2("--tw-drop-shadow-alpha", T2), ...wt("--tw-drop-shadow-size", K2, T2, (R2) => `var(--tw-drop-shadow-color, ${R2})`), a2("--tw-drop-shadow", d(N2, ",").map((R2) => `drop-shadow(${R2})`).join(" ")), a2("filter", o2)];
+      }), n("blur", { themeKeys: ["--blur"], handle: (A) => [w(), a2("--tw-blur", `blur(${A})`), a2("filter", o)], staticValues: { none: [w(), a2("--tw-blur", " "), a2("filter", o)] } }), n("backdrop-blur", { themeKeys: ["--backdrop-blur", "--blur"], handle: (A) => [C(), a2("--tw-backdrop-blur", `blur(${A})`), a2("-webkit-backdrop-filter", g), a2("backdrop-filter", g)], staticValues: { none: [C(), a2("--tw-backdrop-blur", " "), a2("-webkit-backdrop-filter", g), a2("backdrop-filter", g)] } }), n("brightness", { themeKeys: ["--brightness"], handleBareValue: ({ value: A }) => u(A) ? `${A}%` : null, handle: (A) => [w(), a2("--tw-brightness", `brightness(${A})`), a2("filter", o)] }), n("backdrop-brightness", { themeKeys: ["--backdrop-brightness", "--brightness"], handleBareValue: ({ value: A }) => u(A) ? `${A}%` : null, handle: (A) => [C(), a2("--tw-backdrop-brightness", `brightness(${A})`), a2("-webkit-backdrop-filter", g), a2("backdrop-filter", g)] }), r("brightness", () => [{ values: ["0", "50", "75", "90", "95", "100", "105", "110", "125", "150", "200"], valueThemeKeys: ["--brightness"] }]), r("backdrop-brightness", () => [{ values: ["0", "50", "75", "90", "95", "100", "105", "110", "125", "150", "200"], valueThemeKeys: ["--backdrop-brightness", "--brightness"] }]), n("contrast", { themeKeys: ["--contrast"], handleBareValue: ({ value: A }) => u(A) ? `${A}%` : null, handle: (A) => [w(), a2("--tw-contrast", `contrast(${A})`), a2("filter", o)] }), n("backdrop-contrast", { themeKeys: ["--backdrop-contrast", "--contrast"], handleBareValue: ({ value: A }) => u(A) ? `${A}%` : null, handle: (A) => [C(), a2("--tw-backdrop-contrast", `contrast(${A})`), a2("-webkit-backdrop-filter", g), a2("backdrop-filter", g)] }), r("contrast", () => [{ values: ["0", "50", "75", "100", "125", "150", "200"], valueThemeKeys: ["--contrast"] }]), r("backdrop-contrast", () => [{ values: ["0", "50", "75", "100", "125", "150", "200"], valueThemeKeys: ["--backdrop-contrast", "--contrast"] }]), n("grayscale", { themeKeys: ["--grayscale"], handleBareValue: ({ value: A }) => u(A) ? `${A}%` : null, defaultValue: "100%", handle: (A) => [w(), a2("--tw-grayscale", `grayscale(${A})`), a2("filter", o)] }), n("backdrop-grayscale", { themeKeys: ["--backdrop-grayscale", "--grayscale"], handleBareValue: ({ value: A }) => u(A) ? `${A}%` : null, defaultValue: "100%", handle: (A) => [C(), a2("--tw-backdrop-grayscale", `grayscale(${A})`), a2("-webkit-backdrop-filter", g), a2("backdrop-filter", g)] }), r("grayscale", () => [{ values: ["0", "25", "50", "75", "100"], valueThemeKeys: ["--grayscale"], hasDefaultValue: true }]), r("backdrop-grayscale", () => [{ values: ["0", "25", "50", "75", "100"], valueThemeKeys: ["--backdrop-grayscale", "--grayscale"], hasDefaultValue: true }]), n("hue-rotate", { supportsNegative: true, themeKeys: ["--hue-rotate"], handleBareValue: ({ value: A }) => u(A) ? `${A}deg` : null, handle: (A) => [w(), a2("--tw-hue-rotate", `hue-rotate(${A})`), a2("filter", o)] }), n("backdrop-hue-rotate", { supportsNegative: true, themeKeys: ["--backdrop-hue-rotate", "--hue-rotate"], handleBareValue: ({ value: A }) => u(A) ? `${A}deg` : null, handle: (A) => [C(), a2("--tw-backdrop-hue-rotate", `hue-rotate(${A})`), a2("-webkit-backdrop-filter", g), a2("backdrop-filter", g)] }), r("hue-rotate", () => [{ values: ["0", "15", "30", "60", "90", "180"], valueThemeKeys: ["--hue-rotate"] }]), r("backdrop-hue-rotate", () => [{ values: ["0", "15", "30", "60", "90", "180"], valueThemeKeys: ["--backdrop-hue-rotate", "--hue-rotate"] }]), n("invert", { themeKeys: ["--invert"], handleBareValue: ({ value: A }) => u(A) ? `${A}%` : null, defaultValue: "100%", handle: (A) => [w(), a2("--tw-invert", `invert(${A})`), a2("filter", o)] }), n("backdrop-invert", { themeKeys: ["--backdrop-invert", "--invert"], handleBareValue: ({ value: A }) => u(A) ? `${A}%` : null, defaultValue: "100%", handle: (A) => [C(), a2("--tw-backdrop-invert", `invert(${A})`), a2("-webkit-backdrop-filter", g), a2("backdrop-filter", g)] }), r("invert", () => [{ values: ["0", "25", "50", "75", "100"], valueThemeKeys: ["--invert"], hasDefaultValue: true }]), r("backdrop-invert", () => [{ values: ["0", "25", "50", "75", "100"], valueThemeKeys: ["--backdrop-invert", "--invert"], hasDefaultValue: true }]), n("saturate", { themeKeys: ["--saturate"], handleBareValue: ({ value: A }) => u(A) ? `${A}%` : null, handle: (A) => [w(), a2("--tw-saturate", `saturate(${A})`), a2("filter", o)] }), n("backdrop-saturate", { themeKeys: ["--backdrop-saturate", "--saturate"], handleBareValue: ({ value: A }) => u(A) ? `${A}%` : null, handle: (A) => [C(), a2("--tw-backdrop-saturate", `saturate(${A})`), a2("-webkit-backdrop-filter", g), a2("backdrop-filter", g)] }), r("saturate", () => [{ values: ["0", "50", "100", "150", "200"], valueThemeKeys: ["--saturate"] }]), r("backdrop-saturate", () => [{ values: ["0", "50", "100", "150", "200"], valueThemeKeys: ["--backdrop-saturate", "--saturate"] }]), n("sepia", { themeKeys: ["--sepia"], handleBareValue: ({ value: A }) => u(A) ? `${A}%` : null, defaultValue: "100%", handle: (A) => [w(), a2("--tw-sepia", `sepia(${A})`), a2("filter", o)] }), n("backdrop-sepia", { themeKeys: ["--backdrop-sepia", "--sepia"], handleBareValue: ({ value: A }) => u(A) ? `${A}%` : null, defaultValue: "100%", handle: (A) => [C(), a2("--tw-backdrop-sepia", `sepia(${A})`), a2("-webkit-backdrop-filter", g), a2("backdrop-filter", g)] }), r("sepia", () => [{ values: ["0", "50", "100"], valueThemeKeys: ["--sepia"], hasDefaultValue: true }]), r("backdrop-sepia", () => [{ values: ["0", "50", "100"], valueThemeKeys: ["--backdrop-sepia", "--sepia"], hasDefaultValue: true }]), t("drop-shadow-none", [w, ["--tw-drop-shadow", " "], ["filter", o]]), i.functional("drop-shadow", (A) => {
+        let T;
+        if (A.modifier && (A.modifier.kind === "arbitrary" ? T = A.modifier.value : xe(A.modifier.value) && (T = `${A.modifier.value}%`)), !A.value) {
+          let K = e.get(["--drop-shadow"]), N = e.resolve(null, ["--drop-shadow"]);
+          return K === null || N === null ? undefined : [w(), a2("--tw-drop-shadow-alpha", T), ...wt("--tw-drop-shadow-size", K, T, (R) => `var(--tw-drop-shadow-color, ${R})`), a2("--tw-drop-shadow", d(N, ",").map((R) => `drop-shadow(${R})`).join(" ")), a2("filter", o)];
         }
-        if (A2.value.kind === "arbitrary") {
-          let K2 = A2.value.value;
-          return (A2.value.dataType ?? ge(K2, ["color"])) === "color" ? (K2 = te2(K2, A2.modifier, e2), K2 === null ? undefined : [w2(), a2("--tw-drop-shadow-color", X2(K2, "var(--tw-drop-shadow-alpha)")), a2("--tw-drop-shadow", "var(--tw-drop-shadow-size)")]) : A2.modifier && !T2 ? undefined : [w2(), a2("--tw-drop-shadow-alpha", T2), ...wt("--tw-drop-shadow-size", K2, T2, (R2) => `var(--tw-drop-shadow-color, ${R2})`), a2("--tw-drop-shadow", "var(--tw-drop-shadow-size)"), a2("filter", o2)];
-        }
-        {
-          let K2 = e2.get([`--drop-shadow-${A2.value.value}`]), N2 = e2.resolve(A2.value.value, ["--drop-shadow"]);
-          if (K2 && N2)
-            return A2.modifier && !T2 ? undefined : T2 ? [w2(), a2("--tw-drop-shadow-alpha", T2), ...wt("--tw-drop-shadow-size", K2, T2, (R2) => `var(--tw-drop-shadow-color, ${R2})`), a2("--tw-drop-shadow", "var(--tw-drop-shadow-size)"), a2("filter", o2)] : [w2(), a2("--tw-drop-shadow-alpha", T2), ...wt("--tw-drop-shadow-size", K2, T2, (R2) => `var(--tw-drop-shadow-color, ${R2})`), a2("--tw-drop-shadow", d(N2, ",").map((R2) => `drop-shadow(${R2})`).join(" ")), a2("filter", o2)];
+        if (A.value.kind === "arbitrary") {
+          let K = A.value.value;
+          return (A.value.dataType ?? ge(K, ["color"])) === "color" ? (K = te2(K, A.modifier, e), K === null ? undefined : [w(), a2("--tw-drop-shadow-color", X2(K, "var(--tw-drop-shadow-alpha)")), a2("--tw-drop-shadow", "var(--tw-drop-shadow-size)")]) : A.modifier && !T ? undefined : [w(), a2("--tw-drop-shadow-alpha", T), ...wt("--tw-drop-shadow-size", K, T, (R) => `var(--tw-drop-shadow-color, ${R})`), a2("--tw-drop-shadow", "var(--tw-drop-shadow-size)"), a2("filter", o)];
         }
         {
-          let K2 = ae2(A2, e2, ["--drop-shadow-color", "--color"]);
-          if (K2)
-            return K2 === "inherit" ? [w2(), a2("--tw-drop-shadow-color", "inherit"), a2("--tw-drop-shadow", "var(--tw-drop-shadow-size)")] : [w2(), a2("--tw-drop-shadow-color", X2(K2, "var(--tw-drop-shadow-alpha)")), a2("--tw-drop-shadow", "var(--tw-drop-shadow-size)")];
+          let K = e.get([`--drop-shadow-${A.value.value}`]), N = e.resolve(A.value.value, ["--drop-shadow"]);
+          if (K && N)
+            return A.modifier && !T ? undefined : T ? [w(), a2("--tw-drop-shadow-alpha", T), ...wt("--tw-drop-shadow-size", K, T, (R) => `var(--tw-drop-shadow-color, ${R})`), a2("--tw-drop-shadow", "var(--tw-drop-shadow-size)"), a2("filter", o)] : [w(), a2("--tw-drop-shadow-alpha", T), ...wt("--tw-drop-shadow-size", K, T, (R) => `var(--tw-drop-shadow-color, ${R})`), a2("--tw-drop-shadow", d(N, ",").map((R) => `drop-shadow(${R})`).join(" ")), a2("filter", o)];
         }
-      }), r("drop-shadow", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--drop-shadow-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (A2, T2) => `${T2 * 5}`) }, { valueThemeKeys: ["--drop-shadow"] }]), n("backdrop-opacity", { themeKeys: ["--backdrop-opacity", "--opacity"], handleBareValue: ({ value: A2 }) => xe(A2) ? `${A2}%` : null, handle: (A2) => [C2(), a2("--tw-backdrop-opacity", `opacity(${A2})`), a2("-webkit-backdrop-filter", g3), a2("backdrop-filter", g3)] }), r("backdrop-opacity", () => [{ values: Array.from({ length: 21 }, (A2, T2) => `${T2 * 5}`), valueThemeKeys: ["--backdrop-opacity", "--opacity"] }]);
+        {
+          let K = ae2(A, e, ["--drop-shadow-color", "--color"]);
+          if (K)
+            return K === "inherit" ? [w(), a2("--tw-drop-shadow-color", "inherit"), a2("--tw-drop-shadow", "var(--tw-drop-shadow-size)")] : [w(), a2("--tw-drop-shadow-color", X2(K, "var(--tw-drop-shadow-alpha)")), a2("--tw-drop-shadow", "var(--tw-drop-shadow-size)")];
+        }
+      }), r("drop-shadow", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--drop-shadow-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (A, T) => `${T * 5}`) }, { valueThemeKeys: ["--drop-shadow"] }]), n("backdrop-opacity", { themeKeys: ["--backdrop-opacity", "--opacity"], handleBareValue: ({ value: A }) => xe(A) ? `${A}%` : null, handle: (A) => [C(), a2("--tw-backdrop-opacity", `opacity(${A})`), a2("-webkit-backdrop-filter", g), a2("backdrop-filter", g)] }), r("backdrop-opacity", () => [{ values: Array.from({ length: 21 }, (A, T) => `${T * 5}`), valueThemeKeys: ["--backdrop-opacity", "--opacity"] }]);
     }
     {
-      let o2 = `var(--tw-ease, ${e2.resolve(null, ["--default-transition-timing-function"]) ?? "ease"})`, g3 = `var(--tw-duration, ${e2.resolve(null, ["--default-transition-duration"]) ?? "0s"})`;
-      n("transition", { defaultValue: "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events", themeKeys: ["--transition-property"], handle: (w2) => [a2("transition-property", w2), a2("transition-timing-function", o2), a2("transition-duration", g3)], staticValues: { none: [a2("transition-property", "none")], all: [a2("transition-property", "all"), a2("transition-timing-function", o2), a2("transition-duration", g3)], colors: [a2("transition-property", "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to"), a2("transition-timing-function", o2), a2("transition-duration", g3)], opacity: [a2("transition-property", "opacity"), a2("transition-timing-function", o2), a2("transition-duration", g3)], shadow: [a2("transition-property", "box-shadow"), a2("transition-timing-function", o2), a2("transition-duration", g3)], transform: [a2("transition-property", "transform, translate, scale, rotate"), a2("transition-timing-function", o2), a2("transition-duration", g3)] } }), t("transition-discrete", [["transition-behavior", "allow-discrete"]]), t("transition-normal", [["transition-behavior", "normal"]]), n("delay", { handleBareValue: ({ value: w2 }) => u(w2) ? `${w2}ms` : null, themeKeys: ["--transition-delay"], handle: (w2) => [a2("transition-delay", w2)] });
+      let o = `var(--tw-ease, ${e.resolve(null, ["--default-transition-timing-function"]) ?? "ease"})`, g = `var(--tw-duration, ${e.resolve(null, ["--default-transition-duration"]) ?? "0s"})`;
+      n("transition", { defaultValue: "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to, opacity, box-shadow, transform, translate, scale, rotate, filter, -webkit-backdrop-filter, backdrop-filter, display, content-visibility, overlay, pointer-events", themeKeys: ["--transition-property"], handle: (w) => [a2("transition-property", w), a2("transition-timing-function", o), a2("transition-duration", g)], staticValues: { none: [a2("transition-property", "none")], all: [a2("transition-property", "all"), a2("transition-timing-function", o), a2("transition-duration", g)], colors: [a2("transition-property", "color, background-color, border-color, outline-color, text-decoration-color, fill, stroke, --tw-gradient-from, --tw-gradient-via, --tw-gradient-to"), a2("transition-timing-function", o), a2("transition-duration", g)], opacity: [a2("transition-property", "opacity"), a2("transition-timing-function", o), a2("transition-duration", g)], shadow: [a2("transition-property", "box-shadow"), a2("transition-timing-function", o), a2("transition-duration", g)], transform: [a2("transition-property", "transform, translate, scale, rotate"), a2("transition-timing-function", o), a2("transition-duration", g)] } }), t("transition-discrete", [["transition-behavior", "allow-discrete"]]), t("transition-normal", [["transition-behavior", "normal"]]), n("delay", { handleBareValue: ({ value: w }) => u(w) ? `${w}ms` : null, themeKeys: ["--transition-delay"], handle: (w) => [a2("transition-delay", w)] });
       {
-        let w2 = () => Y2([$2("--tw-duration")]);
-        t("duration-initial", [w2, ["--tw-duration", "initial"]]), i.functional("duration", (C2) => {
-          if (C2.modifier || !C2.value)
+        let w = () => Y2([$2("--tw-duration")]);
+        t("duration-initial", [w, ["--tw-duration", "initial"]]), i.functional("duration", (C) => {
+          if (C.modifier || !C.value)
             return;
-          let A2 = null;
-          if (C2.value.kind === "arbitrary" ? A2 = C2.value.value : (A2 = e2.resolve(C2.value.fraction ?? C2.value.value, ["--transition-duration"]), A2 === null && u(C2.value.value) && (A2 = `${C2.value.value}ms`)), A2 !== null)
-            return [w2(), a2("--tw-duration", A2), a2("transition-duration", A2)];
+          let A = null;
+          if (C.value.kind === "arbitrary" ? A = C.value.value : (A = e.resolve(C.value.fraction ?? C.value.value, ["--transition-duration"]), A === null && u(C.value.value) && (A = `${C.value.value}ms`)), A !== null)
+            return [w(), a2("--tw-duration", A), a2("transition-duration", A)];
         });
       }
       r("delay", () => [{ values: ["75", "100", "150", "200", "300", "500", "700", "1000"], valueThemeKeys: ["--transition-delay"] }]), r("duration", () => [{ values: ["75", "100", "150", "200", "300", "500", "700", "1000"], valueThemeKeys: ["--transition-duration"] }]);
     }
     {
-      let o2 = () => Y2([$2("--tw-ease")]);
-      n("ease", { themeKeys: ["--ease"], handle: (g3) => [o2(), a2("--tw-ease", g3), a2("transition-timing-function", g3)], staticValues: { initial: [o2(), a2("--tw-ease", "initial")], linear: [o2(), a2("--tw-ease", "linear"), a2("transition-timing-function", "linear")] } });
+      let o = () => Y2([$2("--tw-ease")]);
+      n("ease", { themeKeys: ["--ease"], handle: (g) => [o(), a2("--tw-ease", g), a2("transition-timing-function", g)], staticValues: { initial: [o(), a2("--tw-ease", "initial")], linear: [o(), a2("--tw-ease", "linear"), a2("transition-timing-function", "linear")] } });
     }
-    t("will-change-auto", [["will-change", "auto"]]), t("will-change-scroll", [["will-change", "scroll-position"]]), t("will-change-contents", [["will-change", "contents"]]), t("will-change-transform", [["will-change", "transform"]]), n("will-change", { themeKeys: [], handle: (o2) => [a2("will-change", o2)] }), t("content-none", [["--tw-content", "none"], ["content", "none"]]), n("content", { themeKeys: ["--content"], handle: (o2) => [Y2([$2("--tw-content", '""')]), a2("--tw-content", o2), a2("content", "var(--tw-content)")] });
+    t("will-change-auto", [["will-change", "auto"]]), t("will-change-scroll", [["will-change", "scroll-position"]]), t("will-change-contents", [["will-change", "contents"]]), t("will-change-transform", [["will-change", "transform"]]), n("will-change", { themeKeys: [], handle: (o) => [a2("will-change", o)] }), t("content-none", [["--tw-content", "none"], ["content", "none"]]), n("content", { themeKeys: ["--content"], handle: (o) => [Y2([$2("--tw-content", '""')]), a2("--tw-content", o), a2("content", "var(--tw-content)")] });
     {
-      let o2 = "var(--tw-contain-size,) var(--tw-contain-layout,) var(--tw-contain-paint,) var(--tw-contain-style,)", g3 = () => Y2([$2("--tw-contain-size"), $2("--tw-contain-layout"), $2("--tw-contain-paint"), $2("--tw-contain-style")]);
-      t("contain-none", [["contain", "none"]]), t("contain-content", [["contain", "content"]]), t("contain-strict", [["contain", "strict"]]), t("contain-size", [g3, ["--tw-contain-size", "size"], ["contain", o2]]), t("contain-inline-size", [g3, ["--tw-contain-size", "inline-size"], ["contain", o2]]), t("contain-layout", [g3, ["--tw-contain-layout", "layout"], ["contain", o2]]), t("contain-paint", [g3, ["--tw-contain-paint", "paint"], ["contain", o2]]), t("contain-style", [g3, ["--tw-contain-style", "style"], ["contain", o2]]), n("contain", { themeKeys: [], handle: (w2) => [a2("contain", w2)] });
+      let o = "var(--tw-contain-size,) var(--tw-contain-layout,) var(--tw-contain-paint,) var(--tw-contain-style,)", g = () => Y2([$2("--tw-contain-size"), $2("--tw-contain-layout"), $2("--tw-contain-paint"), $2("--tw-contain-style")]);
+      t("contain-none", [["contain", "none"]]), t("contain-content", [["contain", "content"]]), t("contain-strict", [["contain", "strict"]]), t("contain-size", [g, ["--tw-contain-size", "size"], ["contain", o]]), t("contain-inline-size", [g, ["--tw-contain-size", "inline-size"], ["contain", o]]), t("contain-layout", [g, ["--tw-contain-layout", "layout"], ["contain", o]]), t("contain-paint", [g, ["--tw-contain-paint", "paint"], ["contain", o]]), t("contain-style", [g, ["--tw-contain-style", "style"], ["contain", o]]), n("contain", { themeKeys: [], handle: (w) => [a2("contain", w)] });
     }
-    t("forced-color-adjust-none", [["forced-color-adjust", "none"]]), t("forced-color-adjust-auto", [["forced-color-adjust", "auto"]]), l2("leading", ["--leading", "--spacing"], (o2) => [Y2([$2("--tw-leading")]), a2("--tw-leading", o2), a2("line-height", o2)], { staticValues: { none: [Y2([$2("--tw-leading")]), a2("--tw-leading", "1"), a2("line-height", "1")] } }), n("tracking", { supportsNegative: true, themeKeys: ["--tracking"], handle: (o2) => [Y2([$2("--tw-tracking")]), a2("--tw-tracking", o2), a2("letter-spacing", o2)] }), t("antialiased", [["-webkit-font-smoothing", "antialiased"], ["-moz-osx-font-smoothing", "grayscale"]]), t("subpixel-antialiased", [["-webkit-font-smoothing", "auto"], ["-moz-osx-font-smoothing", "auto"]]);
+    t("forced-color-adjust-none", [["forced-color-adjust", "none"]]), t("forced-color-adjust-auto", [["forced-color-adjust", "auto"]]), l("leading", ["--leading", "--spacing"], (o) => [Y2([$2("--tw-leading")]), a2("--tw-leading", o), a2("line-height", o)], { staticValues: { none: [Y2([$2("--tw-leading")]), a2("--tw-leading", "1"), a2("line-height", "1")] } }), n("tracking", { supportsNegative: true, themeKeys: ["--tracking"], handle: (o) => [Y2([$2("--tw-tracking")]), a2("--tw-tracking", o), a2("letter-spacing", o)] }), t("antialiased", [["-webkit-font-smoothing", "antialiased"], ["-moz-osx-font-smoothing", "grayscale"]]), t("subpixel-antialiased", [["-webkit-font-smoothing", "auto"], ["-moz-osx-font-smoothing", "auto"]]);
     {
-      let o2 = "var(--tw-ordinal,) var(--tw-slashed-zero,) var(--tw-numeric-figure,) var(--tw-numeric-spacing,) var(--tw-numeric-fraction,)", g3 = () => Y2([$2("--tw-ordinal"), $2("--tw-slashed-zero"), $2("--tw-numeric-figure"), $2("--tw-numeric-spacing"), $2("--tw-numeric-fraction")]);
-      t("normal-nums", [["font-variant-numeric", "normal"]]), t("ordinal", [g3, ["--tw-ordinal", "ordinal"], ["font-variant-numeric", o2]]), t("slashed-zero", [g3, ["--tw-slashed-zero", "slashed-zero"], ["font-variant-numeric", o2]]), t("lining-nums", [g3, ["--tw-numeric-figure", "lining-nums"], ["font-variant-numeric", o2]]), t("oldstyle-nums", [g3, ["--tw-numeric-figure", "oldstyle-nums"], ["font-variant-numeric", o2]]), t("proportional-nums", [g3, ["--tw-numeric-spacing", "proportional-nums"], ["font-variant-numeric", o2]]), t("tabular-nums", [g3, ["--tw-numeric-spacing", "tabular-nums"], ["font-variant-numeric", o2]]), t("diagonal-fractions", [g3, ["--tw-numeric-fraction", "diagonal-fractions"], ["font-variant-numeric", o2]]), t("stacked-fractions", [g3, ["--tw-numeric-fraction", "stacked-fractions"], ["font-variant-numeric", o2]]);
+      let o = "var(--tw-ordinal,) var(--tw-slashed-zero,) var(--tw-numeric-figure,) var(--tw-numeric-spacing,) var(--tw-numeric-fraction,)", g = () => Y2([$2("--tw-ordinal"), $2("--tw-slashed-zero"), $2("--tw-numeric-figure"), $2("--tw-numeric-spacing"), $2("--tw-numeric-fraction")]);
+      t("normal-nums", [["font-variant-numeric", "normal"]]), t("ordinal", [g, ["--tw-ordinal", "ordinal"], ["font-variant-numeric", o]]), t("slashed-zero", [g, ["--tw-slashed-zero", "slashed-zero"], ["font-variant-numeric", o]]), t("lining-nums", [g, ["--tw-numeric-figure", "lining-nums"], ["font-variant-numeric", o]]), t("oldstyle-nums", [g, ["--tw-numeric-figure", "oldstyle-nums"], ["font-variant-numeric", o]]), t("proportional-nums", [g, ["--tw-numeric-spacing", "proportional-nums"], ["font-variant-numeric", o]]), t("tabular-nums", [g, ["--tw-numeric-spacing", "tabular-nums"], ["font-variant-numeric", o]]), t("diagonal-fractions", [g, ["--tw-numeric-fraction", "diagonal-fractions"], ["font-variant-numeric", o]]), t("stacked-fractions", [g, ["--tw-numeric-fraction", "stacked-fractions"], ["font-variant-numeric", o]]);
     }
     {
-      let o2 = () => Y2([$2("--tw-outline-style", "solid")]);
-      i.static("outline-hidden", () => [a2("--tw-outline-style", "none"), a2("outline-style", "none"), B2("@media", "(forced-colors: active)", [a2("outline", "2px solid transparent"), a2("outline-offset", "2px")])]), t("outline-none", [["--tw-outline-style", "none"], ["outline-style", "none"]]), t("outline-solid", [["--tw-outline-style", "solid"], ["outline-style", "solid"]]), t("outline-dashed", [["--tw-outline-style", "dashed"], ["outline-style", "dashed"]]), t("outline-dotted", [["--tw-outline-style", "dotted"], ["outline-style", "dotted"]]), t("outline-double", [["--tw-outline-style", "double"], ["outline-style", "double"]]), i.functional("outline", (g3) => {
-        if (g3.value === null) {
-          if (g3.modifier)
+      let o = () => Y2([$2("--tw-outline-style", "solid")]);
+      i.static("outline-hidden", () => [a2("--tw-outline-style", "none"), a2("outline-style", "none"), B2("@media", "(forced-colors: active)", [a2("outline", "2px solid transparent"), a2("outline-offset", "2px")])]), t("outline-none", [["--tw-outline-style", "none"], ["outline-style", "none"]]), t("outline-solid", [["--tw-outline-style", "solid"], ["outline-style", "solid"]]), t("outline-dashed", [["--tw-outline-style", "dashed"], ["outline-style", "dashed"]]), t("outline-dotted", [["--tw-outline-style", "dotted"], ["outline-style", "dotted"]]), t("outline-double", [["--tw-outline-style", "double"], ["outline-style", "double"]]), i.functional("outline", (g) => {
+        if (g.value === null) {
+          if (g.modifier)
             return;
-          let w2 = e2.get(["--default-outline-width"]) ?? "1px";
-          return [o2(), a2("outline-style", "var(--tw-outline-style)"), a2("outline-width", w2)];
+          let w = e.get(["--default-outline-width"]) ?? "1px";
+          return [o(), a2("outline-style", "var(--tw-outline-style)"), a2("outline-width", w)];
         }
-        if (g3.value.kind === "arbitrary") {
-          let w2 = g3.value.value;
-          switch (g3.value.dataType ?? ge(w2, ["color", "length", "number", "percentage"])) {
+        if (g.value.kind === "arbitrary") {
+          let w = g.value.value;
+          switch (g.value.dataType ?? ge(w, ["color", "length", "number", "percentage"])) {
             case "length":
             case "number":
             case "percentage":
-              return g3.modifier ? undefined : [o2(), a2("outline-style", "var(--tw-outline-style)"), a2("outline-width", w2)];
+              return g.modifier ? undefined : [o(), a2("outline-style", "var(--tw-outline-style)"), a2("outline-width", w)];
             default:
-              return w2 = te2(w2, g3.modifier, e2), w2 === null ? undefined : [a2("outline-color", w2)];
+              return w = te2(w, g.modifier, e), w === null ? undefined : [a2("outline-color", w)];
           }
         }
         {
-          let w2 = ae2(g3, e2, ["--outline-color", "--color"]);
-          if (w2)
-            return [a2("outline-color", w2)];
+          let w = ae2(g, e, ["--outline-color", "--color"]);
+          if (w)
+            return [a2("outline-color", w)];
         }
         {
-          if (g3.modifier)
+          if (g.modifier)
             return;
-          let w2 = e2.resolve(g3.value.value, ["--outline-width"]);
-          if (w2)
-            return [o2(), a2("outline-style", "var(--tw-outline-style)"), a2("outline-width", w2)];
-          if (u(g3.value.value))
-            return [o2(), a2("outline-style", "var(--tw-outline-style)"), a2("outline-width", `${g3.value.value}px`)];
+          let w = e.resolve(g.value.value, ["--outline-width"]);
+          if (w)
+            return [o(), a2("outline-style", "var(--tw-outline-style)"), a2("outline-width", w)];
+          if (u(g.value.value))
+            return [o(), a2("outline-style", "var(--tw-outline-style)"), a2("outline-width", `${g.value.value}px`)];
         }
-      }), r("outline", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--outline-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (g3, w2) => `${w2 * 5}`), hasDefaultValue: true }, { values: ["0", "1", "2", "4", "8"], valueThemeKeys: ["--outline-width"] }]), n("outline-offset", { supportsNegative: true, themeKeys: ["--outline-offset"], handleBareValue: ({ value: g3 }) => u(g3) ? `${g3}px` : null, handle: (g3) => [a2("outline-offset", g3)] }), r("outline-offset", () => [{ supportsNegative: true, values: ["0", "1", "2", "4", "8"], valueThemeKeys: ["--outline-offset"] }]);
+      }), r("outline", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--outline-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (g, w) => `${w * 5}`), hasDefaultValue: true }, { values: ["0", "1", "2", "4", "8"], valueThemeKeys: ["--outline-width"] }]), n("outline-offset", { supportsNegative: true, themeKeys: ["--outline-offset"], handleBareValue: ({ value: g }) => u(g) ? `${g}px` : null, handle: (g) => [a2("outline-offset", g)] }), r("outline-offset", () => [{ supportsNegative: true, values: ["0", "1", "2", "4", "8"], valueThemeKeys: ["--outline-offset"] }]);
     }
-    n("opacity", { themeKeys: ["--opacity"], handleBareValue: ({ value: o2 }) => xe(o2) ? `${o2}%` : null, handle: (o2) => [a2("opacity", o2)] }), r("opacity", () => [{ values: Array.from({ length: 21 }, (o2, g3) => `${g3 * 5}`), valueThemeKeys: ["--opacity"] }]), n("underline-offset", { supportsNegative: true, themeKeys: ["--text-underline-offset"], handleBareValue: ({ value: o2 }) => u(o2) ? `${o2}px` : null, handle: (o2) => [a2("text-underline-offset", o2)], staticValues: { auto: [a2("text-underline-offset", "auto")] } }), r("underline-offset", () => [{ supportsNegative: true, values: ["0", "1", "2", "4", "8"], valueThemeKeys: ["--text-underline-offset"] }]), i.functional("text", (o2) => {
-      if (o2.value) {
-        if (o2.value.kind === "arbitrary") {
-          let g3 = o2.value.value;
-          switch (o2.value.dataType ?? ge(g3, ["color", "length", "percentage", "absolute-size", "relative-size"])) {
+    n("opacity", { themeKeys: ["--opacity"], handleBareValue: ({ value: o }) => xe(o) ? `${o}%` : null, handle: (o) => [a2("opacity", o)] }), r("opacity", () => [{ values: Array.from({ length: 21 }, (o, g) => `${g * 5}`), valueThemeKeys: ["--opacity"] }]), n("underline-offset", { supportsNegative: true, themeKeys: ["--text-underline-offset"], handleBareValue: ({ value: o }) => u(o) ? `${o}px` : null, handle: (o) => [a2("text-underline-offset", o)], staticValues: { auto: [a2("text-underline-offset", "auto")] } }), r("underline-offset", () => [{ supportsNegative: true, values: ["0", "1", "2", "4", "8"], valueThemeKeys: ["--text-underline-offset"] }]), i.functional("text", (o) => {
+      if (o.value) {
+        if (o.value.kind === "arbitrary") {
+          let g = o.value.value;
+          switch (o.value.dataType ?? ge(g, ["color", "length", "percentage", "absolute-size", "relative-size"])) {
             case "size":
             case "length":
             case "percentage":
             case "absolute-size":
             case "relative-size": {
-              if (o2.modifier) {
-                let C2 = o2.modifier.kind === "arbitrary" ? o2.modifier.value : e2.resolve(o2.modifier.value, ["--leading"]);
-                if (!C2 && de(o2.modifier.value)) {
-                  if (!e2.resolve(null, ["--spacing"]))
+              if (o.modifier) {
+                let C = o.modifier.kind === "arbitrary" ? o.modifier.value : e.resolve(o.modifier.value, ["--leading"]);
+                if (!C && de(o.modifier.value)) {
+                  if (!e.resolve(null, ["--spacing"]))
                     return null;
-                  C2 = `--spacing(${o2.modifier.value})`;
+                  C = `--spacing(${o.modifier.value})`;
                 }
-                return !C2 && o2.modifier.value === "none" && (C2 = "1"), C2 ? [a2("font-size", g3), a2("line-height", C2)] : null;
+                return !C && o.modifier.value === "none" && (C = "1"), C ? [a2("font-size", g), a2("line-height", C)] : null;
               }
-              return [a2("font-size", g3)];
+              return [a2("font-size", g)];
             }
             default:
-              return g3 = te2(g3, o2.modifier, e2), g3 === null ? undefined : [a2("color", g3)];
+              return g = te2(g, o.modifier, e), g === null ? undefined : [a2("color", g)];
           }
         }
         {
-          let g3 = ae2(o2, e2, ["--text-color", "--color"]);
-          if (g3)
-            return [a2("color", g3)];
+          let g = ae2(o, e, ["--text-color", "--color"]);
+          if (g)
+            return [a2("color", g)];
         }
         {
-          let g3 = e2.resolveWith(o2.value.value, ["--text"], ["--line-height", "--letter-spacing", "--font-weight"]);
-          if (g3) {
-            let [w2, C2 = {}] = Array.isArray(g3) ? g3 : [g3];
-            if (o2.modifier) {
-              let A2 = o2.modifier.kind === "arbitrary" ? o2.modifier.value : e2.resolve(o2.modifier.value, ["--leading"]);
-              if (!A2 && de(o2.modifier.value)) {
-                if (!e2.resolve(null, ["--spacing"]))
+          let g = e.resolveWith(o.value.value, ["--text"], ["--line-height", "--letter-spacing", "--font-weight"]);
+          if (g) {
+            let [w, C = {}] = Array.isArray(g) ? g : [g];
+            if (o.modifier) {
+              let A = o.modifier.kind === "arbitrary" ? o.modifier.value : e.resolve(o.modifier.value, ["--leading"]);
+              if (!A && de(o.modifier.value)) {
+                if (!e.resolve(null, ["--spacing"]))
                   return null;
-                A2 = `--spacing(${o2.modifier.value})`;
+                A = `--spacing(${o.modifier.value})`;
               }
-              if (!A2 && o2.modifier.value === "none" && (A2 = "1"), !A2)
+              if (!A && o.modifier.value === "none" && (A = "1"), !A)
                 return null;
-              let T2 = [a2("font-size", w2)];
-              return A2 && T2.push(a2("line-height", A2)), T2;
+              let T = [a2("font-size", w)];
+              return A && T.push(a2("line-height", A)), T;
             }
-            return typeof C2 == "string" ? [a2("font-size", w2), a2("line-height", C2)] : [a2("font-size", w2), a2("line-height", C2["--line-height"] ? `var(--tw-leading, ${C2["--line-height"]})` : undefined), a2("letter-spacing", C2["--letter-spacing"] ? `var(--tw-tracking, ${C2["--letter-spacing"]})` : undefined), a2("font-weight", C2["--font-weight"] ? `var(--tw-font-weight, ${C2["--font-weight"]})` : undefined)];
+            return typeof C == "string" ? [a2("font-size", w), a2("line-height", C)] : [a2("font-size", w), a2("line-height", C["--line-height"] ? `var(--tw-leading, ${C["--line-height"]})` : undefined), a2("letter-spacing", C["--letter-spacing"] ? `var(--tw-tracking, ${C["--letter-spacing"]})` : undefined), a2("font-weight", C["--font-weight"] ? `var(--tw-font-weight, ${C["--font-weight"]})` : undefined)];
           }
         }
       }
-    }), r("text", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--text-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (o2, g3) => `${g3 * 5}`) }, { values: [], valueThemeKeys: ["--text"], modifiers: [], modifierThemeKeys: ["--leading"] }]);
-    let L2 = () => Y2([$2("--tw-text-shadow-color"), $2("--tw-text-shadow-alpha", "100%", "<percentage>")]);
-    t("text-shadow-initial", [L2, ["--tw-text-shadow-color", "initial"]]), i.functional("text-shadow", (o2) => {
-      let g3;
-      if (o2.modifier && (o2.modifier.kind === "arbitrary" ? g3 = o2.modifier.value : xe(o2.modifier.value) && (g3 = `${o2.modifier.value}%`)), !o2.value) {
-        let w2 = e2.get(["--text-shadow"]);
-        return w2 === null ? undefined : [L2(), a2("--tw-text-shadow-alpha", g3), ...xe2("text-shadow", w2, g3, (C2) => `var(--tw-text-shadow-color, ${C2})`)];
+    }), r("text", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--text-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (o, g) => `${g * 5}`) }, { values: [], valueThemeKeys: ["--text"], modifiers: [], modifierThemeKeys: ["--leading"] }]);
+    let L = () => Y2([$2("--tw-text-shadow-color"), $2("--tw-text-shadow-alpha", "100%", "<percentage>")]);
+    t("text-shadow-initial", [L, ["--tw-text-shadow-color", "initial"]]), i.functional("text-shadow", (o) => {
+      let g;
+      if (o.modifier && (o.modifier.kind === "arbitrary" ? g = o.modifier.value : xe(o.modifier.value) && (g = `${o.modifier.value}%`)), !o.value) {
+        let w = e.get(["--text-shadow"]);
+        return w === null ? undefined : [L(), a2("--tw-text-shadow-alpha", g), ...xe2("text-shadow", w, g, (C) => `var(--tw-text-shadow-color, ${C})`)];
       }
-      if (o2.value.kind === "arbitrary") {
-        let w2 = o2.value.value;
-        return (o2.value.dataType ?? ge(w2, ["color"])) === "color" ? (w2 = te2(w2, o2.modifier, e2), w2 === null ? undefined : [L2(), a2("--tw-text-shadow-color", X2(w2, "var(--tw-text-shadow-alpha)"))]) : [L2(), a2("--tw-text-shadow-alpha", g3), ...xe2("text-shadow", w2, g3, (A2) => `var(--tw-text-shadow-color, ${A2})`)];
+      if (o.value.kind === "arbitrary") {
+        let w = o.value.value;
+        return (o.value.dataType ?? ge(w, ["color"])) === "color" ? (w = te2(w, o.modifier, e), w === null ? undefined : [L(), a2("--tw-text-shadow-color", X2(w, "var(--tw-text-shadow-alpha)"))]) : [L(), a2("--tw-text-shadow-alpha", g), ...xe2("text-shadow", w, g, (A) => `var(--tw-text-shadow-color, ${A})`)];
       }
-      switch (o2.value.value) {
+      switch (o.value.value) {
         case "none":
-          return o2.modifier ? undefined : [L2(), a2("text-shadow", "none")];
+          return o.modifier ? undefined : [L(), a2("text-shadow", "none")];
         case "inherit":
-          return o2.modifier ? undefined : [L2(), a2("--tw-text-shadow-color", "inherit")];
+          return o.modifier ? undefined : [L(), a2("--tw-text-shadow-color", "inherit")];
       }
       {
-        let w2 = e2.get([`--text-shadow-${o2.value.value}`]);
-        if (w2)
-          return [L2(), a2("--tw-text-shadow-alpha", g3), ...xe2("text-shadow", w2, g3, (C2) => `var(--tw-text-shadow-color, ${C2})`)];
+        let w = e.get([`--text-shadow-${o.value.value}`]);
+        if (w)
+          return [L(), a2("--tw-text-shadow-alpha", g), ...xe2("text-shadow", w, g, (C) => `var(--tw-text-shadow-color, ${C})`)];
       }
       {
-        let w2 = ae2(o2, e2, ["--text-shadow-color", "--color"]);
-        if (w2)
-          return [L2(), a2("--tw-text-shadow-color", X2(w2, "var(--tw-text-shadow-alpha)"))];
+        let w = ae2(o, e, ["--text-shadow-color", "--color"]);
+        if (w)
+          return [L(), a2("--tw-text-shadow-color", X2(w, "var(--tw-text-shadow-alpha)"))];
       }
-    }), r("text-shadow", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--text-shadow-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (o2, g3) => `${g3 * 5}`) }, { values: ["none"] }, { valueThemeKeys: ["--text-shadow"], modifiers: Array.from({ length: 21 }, (o2, g3) => `${g3 * 5}`), hasDefaultValue: e2.get(["--text-shadow"]) !== null }]);
+    }), r("text-shadow", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--text-shadow-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (o, g) => `${g * 5}`) }, { values: ["none"] }, { valueThemeKeys: ["--text-shadow"], modifiers: Array.from({ length: 21 }, (o, g) => `${g * 5}`), hasDefaultValue: e.get(["--text-shadow"]) !== null }]);
     {
-      let A2 = function(N2) {
-        return `var(--tw-ring-inset,) 0 0 0 calc(${N2} + var(--tw-ring-offset-width)) var(--tw-ring-color, ${C2})`;
-      }, T2 = function(N2) {
-        return `inset 0 0 0 ${N2} var(--tw-inset-ring-color, currentcolor)`;
+      let A = function(N) {
+        return `var(--tw-ring-inset,) 0 0 0 calc(${N} + var(--tw-ring-offset-width)) var(--tw-ring-color, ${C})`;
+      }, T = function(N) {
+        return `inset 0 0 0 ${N} var(--tw-inset-ring-color, currentcolor)`;
       };
-      var ee2 = A2, ie = T2;
-      let o2 = ["var(--tw-inset-shadow)", "var(--tw-inset-ring-shadow)", "var(--tw-ring-offset-shadow)", "var(--tw-ring-shadow)", "var(--tw-shadow)"].join(", "), g3 = "0 0 #0000", w2 = () => Y2([$2("--tw-shadow", g3), $2("--tw-shadow-color"), $2("--tw-shadow-alpha", "100%", "<percentage>"), $2("--tw-inset-shadow", g3), $2("--tw-inset-shadow-color"), $2("--tw-inset-shadow-alpha", "100%", "<percentage>"), $2("--tw-ring-color"), $2("--tw-ring-shadow", g3), $2("--tw-inset-ring-color"), $2("--tw-inset-ring-shadow", g3), $2("--tw-ring-inset"), $2("--tw-ring-offset-width", "0px", "<length>"), $2("--tw-ring-offset-color", "#fff"), $2("--tw-ring-offset-shadow", g3)]);
-      t("shadow-initial", [w2, ["--tw-shadow-color", "initial"]]), i.functional("shadow", (N2) => {
-        let R2;
-        if (N2.modifier && (N2.modifier.kind === "arbitrary" ? R2 = N2.modifier.value : xe(N2.modifier.value) && (R2 = `${N2.modifier.value}%`)), !N2.value) {
-          let W2 = e2.get(["--shadow"]);
-          return W2 === null ? undefined : [w2(), a2("--tw-shadow-alpha", R2), ...xe2("--tw-shadow", W2, R2, (he) => `var(--tw-shadow-color, ${he})`), a2("box-shadow", o2)];
+      var ee = A, ie = T;
+      let o = ["var(--tw-inset-shadow)", "var(--tw-inset-ring-shadow)", "var(--tw-ring-offset-shadow)", "var(--tw-ring-shadow)", "var(--tw-shadow)"].join(", "), g = "0 0 #0000", w = () => Y2([$2("--tw-shadow", g), $2("--tw-shadow-color"), $2("--tw-shadow-alpha", "100%", "<percentage>"), $2("--tw-inset-shadow", g), $2("--tw-inset-shadow-color"), $2("--tw-inset-shadow-alpha", "100%", "<percentage>"), $2("--tw-ring-color"), $2("--tw-ring-shadow", g), $2("--tw-inset-ring-color"), $2("--tw-inset-ring-shadow", g), $2("--tw-ring-inset"), $2("--tw-ring-offset-width", "0px", "<length>"), $2("--tw-ring-offset-color", "#fff"), $2("--tw-ring-offset-shadow", g)]);
+      t("shadow-initial", [w, ["--tw-shadow-color", "initial"]]), i.functional("shadow", (N) => {
+        let R;
+        if (N.modifier && (N.modifier.kind === "arbitrary" ? R = N.modifier.value : xe(N.modifier.value) && (R = `${N.modifier.value}%`)), !N.value) {
+          let W = e.get(["--shadow"]);
+          return W === null ? undefined : [w(), a2("--tw-shadow-alpha", R), ...xe2("--tw-shadow", W, R, (he) => `var(--tw-shadow-color, ${he})`), a2("box-shadow", o)];
         }
-        if (N2.value.kind === "arbitrary") {
-          let W2 = N2.value.value;
-          return (N2.value.dataType ?? ge(W2, ["color"])) === "color" ? (W2 = te2(W2, N2.modifier, e2), W2 === null ? undefined : [w2(), a2("--tw-shadow-color", X2(W2, "var(--tw-shadow-alpha)"))]) : [w2(), a2("--tw-shadow-alpha", R2), ...xe2("--tw-shadow", W2, R2, (Ot) => `var(--tw-shadow-color, ${Ot})`), a2("box-shadow", o2)];
+        if (N.value.kind === "arbitrary") {
+          let W = N.value.value;
+          return (N.value.dataType ?? ge(W, ["color"])) === "color" ? (W = te2(W, N.modifier, e), W === null ? undefined : [w(), a2("--tw-shadow-color", X2(W, "var(--tw-shadow-alpha)"))]) : [w(), a2("--tw-shadow-alpha", R), ...xe2("--tw-shadow", W, R, (Ot) => `var(--tw-shadow-color, ${Ot})`), a2("box-shadow", o)];
         }
-        switch (N2.value.value) {
+        switch (N.value.value) {
           case "none":
-            return N2.modifier ? undefined : [w2(), a2("--tw-shadow", g3), a2("box-shadow", o2)];
+            return N.modifier ? undefined : [w(), a2("--tw-shadow", g), a2("box-shadow", o)];
           case "inherit":
-            return N2.modifier ? undefined : [w2(), a2("--tw-shadow-color", "inherit")];
+            return N.modifier ? undefined : [w(), a2("--tw-shadow-color", "inherit")];
         }
         {
-          let W2 = e2.get([`--shadow-${N2.value.value}`]);
-          if (W2)
-            return [w2(), a2("--tw-shadow-alpha", R2), ...xe2("--tw-shadow", W2, R2, (he) => `var(--tw-shadow-color, ${he})`), a2("box-shadow", o2)];
+          let W = e.get([`--shadow-${N.value.value}`]);
+          if (W)
+            return [w(), a2("--tw-shadow-alpha", R), ...xe2("--tw-shadow", W, R, (he) => `var(--tw-shadow-color, ${he})`), a2("box-shadow", o)];
         }
         {
-          let W2 = ae2(N2, e2, ["--box-shadow-color", "--color"]);
-          if (W2)
-            return [w2(), a2("--tw-shadow-color", X2(W2, "var(--tw-shadow-alpha)"))];
+          let W = ae2(N, e, ["--box-shadow-color", "--color"]);
+          if (W)
+            return [w(), a2("--tw-shadow-color", X2(W, "var(--tw-shadow-alpha)"))];
         }
-      }), r("shadow", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--box-shadow-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (N2, R2) => `${R2 * 5}`) }, { values: ["none"] }, { valueThemeKeys: ["--shadow"], modifiers: Array.from({ length: 21 }, (N2, R2) => `${R2 * 5}`), hasDefaultValue: e2.get(["--shadow"]) !== null }]), t("inset-shadow-initial", [w2, ["--tw-inset-shadow-color", "initial"]]), i.functional("inset-shadow", (N2) => {
-        let R2;
-        if (N2.modifier && (N2.modifier.kind === "arbitrary" ? R2 = N2.modifier.value : xe(N2.modifier.value) && (R2 = `${N2.modifier.value}%`)), !N2.value) {
-          let W2 = e2.get(["--inset-shadow"]);
-          return W2 === null ? undefined : [w2(), a2("--tw-inset-shadow-alpha", R2), ...xe2("--tw-inset-shadow", W2, R2, (he) => `var(--tw-inset-shadow-color, ${he})`), a2("box-shadow", o2)];
+      }), r("shadow", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--box-shadow-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (N, R) => `${R * 5}`) }, { values: ["none"] }, { valueThemeKeys: ["--shadow"], modifiers: Array.from({ length: 21 }, (N, R) => `${R * 5}`), hasDefaultValue: e.get(["--shadow"]) !== null }]), t("inset-shadow-initial", [w, ["--tw-inset-shadow-color", "initial"]]), i.functional("inset-shadow", (N) => {
+        let R;
+        if (N.modifier && (N.modifier.kind === "arbitrary" ? R = N.modifier.value : xe(N.modifier.value) && (R = `${N.modifier.value}%`)), !N.value) {
+          let W = e.get(["--inset-shadow"]);
+          return W === null ? undefined : [w(), a2("--tw-inset-shadow-alpha", R), ...xe2("--tw-inset-shadow", W, R, (he) => `var(--tw-inset-shadow-color, ${he})`), a2("box-shadow", o)];
         }
-        if (N2.value.kind === "arbitrary") {
-          let W2 = N2.value.value;
-          return (N2.value.dataType ?? ge(W2, ["color"])) === "color" ? (W2 = te2(W2, N2.modifier, e2), W2 === null ? undefined : [w2(), a2("--tw-inset-shadow-color", X2(W2, "var(--tw-inset-shadow-alpha)"))]) : [w2(), a2("--tw-inset-shadow-alpha", R2), ...xe2("--tw-inset-shadow", W2, R2, (Ot) => `var(--tw-inset-shadow-color, ${Ot})`, "inset"), a2("box-shadow", o2)];
+        if (N.value.kind === "arbitrary") {
+          let W = N.value.value;
+          return (N.value.dataType ?? ge(W, ["color"])) === "color" ? (W = te2(W, N.modifier, e), W === null ? undefined : [w(), a2("--tw-inset-shadow-color", X2(W, "var(--tw-inset-shadow-alpha)"))]) : [w(), a2("--tw-inset-shadow-alpha", R), ...xe2("--tw-inset-shadow", W, R, (Ot) => `var(--tw-inset-shadow-color, ${Ot})`, "inset"), a2("box-shadow", o)];
         }
-        switch (N2.value.value) {
+        switch (N.value.value) {
           case "none":
-            return N2.modifier ? undefined : [w2(), a2("--tw-inset-shadow", `inset ${g3}`), a2("box-shadow", o2)];
+            return N.modifier ? undefined : [w(), a2("--tw-inset-shadow", `inset ${g}`), a2("box-shadow", o)];
           case "inherit":
-            return N2.modifier ? undefined : [w2(), a2("--tw-inset-shadow-color", "inherit")];
+            return N.modifier ? undefined : [w(), a2("--tw-inset-shadow-color", "inherit")];
         }
         {
-          let W2 = e2.get([`--inset-shadow-${N2.value.value}`]);
-          if (W2)
-            return [w2(), a2("--tw-inset-shadow-alpha", R2), ...xe2("--tw-inset-shadow", W2, R2, (he) => `var(--tw-inset-shadow-color, ${he})`), a2("box-shadow", o2)];
+          let W = e.get([`--inset-shadow-${N.value.value}`]);
+          if (W)
+            return [w(), a2("--tw-inset-shadow-alpha", R), ...xe2("--tw-inset-shadow", W, R, (he) => `var(--tw-inset-shadow-color, ${he})`), a2("box-shadow", o)];
         }
         {
-          let W2 = ae2(N2, e2, ["--box-shadow-color", "--color"]);
-          if (W2)
-            return [w2(), a2("--tw-inset-shadow-color", X2(W2, "var(--tw-inset-shadow-alpha)"))];
+          let W = ae2(N, e, ["--box-shadow-color", "--color"]);
+          if (W)
+            return [w(), a2("--tw-inset-shadow-color", X2(W, "var(--tw-inset-shadow-alpha)"))];
         }
-      }), r("inset-shadow", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--box-shadow-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (N2, R2) => `${R2 * 5}`) }, { values: ["none"] }, { valueThemeKeys: ["--inset-shadow"], modifiers: Array.from({ length: 21 }, (N2, R2) => `${R2 * 5}`), hasDefaultValue: e2.get(["--inset-shadow"]) !== null }]), t("ring-inset", [w2, ["--tw-ring-inset", "inset"]]);
-      let C2 = e2.get(["--default-ring-color"]) ?? "currentcolor";
-      i.functional("ring", (N2) => {
-        if (!N2.value) {
-          if (N2.modifier)
+      }), r("inset-shadow", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--box-shadow-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (N, R) => `${R * 5}`) }, { values: ["none"] }, { valueThemeKeys: ["--inset-shadow"], modifiers: Array.from({ length: 21 }, (N, R) => `${R * 5}`), hasDefaultValue: e.get(["--inset-shadow"]) !== null }]), t("ring-inset", [w, ["--tw-ring-inset", "inset"]]);
+      let C = e.get(["--default-ring-color"]) ?? "currentcolor";
+      i.functional("ring", (N) => {
+        if (!N.value) {
+          if (N.modifier)
             return;
-          let R2 = e2.get(["--default-ring-width"]) ?? "1px";
-          return [w2(), a2("--tw-ring-shadow", A2(R2)), a2("box-shadow", o2)];
+          let R = e.get(["--default-ring-width"]) ?? "1px";
+          return [w(), a2("--tw-ring-shadow", A(R)), a2("box-shadow", o)];
         }
-        if (N2.value.kind === "arbitrary") {
-          let R2 = N2.value.value;
-          return (N2.value.dataType ?? ge(R2, ["color", "length"])) === "length" ? N2.modifier ? undefined : [w2(), a2("--tw-ring-shadow", A2(R2)), a2("box-shadow", o2)] : (R2 = te2(R2, N2.modifier, e2), R2 === null ? undefined : [a2("--tw-ring-color", R2)]);
-        }
-        {
-          let R2 = ae2(N2, e2, ["--ring-color", "--color"]);
-          if (R2)
-            return [a2("--tw-ring-color", R2)];
+        if (N.value.kind === "arbitrary") {
+          let R = N.value.value;
+          return (N.value.dataType ?? ge(R, ["color", "length"])) === "length" ? N.modifier ? undefined : [w(), a2("--tw-ring-shadow", A(R)), a2("box-shadow", o)] : (R = te2(R, N.modifier, e), R === null ? undefined : [a2("--tw-ring-color", R)]);
         }
         {
-          if (N2.modifier)
+          let R = ae2(N, e, ["--ring-color", "--color"]);
+          if (R)
+            return [a2("--tw-ring-color", R)];
+        }
+        {
+          if (N.modifier)
             return;
-          let R2 = e2.resolve(N2.value.value, ["--ring-width"]);
-          if (R2 === null && u(N2.value.value) && (R2 = `${N2.value.value}px`), R2)
-            return [w2(), a2("--tw-ring-shadow", A2(R2)), a2("box-shadow", o2)];
+          let R = e.resolve(N.value.value, ["--ring-width"]);
+          if (R === null && u(N.value.value) && (R = `${N.value.value}px`), R)
+            return [w(), a2("--tw-ring-shadow", A(R)), a2("box-shadow", o)];
         }
-      }), r("ring", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--ring-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (N2, R2) => `${R2 * 5}`) }, { values: ["0", "1", "2", "4", "8"], valueThemeKeys: ["--ring-width"], hasDefaultValue: true }]), i.functional("inset-ring", (N2) => {
-        if (!N2.value)
-          return N2.modifier ? undefined : [w2(), a2("--tw-inset-ring-shadow", T2("1px")), a2("box-shadow", o2)];
-        if (N2.value.kind === "arbitrary") {
-          let R2 = N2.value.value;
-          return (N2.value.dataType ?? ge(R2, ["color", "length"])) === "length" ? N2.modifier ? undefined : [w2(), a2("--tw-inset-ring-shadow", T2(R2)), a2("box-shadow", o2)] : (R2 = te2(R2, N2.modifier, e2), R2 === null ? undefined : [a2("--tw-inset-ring-color", R2)]);
-        }
-        {
-          let R2 = ae2(N2, e2, ["--ring-color", "--color"]);
-          if (R2)
-            return [a2("--tw-inset-ring-color", R2)];
+      }), r("ring", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--ring-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (N, R) => `${R * 5}`) }, { values: ["0", "1", "2", "4", "8"], valueThemeKeys: ["--ring-width"], hasDefaultValue: true }]), i.functional("inset-ring", (N) => {
+        if (!N.value)
+          return N.modifier ? undefined : [w(), a2("--tw-inset-ring-shadow", T("1px")), a2("box-shadow", o)];
+        if (N.value.kind === "arbitrary") {
+          let R = N.value.value;
+          return (N.value.dataType ?? ge(R, ["color", "length"])) === "length" ? N.modifier ? undefined : [w(), a2("--tw-inset-ring-shadow", T(R)), a2("box-shadow", o)] : (R = te2(R, N.modifier, e), R === null ? undefined : [a2("--tw-inset-ring-color", R)]);
         }
         {
-          if (N2.modifier)
+          let R = ae2(N, e, ["--ring-color", "--color"]);
+          if (R)
+            return [a2("--tw-inset-ring-color", R)];
+        }
+        {
+          if (N.modifier)
             return;
-          let R2 = e2.resolve(N2.value.value, ["--ring-width"]);
-          if (R2 === null && u(N2.value.value) && (R2 = `${N2.value.value}px`), R2)
-            return [w2(), a2("--tw-inset-ring-shadow", T2(R2)), a2("box-shadow", o2)];
+          let R = e.resolve(N.value.value, ["--ring-width"]);
+          if (R === null && u(N.value.value) && (R = `${N.value.value}px`), R)
+            return [w(), a2("--tw-inset-ring-shadow", T(R)), a2("box-shadow", o)];
         }
-      }), r("inset-ring", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--ring-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (N2, R2) => `${R2 * 5}`) }, { values: ["0", "1", "2", "4", "8"], valueThemeKeys: ["--ring-width"], hasDefaultValue: true }]);
-      let K2 = "var(--tw-ring-inset,) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color)";
-      i.functional("ring-offset", (N2) => {
-        if (N2.value) {
-          if (N2.value.kind === "arbitrary") {
-            let R2 = N2.value.value;
-            return (N2.value.dataType ?? ge(R2, ["color", "length"])) === "length" ? N2.modifier ? undefined : [a2("--tw-ring-offset-width", R2), a2("--tw-ring-offset-shadow", K2)] : (R2 = te2(R2, N2.modifier, e2), R2 === null ? undefined : [a2("--tw-ring-offset-color", R2)]);
+      }), r("inset-ring", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--ring-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (N, R) => `${R * 5}`) }, { values: ["0", "1", "2", "4", "8"], valueThemeKeys: ["--ring-width"], hasDefaultValue: true }]);
+      let K = "var(--tw-ring-inset,) 0 0 0 var(--tw-ring-offset-width) var(--tw-ring-offset-color)";
+      i.functional("ring-offset", (N) => {
+        if (N.value) {
+          if (N.value.kind === "arbitrary") {
+            let R = N.value.value;
+            return (N.value.dataType ?? ge(R, ["color", "length"])) === "length" ? N.modifier ? undefined : [a2("--tw-ring-offset-width", R), a2("--tw-ring-offset-shadow", K)] : (R = te2(R, N.modifier, e), R === null ? undefined : [a2("--tw-ring-offset-color", R)]);
           }
           {
-            let R2 = e2.resolve(N2.value.value, ["--ring-offset-width"]);
-            if (R2)
-              return N2.modifier ? undefined : [a2("--tw-ring-offset-width", R2), a2("--tw-ring-offset-shadow", K2)];
-            if (u(N2.value.value))
-              return N2.modifier ? undefined : [a2("--tw-ring-offset-width", `${N2.value.value}px`), a2("--tw-ring-offset-shadow", K2)];
+            let R = e.resolve(N.value.value, ["--ring-offset-width"]);
+            if (R)
+              return N.modifier ? undefined : [a2("--tw-ring-offset-width", R), a2("--tw-ring-offset-shadow", K)];
+            if (u(N.value.value))
+              return N.modifier ? undefined : [a2("--tw-ring-offset-width", `${N.value.value}px`), a2("--tw-ring-offset-shadow", K)];
           }
           {
-            let R2 = ae2(N2, e2, ["--ring-offset-color", "--color"]);
-            if (R2)
-              return [a2("--tw-ring-offset-color", R2)];
+            let R = ae2(N, e, ["--ring-offset-color", "--color"]);
+            if (R)
+              return [a2("--tw-ring-offset-color", R)];
           }
         }
       });
     }
-    return r("ring-offset", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--ring-offset-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (o2, g3) => `${g3 * 5}`) }, { values: ["0", "1", "2", "4", "8"], valueThemeKeys: ["--ring-offset-width"] }]), i.functional("@container", (o2) => {
-      let g3 = null;
-      if (o2.value === null ? g3 = "inline-size" : o2.value.kind === "arbitrary" ? g3 = o2.value.value : o2.value.kind === "named" && o2.value.value === "normal" ? g3 = "normal" : o2.value.kind === "named" && o2.value.value === "size" && (g3 = "size"), g3 !== null)
-        return o2.modifier ? [a2("container-type", g3), a2("container-name", o2.modifier.value)] : [a2("container-type", g3)];
+    return r("ring-offset", () => [{ values: ["current", "inherit", "transparent"], valueThemeKeys: ["--ring-offset-color", "--color"], modifierThemeKeys: ["--opacity"], modifiers: Array.from({ length: 21 }, (o, g) => `${g * 5}`) }, { values: ["0", "1", "2", "4", "8"], valueThemeKeys: ["--ring-offset-width"] }]), i.functional("@container", (o) => {
+      let g = null;
+      if (o.value === null ? g = "inline-size" : o.value.kind === "arbitrary" ? g = o.value.value : o.value.kind === "named" && o.value.value === "normal" ? g = "normal" : o.value.kind === "named" && o.value.value === "size" && (g = "size"), g !== null)
+        return o.modifier ? [a2("container-type", g), a2("container-name", o.modifier.value)] : [a2("container-type", g)];
     }), r("@container", () => [{ values: ["normal"], valueThemeKeys: [], hasDefaultValue: true }]), i;
   }
   var ir = ["number", "integer", "ratio", "percentage"];
-  function ui(e2) {
-    let i = a(e2.params);
+  function ui(e) {
+    let i = a(e.params);
     return al(i) ? (r) => {
       let t = { "--value": { usedSpacingInteger: false, usedSpacingNumber: false, themeKeys: new Set, literals: new Set }, "--modifier": { usedSpacingInteger: false, usedSpacingNumber: false, themeKeys: new Set, literals: new Set } };
-      P2(e2.nodes, (n) => {
+      P2(e.nodes, (n) => {
         if (n.kind !== "declaration" || !n.value || !n.value.includes("--value(") && !n.value.includes("--modifier("))
           return;
         let s = M2(n.value);
-        P2(s, (l2) => {
-          if (l2.kind !== "function")
+        P2(s, (l) => {
+          if (l.kind !== "function")
             return;
-          if (l2.value === "--spacing" && !(t["--modifier"].usedSpacingNumber && t["--value"].usedSpacingNumber))
-            return P2(l2.nodes, (f2) => {
-              if (f2.kind !== "function" || f2.value !== "--value" && f2.value !== "--modifier")
+          if (l.value === "--spacing" && !(t["--modifier"].usedSpacingNumber && t["--value"].usedSpacingNumber))
+            return P2(l.nodes, (f) => {
+              if (f.kind !== "function" || f.value !== "--value" && f.value !== "--modifier")
                 return;
-              let c2 = f2.value;
-              for (let p2 of f2.nodes)
-                if (p2.kind === "word") {
-                  if (p2.value === "integer")
-                    t[c2].usedSpacingInteger ||= true;
-                  else if (p2.value === "number" && (t[c2].usedSpacingNumber ||= true, t["--modifier"].usedSpacingNumber && t["--value"].usedSpacingNumber))
+              let c = f.value;
+              for (let p of f.nodes)
+                if (p.kind === "word") {
+                  if (p.value === "integer")
+                    t[c].usedSpacingInteger ||= true;
+                  else if (p.value === "number" && (t[c].usedSpacingNumber ||= true, t["--modifier"].usedSpacingNumber && t["--value"].usedSpacingNumber))
                     return V2.Stop;
                 }
             }), V2.Continue;
-          if (l2.value !== "--value" && l2.value !== "--modifier")
+          if (l.value !== "--value" && l.value !== "--modifier")
             return;
-          let d2 = d(F2(l2.nodes), ",");
-          for (let [f2, c2] of d2.entries())
-            c2 = c2.replace(/\\\*/g, "*"), c2 = c2.replace(/--(.*?)\s--(.*?)/g, "--$1-*--$2"), c2 = c2.replace(/\s+/g, ""), c2 = c2.replace(/(-\*){2,}/g, "-*"), c2[0] === "-" && c2[1] === "-" && !c2.includes("(") && !c2.includes("-*") && (c2 += "-*"), d2[f2] = c2;
-          l2.nodes = M2(d2.join(","));
-          for (let f2 of l2.nodes)
-            if (f2.kind === "word" && (f2.value[0] === '"' || f2.value[0] === "'") && f2.value[0] === f2.value[f2.value.length - 1]) {
-              let c2 = f2.value.slice(1, -1);
-              t[l2.value].literals.add(c2);
-            } else if (f2.kind === "word" && f2.value[0] === "-" && f2.value[1] === "-") {
-              let c2 = f2.value.replace(/-\*.*$/g, "");
-              t[l2.value].themeKeys.add(c2);
-            } else if (f2.kind === "word" && !(f2.value[0] === "[" && f2.value[f2.value.length - 1] === "]") && !ir.includes(f2.value)) {
-              console.warn(`Unsupported bare value data type: "${f2.value}".
+          let d2 = d(F2(l.nodes), ",");
+          for (let [f, c] of d2.entries())
+            c = c.replace(/\\\*/g, "*"), c = c.replace(/--(.*?)\s--(.*?)/g, "--$1-*--$2"), c = c.replace(/\s+/g, ""), c = c.replace(/(-\*){2,}/g, "-*"), c[0] === "-" && c[1] === "-" && !c.includes("(") && !c.includes("-*") && (c += "-*"), d2[f] = c;
+          l.nodes = M2(d2.join(","));
+          for (let f of l.nodes)
+            if (f.kind === "word" && (f.value[0] === '"' || f.value[0] === "'") && f.value[0] === f.value[f.value.length - 1]) {
+              let c = f.value.slice(1, -1);
+              t[l.value].literals.add(c);
+            } else if (f.kind === "word" && f.value[0] === "-" && f.value[1] === "-") {
+              let c = f.value.replace(/-\*.*$/g, "");
+              t[l.value].themeKeys.add(c);
+            } else if (f.kind === "word" && !(f.value[0] === "[" && f.value[f.value.length - 1] === "]") && !ir.includes(f.value)) {
+              console.warn(`Unsupported bare value data type: "${f.value}".
 Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
 `);
-              let c2 = f2.value, p2 = structuredClone(l2), m = "¶";
-              P2(p2.nodes, (k) => {
-                if (k.kind === "word" && k.value === c2)
+              let c = f.value, p = structuredClone(l), m = "¶";
+              P2(p.nodes, (k) => {
+                if (k.kind === "word" && k.value === c)
                   return V2.ReplaceSkip({ kind: "word", value: m });
               });
-              let u2 = "^".repeat(F2([f2]).length), v2 = F2([p2]).indexOf(m), h3 = ["```css", F2([l2]), " ".repeat(v2) + u2, "```"].join(`
+              let u = "^".repeat(F2([f]).length), v = F2([p]).indexOf(m), h = ["```css", F2([l]), " ".repeat(v) + u, "```"].join(`
 `);
-              console.warn(h3);
+              console.warn(h);
             }
         }), n.value = F2(s);
       }), r.utilities.functional(i.slice(0, -2), (n) => {
-        let s = re2(e2), l2 = n.value, d2 = n.modifier, f2 = false, c2 = false, p2 = false, m = false, u2 = new Map, v2 = false;
-        if (P2([s], (h3, k) => {
-          let y2 = k.parent;
-          if (y2?.kind !== "rule" && y2?.kind !== "at-rule" || h3.kind !== "declaration" || !h3.value)
+        let s = re2(e), { value: l, modifier: d } = n, f = false, c = false, p = false, m = false, u = new Map, v = false;
+        if (P2([s], (h, k) => {
+          let y = k.parent;
+          if (y?.kind !== "rule" && y?.kind !== "at-rule" || h.kind !== "declaration" || !h.value)
             return;
-          let S2 = false, x2 = M2(h3.value);
-          if (P2(x2, (b2) => {
-            if (b2.kind === "function") {
-              if (b2.value === "--value") {
-                f2 = true;
-                let I2 = li(l2, b2, r);
-                return I2 ? (c2 = true, I2.ratio ? v2 = true : u2.set(h3, y2), V2.ReplaceSkip(I2.nodes)) : (S2 = true, V2.Stop);
-              } else if (b2.value === "--modifier") {
-                p2 = true;
-                let I2 = li(d2, b2, r);
-                return I2 ? (m = true, V2.ReplaceSkip(I2.nodes)) : (S2 = true, V2.Stop);
+          let S = false, x = M2(h.value);
+          if (P2(x, (b) => {
+            if (b.kind === "function") {
+              if (b.value === "--value") {
+                f = true;
+                let I = li(l, b, r);
+                return I ? (c = true, I.ratio ? v = true : u.set(h, y), V2.ReplaceSkip(I.nodes)) : (S = true, V2.Stop);
+              } else if (b.value === "--modifier") {
+                p = true;
+                let I = li(d, b, r);
+                return I ? (m = true, V2.ReplaceSkip(I.nodes)) : (S = true, V2.Stop);
               }
             }
-          }), S2)
+          }), S)
             return V2.ReplaceSkip([]);
-          h3.value = F2(x2);
-        }), !f2 || !c2 || p2 && !m && d2 !== null || v2 && m || d2 && !v2 && !m)
+          h.value = F2(x);
+        }), !f || !c || p && !m && d !== null || v && m || d && !v && !m)
           return null;
-        if (v2)
-          for (let [h3, k] of u2) {
-            let y2 = k.nodes.indexOf(h3);
-            y2 !== -1 && k.nodes.splice(y2, 1);
+        if (v)
+          for (let [h, k] of u) {
+            let y = k.nodes.indexOf(h);
+            y !== -1 && k.nodes.splice(y, 1);
           }
         return s.nodes;
       }), r.utilities.suggest(i.slice(0, -2), () => {
         let n = [], s = [];
-        for (let [l2, { literals: d2, usedSpacingNumber: f2, usedSpacingInteger: c2, themeKeys: p2 }] of [[n, t["--value"]], [s, t["--modifier"]]]) {
-          for (let m of d2)
-            l2.push(m);
-          if (f2)
-            l2.push(...yt);
-          else if (c2)
+        for (let [l, { literals: d, usedSpacingNumber: f, usedSpacingInteger: c, themeKeys: p }] of [[n, t["--value"]], [s, t["--modifier"]]]) {
+          for (let m of d)
+            l.push(m);
+          if (f)
+            l.push(...yt);
+          else if (c)
             for (let m of yt)
-              u(m) && l2.push(m);
-          for (let m of r.theme.keysInNamespaces(p2))
-            l2.push(m.replace(oi, (u2, v2, h3) => `${v2}.${h3}`));
+              u(m) && l.push(m);
+          for (let m of r.theme.keysInNamespaces(p))
+            l.push(m.replace(oi, (u, v, h) => `${v}.${h}`));
         }
         return [{ values: n, modifiers: s }];
       });
     } : ll(i) ? (r) => {
-      r.utilities.static(i, () => e2.nodes.map(re2));
+      r.utilities.static(i, () => e.nodes.map(re2));
     } : null;
   }
-  function li(e2, i, r) {
-    if (e2 === null) {
+  function li(e, i, r) {
+    if (e === null) {
       for (let t of i.nodes)
         if (t.kind === "function" && t.value === "--default")
           return { nodes: t.nodes };
       return;
     }
     for (let t of i.nodes) {
-      if (e2.kind === "named" && t.kind === "word" && (t.value[0] === "'" || t.value[0] === '"') && t.value[t.value.length - 1] === t.value[0] && t.value.slice(1, -1) === e2.value)
-        return { nodes: M2(e2.value) };
-      if (e2.kind === "named" && t.kind === "word" && t.value[0] === "-" && t.value[1] === "-") {
+      if (e.kind === "named" && t.kind === "word" && (t.value[0] === "'" || t.value[0] === '"') && t.value[t.value.length - 1] === t.value[0] && t.value.slice(1, -1) === e.value)
+        return { nodes: M2(e.value) };
+      if (e.kind === "named" && t.kind === "word" && t.value[0] === "-" && t.value[1] === "-") {
         let n = t.value;
         if (n.endsWith("-*")) {
           n = n.slice(0, -2);
-          let s = r.theme.resolve(e2.value, [n]);
+          let s = r.theme.resolve(e.value, [n]);
           if (s)
             return { nodes: M2(s) };
         } else {
           let s = n.split("-*");
           if (s.length <= 1)
             continue;
-          let l2 = [s.shift()], d2 = r.theme.resolveWith(e2.value, l2, s);
-          if (d2) {
-            let [, f2 = {}] = d2;
+          let l = [s.shift()], d = r.theme.resolveWith(e.value, l, s);
+          if (d) {
+            let [, f = {}] = d;
             {
-              let c2 = f2[s.pop()];
-              if (c2)
-                return { nodes: M2(c2) };
+              let c = f[s.pop()];
+              if (c)
+                return { nodes: M2(c) };
             }
           }
         }
-      } else if (e2.kind === "named" && t.kind === "word") {
+      } else if (e.kind === "named" && t.kind === "word") {
         if (!ir.includes(t.value))
           continue;
-        let n = t.value === "ratio" && "fraction" in e2 ? e2.fraction : e2.value;
+        let n = t.value === "ratio" && "fraction" in e ? e.fraction : e.value;
         if (!n)
           continue;
         let s = ge(n, [t.value]);
         if (s === null)
           continue;
         if (s === "ratio") {
-          let [l2, d2] = d(n, "/").map(Number);
-          if (!u(l2) || !u(d2))
+          let [l, d2] = d(n, "/").map(Number);
+          if (!u(l) || !u(d2))
             continue;
         } else {
           if (s === "number" && !de(n))
@@ -3292,33 +3302,33 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
             continue;
         }
         if (s === "ratio") {
-          let [l2, d2] = d(n, "/");
-          return { nodes: M2(`${l2.trim()} / ${d2.trim()}`), ratio: true };
+          let [l, d2] = d(n, "/");
+          return { nodes: M2(`${l.trim()} / ${d2.trim()}`), ratio: true };
         }
         return { nodes: M2(n), ratio: false };
-      } else if (e2.kind === "arbitrary" && t.kind === "word" && t.value[0] === "[" && t.value[t.value.length - 1] === "]") {
+      } else if (e.kind === "arbitrary" && t.kind === "word" && t.value[0] === "[" && t.value[t.value.length - 1] === "]") {
         let n = t.value.slice(1, -1);
         if (n === "*")
-          return { nodes: M2(e2.value) };
-        if ("dataType" in e2 && e2.dataType && e2.dataType !== n)
+          return { nodes: M2(e.value) };
+        if ("dataType" in e && e.dataType && e.dataType !== n)
           continue;
-        if ("dataType" in e2 && e2.dataType)
-          return { nodes: M2(e2.value) };
-        if (ge(e2.value, [n]) !== null)
-          return { nodes: M2(e2.value) };
+        if ("dataType" in e && e.dataType)
+          return { nodes: M2(e.value) };
+        if (ge(e.value, [n]) !== null)
+          return { nodes: M2(e.value) };
       }
     }
   }
-  function xe2(e2, i, r, t, n = "") {
-    let s = false, l2 = it(i, (f2) => r == null ? t(f2) : f2.startsWith("current") ? t(X2(f2, r)) : ((f2.startsWith("var(") || r.startsWith("var(")) && (s = true), t(ai(f2, r))));
-    function d2(f2) {
-      return n ? d(f2, ",").map((c2) => n.trim() + " " + c2.trim()).join(", ") : f2;
+  function xe2(e, i, r, t, n = "") {
+    let s = false, l = it(i, (f) => r == null ? t(f) : f.startsWith("current") ? t(X2(f, r)) : ((f.startsWith("var(") || r.startsWith("var(")) && (s = true), t(ai(f, r))));
+    function d2(f) {
+      return n ? d(f, ",").map((c) => n.trim() + " " + c.trim()).join(", ") : f;
     }
-    return s ? [a2(e2, d2(it(i, t))), Z2("@supports (color: lab(from red l a b))", [a2(e2, d2(l2))])] : [a2(e2, d2(l2))];
+    return s ? [a2(e, d2(it(i, t))), Z2("@supports (color: lab(from red l a b))", [a2(e, d2(l))])] : [a2(e, d2(l))];
   }
-  function wt(e2, i, r, t, n = "") {
-    let s = false, l2 = d(i, ",").map((d2) => it(d2, (f2) => r == null ? t(f2) : f2.startsWith("current") ? t(X2(f2, r)) : ((f2.startsWith("var(") || r.startsWith("var(")) && (s = true), t(ai(f2, r))))).map((d2) => `drop-shadow(${d2})`).join(" ");
-    return s ? [a2(e2, n + d(i, ",").map((d2) => `drop-shadow(${it(d2, t)})`).join(" ")), Z2("@supports (color: lab(from red l a b))", [a2(e2, n + l2)])] : [a2(e2, n + l2)];
+  function wt(e, i, r, t, n = "") {
+    let s = false, l = d(i, ",").map((d) => it(d, (f) => r == null ? t(f) : f.startsWith("current") ? t(X2(f, r)) : ((f.startsWith("var(") || r.startsWith("var(")) && (s = true), t(ai(f, r))))).map((d) => `drop-shadow(${d})`).join(" ");
+    return s ? [a2(e, n + d(i, ",").map((d) => `drop-shadow(${it(d, t)})`).join(" ")), Z2("@supports (color: lab(from red l a b))", [a2(e, n + l)])] : [a2(e, n + l)];
   }
   var fi = /^-?[a-z][a-zA-Z0-9_-]*/;
   var Zn = 37;
@@ -3332,24 +3342,24 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
   var bt = 57;
   var il = 95;
   var nl = 45;
-  function ll(e2) {
-    let i = fi.exec(e2);
+  function ll(e) {
+    let i = fi.exec(e);
     if (i === null)
       return false;
-    let r = i[0], t = e2.slice(r.length);
+    let r = i[0], t = e.slice(r.length);
     if (t.length === 0 && r.endsWith("-"))
       return false;
     if (t.length === 0)
       return true;
     let n = false;
     for (let s = 0;s < t.length; s++) {
-      let l2 = t.charCodeAt(s);
-      switch (l2) {
+      let l = t.charCodeAt(s);
+      switch (l) {
         case Zn: {
           if (s !== t.length - 1)
             return false;
-          let f2 = (t[s - 1] || r[r.length - 1] || "").charCodeAt(0);
-          if (f2 < kt || f2 > bt)
+          let f = (t[s - 1] || r[r.length - 1] || "").charCodeAt(0);
+          if (f < kt || f > bt)
             return false;
           break;
         }
@@ -3360,11 +3370,11 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
           break;
         }
         case Qn: {
-          let f2 = (t[s - 1] || r[r.length - 1] || "").charCodeAt(0);
-          if (f2 < kt || f2 > bt)
+          let f = (t[s - 1] || r[r.length - 1] || "").charCodeAt(0);
+          if (f < kt || f > bt)
             return false;
-          let p2 = (t[s + 1] || "").charCodeAt(0);
-          if (p2 < kt || p2 > bt)
+          let p = (t[s + 1] || "").charCodeAt(0);
+          if (p < kt || p > bt)
             return false;
           break;
         }
@@ -3372,7 +3382,7 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
         case nl:
           continue;
         default: {
-          if (l2 >= Xn && l2 <= el || l2 >= tl && l2 <= rl || l2 >= kt && l2 <= bt)
+          if (l >= Xn && l <= el || l >= tl && l <= rl || l >= kt && l <= bt)
             continue;
           return false;
         }
@@ -3380,31 +3390,31 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
     }
     return true;
   }
-  function al(e2) {
-    if (!e2.endsWith("-*"))
+  function al(e) {
+    if (!e.endsWith("-*"))
       return false;
-    e2 = e2.slice(0, -2);
-    let i = fi.exec(e2);
+    e = e.slice(0, -2);
+    let i = fi.exec(e);
     if (i === null)
       return false;
     let r = i[0];
-    return e2.slice(r.length).length === 0;
+    return e.slice(r.length).length === 0;
   }
   var nr = { "--alpha": ol, "--spacing": sl, "--theme": ul, theme: fl };
-  function ol(e2, i, r, ...t) {
-    let [n, s] = d(r, "/").map((l2) => l2.trim());
+  function ol(e, i, r, ...t) {
+    let [n, s] = d(r, "/").map((l) => l.trim());
     if (!n || !s)
       throw new Error(`The --alpha(…) function requires a color and an alpha value, e.g.: \`--alpha(${n || "var(--my-color)"} / ${s || "50%"})\``);
     if (t.length > 0)
       throw new Error(`The --alpha(…) function only accepts one argument, e.g.: \`--alpha(${n || "var(--my-color)"} / ${s || "50%"})\``);
     return X2(n, s);
   }
-  function sl(e2, i, r, ...t) {
+  function sl(e, i, r, ...t) {
     if (!r)
       throw new Error("The --spacing(…) function requires an argument, but received none.");
     if (t.length > 0)
       throw new Error(`The --spacing(…) function only accepts a single argument, but received ${t.length + 1}.`);
-    let n = e2.theme.resolve(null, ["--spacing"]);
+    let n = e.theme.resolve(null, ["--spacing"]);
     if (!n)
       throw new Error("The --spacing(…) function requires that the `--spacing` theme variable exists, but it was not found.");
     let s = le.get(r);
@@ -3416,12 +3426,12 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
     }
     return `calc(${n} * ${r})`;
   }
-  function ul(e2, i, r, ...t) {
+  function ul(e, i, r, ...t) {
     if (!r.startsWith("--"))
       throw new Error("The --theme(…) function can only be used with CSS variables from your theme.");
     let n = false;
     r.endsWith(" inline") && (n = true, r = r.slice(0, -7)), i.kind === "at-rule" && (n = true);
-    let s = e2.resolveThemeValue(r, n);
+    let s = e.resolveThemeValue(r, n);
     if (!s) {
       if (t.length > 0)
         return t.join(", ");
@@ -3429,30 +3439,30 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
     }
     if (t.length === 0)
       return s;
-    let l2 = t.join(", ");
-    if (l2 === "initial")
+    let l = t.join(", ");
+    if (l === "initial")
       return s;
     if (s === "initial")
-      return l2;
+      return l;
     if (s.startsWith("var(") || s.startsWith("theme(") || s.startsWith("--theme(")) {
-      let d2 = M2(s);
-      return pl(d2, l2), F2(d2);
+      let d = M2(s);
+      return pl(d, l), F2(d);
     }
     return s;
   }
-  function fl(e2, i, r, ...t) {
+  function fl(e, i, r, ...t) {
     r = cl(r);
-    let n = e2.resolveThemeValue(r);
+    let n = e.resolveThemeValue(r);
     if (!n && t.length > 0)
       return t.join(", ");
     if (!n)
       throw new Error(`Could not resolve value for theme function: \`theme(${r})\`. Consider checking if the path is correct or provide a fallback value to silence this error.`);
     return n;
   }
-  var ci = new RegExp(Object.keys(nr).map((e2) => `${e2}\\(`).join("|"));
-  function Le(e2, i) {
+  var ci = new RegExp(Object.keys(nr).map((e) => `${e}\\(`).join("|"));
+  function Le(e, i) {
     let r = 0;
-    return P2(e2, (t) => {
+    return P2(e, (t) => {
       if (t.kind === "declaration" && t.value && ci.test(t.value)) {
         r |= 8, t.value = pi(t.value, t, i);
         return;
@@ -3460,27 +3470,27 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
       t.kind === "at-rule" && (t.name === "@media" || t.name === "@custom-media" || t.name === "@container" || t.name === "@supports") && ci.test(t.params) && (r |= 8, t.params = pi(t.params, t, i));
     }), r;
   }
-  function pi(e2, i, r) {
-    let t = M2(e2);
+  function pi(e, i, r) {
+    let t = M2(e);
     return P2(t, (n) => {
       if (n.kind === "function" && n.value in nr) {
-        let s = d(F2(n.nodes).trim(), ",").map((d2) => d2.trim()), l2 = nr[n.value](r, i, ...s);
-        return V2.Replace(M2(l2));
+        let s = d(F2(n.nodes).trim(), ",").map((d) => d.trim()), l = nr[n.value](r, i, ...s);
+        return V2.Replace(M2(l));
       }
     }), F2(t);
   }
-  function cl(e2) {
-    if (e2[0] !== "'" && e2[0] !== '"')
-      return e2;
-    let i = "", r = e2[0];
-    for (let t = 1;t < e2.length - 1; t++) {
-      let n = e2[t], s = e2[t + 1];
+  function cl(e) {
+    if (e[0] !== "'" && e[0] !== '"')
+      return e;
+    let i = "", r = e[0];
+    for (let t = 1;t < e.length - 1; t++) {
+      let n = e[t], s = e[t + 1];
       n === "\\" && (s === r || s === "\\") ? (i += s, t++) : i += n;
     }
     return i;
   }
-  function pl(e2, i) {
-    P2(e2, (r) => {
+  function pl(e, i) {
+    P2(e, (r) => {
       if (r.kind === "function" && !(r.value !== "var" && r.value !== "theme" && r.value !== "--theme"))
         if (r.nodes.length === 1)
           r.nodes.push({ kind: "word", value: `, ${i}` });
@@ -3490,103 +3500,103 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
         }
     });
   }
-  function xt(e2, i) {
-    let r = e2.length, t = i.length, n = r < t ? r : t;
+  function xt(e, i) {
+    let r = e.length, t = i.length, n = r < t ? r : t;
     for (let s = 0;s < n; s++) {
-      let l2 = e2.charCodeAt(s), d2 = i.charCodeAt(s);
-      if (l2 >= 48 && l2 <= 57 && d2 >= 48 && d2 <= 57) {
-        let f2 = s, c2 = s + 1, p2 = s, m = s + 1;
-        for (l2 = e2.charCodeAt(c2);l2 >= 48 && l2 <= 57; )
-          l2 = e2.charCodeAt(++c2);
-        for (d2 = i.charCodeAt(m);d2 >= 48 && d2 <= 57; )
-          d2 = i.charCodeAt(++m);
-        let u2 = e2.slice(f2, c2), v2 = i.slice(p2, m), h3 = Number(u2) - Number(v2);
-        if (h3)
-          return h3;
-        if (u2 < v2)
+      let l = e.charCodeAt(s), d = i.charCodeAt(s);
+      if (l >= 48 && l <= 57 && d >= 48 && d <= 57) {
+        let f = s, c = s + 1, p = s, m = s + 1;
+        for (l = e.charCodeAt(c);l >= 48 && l <= 57; )
+          l = e.charCodeAt(++c);
+        for (d = i.charCodeAt(m);d >= 48 && d <= 57; )
+          d = i.charCodeAt(++m);
+        let u = e.slice(f, c), v = i.slice(p, m), h = Number(u) - Number(v);
+        if (h)
+          return h;
+        if (u < v)
           return -1;
-        if (u2 > v2)
+        if (u > v)
           return 1;
         continue;
       }
-      if (l2 !== d2)
-        return l2 - d2;
+      if (l !== d)
+        return l - d;
     }
-    return e2.length - i.length;
+    return e.length - i.length;
   }
-  function Me(e2) {
-    if (e2[0] !== "[" || e2[e2.length - 1] !== "]")
+  function Me(e) {
+    if (e[0] !== "[" || e[e.length - 1] !== "]")
       return null;
-    let i = 1, r = i, t = e2.length - 1;
-    for (;je(e2.charCodeAt(i)); )
+    let i = 1, r = i, t = e.length - 1;
+    for (;je(e.charCodeAt(i)); )
       i++;
     {
       for (r = i;i < t; i++) {
-        let p2 = e2.charCodeAt(i);
-        if (p2 === 92) {
+        let p = e.charCodeAt(i);
+        if (p === 92) {
           i++;
           continue;
         }
-        if (!(p2 >= 65 && p2 <= 90) && !(p2 >= 97 && p2 <= 122) && !(p2 >= 48 && p2 <= 57) && !(p2 === 45 || p2 === 95) && !(p2 >= 128))
+        if (!(p >= 65 && p <= 90) && !(p >= 97 && p <= 122) && !(p >= 48 && p <= 57) && !(p === 45 || p === 95) && !(p >= 128))
           break;
       }
       if (r === i)
         return null;
     }
-    let n = e2.slice(r, i);
-    for (;je(e2.charCodeAt(i)); )
+    let n = e.slice(r, i);
+    for (;je(e.charCodeAt(i)); )
       i++;
     if (i === t)
       return { attribute: n, operator: null, quote: null, value: null, sensitivity: null };
-    let s = null, l2 = e2.charCodeAt(i);
-    if (l2 === 61)
+    let s = null, l = e.charCodeAt(i);
+    if (l === 61)
       s = "=", i++;
-    else if ((l2 === 126 || l2 === 124 || l2 === 94 || l2 === 36 || l2 === 42) && e2.charCodeAt(i + 1) === 61)
-      s = e2[i] + "=", i += 2;
+    else if ((l === 126 || l === 124 || l === 94 || l === 36 || l === 42) && e.charCodeAt(i + 1) === 61)
+      s = e[i] + "=", i += 2;
     else
       return null;
-    for (;je(e2.charCodeAt(i)); )
+    for (;je(e.charCodeAt(i)); )
       i++;
     if (i === t)
       return null;
-    let d2 = "", f2 = null;
-    if (l2 = e2.charCodeAt(i), l2 === 39 || l2 === 34) {
-      f2 = e2[i], i++, r = i;
-      for (let p2 = i;p2 < t; p2++) {
-        let m = e2.charCodeAt(p2);
-        m === l2 ? i = p2 + 1 : m === 92 && p2++;
+    let d = "", f = null;
+    if (l = e.charCodeAt(i), l === 39 || l === 34) {
+      f = e[i], i++, r = i;
+      for (let p = i;p < t; p++) {
+        let m = e.charCodeAt(p);
+        m === l ? i = p + 1 : m === 92 && p++;
       }
-      d2 = e2.slice(r, i - 1);
+      d = e.slice(r, i - 1);
     } else {
-      for (r = i;i < t && !je(e2.charCodeAt(i)); )
+      for (r = i;i < t && !je(e.charCodeAt(i)); )
         i++;
-      d2 = e2.slice(r, i);
+      d = e.slice(r, i);
     }
-    for (;je(e2.charCodeAt(i)); )
+    for (;je(e.charCodeAt(i)); )
       i++;
     if (i === t)
-      return { attribute: n, operator: s, quote: f2, value: d2, sensitivity: null };
-    let c2 = null;
-    switch (e2.charCodeAt(i)) {
+      return { attribute: n, operator: s, quote: f, value: d, sensitivity: null };
+    let c = null;
+    switch (e.charCodeAt(i)) {
       case 105:
       case 73: {
-        c2 = "i", i++;
+        c = "i", i++;
         break;
       }
       case 115:
       case 83: {
-        c2 = "s", i++;
+        c = "s", i++;
         break;
       }
       default:
         return null;
     }
-    for (;je(e2.charCodeAt(i)); )
+    for (;je(e.charCodeAt(i)); )
       i++;
-    return i !== t ? null : { attribute: n, operator: s, quote: f2, value: d2, sensitivity: c2 };
+    return i !== t ? null : { attribute: n, operator: s, quote: f, value: d, sensitivity: c };
   }
-  function je(e2) {
-    switch (e2) {
+  function je(e) {
+    switch (e) {
       case 32:
       case 9:
       case 10:
@@ -3596,9 +3606,9 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
         return false;
     }
   }
-  function mi(e2) {
+  function mi(e) {
     let i = false;
-    return P2(e2, { exit(r) {
+    return P2(e, { exit(r) {
       if (r.kind !== "function" || r.value !== "calc" && r.value !== "" || r.nodes.length !== 5 || r.nodes[2].kind !== "word" || r.nodes[2].value !== "*" && r.nodes[2].value !== "+")
         return;
       let t = r.nodes[0], n = r.nodes[4];
@@ -3607,61 +3617,61 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
         let s = { kind: "function", value: r.value, nodes: [n, r.nodes[1], r.nodes[2], r.nodes[3], t] };
         return V2.ReplaceSkip(s);
       }
-    } }), [i, e2];
+    } }), [i, e];
   }
-  function dl(e2, i) {
-    let r = e2.kind === "word" ? le.get(e2.value) : null, t = i.kind === "word" ? le.get(i.value) : null;
+  function dl(e, i) {
+    let r = e.kind === "word" ? le.get(e.value) : null, t = i.kind === "word" ? le.get(i.value) : null;
     if (r !== null && t === null)
       return true;
     if (r === null && t !== null)
       return false;
     if (r !== null && t !== null) {
-      let [n, s] = r, [l2, d2] = t;
-      if (s === null && d2 !== null)
+      let [n, s] = r, [l, d] = t;
+      if (s === null && d !== null)
         return true;
-      if (s !== null && d2 === null)
+      if (s !== null && d === null)
         return false;
-      if (n !== l2)
-        return n - l2 > 0;
-      if (s !== d2)
-        return (s ?? "").localeCompare(d2 ?? "") > 0;
+      if (n !== l)
+        return n - l > 0;
+      if (s !== d)
+        return (s ?? "").localeCompare(d ?? "") > 0;
     }
-    return F2([e2]).localeCompare(F2([i])) > 0;
+    return F2([e]).localeCompare(F2([i])) > 0;
   }
-  function Fe(e2, i = null) {
-    return Array.isArray(e2) && e2.length === 2 && typeof e2[1] == "object" && typeof e2[1] !== null ? i ? e2[1][i] ?? null : e2[0] : Array.isArray(e2) && i === null ? e2.join(", ") : typeof e2 == "string" && i === null ? e2 : null;
+  function Fe(e, i = null) {
+    return Array.isArray(e) && e.length === 2 && typeof e[1] == "object" && typeof e[1] !== null ? i ? e[1][i] ?? null : e[0] : Array.isArray(e) && i === null ? e.join(", ") : typeof e == "string" && i === null ? e : null;
   }
-  function gi(e2, { theme: i }, r) {
+  function gi(e, { theme: i }, r) {
     for (let t of r) {
       let n = We([t]);
-      n && e2.theme.clearNamespace(`--${n}`, 4);
+      n && e.theme.clearNamespace(`--${n}`, 4);
     }
     for (let [t, n] of ml(i)) {
       if (typeof n != "string" && typeof n != "number")
         continue;
       if (typeof n == "string" && (n = n.replace(/<alpha-value>/g, "1")), t[0] === "opacity" && (typeof n == "number" || typeof n == "string")) {
-        let l2 = typeof n == "string" ? parseFloat(n) : n;
-        l2 >= 0 && l2 <= 1 && (n = l2 * 100 + "%");
+        let l = typeof n == "string" ? parseFloat(n) : n;
+        l >= 0 && l <= 1 && (n = l * 100 + "%");
       }
       let s = We(t);
-      s && e2.theme.add(`--${s}`, "" + n, 7);
+      s && e.theme.add(`--${s}`, "" + n, 7);
     }
     if (Object.hasOwn(i, "fontFamily")) {
       let t = 5;
       {
         let n = Fe(i.fontFamily.sans);
-        n && e2.theme.hasDefault("--font-sans") && (e2.theme.add("--default-font-family", n, t), e2.theme.add("--default-font-feature-settings", Fe(i.fontFamily.sans, "fontFeatureSettings") ?? "normal", t), e2.theme.add("--default-font-variation-settings", Fe(i.fontFamily.sans, "fontVariationSettings") ?? "normal", t));
+        n && e.theme.hasDefault("--font-sans") && (e.theme.add("--default-font-family", n, t), e.theme.add("--default-font-feature-settings", Fe(i.fontFamily.sans, "fontFeatureSettings") ?? "normal", t), e.theme.add("--default-font-variation-settings", Fe(i.fontFamily.sans, "fontVariationSettings") ?? "normal", t));
       }
       {
         let n = Fe(i.fontFamily.mono);
-        n && e2.theme.hasDefault("--font-mono") && (e2.theme.add("--default-mono-font-family", n, t), e2.theme.add("--default-mono-font-feature-settings", Fe(i.fontFamily.mono, "fontFeatureSettings") ?? "normal", t), e2.theme.add("--default-mono-font-variation-settings", Fe(i.fontFamily.mono, "fontVariationSettings") ?? "normal", t));
+        n && e.theme.hasDefault("--font-mono") && (e.theme.add("--default-mono-font-family", n, t), e.theme.add("--default-mono-font-feature-settings", Fe(i.fontFamily.mono, "fontFeatureSettings") ?? "normal", t), e.theme.add("--default-mono-font-variation-settings", Fe(i.fontFamily.mono, "fontVariationSettings") ?? "normal", t));
       }
     }
     return i;
   }
-  function ml(e2) {
+  function ml(e) {
     let i = [];
-    return hi(e2, [], (r, t) => {
+    return hi(e, [], (r, t) => {
       if (wl(r))
         return i.push([t, r]), 1;
       if (kl(r)) {
@@ -3677,144 +3687,144 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
   var gl = { borderWidth: "border-width", outlineWidth: "outline-width", ringColor: "ring-color", ringWidth: "ring-width", transitionDuration: "transition-duration", transitionTimingFunction: "transition-timing-function" };
   var hl = { animation: "animate", aspectRatio: "aspect", borderRadius: "radius", boxShadow: "shadow", colors: "color", containers: "container", fontFamily: "font", fontSize: "text", letterSpacing: "tracking", lineHeight: "leading", maxWidth: "container", screens: "breakpoint", transitionTimingFunction: "ease" };
   var vl = /^[a-zA-Z0-9-_%/.]+$/;
-  function We(e2) {
-    let i = gl[e2[0]];
-    if (i && e2[1] === "DEFAULT")
+  function We(e) {
+    let i = gl[e[0]];
+    if (i && e[1] === "DEFAULT")
       return `default-${i}`;
-    if (e2[0] === "container")
+    if (e[0] === "container")
       return null;
-    for (let t of e2)
+    for (let t of e)
       if (!vl.test(t))
         return null;
-    let r = hl[e2[0]];
-    return r && (e2 = e2.slice(), e2[0] = r), e2.map((t, n, s) => t === "1" && n !== s.length - 1 ? "" : t).map((t, n) => (t = t.replaceAll(".", "_"), (n === 0 || t.startsWith("-") || t === "lineHeight") && (t = t.replace(/([a-z])([A-Z])/g, (l2, d2, f2) => `${d2}-${f2.toLowerCase()}`)), t)).filter((t, n) => t !== "DEFAULT" || n !== e2.length - 1).join("-");
+    let r = hl[e[0]];
+    return r && (e = e.slice(), e[0] = r), e.map((t, n, s) => t === "1" && n !== s.length - 1 ? "" : t).map((t, n) => (t = t.replaceAll(".", "_"), (n === 0 || t.startsWith("-") || t === "lineHeight") && (t = t.replace(/([a-z])([A-Z])/g, (l, d, f) => `${d}-${f.toLowerCase()}`)), t)).filter((t, n) => t !== "DEFAULT" || n !== e.length - 1).join("-");
   }
-  function wl(e2) {
-    return typeof e2 == "number" || typeof e2 == "string";
+  function wl(e) {
+    return typeof e == "number" || typeof e == "string";
   }
-  function kl(e2) {
-    if (!Array.isArray(e2) || e2.length !== 2 || typeof e2[0] != "string" && typeof e2[0] != "number" || e2[1] === undefined || e2[1] === null || typeof e2[1] != "object")
+  function kl(e) {
+    if (!Array.isArray(e) || e.length !== 2 || typeof e[0] != "string" && typeof e[0] != "number" || e[1] === undefined || e[1] === null || typeof e[1] != "object")
       return false;
-    for (let i of Reflect.ownKeys(e2[1]))
-      if (typeof i != "string" || typeof e2[1][i] != "string" && typeof e2[1][i] != "number")
+    for (let i of Reflect.ownKeys(e[1]))
+      if (typeof i != "string" || typeof e[1][i] != "string" && typeof e[1][i] != "number")
         return false;
     return true;
   }
-  function hi(e2, i = [], r) {
-    for (let t of Reflect.ownKeys(e2)) {
-      let n = e2[t];
+  function hi(e, i = [], r) {
+    for (let t of Reflect.ownKeys(e)) {
+      let n = e[t];
       if (n == null)
         continue;
-      let s = [...i, t], l2 = r(n, s) ?? 0;
-      if (l2 !== 1) {
-        if (l2 === 2)
+      let s = [...i, t], l = r(n, s) ?? 0;
+      if (l !== 1) {
+        if (l === 2)
           return 2;
         if (!(!Array.isArray(n) && typeof n != "object") && hi(n, s, r) === 2)
           return 2;
       }
     }
   }
-  function At(e2, i = null, r = true) {
-    let [t, n] = nt(M2(e2), i, r);
-    return t ? F2(n) : e2;
+  function At(e, i = null, r = true) {
+    let [t, n] = nt(M2(e), i, r);
+    return t ? F2(n) : e;
   }
-  function nt(e2, i = null, r = true) {
+  function nt(e, i = null, r = true) {
     let t = false;
-    return P2(e2, { exit(n, s) {
+    return P2(e, { exit(n, s) {
       if (n.kind === "word" && n.value !== "0") {
-        let l2 = vi(n.value, i, r);
-        if (l2 === null || l2 === n.value)
+        let l = vi(n.value, i, r);
+        if (l === null || l === n.value)
           return;
-        if (l2 === "0" && s.parent?.kind === "function") {
-          let d2 = vi(n.value, i, false);
-          return d2 === null ? undefined : (t = true, V2.ReplaceSkip(ne2(d2)));
+        if (l === "0" && s.parent?.kind === "function") {
+          let d = vi(n.value, i, false);
+          return d === null ? undefined : (t = true, V2.ReplaceSkip(ne2(d)));
         }
-        return t = true, V2.ReplaceSkip(ne2(l2));
+        return t = true, V2.ReplaceSkip(ne2(l));
       } else if (n.kind === "function" && (n.value === "calc" || n.value === "")) {
         if (n.nodes.length !== 5 || n.nodes[2].kind !== "word")
           return;
-        let l2 = n.nodes[0], d2 = n.nodes[2].value, f2 = n.nodes[4], c2 = l2.kind === "word" ? le.get(l2.value) : null, p2 = f2.kind === "word" ? le.get(f2.value) : null;
-        if (d2 === "*" && (c2?.[0] === 0 && c2?.[1] === null || p2?.[0] === 0 && p2?.[1] === null))
+        let l = n.nodes[0], d = n.nodes[2].value, f = n.nodes[4], c = l.kind === "word" ? le.get(l.value) : null, p = f.kind === "word" ? le.get(f.value) : null;
+        if (d === "*" && (c?.[0] === 0 && c?.[1] === null || p?.[0] === 0 && p?.[1] === null))
           return t = true, V2.ReplaceSkip(ne2("0"));
-        if (d2 === "*" && c2?.[0] === 0 && c2?.[1] !== null && p2?.[1] === null)
-          return t = true, s.parent?.kind === "function" ? V2.ReplaceSkip(ne2(`0${c2[1]}`)) : V2.ReplaceSkip(ne2("0"));
-        if (d2 === "*" && p2?.[0] === 0 && p2?.[1] !== null && c2?.[1] === null)
-          return t = true, s.parent?.kind === "function" ? V2.ReplaceSkip(ne2(`0${p2[1]}`)) : V2.ReplaceSkip(ne2("0"));
-        if (d2 === "*") {
-          if (c2?.[0] === 1 && c2?.[1] === null)
-            return t = true, V2.ReplaceSkip(f2);
-          if (p2?.[0] === 1 && p2?.[1] === null)
-            return t = true, V2.ReplaceSkip(l2);
+        if (d === "*" && c?.[0] === 0 && c?.[1] !== null && p?.[1] === null)
+          return t = true, s.parent?.kind === "function" ? V2.ReplaceSkip(ne2(`0${c[1]}`)) : V2.ReplaceSkip(ne2("0"));
+        if (d === "*" && p?.[0] === 0 && p?.[1] !== null && c?.[1] === null)
+          return t = true, s.parent?.kind === "function" ? V2.ReplaceSkip(ne2(`0${p[1]}`)) : V2.ReplaceSkip(ne2("0"));
+        if (d === "*") {
+          if (c?.[0] === 1 && c?.[1] === null)
+            return t = true, V2.ReplaceSkip(f);
+          if (p?.[0] === 1 && p?.[1] === null)
+            return t = true, V2.ReplaceSkip(l);
         }
-        if (d2 === "*" || d2 === "+") {
-          let m = c2 ?? p2, u2 = c2 === null ? l2 : p2 === null ? f2 : null;
-          if (m !== null && u2 !== null && u2.kind === "function" && (u2.value === "calc" || u2.value === "") && u2.nodes.length === 5 && u2.nodes[2].kind === "word" && u2.nodes[2].value === d2) {
-            let v2 = u2.nodes[0], h3 = u2.nodes[4], k = v2.kind === "word" ? le.get(v2.value) : null, y2 = h3.kind === "word" ? le.get(h3.value) : null, S2 = k ?? y2, x2 = k === null ? v2 : y2 === null ? h3 : null;
-            if (S2 !== null && x2 !== null) {
-              if (d2 === "*" && !(m[1] === null && S2[1] === null || m[1] === null && S2[1] !== null || m[1] !== null && S2[1] === null) || d2 === "+" && m[1] !== S2[1])
+        if (d === "*" || d === "+") {
+          let m = c ?? p, u = c === null ? l : p === null ? f : null;
+          if (m !== null && u !== null && u.kind === "function" && (u.value === "calc" || u.value === "") && u.nodes.length === 5 && u.nodes[2].kind === "word" && u.nodes[2].value === d) {
+            let v = u.nodes[0], h = u.nodes[4], k = v.kind === "word" ? le.get(v.value) : null, y = h.kind === "word" ? le.get(h.value) : null, S = k ?? y, x = k === null ? v : y === null ? h : null;
+            if (S !== null && x !== null) {
+              if (d === "*" && !(m[1] === null && S[1] === null || m[1] === null && S[1] !== null || m[1] !== null && S[1] === null) || d === "+" && m[1] !== S[1])
                 return;
-              let b2;
-              switch (d2) {
+              let b;
+              switch (d) {
                 case "*": {
-                  b2 = `${m[0] * S2[0]}${m[1] ?? S2[1] ?? ""}`;
+                  b = `${m[0] * S[0]}${m[1] ?? S[1] ?? ""}`;
                   break;
                 }
                 case "+": {
-                  b2 = `${m[0] + S2[0]}${m[1] ?? S2[1] ?? ""}`;
+                  b = `${m[0] + S[0]}${m[1] ?? S[1] ?? ""}`;
                   break;
                 }
                 default:
                   return;
               }
-              if (t = true, d2 === "*" && b2 === "1")
-                return V2.ReplaceSkip(x2);
-              let I2 = { kind: "function", value: n.value, nodes: [ne2(b2), n.nodes[1], n.nodes[2], n.nodes[3], x2] };
-              return V2.ReplaceSkip(I2);
+              if (t = true, d === "*" && b === "1")
+                return V2.ReplaceSkip(x);
+              let I = { kind: "function", value: n.value, nodes: [ne2(b), n.nodes[1], n.nodes[2], n.nodes[3], x] };
+              return V2.ReplaceSkip(I);
             }
           }
         }
-        if (c2 === null || p2 === null)
+        if (c === null || p === null)
           return;
-        switch (d2) {
+        switch (d) {
           case "*": {
-            if (c2[1] === p2[1] || c2[1] === null && p2[1] !== null || c2[1] !== null && p2[1] === null)
-              return t = true, V2.ReplaceSkip(ne2(`${c2[0] * p2[0]}${c2[1] ?? p2[1] ?? ""}`));
+            if (c[1] === p[1] || c[1] === null && p[1] !== null || c[1] !== null && p[1] === null)
+              return t = true, V2.ReplaceSkip(ne2(`${c[0] * p[0]}${c[1] ?? p[1] ?? ""}`));
             break;
           }
           case "+": {
-            if (c2[1] === p2[1])
-              return t = true, V2.ReplaceSkip(ne2(`${c2[0] + p2[0]}${c2[1] ?? ""}`));
+            if (c[1] === p[1])
+              return t = true, V2.ReplaceSkip(ne2(`${c[0] + p[0]}${c[1] ?? ""}`));
             break;
           }
           case "-": {
-            if (c2[1] === p2[1])
-              return t = true, V2.ReplaceSkip(ne2(`${c2[0] - p2[0]}${c2[1] ?? ""}`));
+            if (c[1] === p[1])
+              return t = true, V2.ReplaceSkip(ne2(`${c[0] - p[0]}${c[1] ?? ""}`));
             break;
           }
           case "/": {
-            if (p2[0] !== 0 && (c2[1] === null && p2[1] === null || c2[1] !== null && p2[1] === null)) {
-              let m = c2[0] / p2[0];
+            if (p[0] !== 0 && (c[1] === null && p[1] === null || c[1] !== null && p[1] === null)) {
+              let m = c[0] / p[0];
               if (Math.round(m * 100) / 100 !== m)
                 break;
-              return t = true, V2.ReplaceSkip(ne2(`${m}${c2[1] ?? ""}`));
+              return t = true, V2.ReplaceSkip(ne2(`${m}${c[1] ?? ""}`));
             }
             break;
           }
         }
       }
-    } }), [t, e2];
+    } }), [t, e];
   }
-  function vi(e2, i = null, r = true) {
-    let t = le.get(e2);
+  function vi(e, i = null, r = true) {
+    let t = le.get(e);
     if (t === null)
       return null;
     let [n, s] = t;
     if (s === null)
       return `${n}`;
-    if (n === 0 && y(e2))
+    if (n === 0 && y(e))
       return r ? "0" : `0${s}`;
     if (!r)
-      return `${e2}`;
+      return `${e}`;
     switch (s.toLowerCase()) {
       case "in":
         return `${n * 96}px`;
@@ -3844,41 +3854,41 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
         return `${n}${s}`;
     }
   }
-  function Re(e2, i = "top", r = "right", t = "bottom", n = "left") {
-    return yi(`${e2}-${i}`, `${e2}-${r}`, `${e2}-${t}`, `${e2}-${n}`);
+  function Re(e, i = "top", r = "right", t = "bottom", n = "left") {
+    return yi(`${e}-${i}`, `${e}-${r}`, `${e}-${t}`, `${e}-${n}`);
   }
-  function yi(e2 = "top", i = "right", r = "bottom", t = "left") {
-    return { 1: [[e2, 0], [i, 0], [r, 0], [t, 0]], 2: [[e2, 0], [i, 1], [r, 0], [t, 1]], 3: [[e2, 0], [i, 1], [r, 2], [t, 1]], 4: [[e2, 0], [i, 1], [r, 2], [t, 3]] };
+  function yi(e = "top", i = "right", r = "bottom", t = "left") {
+    return { 1: [[e, 0], [i, 0], [r, 0], [t, 0]], 2: [[e, 0], [i, 1], [r, 0], [t, 1]], 3: [[e, 0], [i, 1], [r, 2], [t, 1]], 4: [[e, 0], [i, 1], [r, 2], [t, 3]] };
   }
-  function ue2(e2, i) {
-    return { 1: [[e2, 0], [i, 0]], 2: [[e2, 0], [i, 1]] };
+  function ue2(e, i) {
+    return { 1: [[e, 0], [i, 0]], 2: [[e, 0], [i, 1]] };
   }
   var wi = { inset: yi(), margin: Re("margin"), padding: Re("padding"), "scroll-margin": Re("scroll-margin"), "scroll-padding": Re("scroll-padding"), "border-width": Re("border", "top-width", "right-width", "bottom-width", "left-width"), "border-style": Re("border", "top-style", "right-style", "bottom-style", "left-style"), "border-color": Re("border", "top-color", "right-color", "bottom-color", "left-color"), gap: ue2("row-gap", "column-gap"), overflow: ue2("overflow-x", "overflow-y"), "overscroll-behavior": ue2("overscroll-behavior-x", "overscroll-behavior-y") };
   var ki = { "inset-block": ue2("top", "bottom"), "inset-inline": ue2("left", "right"), "margin-block": ue2("margin-top", "margin-bottom"), "margin-inline": ue2("margin-left", "margin-right"), "padding-block": ue2("padding-top", "padding-bottom"), "padding-inline": ue2("padding-left", "padding-right"), "scroll-margin-block": ue2("scroll-margin-top", "scroll-margin-bottom"), "scroll-margin-inline": ue2("scroll-margin-left", "scroll-margin-right"), "scroll-padding-block": ue2("scroll-padding-top", "scroll-padding-bottom"), "scroll-padding-inline": ue2("scroll-padding-left", "scroll-padding-right") };
   var bi = { "border-block": ["border-bottom", "border-top"], "border-block-color": ["border-bottom-color", "border-top-color"], "border-block-style": ["border-bottom-style", "border-top-style"], "border-block-width": ["border-bottom-width", "border-top-width"], "border-inline": ["border-left", "border-right"], "border-inline-color": ["border-left-color", "border-right-color"], "border-inline-style": ["border-left-style", "border-right-style"], "border-inline-width": ["border-left-width", "border-right-width"] };
-  function xi(e2, i) {
+  function xi(e, i) {
     if (i & 2) {
-      if (e2.property in ki) {
-        let r = d(e2.value, " ");
-        return ki[e2.property][r.length]?.map(([t, n]) => a2(t, r[n], e2.important));
+      if (e.property in ki) {
+        let r = d(e.value, " ");
+        return ki[e.property][r.length]?.map(([t, n]) => a2(t, r[n], e.important));
       }
-      if (e2.property in bi)
-        return bi[e2.property]?.map((r) => a2(r, e2.value, e2.important));
+      if (e.property in bi)
+        return bi[e.property]?.map((r) => a2(r, e.value, e.important));
     }
-    if (e2.property in wi) {
-      let r = d(e2.value, " ");
-      return wi[e2.property][r.length]?.map(([t, n]) => a2(t, r[n], e2.important));
+    if (e.property in wi) {
+      let r = d(e.value, " ");
+      return wi[e.property][r.length]?.map(([t, n]) => a2(t, r[n], e.important));
     }
     return null;
   }
-  function pe(e2, i) {
-    for (let r in e2)
-      delete e2[r];
-    return Object.assign(e2, i);
+  function pe(e, i) {
+    for (let r in e)
+      delete e[r];
+    return Object.assign(e, i);
   }
-  function Pe(e2) {
+  function Pe(e) {
     let i = [];
-    for (let r of d(e2, ".")) {
+    for (let r of d(e, ".")) {
       if (!r.includes("[")) {
         i.push(r);
         continue;
@@ -3894,179 +3904,179 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
     }
     return i;
   }
-  function lr(e2, i) {
-    let r = e2;
+  function lr(e, i) {
+    let r = e;
     return r.storage[Ti] ??= bl(), r.storage[Ni] ??= Al(r), r.storage[Ei] ??= Vl(), r.storage[Ri] ??= Tl(), r.storage[Pi] ??= El(), r.storage[or] ??= Dl(r), r.storage[Vt] ??= Ll(r, i), r.storage[we] ??= ea(r), r.storage[sr] ??= ra(), r.storage[$t] ??= ia(r), r.storage[ur] ??= na(r), r.storage[Nt] ??= la(r), r.storage[Ki] ??= aa(r), r.storage[lt] ??= yl(r), r;
   }
   var Ti = Symbol();
   function bl() {
-    return new U2((e2) => new U2((i) => ({ rem: e2, features: i })));
+    return new U2((e) => new U2((i) => ({ rem: e, features: i })));
   }
   var lt = Symbol();
-  function yl(e2) {
+  function yl(e) {
     return new U2((i) => {
-      let r = e2.storage[we].get(i);
+      let r = e.storage[we].get(i);
       return function(n, s) {
-        let l2 = typeof n == "string" ? n : e2.printCandidate(n), d2 = r.get(l2);
-        if (typeof d2 != "string")
+        let l = typeof n == "string" ? n : e.printCandidate(n), d = r.get(l);
+        if (typeof d != "string")
           return false;
-        let f2 = typeof s == "string" ? s : e2.printCandidate(s), c2 = r.get(f2);
-        return typeof c2 != "string" ? false : d2 === c2;
+        let f = typeof s == "string" ? s : e.printCandidate(s), c = r.get(f);
+        return typeof c != "string" ? false : d === c;
       };
     });
   }
-  function xl(e2, i) {
+  function xl(e, i) {
     let r = 0;
-    return i?.collapse && (r |= 1), i?.logicalToPhysical && (r |= 2), lr(e2, i).storage[Ti].get(i?.rem ?? null).get(r);
+    return i?.collapse && (r |= 1), i?.logicalToPhysical && (r |= 2), lr(e, i).storage[Ti].get(i?.rem ?? null).get(r);
   }
   var Ni = Symbol();
-  function Al(e2) {
-    return new U2((i) => new U2((r) => ({ features: r, designSystem: e2, signatureOptions: i })));
+  function Al(e) {
+    return new U2((i) => new U2((r) => ({ features: r, designSystem: e, signatureOptions: i })));
   }
-  function Cl(e2, i, r) {
+  function Cl(e, i, r) {
     let t = 0;
-    return r?.collapse && (t |= 1), lr(e2).storage[Ni].get(i).get(t);
+    return r?.collapse && (t |= 1), lr(e).storage[Ni].get(i).get(t);
   }
-  function ar(e2, i, r) {
-    let t = xl(e2, r), n = Cl(e2, t, r), s = lr(e2), l2 = new Set, d2 = s.storage[Ei].get(n);
-    for (let f2 of i)
-      l2.add(d2.get(f2));
-    return l2.size <= 1 || !(n.features & 1) ? Array.from(l2) : Sl(n, Array.from(l2));
+  function ar(e, i, r) {
+    let t = xl(e, r), n = Cl(e, t, r), s = lr(e), l = new Set, d = s.storage[Ei].get(n);
+    for (let f of i)
+      l.add(d.get(f));
+    return l.size <= 1 || !(n.features & 1) ? Array.from(l) : Sl(n, Array.from(l));
   }
-  function Sl(e2, i) {
-    let r = e2.designSystem, t = new U2((d2) => new U2((f2) => new Set)), n = e2.designSystem.theme.prefix ? `${e2.designSystem.theme.prefix}:` : "";
+  function Sl(e, i) {
+    let r = e.designSystem, t = new U2((d) => new U2((f) => new Set)), n = e.designSystem.theme.prefix ? `${e.designSystem.theme.prefix}:` : "";
     for (let d2 of i) {
-      let f2 = d(d2, ":"), c2 = f2.pop(), p2 = c2.endsWith("!");
-      p2 && (c2 = c2.slice(0, -1));
-      let m = f2.length > 0 ? `${f2.join(":")}:` : "", u2 = p2 ? "!" : "";
-      t.get(m).get(u2).add(`${n}${c2}`);
+      let f = d(d2, ":"), c = f.pop(), p = c.endsWith("!");
+      p && (c = c.slice(0, -1));
+      let m = f.length > 0 ? `${f.join(":")}:` : "", u = p ? "!" : "";
+      t.get(m).get(u).add(`${n}${c}`);
     }
     let s = new Set;
-    for (let [d2, f2] of t.entries())
-      for (let [c2, p2] of f2.entries())
-        for (let m of l2(Array.from(p2)))
-          n && m.startsWith(n) && (m = m.slice(n.length)), s.add(`${d2}${m}${c2}`);
+    for (let [d, f] of t.entries())
+      for (let [c, p] of f.entries())
+        for (let m of l(Array.from(p)))
+          n && m.startsWith(n) && (m = m.slice(n.length)), s.add(`${d}${m}${c}`);
     return Array.from(s);
-    function l2(d2) {
-      let f2 = e2.signatureOptions, c2 = r.storage[$t].get(f2), p2 = r.storage[sr].get(f2), m = d2.map((x2) => c2.get(x2));
-      if (m.some((x2) => x2.has("line-height"))) {
-        let x2 = r.theme.keysInNamespaces(["--text"]);
-        if (x2.length > 0) {
-          let b2 = new Set, I2 = new Set;
-          for (let O2 of m)
-            if (O2.has("line-height"))
-              for (let L2 of O2.get("line-height")) {
-                if (I2.has(L2))
+    function l(d) {
+      let f = e.signatureOptions, c = r.storage[$t].get(f), p = r.storage[sr].get(f), m = d.map((x) => c.get(x));
+      if (m.some((x) => x.has("line-height"))) {
+        let x = r.theme.keysInNamespaces(["--text"]);
+        if (x.length > 0) {
+          let b = new Set, I = new Set;
+          for (let O of m)
+            if (O.has("line-height"))
+              for (let L of O.get("line-height")) {
+                if (I.has(L))
                   continue;
-                I2.add(L2);
-                let E2 = r.storage[Vt]?.get(L2) ?? null;
-                if (E2 !== null)
-                  if (de(E2)) {
-                    b2.add(E2);
-                    for (let j2 of x2)
-                      c2.get(`text-${j2}/${E2}`);
+                I.add(L);
+                let E = r.storage[Vt]?.get(L) ?? null;
+                if (E !== null)
+                  if (de(E)) {
+                    b.add(E);
+                    for (let j of x)
+                      c.get(`text-${j}/${E}`);
                   } else {
-                    b2.add(L2);
-                    for (let j2 of x2)
-                      c2.get(`text-${j2}/[${L2}]`);
+                    b.add(L);
+                    for (let j of x)
+                      c.get(`text-${j}/[${L}]`);
                   }
               }
-          let D2 = new Set;
-          for (let O2 of m)
-            if (O2.has("font-size")) {
-              for (let L2 of O2.get("font-size"))
-                if (!D2.has(L2)) {
-                  D2.add(L2);
-                  for (let E2 of b2)
-                    de(E2) ? c2.get(`text-[${L2}]/${E2}`) : c2.get(`text-[${L2}]/[${E2}]`);
+          let D = new Set;
+          for (let O of m)
+            if (O.has("font-size")) {
+              for (let L of O.get("font-size"))
+                if (!D.has(L)) {
+                  D.add(L);
+                  for (let E of b)
+                    de(E) ? c.get(`text-[${L}]/${E}`) : c.get(`text-[${L}]/[${E}]`);
                 }
             }
         }
       }
-      let u2 = new U2((x2) => {
-        let b2 = new U2((D2) => new U2((O2) => new Set)), I2 = new Set(c2.get(x2).keys());
-        if (I2.size === 0)
-          return b2;
-        for (let D2 of de2(r, x2))
-          if (!(D2.kind !== "functional" || D2.value === null)) {
-            for (let O2 of r.utilities.keys("functional")) {
-              if (O2 === D2.root)
+      let u = new U2((x) => {
+        let b = new U2((D) => new U2((O) => new Set)), I = new Set(c.get(x).keys());
+        if (I.size === 0)
+          return b;
+        for (let D of de2(r, x))
+          if (!(D.kind !== "functional" || D.value === null)) {
+            for (let O of r.utilities.keys("functional")) {
+              if (O === D.root)
                 continue;
-              let L2 = Oi(r, { ...Ue(D2), root: O2 }), E2 = c2.get(L2);
-              for (let [j2, q2] of E2)
-                if (I2.has(j2))
-                  for (let G2 of q2)
-                    b2.get(j2).get(G2).add(L2);
+              let L = Oi(r, { ...Ue(D), root: O }), E = c.get(L);
+              for (let [j, q] of E)
+                if (I.has(j))
+                  for (let G of q)
+                    b.get(j).get(G).add(L);
             }
-            return b2;
+            return b;
           }
-        return b2;
-      }), v2 = m.map((x2, b2) => {
-        let I2 = null;
-        for (let D2 of x2.keys()) {
-          let O2 = new Set;
-          for (let L2 of p2.get(D2).values())
-            for (let E2 of L2)
-              O2.add(E2);
-          for (let L2 of x2.get(D2))
-            for (let E2 of u2.get(d2[b2]).get(D2).get(L2))
-              O2.add(E2);
-          if (I2 === null ? I2 = O2 : I2 = $i(I2, O2), I2.size === 0)
-            return I2;
+        return b;
+      }), v = m.map((x, b) => {
+        let I = null;
+        for (let D of x.keys()) {
+          let O = new Set;
+          for (let L of p.get(D).values())
+            for (let E of L)
+              O.add(E);
+          for (let L of x.get(D))
+            for (let E of u.get(d[b]).get(D).get(L))
+              O.add(E);
+          if (I === null ? I = O : I = $i(I, O), I.size === 0)
+            return I;
         }
-        return I2 ?? new Set;
-      }), h3 = new U2((x2) => new Set([x2]));
-      for (let x2 = 0;x2 < v2.length; x2++) {
-        let b2 = v2[x2];
-        for (let I2 = x2 + 1;I2 < v2.length; I2++) {
-          let D2 = v2[I2];
-          for (let O2 of b2)
-            if (D2.has(O2)) {
-              h3.get(x2).add(I2), h3.get(I2).add(x2);
+        return I ?? new Set;
+      }), h = new U2((x) => new Set([x]));
+      for (let x = 0;x < v.length; x++) {
+        let b = v[x];
+        for (let I = x + 1;I < v.length; I++) {
+          let D = v[I];
+          for (let O of b)
+            if (D.has(O)) {
+              h.get(x).add(I), h.get(I).add(x);
               break;
             }
         }
       }
-      if (h3.size === 0)
-        return d2;
-      let k = new U2((x2) => x2.split(",").map(Number));
-      for (let x2 of h3.values()) {
-        let b2 = Array.from(x2).sort((I2, D2) => I2 - D2);
-        k.get(b2.join(","));
+      if (h.size === 0)
+        return d;
+      let k = new U2((x) => x.split(",").map(Number));
+      for (let x of h.values()) {
+        let b = Array.from(x).sort((I, D) => I - D);
+        k.get(b.join(","));
       }
-      let y2 = new Set(d2), S2 = new Set;
-      for (let x2 of k.values())
-        for (let b2 of sa(x2)) {
-          if (b2.some((O2) => S2.has(d2[O2])))
+      let y = new Set(d), S = new Set;
+      for (let x of k.values())
+        for (let b of sa(x)) {
+          if (b.some((O) => S.has(d[O])))
             continue;
-          let I2 = b2.flatMap((O2) => v2[O2]).reduce($i), D2 = r.storage[we].get(f2).get(b2.map((O2) => d2[O2]).sort((O2, L2) => O2.localeCompare(L2)).join(" "));
-          for (let O2 of I2)
-            if (r.storage[we].get(f2).get(O2) === D2) {
-              y2.add(O2);
-              for (let E2 of b2)
-                d2[E2] !== O2 && S2.add(d2[E2]);
+          let I = b.flatMap((O) => v[O]).reduce($i), D = r.storage[we].get(f).get(b.map((O) => d[O]).sort((O, L) => O.localeCompare(L)).join(" "));
+          for (let O of I)
+            if (r.storage[we].get(f).get(O) === D) {
+              y.add(O);
+              for (let E of b)
+                d[E] !== O && S.add(d[E]);
               break;
             }
         }
-      for (let x2 of S2)
-        y2.delete(x2);
-      return Array.from(y2);
+      for (let x of S)
+        y.delete(x);
+      return Array.from(y);
     }
   }
   var Ei = Symbol();
   function Vl() {
-    return new U2((e2) => {
-      let i = e2.designSystem, r = i.theme.prefix ? `${i.theme.prefix}:` : "", t = i.storage[Ri].get(e2), n = i.storage[Pi].get(e2);
-      return new U2((s, l2) => {
-        for (let d2 of i.parseCandidate(s)) {
-          let f2 = d2.variants.slice().reverse().flatMap((m) => t.get(m)), c2 = d2.important;
-          if (c2 || f2.length > 0) {
-            let u2 = l2.get(i.printCandidate({ ...d2, variants: [], important: false }));
-            return i.theme.prefix !== null && f2.length > 0 && (u2 = u2.slice(r.length)), f2.length > 0 && (u2 = `${f2.map((v2) => i.printVariant(v2)).join(":")}:${u2}`), c2 && (u2 += "!"), i.theme.prefix !== null && f2.length > 0 && (u2 = `${r}${u2}`), u2;
+    return new U2((e) => {
+      let i = e.designSystem, r = i.theme.prefix ? `${i.theme.prefix}:` : "", t = i.storage[Ri].get(e), n = i.storage[Pi].get(e);
+      return new U2((s, l) => {
+        for (let d of i.parseCandidate(s)) {
+          let f = d.variants.slice().reverse().flatMap((m) => t.get(m)), c = d.important;
+          if (c || f.length > 0) {
+            let u = l.get(i.printCandidate({ ...d, variants: [], important: false }));
+            return i.theme.prefix !== null && f.length > 0 && (u = u.slice(r.length)), f.length > 0 && (u = `${f.map((v) => i.printVariant(v)).join(":")}:${u}`), c && (u += "!"), i.theme.prefix !== null && f.length > 0 && (u = `${r}${u}`), u;
           }
-          let p2 = n.get(s);
-          if (p2 !== s)
-            return p2;
+          let p = n.get(s);
+          if (p !== s)
+            return p;
         }
         return s;
       });
@@ -4075,11 +4085,11 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
   var $l = [_l, Zl, Jl, Gl];
   var Ri = Symbol();
   function Tl() {
-    return new U2((e2) => new U2((i) => {
+    return new U2((e) => new U2((i) => {
       let r = [i];
       for (let t of $l)
         for (let n of r.splice(0)) {
-          let s = t(Ke(n), e2);
+          let s = t(Ke(n), e);
           if (Array.isArray(s)) {
             r.push(...s);
             continue;
@@ -4092,13 +4102,13 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
   var Nl = [Pl, Ol, Il, Ql, zl, Ml, Yl, ql, Hl, Xl];
   var Pi = Symbol();
   function El() {
-    return new U2((e2) => {
-      let i = e2.designSystem;
+    return new U2((e) => {
+      let i = e.designSystem;
       return new U2((r) => {
         for (let t of i.parseCandidate(r)) {
           let n = Ue(t);
-          for (let l2 of Nl)
-            n = l2(n, e2);
+          for (let l of Nl)
+            n = l(n, e);
           let s = i.printCandidate(n);
           if (r !== s)
             return s;
@@ -4108,26 +4118,26 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
     });
   }
   var Rl = ["t", "tr", "r", "br", "b", "bl", "l", "tl"];
-  function Pl(e2) {
-    if (e2.kind === "static" && e2.root.startsWith("bg-gradient-to-")) {
-      let i = e2.root.slice(15);
-      return Rl.includes(i) && (e2.root = `bg-linear-to-${i}`), e2;
+  function Pl(e) {
+    if (e.kind === "static" && e.root.startsWith("bg-gradient-to-")) {
+      let i = e.root.slice(15);
+      return Rl.includes(i) && (e.root = `bg-linear-to-${i}`), e;
     }
-    return e2;
+    return e;
   }
-  function Ol(e2, i) {
+  function Ol(e, i) {
     let r = i.designSystem.storage[or];
-    if (e2.kind === "arbitrary") {
-      let [t, n] = r(e2.value, e2.modifier === null ? 1 : 0);
-      t !== e2.value && (e2.value = t, n !== null && (e2.modifier = n));
-    } else if (e2.kind === "functional" && e2.value?.kind === "arbitrary") {
-      let [t, n] = r(e2.value.value, e2.modifier === null ? 1 : 0);
-      t !== e2.value.value && (e2.value.value = t, n !== null && (e2.modifier = n));
+    if (e.kind === "arbitrary") {
+      let [t, n] = r(e.value, e.modifier === null ? 1 : 0);
+      t !== e.value && (e.value = t, n !== null && (e.modifier = n));
+    } else if (e.kind === "functional" && e.value?.kind === "arbitrary") {
+      let [t, n] = r(e.value.value, e.modifier === null ? 1 : 0);
+      t !== e.value.value && (e.value.value = t, n !== null && (e.modifier = n));
     }
-    return e2;
+    return e;
   }
-  function _l(e2, i) {
-    let r = i.designSystem.storage[or], t = Tt(e2);
+  function _l(e, i) {
+    let r = i.designSystem.storage[or], t = Tt(e);
     for (let [n] of t)
       if (n.kind === "arbitrary") {
         let [s] = r(n.selector, 2);
@@ -4136,83 +4146,83 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
         let [s] = r(n.value.value, 2);
         s !== n.value.value && (n.value.value = s);
       }
-    return e2;
+    return e;
   }
-  function Il(e2, i) {
-    return e2.kind === "arbitrary" ? e2.value = Ai(e2.value, i.designSystem) : e2.kind === "functional" && e2.value?.kind === "arbitrary" && (e2.value.value = Ai(e2.value.value, i.designSystem)), e2;
+  function Il(e, i) {
+    return e.kind === "arbitrary" ? e.value = Ai(e.value, i.designSystem) : e.kind === "functional" && e.value?.kind === "arbitrary" && (e.value.value = Ai(e.value.value, i.designSystem)), e;
   }
-  function Ai(e2, i) {
-    let r = i.theme.prefix ? `--${i.theme.prefix}-spacing` : "--spacing", t = M2(e2);
+  function Ai(e, i) {
+    let r = i.theme.prefix ? `--${i.theme.prefix}-spacing` : "--spacing", t = M2(e);
     return P2(t, (n) => {
       if (!(n.kind !== "function" || n.value !== "calc") && n.nodes.length === 5 && !(n.nodes[2].kind !== "word" || n.nodes[2].value !== "*") && !(n.nodes[0].kind !== "function" || n.nodes[0].value !== "var" || n.nodes[0].nodes.length !== 1 || n.nodes[0].nodes[0].kind !== "word" || n.nodes[0].nodes[0].value !== r))
         return V2.Replace(M2(`--spacing(${F2([n.nodes[4]])})`));
     }), F2(t);
   }
   var or = Symbol();
-  function Dl(e2) {
-    return i(e2);
+  function Dl(e) {
+    return i(e);
     function i(r) {
-      function t(d2, f2 = 0) {
-        let c2 = M2(d2);
-        if (f2 & 2)
-          return [Ct(c2, l2), null];
-        let p2 = 0, m = 0;
-        if (P2(c2, (h3) => {
-          h3.kind === "function" && h3.value === "theme" && (p2 += 1, P2(h3.nodes, (k) => k.kind === "separator" && k.value.includes(",") ? V2.Stop : k.kind === "word" && k.value === "/" ? (m += 1, V2.Stop) : V2.Skip));
-        }), p2 === 0)
+      function t(d2, f = 0) {
+        let c = M2(d2);
+        if (f & 2)
+          return [Ct(c, l), null];
+        let p = 0, m = 0;
+        if (P2(c, (h) => {
+          h.kind === "function" && h.value === "theme" && (p += 1, P2(h.nodes, (k) => k.kind === "separator" && k.value.includes(",") ? V2.Stop : k.kind === "word" && k.value === "/" ? (m += 1, V2.Stop) : V2.Skip));
+        }), p === 0)
           return [d2, null];
         if (m === 0)
-          return [Ct(c2, s), null];
+          return [Ct(c, s), null];
         if (m > 1)
-          return [Ct(c2, l2), null];
-        let u2 = null;
-        return [Ct(c2, (h3, k) => {
-          let y2 = d(h3, "/").map((S2) => S2.trim());
-          if (y2.length > 2)
+          return [Ct(c, l), null];
+        let u = null;
+        return [Ct(c, (h, k) => {
+          let y = d(h, "/").map((S) => S.trim());
+          if (y.length > 2)
             return null;
-          if (c2.length === 1 && y2.length === 2 && f2 & 1) {
-            let [S2, x2] = y2;
-            if (/^\d+%$/.test(x2))
-              u2 = { kind: "named", value: x2.slice(0, -1) };
-            else if (/^0?\.\d+$/.test(x2)) {
-              let b2 = Number(x2) * 100;
-              u2 = { kind: Number.isInteger(b2) ? "named" : "arbitrary", value: b2.toString() };
+          if (c.length === 1 && y.length === 2 && f & 1) {
+            let [S, x] = y;
+            if (/^\d+%$/.test(x))
+              u = { kind: "named", value: x.slice(0, -1) };
+            else if (/^0?\.\d+$/.test(x)) {
+              let b = Number(x) * 100;
+              u = { kind: Number.isInteger(b) ? "named" : "arbitrary", value: b.toString() };
             } else
-              u2 = { kind: "arbitrary", value: x2 };
-            h3 = S2;
+              u = { kind: "arbitrary", value: x };
+            h = S;
           }
-          return s(h3, k) || l2(h3, k);
-        }), u2];
+          return s(h, k) || l(h, k);
+        }), u];
       }
-      function n(d2, f2 = true) {
-        let c2 = `--${We(Pe(d2))}`;
-        return r.theme.get([c2]) ? f2 && r.theme.prefix ? `--${r.theme.prefix}-${c2.slice(2)}` : c2 : null;
+      function n(d, f = true) {
+        let c = `--${We(Pe(d))}`;
+        return r.theme.get([c]) ? f && r.theme.prefix ? `--${r.theme.prefix}-${c.slice(2)}` : c : null;
       }
-      function s(d2, f2) {
-        let c2 = n(d2);
-        if (c2)
-          return f2 ? `var(${c2}, ${f2})` : `var(${c2})`;
-        let p2 = Pe(d2);
-        if (p2[0] === "spacing" && r.theme.get(["--spacing"])) {
-          let m = p2[1];
+      function s(d, f) {
+        let c = n(d);
+        if (c)
+          return f ? `var(${c}, ${f})` : `var(${c})`;
+        let p = Pe(d);
+        if (p[0] === "spacing" && r.theme.get(["--spacing"])) {
+          let m = p[1];
           return de(m) ? `--spacing(${m})` : null;
         }
         return null;
       }
-      function l2(d2, f2) {
-        let c2 = d(d2, "/").map((u2) => u2.trim());
-        d2 = c2.shift();
-        let p2 = n(d2, false);
-        if (!p2)
+      function l(d2, f) {
+        let c = d(d2, "/").map((u) => u.trim());
+        d2 = c.shift();
+        let p = n(d2, false);
+        if (!p)
           return null;
-        let m = c2.length > 0 ? `/${c2.join("/")}` : "";
-        return f2 ? `--theme(${p2}${m}, ${f2})` : `--theme(${p2}${m})`;
+        let m = c.length > 0 ? `/${c.join("/")}` : "";
+        return f ? `--theme(${p}${m}, ${f})` : `--theme(${p}${m})`;
       }
       return t;
     }
   }
-  function Ct(e2, i) {
-    return P2(e2, (r, t) => {
+  function Ct(e, i) {
+    return P2(e, (r, t) => {
       if (r.kind === "function" && r.value === "theme") {
         if (r.nodes.length < 1)
           return;
@@ -4220,67 +4230,67 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
         let n = r.nodes[0];
         if (n.kind !== "word")
           return;
-        let s = n.value, l2 = 1;
-        for (let c2 = l2;c2 < r.nodes.length && !r.nodes[c2].value.includes(","); c2++)
-          s += F2([r.nodes[c2]]), l2 = c2 + 1;
+        let s = n.value, l = 1;
+        for (let c = l;c < r.nodes.length && !r.nodes[c].value.includes(","); c++)
+          s += F2([r.nodes[c]]), l = c + 1;
         s = Kl(s);
-        let d2 = r.nodes.slice(l2 + 1), f2 = d2.length > 0 ? i(s, F2(d2)) : i(s);
-        if (f2 === null)
+        let d = r.nodes.slice(l + 1), f = d.length > 0 ? i(s, F2(d)) : i(s);
+        if (f === null)
           return;
         {
-          let c2 = t.index - 1;
-          for (;c2 !== -1; ) {
-            let p2 = t.siblings[c2];
-            if (p2.kind === "separator" && p2.value.trim() === "") {
-              c2 -= 1;
+          let c = t.index - 1;
+          for (;c !== -1; ) {
+            let p = t.siblings[c];
+            if (p.kind === "separator" && p.value.trim() === "") {
+              c -= 1;
               continue;
             }
-            /^[-+*/]$/.test(p2.value.trim()) && (f2 = `(${f2})`);
+            /^[-+*/]$/.test(p.value.trim()) && (f = `(${f})`);
             break;
           }
         }
-        return V2.Replace(M2(f2));
+        return V2.Replace(M2(f));
       }
-    }), F2(e2);
+    }), F2(e);
   }
-  function Kl(e2) {
-    if (e2[0] !== "'" && e2[0] !== '"')
-      return e2;
-    let i = "", r = e2[0];
-    for (let t = 1;t < e2.length - 1; t++) {
-      let n = e2[t], s = e2[t + 1];
+  function Kl(e) {
+    if (e[0] !== "'" && e[0] !== '"')
+      return e;
+    let i = "", r = e[0];
+    for (let t = 1;t < e.length - 1; t++) {
+      let n = e[t], s = e[t + 1];
       n === "\\" && (s === r || s === "\\") ? (i += s, t++) : i += n;
     }
     return i;
   }
-  function* Tt(e2) {
+  function* Tt(e) {
     function* i(r, t = null) {
       yield [r, t], r.kind === "compound" && (yield* i(r.variant, r));
     }
-    yield* i(e2, null);
+    yield* i(e, null);
   }
-  function de2(e2, i) {
-    return e2.parseCandidate(e2.theme.prefix && !i.startsWith(`${e2.theme.prefix}:`) ? `${e2.theme.prefix}:${i}` : i);
+  function de2(e, i) {
+    return e.parseCandidate(e.theme.prefix && !i.startsWith(`${e.theme.prefix}:`) ? `${e.theme.prefix}:${i}` : i);
   }
-  function Oi(e2, i) {
-    let r = e2.printCandidate(i);
-    return e2.theme.prefix && r.startsWith(`${e2.theme.prefix}:`) ? r.slice(e2.theme.prefix.length + 1) : r;
+  function Oi(e, i) {
+    let r = e.printCandidate(i);
+    return e.theme.prefix && r.startsWith(`${e.theme.prefix}:`) ? r.slice(e.theme.prefix.length + 1) : r;
   }
   var Vt = Symbol();
   var _i = 1536;
   var Ul = _i / 16;
-  function Ci(e2, i, r) {
+  function Ci(e, i, r) {
     let t = i.resolveThemeValue("--spacing");
     if (t === undefined)
       return false;
     let n = le.get(At(t, r));
     if (n === null)
       return false;
-    let [s, l2] = n, d2 = e2 * s;
-    return l2 === "px" ? d2 <= _i : l2 === "rem" ? d2 <= Ul : false;
+    let [s, l] = n, d = e * s;
+    return l === "px" ? d <= _i : l === "rem" ? d <= Ul : false;
   }
-  function Ll(e2, i) {
-    let r = e2.resolveThemeValue("--spacing");
+  function Ll(e, i) {
+    let r = e.resolveThemeValue("--spacing");
     if (r === undefined)
       return null;
     r = At(r, i?.rem ?? null);
@@ -4288,190 +4298,190 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
     if (!t)
       return null;
     let [n, s] = t;
-    return new U2((l2) => {
+    return new U2((l) => {
       if (n === 0)
         return null;
-      let d2 = le.get(At(l2, i?.rem ?? null));
-      if (!d2)
+      let d = le.get(At(l, i?.rem ?? null));
+      if (!d)
         return null;
-      let [f2, c2] = d2;
-      return c2 !== s ? null : f2 / n;
+      let [f, c] = d;
+      return c !== s ? null : f / n;
     });
   }
-  function zl(e2, i) {
-    if (e2.kind !== "arbitrary" && !(e2.kind === "functional" && e2.value?.kind === "arbitrary"))
-      return e2;
-    let r = i.designSystem, t = r.storage[ur].get(i.signatureOptions), n = r.storage[we].get(i.signatureOptions), s = r.storage[lt].get(i.signatureOptions), l2 = r.printCandidate(e2), d2 = n.get(l2);
-    if (typeof d2 != "string")
-      return e2;
-    for (let c2 of f2(d2, e2))
-      if (s(e2, c2) && jl(r, e2, c2))
-        return c2;
-    return e2;
-    function* f2(c2, p2) {
-      let m = t.get(c2);
+  function zl(e, i) {
+    if (e.kind !== "arbitrary" && !(e.kind === "functional" && e.value?.kind === "arbitrary"))
+      return e;
+    let r = i.designSystem, t = r.storage[ur].get(i.signatureOptions), n = r.storage[we].get(i.signatureOptions), s = r.storage[lt].get(i.signatureOptions), l = r.printCandidate(e), d = n.get(l);
+    if (typeof d != "string")
+      return e;
+    for (let c of f(d, e))
+      if (s(e, c) && jl(r, e, c))
+        return c;
+    return e;
+    function* f(c, p) {
+      let m = t.get(c);
       if (m.length > 1) {
-        let u2;
-        for (let v2 of m)
-          if (v2[0] !== "-") {
-            if (u2)
+        let u;
+        for (let v of m)
+          if (v[0] !== "-") {
+            if (u)
               return;
-            u2 = v2;
+            u = v;
           }
-        if (u2)
-          for (let v2 of de2(r, u2))
-            yield v2;
+        if (u)
+          for (let v of de2(r, u))
+            yield v;
         return;
       }
-      if (m.length === 0 && p2.modifier) {
-        let u2 = { ...p2, modifier: null }, v2 = n.get(r.printCandidate(u2));
-        if (typeof v2 == "string")
-          for (let h3 of f2(v2, u2))
-            yield Object.assign({}, h3, { modifier: p2.modifier });
+      if (m.length === 0 && p.modifier) {
+        let u = { ...p, modifier: null }, v = n.get(r.printCandidate(u));
+        if (typeof v == "string")
+          for (let h of f(v, u))
+            yield Object.assign({}, h, { modifier: p.modifier });
       }
       if (m.length === 1)
-        for (let u2 of de2(r, m[0]))
-          yield u2;
+        for (let u of de2(r, m[0]))
+          yield u;
       else if (m.length === 0) {
-        let u2 = p2.kind === "arbitrary" ? p2.value : p2.value?.value ?? null;
-        if (u2 === null)
+        let u = p.kind === "arbitrary" ? p.value : p.value?.value ?? null;
+        if (u === null)
           return;
-        if (i.signatureOptions.rem !== null && p2.kind === "functional" && p2.value?.kind === "arbitrary") {
-          let k = r.storage[Vt]?.get(u2) ?? null;
-          k !== null && de(k) && Ci(k, r, i.signatureOptions.rem) && (yield Object.assign({}, p2, { value: { kind: "named", value: k, fraction: null } }));
+        if (i.signatureOptions.rem !== null && p.kind === "functional" && p.value?.kind === "arbitrary") {
+          let k = r.storage[Vt]?.get(u) ?? null;
+          k !== null && de(k) && Ci(k, r, i.signatureOptions.rem) && (yield Object.assign({}, p, { value: { kind: "named", value: k, fraction: null } }));
         }
-        let v2 = r.storage[Vt]?.get(u2) ?? null, h3 = "";
-        v2 !== null && v2 < 0 && (h3 = "-", v2 = Math.abs(v2));
-        for (let k of Array.from(r.utilities.keys("functional")).sort((y2, S2) => +(y2[0] === "-") - +(S2[0] === "-"))) {
-          h3 && (k = `${h3}${k}`);
-          for (let y2 of de2(r, `${k}-${u2}`))
-            yield y2;
-          if (p2.modifier)
-            for (let y2 of de2(r, `${k}-${u2}${p2.modifier}`))
-              yield y2;
-          if (v2 !== null && de(v2) && Ci(v2, r, i.signatureOptions.rem)) {
-            for (let y2 of de2(r, `${k}-${v2}`))
-              yield y2;
-            if (p2.modifier)
-              for (let y2 of de2(r, `${k}-${v2}${rt(p2.modifier)}`))
-                yield y2;
+        let v = r.storage[Vt]?.get(u) ?? null, h = "";
+        v !== null && v < 0 && (h = "-", v = Math.abs(v));
+        for (let k of Array.from(r.utilities.keys("functional")).sort((y, S) => +(y[0] === "-") - +(S[0] === "-"))) {
+          h && (k = `${h}${k}`);
+          for (let y of de2(r, `${k}-${u}`))
+            yield y;
+          if (p.modifier)
+            for (let y of de2(r, `${k}-${u}${p.modifier}`))
+              yield y;
+          if (v !== null && de(v) && Ci(v, r, i.signatureOptions.rem)) {
+            for (let y of de2(r, `${k}-${v}`))
+              yield y;
+            if (p.modifier)
+              for (let y of de2(r, `${k}-${v}${rt(p.modifier)}`))
+                yield y;
           }
-          for (let y2 of de2(r, `${k}-[${u2}]`))
-            yield y2;
-          if (p2.modifier)
-            for (let y2 of de2(r, `${k}-[${u2}]${rt(p2.modifier)}`))
-              yield y2;
+          for (let y of de2(r, `${k}-[${u}]`))
+            yield y;
+          if (p.modifier)
+            for (let y of de2(r, `${k}-[${u}]${rt(p.modifier)}`))
+              yield y;
         }
       }
     }
   }
-  function jl(e2, i, r) {
+  function jl(e, i, r) {
     let t = null;
     if (i.kind === "functional" && i.value?.kind === "arbitrary" && i.value.value.includes("var(--") ? t = i.value.value : i.kind === "arbitrary" && i.value.includes("var(--") && (t = i.value), t === null)
       return true;
-    let n = e2.candidatesToCss([e2.printCandidate(r)]).join(`
+    let n = e.candidatesToCss([e.printCandidate(r)]).join(`
 `), s = true;
-    return P2(M2(t), (l2) => {
-      if (l2.kind === "function" && l2.value === "var") {
-        let d2 = l2.nodes[0].value;
-        if (!new RegExp(`var\\(${d2}[,)]\\s*`, "g").test(n) || n.includes(`${d2}:`))
+    return P2(M2(t), (l) => {
+      if (l.kind === "function" && l.value === "var") {
+        let d = l.nodes[0].value;
+        if (!new RegExp(`var\\(${d}[,)]\\s*`, "g").test(n) || n.includes(`${d}:`))
           return s = false, V2.Stop;
       }
     }), s;
   }
-  function Ml(e2, i) {
-    if (e2.kind !== "functional" || e2.value?.kind !== "named")
-      return e2;
-    let r = i.designSystem, t = r.storage[ur].get(i.signatureOptions), n = r.storage[we].get(i.signatureOptions), s = r.storage[lt].get(i.signatureOptions), l2 = r.printCandidate(e2), d2 = n.get(l2);
-    if (typeof d2 != "string")
-      return e2;
-    for (let c2 of f2(d2, e2))
-      if (s(e2, c2))
-        return c2;
-    return e2;
-    function* f2(c2, p2) {
-      let m = t.get(c2);
+  function Ml(e, i) {
+    if (e.kind !== "functional" || e.value?.kind !== "named")
+      return e;
+    let r = i.designSystem, t = r.storage[ur].get(i.signatureOptions), n = r.storage[we].get(i.signatureOptions), s = r.storage[lt].get(i.signatureOptions), l = r.printCandidate(e), d = n.get(l);
+    if (typeof d != "string")
+      return e;
+    for (let c of f(d, e))
+      if (s(e, c))
+        return c;
+    return e;
+    function* f(c, p) {
+      let m = t.get(c);
       if (m.length > 1) {
-        let u2;
-        for (let v2 of m)
-          if (v2[0] !== "-") {
-            if (u2)
+        let u;
+        for (let v of m)
+          if (v[0] !== "-") {
+            if (u)
               return;
-            u2 = v2;
+            u = v;
           }
-        if (u2)
-          for (let v2 of de2(r, u2))
-            yield v2;
+        if (u)
+          for (let v of de2(r, u))
+            yield v;
         return;
       }
-      if (m.length === 0 && p2.modifier) {
-        let u2 = { ...p2, modifier: null }, v2 = n.get(r.printCandidate(u2));
-        if (typeof v2 == "string")
-          for (let h3 of f2(v2, u2))
-            yield Object.assign({}, h3, { modifier: p2.modifier });
+      if (m.length === 0 && p.modifier) {
+        let u = { ...p, modifier: null }, v = n.get(r.printCandidate(u));
+        if (typeof v == "string")
+          for (let h of f(v, u))
+            yield Object.assign({}, h, { modifier: p.modifier });
       }
       if (m.length === 1)
-        for (let u2 of de2(r, m[0]))
-          yield u2;
+        for (let u of de2(r, m[0]))
+          yield u;
     }
   }
   var Fl = new Map([["order-none", "order-0"], ["break-words", "wrap-break-word"], ["overflow-ellipsis", "text-ellipsis"]]);
   var Wl = new Map([[/^(-)?start-(.*?)$/, "$1inset-s-$2"], [/^(-)?end-(.*?)$/, "$1inset-e-$2"]]);
-  function* Bl(e2) {
-    let i = Fl.get(e2);
+  function* Bl(e) {
+    let i = Fl.get(e);
     i && (yield i);
     for (let [r, t] of Wl) {
-      let n = e2.replace(r, t);
-      n !== e2 && (yield n);
+      let n = e.replace(r, t);
+      n !== e && (yield n);
     }
   }
-  function Yl(e2, i) {
-    let r = i.designSystem, t = r.storage[lt].get(i.signatureOptions), n = Oi(r, e2);
+  function Yl(e, i) {
+    let r = i.designSystem, t = r.storage[lt].get(i.signatureOptions), n = Oi(r, e);
     for (let s of Bl(n)) {
-      if (!t(e2, s))
+      if (!t(e, s))
         continue;
-      let [l2] = de2(r, s);
-      return l2;
+      let [l] = de2(r, s);
+      return l;
     }
-    return e2;
+    return e;
   }
-  function Gl(e2, i) {
-    let r = i.designSystem, t = r.storage[Nt], n = r.storage[Ki], s = Tt(e2);
-    for (let [l2] of s) {
-      if (l2.kind === "compound")
+  function Gl(e, i) {
+    let r = i.designSystem, t = r.storage[Nt], n = r.storage[Ki], s = Tt(e);
+    for (let [l] of s) {
+      if (l.kind === "compound")
         continue;
-      let d2 = r.printVariant(l2), f2 = t.get(d2);
-      if (typeof f2 != "string")
+      let d = r.printVariant(l), f = t.get(d);
+      if (typeof f != "string")
         continue;
-      let c2 = n.get(f2);
-      if (c2.length !== 1)
+      let c = n.get(f);
+      if (c.length !== 1)
         continue;
-      let p2 = c2[0], m = r.parseVariant(p2);
-      m !== null && pe(l2, m);
+      let p = c[0], m = r.parseVariant(p);
+      m !== null && pe(l, m);
     }
-    return e2;
+    return e;
   }
-  function ql(e2, i) {
+  function ql(e, i) {
     let r = i.designSystem, t = r.storage[we].get(i.signatureOptions);
-    if (e2.kind === "functional" && e2.value?.kind === "arbitrary" && e2.value.dataType !== null) {
-      let n = r.printCandidate({ ...e2, value: { ...e2.value, dataType: null } });
-      t.get(r.printCandidate(e2)) === t.get(n) && (e2.value.dataType = null);
+    if (e.kind === "functional" && e.value?.kind === "arbitrary" && e.value.dataType !== null) {
+      let n = r.printCandidate({ ...e, value: { ...e.value, dataType: null } });
+      t.get(r.printCandidate(e)) === t.get(n) && (e.value.dataType = null);
     }
-    return e2;
+    return e;
   }
-  function Hl(e2, i) {
-    if (e2.kind !== "functional" || e2.value?.kind !== "arbitrary")
-      return e2;
-    let r = i.designSystem, t = r.storage[we].get(i.signatureOptions), n = t.get(r.printCandidate(e2));
+  function Hl(e, i) {
+    if (e.kind !== "functional" || e.value?.kind !== "arbitrary")
+      return e;
+    let r = i.designSystem, t = r.storage[we].get(i.signatureOptions), n = t.get(r.printCandidate(e));
     if (n === null)
-      return e2;
-    for (let s of Ii(e2))
-      if (t.get(r.printCandidate({ ...e2, value: s })) === n)
-        return e2.value = s, e2;
-    return e2;
+      return e;
+    for (let s of Ii(e))
+      if (t.get(r.printCandidate({ ...e, value: s })) === n)
+        return e.value = s, e;
+    return e;
   }
-  function Zl(e2) {
-    let i = Tt(e2);
+  function Zl(e) {
+    let i = Tt(e);
     for (let [r] of i)
       if (r.kind === "functional" && r.root === "data" && r.value?.kind === "arbitrary" && !r.value.value.includes("="))
         r.value = { kind: "named", value: r.value.value };
@@ -4482,208 +4492,208 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
         r.value = { kind: "named", value: r.value.value.slice(0, r.value.value.indexOf("=")) };
       } else
         r.kind === "functional" && r.root === "supports" && r.value?.kind === "arbitrary" && /^[a-z-][a-z0-9-]*$/i.test(r.value.value) && (r.value = { kind: "named", value: r.value.value });
-    return e2;
+    return e;
   }
-  function* Ii(e2, i = e2.value?.value ?? "", r = new Set) {
+  function* Ii(e, i = e.value?.value ?? "", r = new Set) {
     if (r.has(i))
       return;
     if (r.add(i), yield { kind: "named", value: i, fraction: null }, i.endsWith("%") && de(i.slice(0, -1)) && (yield { kind: "named", value: i.slice(0, -1), fraction: null }), i.includes("/")) {
-      let [s, l2] = i.split("/");
-      u(s) && u(l2) && (yield { kind: "named", value: s, fraction: `${s}/${l2}` });
+      let [s, l] = i.split("/");
+      u(s) && u(l) && (yield { kind: "named", value: s, fraction: `${s}/${l}` });
     }
     let t = new Set;
     for (let s of i.matchAll(/(\d+\/\d+)|(\d+\.?\d+)/g))
       t.add(s[0].trim());
-    let n = Array.from(t).sort((s, l2) => s.length - l2.length);
+    let n = Array.from(t).sort((s, l) => s.length - l.length);
     for (let s of n)
-      yield* Ii(e2, s, r);
+      yield* Ii(e, s, r);
   }
-  function Si(e2) {
-    return !(e2.length === 1 && e2[0].kind === "list");
+  function Si(e) {
+    return !(e.length === 1 && e[0].kind === "list");
   }
-  function St(e2) {
-    return e2.value[0] === "[" && e2.value[e2.value.length - 1] === "]";
+  function St(e) {
+    return e.value[0] === "[" && e.value[e.value.length - 1] === "]";
   }
-  function Jl(e2, i) {
-    let r = [e2], t = i.designSystem, n = t.storage[Nt], s = Tt(e2);
-    for (let [l2, d2] of s)
-      if (l2.kind === "compound" && (l2.root === "has" || l2.root === "not" || l2.root === "in") && l2.modifier !== null && "modifier" in l2.variant && (l2.variant.modifier = l2.modifier, l2.modifier = null), l2.kind === "arbitrary") {
-        if (l2.relative)
+  function Jl(e, i) {
+    let r = [e], t = i.designSystem, n = t.storage[Nt], s = Tt(e);
+    for (let [l, d] of s)
+      if (l.kind === "compound" && (l.root === "has" || l.root === "not" || l.root === "in") && l.modifier !== null && "modifier" in l.variant && (l.variant.modifier = l.modifier, l.modifier = null), l.kind === "arbitrary") {
+        if (l.relative)
           continue;
-        let f2 = fe(l2.selector);
-        if (!Si(f2))
+        let f = fe(l.selector);
+        if (!Si(f))
           continue;
-        if (f2.length === 1 && f2[0].kind === "complex" && (f2 = f2[0].nodes), d2 === null && f2.length === 3 && f2[0].kind === "selector" && f2[0].value === "&" && f2[1].kind === "combinator" && f2[1].value === ">" && f2[2].kind === "selector" && f2[2].value === "*") {
-          pe(l2, t.parseVariant("*"));
-          continue;
-        }
-        if (d2 === null && f2.length === 3 && f2[0].kind === "selector" && f2[0].value === "&" && f2[1].kind === "combinator" && f2[1].value === " " && f2[2].kind === "selector" && f2[2].value === "*") {
-          pe(l2, t.parseVariant("**"));
+        if (f.length === 1 && f[0].kind === "complex" && (f = f[0].nodes), d === null && f.length === 3 && f[0].kind === "selector" && f[0].value === "&" && f[1].kind === "combinator" && f[1].value === ">" && f[2].kind === "selector" && f[2].value === "*") {
+          pe(l, t.parseVariant("*"));
           continue;
         }
-        if (d2 === null && f2.length === 1 && f2[0].kind === "compound" && f2[0].nodes.length === 2 && f2[0].nodes[0].kind === "selector" && f2[0].nodes[0].value === "&" && f2[0].nodes[1].kind === "function" && f2[0].nodes[1].value === ":has" && f2[0].nodes[1].nodes.length === 1 && f2[0].nodes[1].nodes[0].kind === "selector") {
-          pe(l2, t.parseVariant(`has-[${oe2(f2[0].nodes[1].nodes, true)}]`));
+        if (d === null && f.length === 3 && f[0].kind === "selector" && f[0].value === "&" && f[1].kind === "combinator" && f[1].value === " " && f[2].kind === "selector" && f[2].value === "*") {
+          pe(l, t.parseVariant("**"));
           continue;
         }
-        if (d2 === null && f2.length === 3 && f2[0].kind === "selector" && f2[1].kind === "combinator" && f2[1].value === " " && f2[2].kind === "selector" && f2[2].value === "&") {
-          f2.pop(), f2.pop(), pe(l2, t.parseVariant(`in-[${oe2(f2, true)}]`));
+        if (d === null && f.length === 1 && f[0].kind === "compound" && f[0].nodes.length === 2 && f[0].nodes[0].kind === "selector" && f[0].nodes[0].value === "&" && f[0].nodes[1].kind === "function" && f[0].nodes[1].value === ":has" && f[0].nodes[1].nodes.length === 1 && f[0].nodes[1].nodes[0].kind === "selector") {
+          pe(l, t.parseVariant(`has-[${oe2(f[0].nodes[1].nodes, true)}]`));
           continue;
         }
-        if (d2 === null && f2[0].kind === "selector" && (f2[0].value === "@media" || f2[0].value === "@supports")) {
-          let u2 = n.get(t.printVariant(l2)), v2 = M2(oe2(f2, true)), h3 = false;
-          if (P2(v2, (k) => {
+        if (d === null && f.length === 3 && f[0].kind === "selector" && f[1].kind === "combinator" && f[1].value === " " && f[2].kind === "selector" && f[2].value === "&") {
+          f.pop(), f.pop(), pe(l, t.parseVariant(`in-[${oe2(f, true)}]`));
+          continue;
+        }
+        if (d === null && f[0].kind === "selector" && (f[0].value === "@media" || f[0].value === "@supports")) {
+          let u = n.get(t.printVariant(l)), v = M2(oe2(f, true)), h = false;
+          if (P2(v, (k) => {
             if (k.kind === "word" && k.value === "not")
-              return h3 = true, V2.Replace([]);
-          }), v2 = M2(F2(v2)), P2(v2, (k) => {
+              return h = true, V2.Replace([]);
+          }), v = M2(F2(v)), P2(v, (k) => {
             k.kind === "separator" && k.value !== " " && k.value.trim() === "" && (k.value = " ");
-          }), h3) {
-            let k = t.parseVariant(`not-[${F2(v2)}]`);
+          }), h) {
+            let k = t.parseVariant(`not-[${F2(v)}]`);
             if (k === null)
               continue;
-            let y2 = n.get(t.printVariant(k));
-            if (u2 === y2) {
-              pe(l2, k);
+            let y = n.get(t.printVariant(k));
+            if (u === y) {
+              pe(l, k);
               continue;
             }
           }
         }
-        let c2 = null;
-        d2 === null && f2.length === 3 && f2[0].kind === "selector" && f2[0].value === "&" && f2[1].kind === "combinator" && f2[1].value === ">" && f2[2].kind === "selector" && (f2[2].value[0] === ":" || St(f2[2])) && (f2 = [f2[2]], c2 = t.parseVariant("*")), d2 === null && f2.length === 3 && f2[0].kind === "selector" && f2[0].value === "&" && f2[1].kind === "combinator" && f2[1].value === " " && f2[2].kind === "selector" && (f2[2].value[0] === ":" || St(f2[2])) && (f2 = [f2[2]], c2 = t.parseVariant("**"));
-        let p2 = f2;
-        if (P2(p2, { enter(u2) {
-          if (u2.kind === "selector" && u2.value === "&")
+        let c = null;
+        d === null && f.length === 3 && f[0].kind === "selector" && f[0].value === "&" && f[1].kind === "combinator" && f[1].value === ">" && f[2].kind === "selector" && (f[2].value[0] === ":" || St(f[2])) && (f = [f[2]], c = t.parseVariant("*")), d === null && f.length === 3 && f[0].kind === "selector" && f[0].value === "&" && f[1].kind === "combinator" && f[1].value === " " && f[2].kind === "selector" && (f[2].value[0] === ":" || St(f[2])) && (f = [f[2]], c = t.parseVariant("**"));
+        let p = f;
+        if (P2(p, { enter(u) {
+          if (u.kind === "selector" && u.value === "&")
             return V2.Replace([]);
-          if (u2.kind === "function")
+          if (u.kind === "function")
             return V2.Skip;
-        }, exit(u2) {
-          if (u2.kind === "compound" && u2.nodes.length === 1)
-            return V2.ReplaceSkip(u2.nodes);
-        } }), p2.length !== 1)
+        }, exit(u) {
+          if (u.kind === "compound" && u.nodes.length === 1)
+            return V2.ReplaceSkip(u.nodes);
+        } }), p.length !== 1)
           continue;
-        let m = p2[0];
+        let m = p[0];
         if (m.kind === "function" && m.value === ":is") {
           if (!Si(m.nodes) || m.nodes.length !== 1 || m.nodes[0].kind === "selector" && !St(m.nodes[0]))
             continue;
           m = m.nodes[0];
         }
         if (m.kind === "function" && m.value[0] === ":" || m.kind === "selector" && m.value[0] === ":") {
-          let u2 = m, v2 = false;
+          let u2 = m, v = false;
           if (u2.kind === "function" && u2.value === ":not") {
-            if (v2 = true, u2.nodes.length !== 1 || u2.nodes[0].kind !== "selector" && u2.nodes[0].kind !== "function" || u2.nodes[0].value[0] !== ":")
+            if (v = true, u2.nodes.length !== 1 || u2.nodes[0].kind !== "selector" && u2.nodes[0].kind !== "function" || u2.nodes[0].value[0] !== ":")
               continue;
             u2 = u2.nodes[0];
           }
-          let h3 = ((y2) => {
-            if (y2 === ":nth-child" && u2.kind === "function" && u2.nodes.length === 1 && u2.nodes[0].kind === "value" && u2.nodes[0].value === "odd")
-              return v2 ? (v2 = false, "even") : "odd";
-            if (y2 === ":nth-child" && u2.kind === "function" && u2.nodes.length === 1 && u2.nodes[0].kind === "value" && u2.nodes[0].value === "even")
-              return v2 ? (v2 = false, "odd") : "even";
-            for (let [S2, x2] of [[":nth-child", "nth"], [":nth-last-child", "nth-last"], [":nth-of-type", "nth-of-type"], [":nth-last-of-type", "nth-of-last-type"]])
-              if (y2 === S2 && u2.kind === "function" && u2.nodes.length === 1)
-                return u2.nodes.length === 1 && u2.nodes[0].kind === "value" && u(u2.nodes[0].value) ? `${x2}-${u2.nodes[0].value}` : `${x2}-[${oe2(u2.nodes, true)}]`;
-            if (v2) {
-              let S2 = n.get(t.printVariant(l2)), x2 = n.get(`not-[${y2}]`);
-              if (S2 === x2)
-                return `[&${y2}]`;
+          let h = ((y) => {
+            if (y === ":nth-child" && u2.kind === "function" && u2.nodes.length === 1 && u2.nodes[0].kind === "value" && u2.nodes[0].value === "odd")
+              return v ? (v = false, "even") : "odd";
+            if (y === ":nth-child" && u2.kind === "function" && u2.nodes.length === 1 && u2.nodes[0].kind === "value" && u2.nodes[0].value === "even")
+              return v ? (v = false, "odd") : "even";
+            for (let [S, x] of [[":nth-child", "nth"], [":nth-last-child", "nth-last"], [":nth-of-type", "nth-of-type"], [":nth-last-of-type", "nth-of-last-type"]])
+              if (y === S && u2.kind === "function" && u2.nodes.length === 1)
+                return u2.nodes.length === 1 && u2.nodes[0].kind === "value" && u(u2.nodes[0].value) ? `${x}-${u2.nodes[0].value}` : `${x}-[${oe2(u2.nodes, true)}]`;
+            if (v) {
+              let S = n.get(t.printVariant(l)), x = n.get(`not-[${y}]`);
+              if (S === x)
+                return `[&${y}]`;
             }
             return null;
           })(u2.value);
-          if (h3 === null) {
-            if (c2)
-              return pe(l2, { kind: "arbitrary", selector: m.value, relative: false }), [c2, l2];
+          if (h === null) {
+            if (c)
+              return pe(l, { kind: "arbitrary", selector: m.value, relative: false }), [c, l];
             continue;
           }
-          v2 && (h3 = `not-${h3}`);
-          let k = t.parseVariant(h3);
+          v && (h = `not-${h}`);
+          let k = t.parseVariant(h);
           if (k === null)
             continue;
-          pe(l2, k);
+          pe(l, k);
         } else if (m.kind === "selector" && St(m)) {
-          let u2 = Me(m.value);
-          if (u2 === null)
+          let u = Me(m.value);
+          if (u === null)
             continue;
-          if (u2.attribute.startsWith("data-")) {
-            let v2 = u2.attribute.slice(5);
-            pe(l2, { kind: "functional", root: "data", modifier: null, value: u2.value === null ? { kind: "named", value: v2 } : { kind: "arbitrary", value: `${v2}${u2.operator}${u2.quote ?? ""}${u2.value}${u2.quote ?? ""}${u2.sensitivity ? ` ${u2.sensitivity}` : ""}` } });
-          } else if (u2.attribute.startsWith("aria-")) {
-            let v2 = u2.attribute.slice(5);
-            pe(l2, { kind: "functional", root: "aria", modifier: null, value: u2.value === null ? { kind: "arbitrary", value: v2 } : u2.operator === "=" && u2.value === "true" && u2.sensitivity === null ? { kind: "named", value: v2 } : { kind: "arbitrary", value: `${u2.attribute}${u2.operator}${u2.quote ?? ""}${u2.value}${u2.quote ?? ""}${u2.sensitivity ? ` ${u2.sensitivity}` : ""}` } });
+          if (u.attribute.startsWith("data-")) {
+            let v = u.attribute.slice(5);
+            pe(l, { kind: "functional", root: "data", modifier: null, value: u.value === null ? { kind: "named", value: v } : { kind: "arbitrary", value: `${v}${u.operator}${u.quote ?? ""}${u.value}${u.quote ?? ""}${u.sensitivity ? ` ${u.sensitivity}` : ""}` } });
+          } else if (u.attribute.startsWith("aria-")) {
+            let v = u.attribute.slice(5);
+            pe(l, { kind: "functional", root: "aria", modifier: null, value: u.value === null ? { kind: "arbitrary", value: v } : u.operator === "=" && u.value === "true" && u.sensitivity === null ? { kind: "named", value: v } : { kind: "arbitrary", value: `${u.attribute}${u.operator}${u.quote ?? ""}${u.value}${u.quote ?? ""}${u.sensitivity ? ` ${u.sensitivity}` : ""}` } });
           } else
-            pe(l2, { kind: "arbitrary", selector: m.value, relative: false });
+            pe(l, { kind: "arbitrary", selector: m.value, relative: false });
         }
-        if (c2)
-          return [c2, l2];
+        if (c)
+          return [c, l];
       }
     return r;
   }
-  function Ql(e2, i) {
-    if (e2.kind !== "functional" || e2.value?.kind !== "arbitrary")
-      return e2;
-    let t = i.designSystem.storage[lt].get(i.signatureOptions), n = M2(e2.value.value);
+  function Ql(e, i) {
+    if (e.kind !== "functional" || e.value?.kind !== "arbitrary")
+      return e;
+    let t = i.designSystem.storage[lt].get(i.signatureOptions), n = M2(e.value.value);
     if (n.length === 1 && n[0].kind === "function" && n[0].value === "calc") {
-      let [s, l2] = nt(n, null, false);
+      let [s, l] = nt(n, null, false);
       if (s) {
-        let d2 = Ue(e2);
-        d2.value.value = F2(l2), t(e2, d2) && (e2 = d2, n = l2);
+        let d = Ue(e);
+        d.value.value = F2(l), t(e, d) && (e = d, n = l);
       }
     }
-    if (e2.root[0] === "-") {
+    if (e.root[0] === "-") {
       if (n.length === 1 && n[0].kind === "function" && n[0].value === "var")
-        return e2;
-      let s = M2(`calc(${e2.value.value} * -1)`), [l2, d2] = nt(s, null, false);
-      if (l2) {
-        let f2 = Ue(e2);
-        f2.root = f2.root.slice(1), f2.value.value = F2(d2), t(e2, f2) && (e2 = f2, n = d2);
+        return e;
+      let s = M2(`calc(${e.value.value} * -1)`), [l, d] = nt(s, null, false);
+      if (l) {
+        let f = Ue(e);
+        f.root = f.root.slice(1), f.value.value = F2(d), t(e, f) && (e = f, n = d);
       }
     }
     if (n.length === 1 && n[0].kind === "function" && n[0].value === "calc") {
       let s = n[0].nodes;
       if (s.length === 5 && s[1].kind === "separator" && s[1].value === " " && s[2].kind === "word" && s[2].value === "*" && s[3].kind === "separator" && s[3].value === " ") {
-        let l2 = s[4].kind === "word" && s[4].value === "-1" ? s[0] : s[0].kind === "word" && s[0].value === "-1" ? s[4] : null;
-        if (l2) {
-          let d2 = Ue(e2);
-          d2.root = `-${e2.root}`, d2.value.value = F2([l2]), t(e2, d2) && (e2 = d2);
+        let l = s[4].kind === "word" && s[4].value === "-1" ? s[0] : s[0].kind === "word" && s[0].value === "-1" ? s[4] : null;
+        if (l) {
+          let d = Ue(e);
+          d.root = `-${e.root}`, d.value.value = F2([l]), t(e, d) && (e = d);
         }
       }
     }
-    return e2;
+    return e;
   }
-  function Xl(e2, i) {
-    if (e2.kind !== "functional" && e2.kind !== "arbitrary" || e2.modifier === null)
-      return e2;
-    let r = i.designSystem, t = r.storage[we].get(i.signatureOptions), n = t.get(r.printCandidate(e2)), s = e2.modifier;
-    if (n === t.get(r.printCandidate({ ...e2, modifier: null })))
-      return e2.modifier = null, e2;
+  function Xl(e, i) {
+    if (e.kind !== "functional" && e.kind !== "arbitrary" || e.modifier === null)
+      return e;
+    let r = i.designSystem, t = r.storage[we].get(i.signatureOptions), n = t.get(r.printCandidate(e)), s = e.modifier;
+    if (n === t.get(r.printCandidate({ ...e, modifier: null })))
+      return e.modifier = null, e;
     {
-      let l2 = { kind: "named", value: s.value.endsWith("%") ? s.value.includes(".") ? `${Number(s.value.slice(0, -1))}` : s.value.slice(0, -1) : s.value, fraction: null };
-      if (n === t.get(r.printCandidate({ ...e2, modifier: l2 })))
-        return e2.modifier = l2, e2;
+      let l = { kind: "named", value: s.value.endsWith("%") ? s.value.includes(".") ? `${Number(s.value.slice(0, -1))}` : s.value.slice(0, -1) : s.value, fraction: null };
+      if (n === t.get(r.printCandidate({ ...e, modifier: l })))
+        return e.modifier = l, e;
     }
     {
-      let l2 = { kind: "named", value: `${parseFloat(s.value) * 100}`, fraction: null };
-      if (n === t.get(r.printCandidate({ ...e2, modifier: l2 })))
-        return e2.modifier = l2, e2;
+      let l = { kind: "named", value: `${parseFloat(s.value) * 100}`, fraction: null };
+      if (n === t.get(r.printCandidate({ ...e, modifier: l })))
+        return e.modifier = l, e;
     }
-    return e2;
+    return e;
   }
   var we = Symbol();
-  function ea(e2) {
+  function ea(e) {
     return new U2((i) => new U2((r) => {
       try {
-        r = e2.theme.prefix && !r.startsWith(e2.theme.prefix) ? `${e2.theme.prefix}:${r}` : r;
+        r = e.theme.prefix && !r.startsWith(e.theme.prefix) ? `${e.theme.prefix}:${r}` : r;
         let t = [H2(".x", [B2("@apply", r)])];
-        return oa(e2, () => {
-          for (let s of e2.parseCandidate(r))
-            e2.compileAstNodes(s, 1);
-          Ve(t, e2);
-        }), Di(e2, t, i), se(t);
+        return oa(e, () => {
+          for (let s of e.parseCandidate(r))
+            e.compileAstNodes(s, 1);
+          Ve(t, e);
+        }), Di(e, t, i), se(t);
       } catch {
         return Symbol();
       }
     }));
   }
   var Vi = /#(?:[a-f0-9]{8}|[a-f0-9]{6}|[a-f0-9]{4}|[a-f0-9]{3})/gi;
-  function Di(e2, i, r) {
+  function Di(e, i, r) {
     let { rem: t } = r;
     return P2(i, { enter(n, s) {
       if (n.kind === "declaration") {
@@ -4696,9 +4706,9 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
           if (m)
             return V2.Replace(m);
         }
-        n.value.includes("var(") && (n.value = ta(n.value, e2));
-        let l2 = M2(n.value), [d2, f2] = nt(l2, t), [c2, p2] = mi(f2);
-        (d2 || c2) && (n.value = F2(p2)), n.value = Se(n.value);
+        n.value.includes("var(") && (n.value = ta(n.value, e));
+        let l = M2(n.value), [d, f] = nt(l, t), [c, p] = mi(f);
+        (d || c) && (n.value = F2(p)), n.value = Se(n.value);
       } else {
         if (n.kind === "context" || n.kind === "at-root")
           return V2.Replace(n.nodes);
@@ -4711,12 +4721,12 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
       if (n.kind === "rule" || n.kind === "at-rule") {
         if (n.nodes.length > 1) {
           let s = new Set;
-          for (let l2 = n.nodes.length - 1;l2 >= 0; l2--) {
-            let d2 = n.nodes[l2];
-            d2.kind === "declaration" && d2.value !== undefined && (s.has(d2.property) && n.nodes.splice(l2, 1), s.add(d2.property));
+          for (let l = n.nodes.length - 1;l >= 0; l--) {
+            let d = n.nodes[l];
+            d.kind === "declaration" && d.value !== undefined && (s.has(d.property) && n.nodes.splice(l, 1), s.add(d.property));
           }
         }
-        n.nodes.sort((s, l2) => s.kind !== "declaration" || l2.kind !== "declaration" ? 0 : s.property.localeCompare(l2.property));
+        n.nodes.sort((s, l) => s.kind !== "declaration" || l.kind !== "declaration" ? 0 : s.property.localeCompare(l.property));
       } else if (n.kind === "declaration" && n.value) {
         if (n.property[0] === "-" && n.property[1] === "-")
           return;
@@ -4724,60 +4734,60 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
       }
     } }), i;
   }
-  function ta(e2, i) {
-    let r = false, t = M2(e2), n = new Set;
+  function ta(e, i) {
+    let r = false, t = M2(e), n = new Set;
     return P2(t, (s) => {
       if (s.kind !== "function" || s.value !== "var" || s.nodes.length !== 1 && s.nodes.length < 3)
         return;
-      let l2 = s.nodes[0].value;
-      i.theme.prefix && l2.startsWith(`--${i.theme.prefix}-`) && (l2 = l2.slice(`--${i.theme.prefix}-`.length));
-      let d2 = i.resolveThemeValue(l2);
-      if (!n.has(l2) && (n.add(l2), d2 !== undefined && (s.nodes.length === 1 && (r = true, s.nodes.push(...M2(`,${d2}`))), s.nodes.length >= 3))) {
-        let f2 = F2(s.nodes), c2 = `${s.nodes[0].value},${d2}`;
-        if (f2 === c2)
-          return r = true, V2.Replace(M2(d2));
+      let l = s.nodes[0].value;
+      i.theme.prefix && l.startsWith(`--${i.theme.prefix}-`) && (l = l.slice(`--${i.theme.prefix}-`.length));
+      let d = i.resolveThemeValue(l);
+      if (!n.has(l) && (n.add(l), d !== undefined && (s.nodes.length === 1 && (r = true, s.nodes.push(...M2(`,${d}`))), s.nodes.length >= 3))) {
+        let f = F2(s.nodes), c = `${s.nodes[0].value},${d}`;
+        if (f === c)
+          return r = true, V2.Replace(M2(d));
       }
-    }), r ? F2(t) : e2;
+    }), r ? F2(t) : e;
   }
   var sr = Symbol();
   function ra() {
-    return new U2((e2) => new U2((i) => new U2((r) => new Set)));
+    return new U2((e) => new U2((i) => new U2((r) => new Set)));
   }
   var $t = Symbol();
-  function ia(e2) {
+  function ia(e) {
     return new U2((i) => new U2((r) => {
       let t = new U2((s) => new Set);
-      e2.theme.prefix && !r.startsWith(e2.theme.prefix) && (r = `${e2.theme.prefix}:${r}`);
-      let n = e2.parseCandidate(r);
+      e.theme.prefix && !r.startsWith(e.theme.prefix) && (r = `${e.theme.prefix}:${r}`);
+      let n = e.parseCandidate(r);
       if (n.length === 0)
         return t;
       try {
-        let s = e2.compileAstNodes(n[0]).map((l2) => re2(l2.node));
-        P2(Di(e2, s, i), (l2) => {
-          l2.kind === "declaration" && (t.get(l2.property).add(l2.value), e2.storage[sr].get(i).get(l2.property).get(l2.value).add(r));
+        let s = e.compileAstNodes(n[0]).map((l) => re2(l.node));
+        P2(Di(e, s, i), (l) => {
+          l.kind === "declaration" && (t.get(l.property).add(l.value), e.storage[sr].get(i).get(l.property).get(l.value).add(r));
         });
       } catch {}
       return t;
     }));
   }
   var ur = Symbol();
-  function na(e2) {
+  function na(e) {
     return new U2((i) => {
-      let r = e2.storage[we].get(i), t = new U2(() => []);
-      for (let [n, s] of e2.getClassList()) {
-        let l2 = r.get(n);
-        if (typeof l2 == "string") {
+      let r = e.storage[we].get(i), t = new U2(() => []);
+      for (let [n, s] of e.getClassList()) {
+        let l = r.get(n);
+        if (typeof l == "string") {
           if (n[0] === "-" && n.endsWith("-0")) {
-            let d2 = r.get(n.slice(1));
-            if (typeof d2 == "string" && l2 === d2)
+            let d = r.get(n.slice(1));
+            if (typeof d == "string" && l === d)
               continue;
           }
-          t.get(l2).push(n), e2.storage[$t].get(i).get(n);
-          for (let d2 of s.modifiers) {
-            if (de(d2))
+          t.get(l).push(n), e.storage[$t].get(i).get(n);
+          for (let d of s.modifiers) {
+            if (de(d))
               continue;
-            let f2 = `${n}/${d2}`, c2 = r.get(f2);
-            typeof c2 == "string" && (t.get(c2).push(f2), e2.storage[$t].get(i).get(f2));
+            let f = `${n}/${d}`, c = r.get(f);
+            typeof c == "string" && (t.get(c).push(f), e.storage[$t].get(i).get(f));
           }
         }
       }
@@ -4785,27 +4795,27 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
     });
   }
   var Nt = Symbol();
-  function la(e2) {
+  function la(e) {
     return new U2((i) => {
       try {
-        i = e2.theme.prefix && !i.startsWith(e2.theme.prefix) ? `${e2.theme.prefix}:${i}` : i;
+        i = e.theme.prefix && !i.startsWith(e.theme.prefix) ? `${e.theme.prefix}:${i}` : i;
         let r = [H2(".x", [B2("@apply", `${i}:flex`)])];
-        return Ve(r, e2), P2(r, (n) => {
+        return Ve(r, e), P2(r, (n) => {
           if (n.kind === "at-rule" && n.params.includes(" "))
             n.params = n.params.replaceAll(" ", "");
           else if (n.kind === "rule") {
-            let s = fe(n.selector), l2 = false;
-            P2(s, (d2) => {
-              if (d2.kind === "list" || d2.kind === "combinator")
-                l2 = true;
-              else if (d2.kind === "function" && d2.value === ":is") {
-                if (d2.nodes.length === 1)
-                  return l2 = true, V2.Replace(d2.nodes);
-                if (d2.nodes.length === 2 && d2.nodes[0].kind === "selector" && d2.nodes[0].value === "*" && d2.nodes[1].kind === "selector" && d2.nodes[1].value[0] === ":")
-                  return l2 = true, V2.Replace(d2.nodes[1]);
+            let s = fe(n.selector), l = false;
+            P2(s, (d) => {
+              if (d.kind === "list" || d.kind === "combinator")
+                l = true;
+              else if (d.kind === "function" && d.value === ":is") {
+                if (d.nodes.length === 1)
+                  return l = true, V2.Replace(d.nodes);
+                if (d.nodes.length === 2 && d.nodes[0].kind === "selector" && d.nodes[0].value === "*" && d.nodes[1].kind === "selector" && d.nodes[1].value[0] === ":")
+                  return l = true, V2.Replace(d.nodes[1]);
               } else
-                d2.kind === "function" && d2.value[0] === ":" && d2.nodes[0]?.kind === "selector" && d2.nodes[0]?.value[0] === ":" && (l2 = true, d2.nodes.unshift({ kind: "selector", value: "*" }));
-            }), l2 && (n.selector = oe2(s, true));
+                d.kind === "function" && d.value[0] === ":" && d.nodes[0]?.kind === "selector" && d.nodes[0]?.value[0] === ":" && (l = true, d.nodes.unshift({ kind: "selector", value: "*" }));
+            }), l && (n.selector = oe2(s, true));
           }
         }), se(r);
       } catch {
@@ -4814,9 +4824,9 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
     });
   }
   var Ki = Symbol();
-  function aa(e2) {
-    let i = e2.storage[Nt], r = new U2(() => []);
-    for (let [t, n] of e2.variants.entries())
+  function aa(e) {
+    let i = e.storage[Nt], r = new U2(() => []);
+    for (let [t, n] of e.variants.entries())
       if (n.kind === "static") {
         let s = i.get(t);
         if (typeof s != "string")
@@ -4825,63 +4835,63 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
       }
     return r;
   }
-  function oa(e2, i) {
-    let r = e2.theme.values.get, t = new Set;
-    e2.theme.values.get = (n) => {
-      let s = r.call(e2.theme.values, n);
+  function oa(e, i) {
+    let r = e.theme.values.get, t = new Set;
+    e.theme.values.get = (n) => {
+      let s = r.call(e.theme.values, n);
       return s === undefined || s.options & 1 && (t.add(s), s.options &= -2), s;
     };
     try {
       return i();
     } finally {
-      e2.theme.values.get = r;
+      e.theme.values.get = r;
       for (let n of t)
         n.options |= 1;
     }
   }
-  function* sa(e2) {
-    let i = e2.length, r = 1n << BigInt(i);
+  function* sa(e) {
+    let i = e.length, r = 1n << BigInt(i);
     for (let t = i;t >= 2; t--) {
       let n = (1n << BigInt(t)) - 1n;
       for (;n < r; ) {
         let s = [];
-        for (let f2 = 0;f2 < i; f2++)
-          n >> BigInt(f2) & 1n && s.push(e2[f2]);
+        for (let f = 0;f < i; f++)
+          n >> BigInt(f) & 1n && s.push(e[f]);
         yield s;
-        let l2 = n & -n, d2 = n + l2;
-        n = ((d2 ^ n) >> 2n) / l2 | d2;
+        let l = n & -n, d = n + l;
+        n = ((d ^ n) >> 2n) / l | d;
       }
     }
   }
-  function $i(e2, i) {
-    if (typeof e2.intersection == "function")
-      return e2.intersection(i);
-    if (e2.size === 0 || i.size === 0)
+  function $i(e, i) {
+    if (typeof e.intersection == "function")
+      return e.intersection(i);
+    if (e.size === 0 || i.size === 0)
       return new Set;
-    let r = new Set(e2);
+    let r = new Set(e);
     for (let t of i)
       r.has(t) || r.delete(t);
     return r;
   }
   var fa = /^\d+\/\d+$/;
-  function Ui(e2) {
+  function Ui(e) {
     let i = new U2((n) => ({ name: n, utility: n, fraction: false, modifiers: [] }));
-    for (let n of e2.utilities.keys("static")) {
-      if (e2.utilities.getCompletions(n).length === 0)
+    for (let n of e.utilities.keys("static")) {
+      if (e.utilities.getCompletions(n).length === 0)
         continue;
-      let l2 = i.get(n);
-      l2.fraction = false, l2.modifiers = [];
+      let l = i.get(n);
+      l.fraction = false, l.modifiers = [];
     }
-    for (let n of e2.utilities.keys("functional")) {
-      let s = e2.utilities.getCompletions(n);
-      for (let l2 of s)
-        for (let d2 of l2.values) {
-          let f2 = d2 !== null && fa.test(d2), c2 = d2 === null ? n : `${n}-${d2}`, p2 = i.get(c2);
-          if (p2.utility = n, p2.fraction ||= f2, p2.modifiers.push(...l2.modifiers), l2.supportsNegative) {
-            let m = i.get(`-${c2}`);
-            m.utility = `-${n}`, m.fraction ||= f2, m.modifiers.push(...l2.modifiers);
+    for (let n of e.utilities.keys("functional")) {
+      let s = e.utilities.getCompletions(n);
+      for (let l of s)
+        for (let d of l.values) {
+          let f = d !== null && fa.test(d), c = d === null ? n : `${n}-${d}`, p = i.get(c);
+          if (p.utility = n, p.fraction ||= f, p.modifiers.push(...l.modifiers), l.supportsNegative) {
+            let m = i.get(`-${c}`);
+            m.utility = `-${n}`, m.fraction ||= f, m.modifiers.push(...l.modifiers);
           }
-          p2.modifiers = Array.from(new Set(p2.modifiers));
+          p.modifiers = Array.from(new Set(p.modifiers));
         }
     }
     if (i.size === 0)
@@ -4889,78 +4899,78 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
     let r = Array.from(i.values());
     return r.sort((n, s) => xt(n.name, s.name)), ca(r);
   }
-  function ca(e2) {
+  function ca(e) {
     let i = [], r = null, t = new Map, n = new U2(() => []);
-    for (let l2 of e2) {
-      let { utility: d2, fraction: f2 } = l2;
-      r || (r = { utility: d2, items: [] }, t.set(d2, r)), d2 !== r.utility && (i.push(r), r = { utility: d2, items: [] }, t.set(d2, r)), f2 ? n.get(d2).push(l2) : r.items.push(l2);
+    for (let l of e) {
+      let { utility: d, fraction: f } = l;
+      r || (r = { utility: d, items: [] }, t.set(d, r)), d !== r.utility && (i.push(r), r = { utility: d, items: [] }, t.set(d, r)), f ? n.get(d).push(l) : r.items.push(l);
     }
     r && i[i.length - 1] !== r && i.push(r);
-    for (let [l2, d2] of n) {
-      let f2 = t.get(l2);
-      f2 && f2.items.push(...d2);
+    for (let [l, d] of n) {
+      let f = t.get(l);
+      f && f.items.push(...d);
     }
     let s = [];
-    for (let l2 of i)
-      for (let d2 of l2.items)
-        s.push([d2.name, { modifiers: d2.modifiers }]);
+    for (let l of i)
+      for (let d of l.items)
+        s.push([d.name, { modifiers: d.modifiers }]);
     return s;
   }
-  function Li(e2) {
+  function Li(e) {
     let i = [];
-    for (let [t, n] of e2.variants.entries()) {
-      let d2 = function({ value: f2, modifier: c2 } = {}) {
-        let p2 = t;
-        f2 && (p2 += s ? `-${f2}` : f2), c2 && (p2 += `/${c2}`);
-        let m = e2.parseVariant(p2);
+    for (let [t, n] of e.variants.entries()) {
+      let d = function({ value: f, modifier: c } = {}) {
+        let p = t;
+        f && (p += s ? `-${f}` : f), c && (p += `/${c}`);
+        let m = e.parseVariant(p);
         if (!m)
           return [];
-        let u2 = H2(".__placeholder__", []);
-        if (Be(u2, m, e2.variants) === null)
+        let u = H2(".__placeholder__", []);
+        if (Be(u, m, e.variants) === null)
           return [];
-        let v2 = [];
-        return P2(u2.nodes, { exit(h3, k) {
-          if (h3.kind !== "rule" && h3.kind !== "at-rule" || h3.nodes.length > 0)
+        let v = [];
+        return P2(u.nodes, { exit(h, k) {
+          if (h.kind !== "rule" && h.kind !== "at-rule" || h.nodes.length > 0)
             return;
-          let y2 = k.path();
-          y2.push(h3), y2.sort((b2, I2) => {
-            let D2 = b2.kind === "at-rule", O2 = I2.kind === "at-rule";
-            return D2 && !O2 ? -1 : !D2 && O2 ? 1 : 0;
+          let y = k.path();
+          y.push(h), y.sort((b, I) => {
+            let D = b.kind === "at-rule", O = I.kind === "at-rule";
+            return D && !O ? -1 : !D && O ? 1 : 0;
           });
-          let S2 = y2.flatMap((b2) => b2.kind === "rule" ? b2.selector === "&" ? [] : [b2.selector] : b2.kind === "at-rule" ? [`${b2.name} ${b2.params}`] : []), x2 = "";
-          for (let b2 = S2.length - 1;b2 >= 0; b2--)
-            x2 = x2 === "" ? S2[b2] : `${S2[b2]} { ${x2} }`;
-          v2.push(x2);
-        } }), v2;
+          let S = y.flatMap((b) => b.kind === "rule" ? b.selector === "&" ? [] : [b.selector] : b.kind === "at-rule" ? [`${b.name} ${b.params}`] : []), x = "";
+          for (let b = S.length - 1;b >= 0; b--)
+            x = x === "" ? S[b] : `${S[b]} { ${x} }`;
+          v.push(x);
+        } }), v;
       };
-      var r = d2;
+      var r = d;
       if (n.kind === "arbitrary")
         continue;
-      let s = t !== "@", l2 = e2.variants.getCompletions(t);
+      let s = t !== "@", l = e.variants.getCompletions(t);
       switch (n.kind) {
         case "static": {
-          i.push({ name: t, values: l2, isArbitrary: false, hasDash: s, selectors: d2 });
+          i.push({ name: t, values: l, isArbitrary: false, hasDash: s, selectors: d });
           break;
         }
         case "functional": {
-          i.push({ name: t, values: l2, isArbitrary: true, hasDash: s, selectors: d2 });
+          i.push({ name: t, values: l, isArbitrary: true, hasDash: s, selectors: d });
           break;
         }
         case "compound": {
-          i.push({ name: t, values: l2, isArbitrary: true, hasDash: s, selectors: d2 });
+          i.push({ name: t, values: l, isArbitrary: true, hasDash: s, selectors: d });
           break;
         }
       }
     }
     return i;
   }
-  function zi(e2, i) {
-    let { astNodes: r, nodeSorting: t } = $e(Array.from(i), e2), n = new Map(i.map((l2) => [l2, null])), s = 0n;
-    for (let l2 of r) {
-      let d2 = t.get(l2)?.candidate;
-      d2 && n.set(d2, n.get(d2) ?? s++);
+  function zi(e, i) {
+    let { astNodes: r, nodeSorting: t } = $e(Array.from(i), e), n = new Map(i.map((l) => [l, null])), s = 0n;
+    for (let l of r) {
+      let d = t.get(l)?.candidate;
+      d && n.set(d, n.get(d) ?? s++);
     }
-    return i.map((l2) => [l2, n.get(l2) ?? null]);
+    return i.map((l) => [l, n.get(l) ?? null]);
   }
   var Et = /^@?[a-z0-9][a-zA-Z0-9_-]*(?<![_-])$/;
   var fr = class {
@@ -4974,11 +4984,11 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
     }
     fromAst(i, r, t) {
       let n = [], s = false;
-      P2(r, (l2) => {
-        l2.kind === "rule" ? n.push(l2.selector) : l2.kind === "at-rule" && l2.name === "@variant" ? s = true : l2.kind === "at-rule" && l2.name !== "@slot" && n.push(`${l2.name} ${l2.params}`);
-      }), this.static(i, (l2) => {
-        let d2 = r.map(re2);
-        s && at(d2, t), cr(d2, l2.nodes), l2.nodes = d2;
+      P2(r, (l) => {
+        l.kind === "rule" ? n.push(l.selector) : l.kind === "at-rule" && l.name === "@variant" ? s = true : l.kind === "at-rule" && l.name !== "@slot" && n.push(`${l.name} ${l.params}`);
+      }), this.static(i, (l) => {
+        let d = r.map(re2);
+        s && at(d, t), cr(d, l.nodes), l.nodes = d;
       }, { compounds: Oe(n) });
     }
     functional(i, r, { compounds: t, order: n } = {}) {
@@ -5026,16 +5036,16 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
       if (s !== 0)
         return s;
       if (i.kind === "compound" && r.kind === "compound") {
-        let c2 = this.compare(i.variant, r.variant);
-        return c2 !== 0 ? c2 : i.modifier && r.modifier ? i.modifier.value < r.modifier.value ? -1 : 1 : i.modifier ? 1 : r.modifier ? -1 : 0;
+        let c = this.compare(i.variant, r.variant);
+        return c !== 0 ? c : i.modifier && r.modifier ? i.modifier.value < r.modifier.value ? -1 : 1 : i.modifier ? 1 : r.modifier ? -1 : 0;
       }
-      let l2 = this.compareFns.get(t);
-      if (l2 !== undefined)
-        return l2(i, r);
+      let l = this.compareFns.get(t);
+      if (l !== undefined)
+        return l(i, r);
       if (i.root !== r.root)
         return i.root < r.root ? -1 : 1;
-      let d2 = i.value, f2 = r.value;
-      return d2 === null ? -1 : f2 === null || d2.kind === "arbitrary" && f2.kind !== "arbitrary" ? 1 : d2.kind !== "arbitrary" && f2.kind === "arbitrary" || d2.value < f2.value ? -1 : 1;
+      let d = i.value, f = r.value;
+      return d === null ? -1 : f === null || d.kind === "arbitrary" && f.kind !== "arbitrary" ? 1 : d.kind !== "arbitrary" && f.kind === "arbitrary" || d.value < f.value ? -1 : 1;
     }
     keys() {
       return this.variants.keys();
@@ -5043,17 +5053,17 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
     entries() {
       return this.variants.entries();
     }
-    set(i, { kind: r, applyFn: t, compounds: n, compoundsWith: s, order: l2 }) {
-      let d2 = this.variants.get(i);
-      d2 ? Object.assign(d2, { kind: r, applyFn: t, compounds: n }) : (l2 === undefined && (this.lastOrder = this.nextOrder(), l2 = this.lastOrder), this.variants.set(i, { kind: r, applyFn: t, order: l2, compoundsWith: s, compounds: n }));
+    set(i, { kind: r, applyFn: t, compounds: n, compoundsWith: s, order: l }) {
+      let d = this.variants.get(i);
+      d ? Object.assign(d, { kind: r, applyFn: t, compounds: n }) : (l === undefined && (this.lastOrder = this.nextOrder(), l = this.lastOrder), this.variants.set(i, { kind: r, applyFn: t, order: l, compoundsWith: s, compounds: n }));
     }
     nextOrder() {
       return this.groupOrder ?? this.lastOrder + 1;
     }
   };
-  function Oe(e2) {
+  function Oe(e) {
     let i = 0;
-    for (let r of e2) {
+    for (let r of e) {
       if (r[0] === "@") {
         if (!r.startsWith("@media") && !r.startsWith("@supports") && !r.startsWith("@container"))
           return 0;
@@ -5066,211 +5076,211 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
     }
     return i;
   }
-  function Mi(e2) {
+  function Mi(e) {
     let i = new fr;
-    function r(c2, p2, { compounds: m } = {}) {
-      m = m ?? Oe(p2), i.static(c2, (u2) => {
-        u2.nodes = p2.map((v2) => Z2(v2, u2.nodes));
+    function r(c, p, { compounds: m } = {}) {
+      m = m ?? Oe(p), i.static(c, (u) => {
+        u.nodes = p.map((v) => Z2(v, u.nodes));
       }, { compounds: m });
     }
     r("*", [":is(& > *)"], { compounds: 0 }), r("**", [":is(& *)"], { compounds: 0 });
-    function t(c2, p2) {
-      return p2.map((m) => {
-        if (c2 === "@container") {
-          let u2 = M2(m.trim());
-          return u2.length >= 1 && u2[0].kind === "function" ? `not ${m}` : u2.length >= 3 && u2[0].kind === "word" && u2[0].value === "not" && u2[2].kind === "function" ? (u2.splice(0, 2), F2(u2)) : u2.length >= 5 && u2[0].kind === "word" && u2[2].kind === "word" && u2[2].value === "not" && u2[4].kind === "function" ? (u2.splice(2, 2), F2(u2)) : u2.length >= 3 && u2[0].kind === "word" && u2[0].value !== "not" && u2[2].kind === "function" ? (u2.splice(1, 0, { kind: "separator", value: " " }, { kind: "word", value: "not" }), F2(u2)) : `not ${m}`;
+    function t(c, p) {
+      return p.map((m) => {
+        if (c === "@container") {
+          let u = M2(m.trim());
+          return u.length >= 1 && u[0].kind === "function" ? `not ${m}` : u.length >= 3 && u[0].kind === "word" && u[0].value === "not" && u[2].kind === "function" ? (u.splice(0, 2), F2(u)) : u.length >= 5 && u[0].kind === "word" && u[2].kind === "word" && u[2].value === "not" && u[4].kind === "function" ? (u.splice(2, 2), F2(u)) : u.length >= 3 && u[0].kind === "word" && u[0].value !== "not" && u[2].kind === "function" ? (u.splice(1, 0, { kind: "separator", value: " " }, { kind: "word", value: "not" }), F2(u)) : `not ${m}`;
         } else {
           m = m.trim();
-          let u2 = d(m, " ");
-          return u2[0] === "not" ? u2.slice(1).join(" ") : `not ${m}`;
+          let u = d(m, " ");
+          return u[0] === "not" ? u.slice(1).join(" ") : `not ${m}`;
         }
       });
     }
     let n = ["@media", "@supports", "@container"];
-    function s(c2) {
-      for (let p2 of n) {
-        if (p2 !== c2.name)
+    function s(c) {
+      for (let p of n) {
+        if (p !== c.name)
           continue;
-        let m = d(c2.params, ",");
-        return m.length > 1 ? null : (m = t(c2.name, m), B2(c2.name, m.join(", ")));
+        let m = d(c.params, ",");
+        return m.length > 1 ? null : (m = t(c.name, m), B2(c.name, m.join(", ")));
       }
       return null;
     }
-    function l2(c2) {
-      return c2.includes("::") ? null : `&:not(${d(c2, ",").map((m) => (m = m.replaceAll("&", "*"), m)).join(", ")})`;
+    function l(c) {
+      return c.includes("::") ? null : `&:not(${d(c, ",").map((m) => (m = m.replaceAll("&", "*"), m)).join(", ")})`;
     }
-    i.compound("not", 3, (c2, p2) => {
-      if (p2.variant.kind === "arbitrary" && p2.variant.relative || p2.modifier)
+    i.compound("not", 3, (c, p) => {
+      if (p.variant.kind === "arbitrary" && p.variant.relative || p.modifier)
         return null;
       let m = false;
-      if (P2([c2], (u2, v2) => {
-        if (u2.kind !== "rule" && u2.kind !== "at-rule")
+      if (P2([c], (u, v) => {
+        if (u.kind !== "rule" && u.kind !== "at-rule")
           return V2.Continue;
-        if (u2.nodes.length > 0)
+        if (u.nodes.length > 0)
           return V2.Continue;
-        let h3 = [], k = [], y2 = v2.path();
-        y2.push(u2);
-        for (let x2 of y2)
-          x2.kind === "at-rule" ? h3.push(x2) : x2.kind === "rule" && k.push(x2);
-        if (h3.length > 1)
+        let h = [], k = [], y = v.path();
+        y.push(u);
+        for (let x of y)
+          x.kind === "at-rule" ? h.push(x) : x.kind === "rule" && k.push(x);
+        if (h.length > 1)
           return V2.Stop;
         if (k.length > 1)
           return V2.Stop;
-        let S2 = [];
-        for (let x2 of k) {
-          let b2 = l2(x2.selector);
-          if (!b2)
+        let S = [];
+        for (let x of k) {
+          let b = l(x.selector);
+          if (!b)
             return m = false, V2.Stop;
-          S2.push(H2(b2, []));
+          S.push(H2(b, []));
         }
-        for (let x2 of h3) {
-          let b2 = s(x2);
-          if (!b2)
+        for (let x of h) {
+          let b = s(x);
+          if (!b)
             return m = false, V2.Stop;
-          S2.push(b2);
+          S.push(b);
         }
-        return Object.assign(c2, H2("&", S2)), m = true, V2.Skip;
-      }), c2.kind === "rule" && c2.selector === "&" && c2.nodes.length === 1 && Object.assign(c2, c2.nodes[0]), !m)
+        return Object.assign(c, H2("&", S)), m = true, V2.Skip;
+      }), c.kind === "rule" && c.selector === "&" && c.nodes.length === 1 && Object.assign(c, c.nodes[0]), !m)
         return null;
-    }), i.suggest("not", () => Array.from(i.keys()).filter((c2) => i.compoundsWith("not", c2))), i.compound("group", 2, (c2, p2) => {
-      if (p2.variant.kind === "arbitrary" && p2.variant.relative)
+    }), i.suggest("not", () => Array.from(i.keys()).filter((c) => i.compoundsWith("not", c))), i.compound("group", 2, (c, p) => {
+      if (p.variant.kind === "arbitrary" && p.variant.relative)
         return null;
-      let m = p2.modifier ? `:where(.${e2.prefix ? `${e2.prefix}\\:` : ""}group\\/${p2.modifier.value})` : `:where(.${e2.prefix ? `${e2.prefix}\\:` : ""}group)`, u2 = false;
-      if (P2([c2], (v2, h3) => {
-        if (v2.kind !== "rule")
+      let m = p.modifier ? `:where(.${e.prefix ? `${e.prefix}\\:` : ""}group\\/${p.modifier.value})` : `:where(.${e.prefix ? `${e.prefix}\\:` : ""}group)`, u = false;
+      if (P2([c], (v, h) => {
+        if (v.kind !== "rule")
           return V2.Continue;
-        for (let y2 of h3.path())
-          if (y2.kind === "rule")
-            return u2 = false, V2.Stop;
-        let k = v2.selector.replaceAll("&", m);
-        d(k, ",").length > 1 && (k = `:is(${k})`), v2.selector = `&:is(${k} *)`, u2 = true;
-      }), !u2)
+        for (let y of h.path())
+          if (y.kind === "rule")
+            return u = false, V2.Stop;
+        let k = v.selector.replaceAll("&", m);
+        d(k, ",").length > 1 && (k = `:is(${k})`), v.selector = `&:is(${k} *)`, u = true;
+      }), !u)
         return null;
-    }), i.suggest("group", () => Array.from(i.keys()).filter((c2) => i.compoundsWith("group", c2))), i.compound("peer", 2, (c2, p2) => {
-      if (p2.variant.kind === "arbitrary" && p2.variant.relative)
+    }), i.suggest("group", () => Array.from(i.keys()).filter((c) => i.compoundsWith("group", c))), i.compound("peer", 2, (c, p) => {
+      if (p.variant.kind === "arbitrary" && p.variant.relative)
         return null;
-      let m = p2.modifier ? `:where(.${e2.prefix ? `${e2.prefix}\\:` : ""}peer\\/${p2.modifier.value})` : `:where(.${e2.prefix ? `${e2.prefix}\\:` : ""}peer)`, u2 = false;
-      if (P2([c2], (v2, h3) => {
-        if (v2.kind !== "rule")
+      let m = p.modifier ? `:where(.${e.prefix ? `${e.prefix}\\:` : ""}peer\\/${p.modifier.value})` : `:where(.${e.prefix ? `${e.prefix}\\:` : ""}peer)`, u = false;
+      if (P2([c], (v, h) => {
+        if (v.kind !== "rule")
           return V2.Continue;
-        for (let y2 of h3.path())
-          if (y2.kind === "rule")
-            return u2 = false, V2.Stop;
-        let k = v2.selector.replaceAll("&", m);
-        d(k, ",").length > 1 && (k = `:is(${k})`), v2.selector = `&:is(${k} ~ *)`, u2 = true;
-      }), !u2)
+        for (let y of h.path())
+          if (y.kind === "rule")
+            return u = false, V2.Stop;
+        let k = v.selector.replaceAll("&", m);
+        d(k, ",").length > 1 && (k = `:is(${k})`), v.selector = `&:is(${k} ~ *)`, u = true;
+      }), !u)
         return null;
-    }), i.suggest("peer", () => Array.from(i.keys()).filter((c2) => i.compoundsWith("peer", c2))), r("first-letter", ["&::first-letter"]), r("first-line", ["&::first-line"]), r("marker", ["& *::marker", "&::marker", "& *::-webkit-details-marker", "&::-webkit-details-marker"]), r("selection", ["& *::selection", "&::selection"]), r("file", ["&::file-selector-button"]), r("placeholder", ["&::placeholder"]), r("backdrop", ["&::backdrop"]), r("details-content", ["&::details-content"]);
+    }), i.suggest("peer", () => Array.from(i.keys()).filter((c) => i.compoundsWith("peer", c))), r("first-letter", ["&::first-letter"]), r("first-line", ["&::first-line"]), r("marker", ["& *::marker", "&::marker", "& *::-webkit-details-marker", "&::-webkit-details-marker"]), r("selection", ["& *::selection", "&::selection"]), r("file", ["&::file-selector-button"]), r("placeholder", ["&::placeholder"]), r("backdrop", ["&::backdrop"]), r("details-content", ["&::details-content"]);
     {
-      let c2 = function() {
+      let c = function() {
         return Y2([B2("@property", "--tw-content", [a2("syntax", '"*"'), a2("initial-value", '""'), a2("inherits", "false")])]);
       };
-      var d2 = c2;
-      i.static("before", (p2) => {
-        p2.nodes = [H2("&::before", [c2(), a2("content", "var(--tw-content)"), ...p2.nodes])];
-      }, { compounds: 0 }), i.static("after", (p2) => {
-        p2.nodes = [H2("&::after", [c2(), a2("content", "var(--tw-content)"), ...p2.nodes])];
+      var d2 = c;
+      i.static("before", (p) => {
+        p.nodes = [H2("&::before", [c(), a2("content", "var(--tw-content)"), ...p.nodes])];
+      }, { compounds: 0 }), i.static("after", (p) => {
+        p.nodes = [H2("&::after", [c(), a2("content", "var(--tw-content)"), ...p.nodes])];
       }, { compounds: 0 });
     }
-    r("first", ["&:first-child"]), r("last", ["&:last-child"]), r("only", ["&:only-child"]), r("odd", ["&:nth-child(odd)"]), r("even", ["&:nth-child(even)"]), r("first-of-type", ["&:first-of-type"]), r("last-of-type", ["&:last-of-type"]), r("only-of-type", ["&:only-of-type"]), r("visited", ["&:visited"]), r("target", ["&:target"]), r("open", ["&:is([open], :popover-open, :open)"]), r("default", ["&:default"]), r("checked", ["&:checked"]), r("indeterminate", ["&:indeterminate"]), r("placeholder-shown", ["&:placeholder-shown"]), r("autofill", ["&:autofill"]), r("optional", ["&:optional"]), r("required", ["&:required"]), r("valid", ["&:valid"]), r("invalid", ["&:invalid"]), r("user-valid", ["&:user-valid"]), r("user-invalid", ["&:user-invalid"]), r("in-range", ["&:in-range"]), r("out-of-range", ["&:out-of-range"]), r("read-only", ["&:read-only"]), r("empty", ["&:empty"]), r("focus-within", ["&:focus-within"]), i.static("hover", (c2) => {
-      c2.nodes = [H2("&:hover", [B2("@media", "(hover: hover)", c2.nodes)])];
-    }), r("focus", ["&:focus"]), r("focus-visible", ["&:focus-visible"]), r("active", ["&:active"]), r("enabled", ["&:enabled"]), r("disabled", ["&:disabled"]), r("inert", ["&:is([inert], [inert] *)"]), i.compound("in", 2, (c2, p2) => {
-      if (p2.modifier)
+    r("first", ["&:first-child"]), r("last", ["&:last-child"]), r("only", ["&:only-child"]), r("odd", ["&:nth-child(odd)"]), r("even", ["&:nth-child(even)"]), r("first-of-type", ["&:first-of-type"]), r("last-of-type", ["&:last-of-type"]), r("only-of-type", ["&:only-of-type"]), r("visited", ["&:visited"]), r("target", ["&:target"]), r("open", ["&:is([open], :popover-open, :open)"]), r("default", ["&:default"]), r("checked", ["&:checked"]), r("indeterminate", ["&:indeterminate"]), r("placeholder-shown", ["&:placeholder-shown"]), r("autofill", ["&:autofill"]), r("optional", ["&:optional"]), r("required", ["&:required"]), r("valid", ["&:valid"]), r("invalid", ["&:invalid"]), r("user-valid", ["&:user-valid"]), r("user-invalid", ["&:user-invalid"]), r("in-range", ["&:in-range"]), r("out-of-range", ["&:out-of-range"]), r("read-only", ["&:read-only"]), r("empty", ["&:empty"]), r("focus-within", ["&:focus-within"]), i.static("hover", (c) => {
+      c.nodes = [H2("&:hover", [B2("@media", "(hover: hover)", c.nodes)])];
+    }), r("focus", ["&:focus"]), r("focus-visible", ["&:focus-visible"]), r("active", ["&:active"]), r("enabled", ["&:enabled"]), r("disabled", ["&:disabled"]), r("inert", ["&:is([inert], [inert] *)"]), i.compound("in", 2, (c, p) => {
+      if (p.modifier)
         return null;
       let m = false;
-      if (P2([c2], (u2, v2) => {
-        if (u2.kind !== "rule")
+      if (P2([c], (u, v) => {
+        if (u.kind !== "rule")
           return V2.Continue;
-        for (let h3 of v2.path())
-          if (h3.kind === "rule")
+        for (let h of v.path())
+          if (h.kind === "rule")
             return m = false, V2.Stop;
-        u2.selector = `:where(${u2.selector.replaceAll("&", "*")}) &`, m = true;
+        u.selector = `:where(${u.selector.replaceAll("&", "*")}) &`, m = true;
       }), !m)
         return null;
-    }), i.suggest("in", () => Array.from(i.keys()).filter((c2) => i.compoundsWith("in", c2))), i.compound("has", 2, (c2, p2) => {
-      if (p2.modifier)
+    }), i.suggest("in", () => Array.from(i.keys()).filter((c) => i.compoundsWith("in", c))), i.compound("has", 2, (c, p) => {
+      if (p.modifier)
         return null;
       let m = false;
-      if (P2([c2], (u2, v2) => {
-        if (u2.kind !== "rule")
+      if (P2([c], (u, v) => {
+        if (u.kind !== "rule")
           return V2.Continue;
-        for (let h3 of v2.path())
-          if (h3.kind === "rule")
+        for (let h of v.path())
+          if (h.kind === "rule")
             return m = false, V2.Stop;
-        u2.selector = `&:has(${u2.selector.replaceAll("&", "*")})`, m = true;
+        u.selector = `&:has(${u.selector.replaceAll("&", "*")})`, m = true;
       }), !m)
         return null;
-    }), i.suggest("has", () => Array.from(i.keys()).filter((c2) => i.compoundsWith("has", c2))), i.functional("aria", (c2, p2) => {
-      if (!p2.value || p2.modifier)
+    }), i.suggest("has", () => Array.from(i.keys()).filter((c) => i.compoundsWith("has", c))), i.functional("aria", (c, p) => {
+      if (!p.value || p.modifier)
         return null;
-      if (p2.value.kind === "arbitrary") {
-        let m = `[aria-${ji(p2.value.value)}]`;
+      if (p.value.kind === "arbitrary") {
+        let m = `[aria-${ji(p.value.value)}]`;
         if (Me(m) === null)
           return null;
-        c2.nodes = [H2(`&${m}`, c2.nodes)];
+        c.nodes = [H2(`&${m}`, c.nodes)];
       } else {
-        let m = `[aria-${p2.value.value}="true"]`;
+        let m = `[aria-${p.value.value}="true"]`;
         if (Me(m) === null)
           return null;
-        c2.nodes = [H2(`&${m}`, c2.nodes)];
+        c.nodes = [H2(`&${m}`, c.nodes)];
       }
-    }), i.suggest("aria", () => ["busy", "checked", "disabled", "expanded", "hidden", "pressed", "readonly", "required", "selected"]), i.functional("data", (c2, p2) => {
-      if (!p2.value || p2.modifier)
+    }), i.suggest("aria", () => ["busy", "checked", "disabled", "expanded", "hidden", "pressed", "readonly", "required", "selected"]), i.functional("data", (c, p) => {
+      if (!p.value || p.modifier)
         return null;
-      let m = `[data-${ji(p2.value.value)}]`;
+      let m = `[data-${ji(p.value.value)}]`;
       if (Me(m) === null)
         return null;
-      c2.nodes = [H2(`&${m}`, c2.nodes)];
-    }), i.functional("nth", (c2, p2) => {
-      if (!p2.value || p2.modifier || p2.value.kind === "named" && !u(p2.value.value))
+      c.nodes = [H2(`&${m}`, c.nodes)];
+    }), i.functional("nth", (c, p) => {
+      if (!p.value || p.modifier || p.value.kind === "named" && !u(p.value.value))
         return null;
-      c2.nodes = [H2(`&:nth-child(${p2.value.value})`, c2.nodes)];
-    }), i.functional("nth-last", (c2, p2) => {
-      if (!p2.value || p2.modifier || p2.value.kind === "named" && !u(p2.value.value))
+      c.nodes = [H2(`&:nth-child(${p.value.value})`, c.nodes)];
+    }), i.functional("nth-last", (c, p) => {
+      if (!p.value || p.modifier || p.value.kind === "named" && !u(p.value.value))
         return null;
-      c2.nodes = [H2(`&:nth-last-child(${p2.value.value})`, c2.nodes)];
-    }), i.functional("nth-of-type", (c2, p2) => {
-      if (!p2.value || p2.modifier || p2.value.kind === "named" && !u(p2.value.value))
+      c.nodes = [H2(`&:nth-last-child(${p.value.value})`, c.nodes)];
+    }), i.functional("nth-of-type", (c, p) => {
+      if (!p.value || p.modifier || p.value.kind === "named" && !u(p.value.value))
         return null;
-      c2.nodes = [H2(`&:nth-of-type(${p2.value.value})`, c2.nodes)];
-    }), i.functional("nth-last-of-type", (c2, p2) => {
-      if (!p2.value || p2.modifier || p2.value.kind === "named" && !u(p2.value.value))
+      c.nodes = [H2(`&:nth-of-type(${p.value.value})`, c.nodes)];
+    }), i.functional("nth-last-of-type", (c, p) => {
+      if (!p.value || p.modifier || p.value.kind === "named" && !u(p.value.value))
         return null;
-      c2.nodes = [H2(`&:nth-last-of-type(${p2.value.value})`, c2.nodes)];
-    }), i.functional("supports", (c2, p2) => {
-      if (!p2.value || p2.modifier)
+      c.nodes = [H2(`&:nth-last-of-type(${p.value.value})`, c.nodes)];
+    }), i.functional("supports", (c, p) => {
+      if (!p.value || p.modifier)
         return null;
-      let m = p2.value.value;
+      let m = p.value.value;
       if (m === null)
         return null;
       if (/^[\w-]*\s*\(/.test(m)) {
-        let u2 = m.replace(/\b(and|or|not)\b/g, " $1 ");
-        c2.nodes = [B2("@supports", u2, c2.nodes)];
+        let u = m.replace(/\b(and|or|not)\b/g, " $1 ");
+        c.nodes = [B2("@supports", u, c.nodes)];
         return;
       }
-      m.includes(":") || (m = `${m}: var(--tw)`), (m[0] !== "(" || m[m.length - 1] !== ")") && (m = `(${m})`), c2.nodes = [B2("@supports", m, c2.nodes)];
+      m.includes(":") || (m = `${m}: var(--tw)`), (m[0] !== "(" || m[m.length - 1] !== ")") && (m = `(${m})`), c.nodes = [B2("@supports", m, c.nodes)];
     }, { compounds: 1 }), r("motion-safe", ["@media (prefers-reduced-motion: no-preference)"]), r("motion-reduce", ["@media (prefers-reduced-motion: reduce)"]), r("contrast-more", ["@media (prefers-contrast: more)"]), r("contrast-less", ["@media (prefers-contrast: less)"]);
     {
-      let c2 = function(p2, m, u2, v2) {
-        if (p2 === m)
+      let c = function(p, m, u, v) {
+        if (p === m)
           return 0;
-        let h3 = v2.get(p2);
-        if (h3 === null)
-          return u2 === "asc" ? -1 : 1;
-        let k = v2.get(m);
-        return k === null ? u2 === "asc" ? 1 : -1 : Ee(h3, k, u2);
+        let h = v.get(p);
+        if (h === null)
+          return u === "asc" ? -1 : 1;
+        let k = v.get(m);
+        return k === null ? u === "asc" ? 1 : -1 : Ee(h, k, u);
       };
-      var f2 = c2;
+      var f = c;
       {
-        let p2 = e2.namespace("--breakpoint"), m = new U2((u2) => {
-          switch (u2.kind) {
+        let p = e.namespace("--breakpoint"), m = new U2((u) => {
+          switch (u.kind) {
             case "static":
-              return e2.resolveValue(u2.root, ["--breakpoint"]) ?? null;
+              return e.resolveValue(u.root, ["--breakpoint"]) ?? null;
             case "functional": {
-              if (!u2.value || u2.modifier)
+              if (!u.value || u.modifier)
                 return null;
-              let v2 = null;
-              return u2.value.kind === "arbitrary" ? v2 = u2.value.value : u2.value.kind === "named" && (v2 = e2.resolveValue(u2.value.value, ["--breakpoint"])), !v2 || v2.includes("var(") ? null : v2;
+              let v = null;
+              return u.value.kind === "arbitrary" ? v = u.value.value : u.value.kind === "named" && (v = e.resolveValue(u.value.value, ["--breakpoint"])), !v || v.includes("var(") ? null : v;
             }
             case "arbitrary":
             case "compound":
@@ -5278,37 +5288,37 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
           }
         });
         i.group(() => {
-          i.functional("max", (u2, v2) => {
-            if (v2.modifier)
+          i.functional("max", (u, v) => {
+            if (v.modifier)
               return null;
-            let h3 = m.get(v2);
-            if (h3 === null)
+            let h = m.get(v);
+            if (h === null)
               return null;
-            u2.nodes = [B2("@media", `(width < ${h3})`, u2.nodes)];
+            u.nodes = [B2("@media", `(width < ${h})`, u.nodes)];
           }, { compounds: 1 });
-        }, (u2, v2) => c2(u2, v2, "desc", m)), i.suggest("max", () => Array.from(p2.keys()).filter((u2) => u2 !== null)), i.group(() => {
-          for (let [u2, v2] of e2.namespace("--breakpoint"))
-            u2 !== null && i.static(u2, (h3) => {
-              h3.nodes = [B2("@media", `(width >= ${v2})`, h3.nodes)];
+        }, (u, v) => c(u, v, "desc", m)), i.suggest("max", () => Array.from(p.keys()).filter((u) => u !== null)), i.group(() => {
+          for (let [u, v] of e.namespace("--breakpoint"))
+            u !== null && i.static(u, (h) => {
+              h.nodes = [B2("@media", `(width >= ${v})`, h.nodes)];
             }, { compounds: 1 });
-          i.functional("min", (u2, v2) => {
-            if (v2.modifier)
+          i.functional("min", (u, v) => {
+            if (v.modifier)
               return null;
-            let h3 = m.get(v2);
-            if (h3 === null)
+            let h = m.get(v);
+            if (h === null)
               return null;
-            u2.nodes = [B2("@media", `(width >= ${h3})`, u2.nodes)];
+            u.nodes = [B2("@media", `(width >= ${h})`, u.nodes)];
           }, { compounds: 1 });
-        }, (u2, v2) => c2(u2, v2, "asc", m)), i.suggest("min", () => Array.from(p2.keys()).filter((u2) => u2 !== null));
+        }, (u, v) => c(u, v, "asc", m)), i.suggest("min", () => Array.from(p.keys()).filter((u) => u !== null));
       }
       {
-        let p2 = e2.namespace("--container"), m = new U2((u2) => {
-          switch (u2.kind) {
+        let p = e.namespace("--container"), m = new U2((u) => {
+          switch (u.kind) {
             case "functional": {
-              if (u2.value === null)
+              if (u.value === null)
                 return null;
-              let v2 = null;
-              return u2.value.kind === "arbitrary" ? v2 = u2.value.value : u2.value.kind === "named" && (v2 = e2.resolveValue(u2.value.value, ["--container"])), !v2 || v2.includes("var(") ? null : v2;
+              let v = null;
+              return u.value.kind === "arbitrary" ? v = u.value.value : u.value.kind === "named" && (v = e.resolveValue(u.value.value, ["--container"])), !v || v.includes("var(") ? null : v;
             }
             case "static":
             case "arbitrary":
@@ -5317,34 +5327,34 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
           }
         });
         i.group(() => {
-          i.functional("@max", (u2, v2) => {
-            let h3 = m.get(v2);
-            if (h3 === null)
+          i.functional("@max", (u, v) => {
+            let h = m.get(v);
+            if (h === null)
               return null;
-            u2.nodes = [B2("@container", v2.modifier ? `${v2.modifier.value} (width < ${h3})` : `(width < ${h3})`, u2.nodes)];
+            u.nodes = [B2("@container", v.modifier ? `${v.modifier.value} (width < ${h})` : `(width < ${h})`, u.nodes)];
           }, { compounds: 1 });
-        }, (u2, v2) => c2(u2, v2, "desc", m)), i.suggest("@max", () => Array.from(p2.keys()).filter((u2) => u2 !== null)), i.group(() => {
-          i.functional("@", (u2, v2) => {
-            let h3 = m.get(v2);
-            if (h3 === null)
+        }, (u, v) => c(u, v, "desc", m)), i.suggest("@max", () => Array.from(p.keys()).filter((u) => u !== null)), i.group(() => {
+          i.functional("@", (u, v) => {
+            let h = m.get(v);
+            if (h === null)
               return null;
-            u2.nodes = [B2("@container", v2.modifier ? `${v2.modifier.value} (width >= ${h3})` : `(width >= ${h3})`, u2.nodes)];
-          }, { compounds: 1 }), i.functional("@min", (u2, v2) => {
-            let h3 = m.get(v2);
-            if (h3 === null)
+            u.nodes = [B2("@container", v.modifier ? `${v.modifier.value} (width >= ${h})` : `(width >= ${h})`, u.nodes)];
+          }, { compounds: 1 }), i.functional("@min", (u, v) => {
+            let h = m.get(v);
+            if (h === null)
               return null;
-            u2.nodes = [B2("@container", v2.modifier ? `${v2.modifier.value} (width >= ${h3})` : `(width >= ${h3})`, u2.nodes)];
+            u.nodes = [B2("@container", v.modifier ? `${v.modifier.value} (width >= ${h})` : `(width >= ${h})`, u.nodes)];
           }, { compounds: 1 });
-        }, (u2, v2) => c2(u2, v2, "asc", m)), i.suggest("@min", () => Array.from(p2.keys()).filter((u2) => u2 !== null)), i.suggest("@", () => Array.from(p2.keys()).filter((u2) => u2 !== null));
+        }, (u, v) => c(u, v, "asc", m)), i.suggest("@min", () => Array.from(p.keys()).filter((u) => u !== null)), i.suggest("@", () => Array.from(p.keys()).filter((u) => u !== null));
       }
     }
     return r("portrait", ["@media (orientation: portrait)"]), r("landscape", ["@media (orientation: landscape)"]), r("ltr", ['&:where(:dir(ltr), [dir="ltr"], [dir="ltr"] *)']), r("rtl", ['&:where(:dir(rtl), [dir="rtl"], [dir="rtl"] *)']), r("dark", ["@media (prefers-color-scheme: dark)"]), r("starting", ["@starting-style"]), r("print", ["@media print"]), r("forced-colors", ["@media (forced-colors: active)"]), r("inverted-colors", ["@media (inverted-colors: inverted)"]), r("pointer-none", ["@media (pointer: none)"]), r("pointer-coarse", ["@media (pointer: coarse)"]), r("pointer-fine", ["@media (pointer: fine)"]), r("any-pointer-none", ["@media (any-pointer: none)"]), r("any-pointer-coarse", ["@media (any-pointer: coarse)"]), r("any-pointer-fine", ["@media (any-pointer: fine)"]), r("noscript", ["@media (scripting: none)"]), i;
   }
-  function ji(e2) {
-    if (e2.includes("=")) {
-      let [i, ...r] = d(e2, "="), t = r.join("=").trim();
+  function ji(e) {
+    if (e.includes("=")) {
+      let [i, ...r] = d(e, "="), t = r.join("=").trim();
       if (t[0] === "'" || t[0] === '"')
-        return e2;
+        return e;
       if (t.length > 1) {
         let n = t[t.length - 1];
         if (t[t.length - 2] === " " && (n === "i" || n === "I" || n === "s" || n === "S"))
@@ -5352,67 +5362,67 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
       }
       return `${i}="${t}"`;
     }
-    return e2;
+    return e;
   }
-  function cr(e2, i) {
-    P2(e2, (r) => {
+  function cr(e, i) {
+    P2(e, (r) => {
       if (r.kind === "at-rule" && r.name === "@slot")
         return V2.ReplaceSkip(i);
       if (r.kind === "at-rule" && (r.name === "@keyframes" || r.name === "@property"))
         return Object.assign(r, Y2([B2(r.name, r.params, r.nodes)])), V2.Skip;
     });
   }
-  function at(e2, i) {
+  function at(e, i) {
     let r = 0;
-    return P2(e2, (t) => {
+    return P2(e, (t) => {
       if (t.kind !== "at-rule" || t.name !== "@variant")
         return;
       let n = [], s = d(t.params, ",");
-      for (let [l2, d2] of s.entries()) {
-        let f2 = H2("&", l2 === s.length - 1 ? t.nodes : t.nodes.map(re2)), c2 = d(d2, ":");
-        for (let p2 = c2.length - 1;p2 >= 0; --p2) {
-          let m = c2[p2].trim();
+      for (let [l, d2] of s.entries()) {
+        let f = H2("&", l === s.length - 1 ? t.nodes : t.nodes.map(re2)), c = d(d2, ":");
+        for (let p = c.length - 1;p >= 0; --p) {
+          let m = c[p].trim();
           if (!m)
             throw new Error("Cannot use `@variant` with empty variant");
-          let u2 = i.parseVariant(m);
-          if (u2 === null)
+          let u = i.parseVariant(m);
+          if (u === null)
             throw new Error(`Cannot use \`@variant\` with unknown variant: ${m}`);
-          if (Be(f2, u2, i.variants) === null)
+          if (Be(f, u, i.variants) === null)
             throw new Error(`Cannot use \`@variant\` with variant: ${m}`);
         }
-        f2.selector === "&" ? n.push(...f2.nodes) : n.push(f2);
+        f.selector === "&" ? n.push(...f.nodes) : n.push(f);
       }
       return r |= 32, V2.Replace(n);
     }), r;
   }
-  function Fi(e2, i) {
-    let r = si(e2), t = Mi(e2), n = new U2((m) => ri(m, p2)), s = new U2((m) => Array.from(ti(m, p2))), l2 = new U2((m) => new U2((u2) => {
-      let v2 = Wi(u2, p2, m);
+  function Fi(e, i) {
+    let r = si(e), t = Mi(e), n = new U2((m) => ri(m, p)), s = new U2((m) => Array.from(ti(m, p))), l = new U2((m) => new U2((u) => {
+      let v = Wi(u, p, m);
       try {
-        let h3 = v2.map((k) => k.node);
-        Le(h3, p2), at(h3, p2);
+        let h = v.map((k) => k.node);
+        Le(h, p), at(h, p);
       } catch {
         return [];
       }
-      return v2;
-    })), d2 = new U2((m) => {
-      for (let u2 of ht(m))
-        e2.markUsedVariable(u2);
+      return v;
+    })), d = new U2((m) => {
+      for (let u of ht(m))
+        e.markUsedVariable(u);
     });
-    function f2(m) {
-      let u2 = [];
-      for (let v2 of m) {
-        let h3 = true, { astNodes: k } = $e([v2], p2, { onInvalidCandidate() {
-          h3 = false;
+    function f(m) {
+      let u = [];
+      for (let v of m) {
+        let h = true, { astNodes: k } = $e([v], p, { onInvalidCandidate() {
+          h = false;
         } });
-        i && P2(k, (y2) => (y2.src ??= i, V2.Continue)), k = Ne(k, p2, 0), u2.push(h3 ? k : []);
+        i && P2(k, (y) => (y.src ??= i, V2.Continue)), k = Ne(k, p, 0), u.push(h ? k : []);
       }
-      return u2;
+      return u;
     }
-    function c2(m) {
-      return f2(m).map((u2) => u2.length > 0 ? se(u2) : null);
+    function c(m) {
+      return f(m).map((u) => u.length > 0 ? se(u) : null);
     }
-    let p2 = { theme: e2, utilities: r, variants: t, invalidCandidates: new Set, important: false, candidatesToCss: c2, candidatesToAst: f2, getClassOrder(m) {
+    let p = { theme: e, utilities: r, variants: t, invalidCandidates: new Set, important: false, candidatesToCss: c, candidatesToAst: f, getClassOrder(m) {
       return zi(this, m);
     }, getClassList() {
       return Ui(this);
@@ -5422,230 +5432,230 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
       return s.get(m);
     }, parseVariant(m) {
       return n.get(m);
-    }, compileAstNodes(m, u2 = 1) {
-      return l2.get(u2).get(m);
+    }, compileAstNodes(m, u = 1) {
+      return l.get(u).get(m);
     }, printCandidate(m) {
-      return ni(p2, m);
+      return ni(p, m);
     }, printVariant(m) {
       return vt(m);
     }, getVariantOrder() {
       let m = Array.from(n.values());
-      m.sort((k, y2) => this.variants.compare(k, y2));
-      let u2 = new Map, v2, h3 = 0;
+      m.sort((k, y) => this.variants.compare(k, y));
+      let u = new Map, v, h = 0;
       for (let k of m)
-        k !== null && (v2 !== undefined && this.variants.compare(v2, k) !== 0 && h3++, u2.set(k, h3), v2 = k);
-      return u2;
-    }, resolveThemeValue(m, u2 = true) {
-      let v2 = m.lastIndexOf("/"), h3 = null;
-      v2 !== -1 && (h3 = m.slice(v2 + 1).trim(), m = m.slice(0, v2).trim());
-      let k = e2.resolve(null, [m], u2 ? 1 : 0) ?? undefined;
-      return h3 && k ? X2(k, h3) : k;
+        k !== null && (v !== undefined && this.variants.compare(v, k) !== 0 && h++, u.set(k, h), v = k);
+      return u;
+    }, resolveThemeValue(m, u = true) {
+      let v = m.lastIndexOf("/"), h = null;
+      v !== -1 && (h = m.slice(v + 1).trim(), m = m.slice(0, v).trim());
+      let k = e.resolve(null, [m], u ? 1 : 0) ?? undefined;
+      return h && k ? X2(k, h) : k;
     }, trackUsedVariables(m) {
-      d2.get(m);
-    }, canonicalizeCandidates(m, u2) {
-      return ar(this, m, u2);
+      d.get(m);
+    }, canonicalizeCandidates(m, u) {
+      return ar(this, m, u);
     }, storage: {} };
-    return p2;
+    return p;
   }
   var pr = ["container-type", "pointer-events", "visibility", "position", "inset", "inset-inline", "inset-block", "inset-inline-start", "inset-inline-end", "inset-block-start", "inset-block-end", "top", "right", "bottom", "left", "isolation", "z-index", "order", "grid-column", "grid-column-start", "grid-column-end", "grid-row", "grid-row-start", "grid-row-end", "float", "clear", "--tw-container-component", "margin", "margin-inline", "margin-block", "margin-inline-start", "margin-inline-end", "margin-block-start", "margin-block-end", "margin-top", "margin-right", "margin-bottom", "margin-left", "box-sizing", "display", "field-sizing", "aspect-ratio", "height", "max-height", "min-height", "width", "max-width", "min-width", "flex", "flex-shrink", "flex-grow", "flex-basis", "table-layout", "caption-side", "border-collapse", "border-spacing", "transform-origin", "translate", "--tw-translate-x", "--tw-translate-y", "--tw-translate-z", "scale", "--tw-scale-x", "--tw-scale-y", "--tw-scale-z", "rotate", "--tw-rotate-x", "--tw-rotate-y", "--tw-rotate-z", "--tw-skew-x", "--tw-skew-y", "transform", "zoom", "animation", "cursor", "touch-action", "--tw-pan-x", "--tw-pan-y", "--tw-pinch-zoom", "resize", "scroll-snap-type", "--tw-scroll-snap-strictness", "scroll-snap-align", "scroll-snap-stop", "scroll-margin", "scroll-margin-inline", "scroll-margin-block", "scroll-margin-inline-start", "scroll-margin-inline-end", "scroll-margin-block-start", "scroll-margin-block-end", "scroll-margin-top", "scroll-margin-right", "scroll-margin-bottom", "scroll-margin-left", "scroll-padding", "scroll-padding-inline", "scroll-padding-block", "scroll-padding-inline-start", "scroll-padding-inline-end", "scroll-padding-block-start", "scroll-padding-block-end", "scroll-padding-top", "scroll-padding-right", "scroll-padding-bottom", "scroll-padding-left", "scrollbar-width", "scrollbar-color", "scrollbar-gutter", "list-style-position", "list-style-type", "list-style-image", "appearance", "columns", "break-before", "break-inside", "break-after", "grid-auto-columns", "grid-auto-flow", "grid-auto-rows", "grid-template-columns", "grid-template-rows", "flex-direction", "flex-wrap", "place-content", "place-items", "align-content", "align-items", "justify-content", "justify-items", "gap", "column-gap", "row-gap", "--tw-space-x-reverse", "--tw-space-y-reverse", "divide-x-width", "divide-y-width", "--tw-divide-y-reverse", "divide-style", "divide-color", "place-self", "align-self", "justify-self", "overflow", "overflow-x", "overflow-y", "overscroll-behavior", "overscroll-behavior-x", "overscroll-behavior-y", "scroll-behavior", "border-radius", "border-start-radius", "border-end-radius", "border-top-radius", "border-right-radius", "border-bottom-radius", "border-left-radius", "border-start-start-radius", "border-start-end-radius", "border-end-end-radius", "border-end-start-radius", "border-top-left-radius", "border-top-right-radius", "border-bottom-right-radius", "border-bottom-left-radius", "border-width", "border-inline-width", "border-block-width", "border-inline-start-width", "border-inline-end-width", "border-block-start-width", "border-block-end-width", "border-top-width", "border-right-width", "border-bottom-width", "border-left-width", "border-style", "border-inline-style", "border-block-style", "border-inline-start-style", "border-inline-end-style", "border-block-start-style", "border-block-end-style", "border-top-style", "border-right-style", "border-bottom-style", "border-left-style", "border-color", "border-inline-color", "border-block-color", "border-inline-start-color", "border-inline-end-color", "border-block-start-color", "border-block-end-color", "border-top-color", "border-right-color", "border-bottom-color", "border-left-color", "background-color", "background-image", "--tw-gradient-position", "--tw-gradient-stops", "--tw-gradient-via-stops", "--tw-gradient-from", "--tw-gradient-from-position", "--tw-gradient-via", "--tw-gradient-via-position", "--tw-gradient-to", "--tw-gradient-to-position", "mask-image", "--tw-mask-top", "--tw-mask-top-from-color", "--tw-mask-top-from-position", "--tw-mask-top-to-color", "--tw-mask-top-to-position", "--tw-mask-right", "--tw-mask-right-from-color", "--tw-mask-right-from-position", "--tw-mask-right-to-color", "--tw-mask-right-to-position", "--tw-mask-bottom", "--tw-mask-bottom-from-color", "--tw-mask-bottom-from-position", "--tw-mask-bottom-to-color", "--tw-mask-bottom-to-position", "--tw-mask-left", "--tw-mask-left-from-color", "--tw-mask-left-from-position", "--tw-mask-left-to-color", "--tw-mask-left-to-position", "--tw-mask-linear", "--tw-mask-linear-position", "--tw-mask-linear-from-color", "--tw-mask-linear-from-position", "--tw-mask-linear-to-color", "--tw-mask-linear-to-position", "--tw-mask-radial", "--tw-mask-radial-shape", "--tw-mask-radial-size", "--tw-mask-radial-position", "--tw-mask-radial-from-color", "--tw-mask-radial-from-position", "--tw-mask-radial-to-color", "--tw-mask-radial-to-position", "--tw-mask-conic", "--tw-mask-conic-position", "--tw-mask-conic-from-color", "--tw-mask-conic-from-position", "--tw-mask-conic-to-color", "--tw-mask-conic-to-position", "box-decoration-break", "background-size", "background-attachment", "background-clip", "background-position", "background-repeat", "background-origin", "mask-composite", "mask-mode", "mask-type", "mask-size", "mask-clip", "mask-position", "mask-repeat", "mask-origin", "fill", "stroke", "stroke-width", "object-fit", "object-position", "padding", "padding-inline", "padding-block", "padding-inline-start", "padding-inline-end", "padding-block-start", "padding-block-end", "padding-top", "padding-right", "padding-bottom", "padding-left", "text-align", "text-indent", "vertical-align", "font-family", "font-feature-settings", "font-size", "line-height", "font-weight", "letter-spacing", "text-wrap", "overflow-wrap", "word-break", "text-overflow", "hyphens", "white-space", "tab-size", "color", "text-transform", "font-style", "font-stretch", "font-variant-numeric", "text-decoration-line", "text-decoration-color", "text-decoration-style", "text-decoration-thickness", "text-underline-offset", "-webkit-font-smoothing", "placeholder-color", "caret-color", "accent-color", "color-scheme", "opacity", "background-blend-mode", "mix-blend-mode", "box-shadow", "--tw-shadow", "--tw-shadow-color", "--tw-ring-shadow", "--tw-ring-color", "--tw-inset-shadow", "--tw-inset-shadow-color", "--tw-inset-ring-shadow", "--tw-inset-ring-color", "--tw-ring-offset-width", "--tw-ring-offset-color", "outline", "outline-width", "outline-offset", "outline-color", "--tw-blur", "--tw-brightness", "--tw-contrast", "--tw-drop-shadow", "--tw-grayscale", "--tw-hue-rotate", "--tw-invert", "--tw-saturate", "--tw-sepia", "filter", "--tw-backdrop-blur", "--tw-backdrop-brightness", "--tw-backdrop-contrast", "--tw-backdrop-grayscale", "--tw-backdrop-hue-rotate", "--tw-backdrop-invert", "--tw-backdrop-opacity", "--tw-backdrop-saturate", "--tw-backdrop-sepia", "backdrop-filter", "transition-property", "transition-behavior", "transition-delay", "transition-duration", "transition-timing-function", "will-change", "contain", "content", "forced-color-adjust"];
-  function $e(e2, i, { onInvalidCandidate: r, respectImportant: t } = {}) {
-    let n = new Map, s = [], l2 = new Map;
-    for (let c2 of e2) {
-      if (i.invalidCandidates.has(c2)) {
-        r?.(c2);
+  function $e(e, i, { onInvalidCandidate: r, respectImportant: t } = {}) {
+    let n = new Map, s = [], l = new Map;
+    for (let c of e) {
+      if (i.invalidCandidates.has(c)) {
+        r?.(c);
         continue;
       }
-      let p2 = i.parseCandidate(c2);
-      if (p2.length === 0) {
-        r?.(c2);
+      let p = i.parseCandidate(c);
+      if (p.length === 0) {
+        r?.(c);
         continue;
       }
-      l2.set(c2, p2);
+      l.set(c, p);
     }
-    let d2 = 0;
-    (t ?? true) && (d2 |= 1);
-    let f2 = i.getVariantOrder();
-    for (let [c2, p2] of l2) {
+    let d = 0;
+    (t ?? true) && (d |= 1);
+    let f = i.getVariantOrder();
+    for (let [c, p] of l) {
       let m = false;
-      for (let u2 of p2) {
-        let v2 = i.compileAstNodes(u2, d2);
-        if (v2.length !== 0) {
+      for (let u of p) {
+        let v = i.compileAstNodes(u, d);
+        if (v.length !== 0) {
           m = true;
-          for (let { node: h3, propertySort: k } of v2) {
-            let y2 = 0n;
-            for (let S2 of u2.variants)
-              y2 |= 1n << BigInt(f2.get(S2));
-            n.set(h3, { properties: k, variants: y2, candidate: c2 }), s.push(h3);
+          for (let { node: h, propertySort: k } of v) {
+            let y = 0n;
+            for (let S of u.variants)
+              y |= 1n << BigInt(f.get(S));
+            n.set(h, { properties: k, variants: y, candidate: c }), s.push(h);
           }
         }
       }
-      m || r?.(c2);
+      m || r?.(c);
     }
-    return s.sort((c2, p2) => {
-      let m = n.get(c2), u2 = n.get(p2);
-      if (m.variants - u2.variants !== 0n)
-        return Number(m.variants - u2.variants);
-      let v2 = 0;
-      for (;v2 < m.properties.order.length && v2 < u2.properties.order.length && m.properties.order[v2] === u2.properties.order[v2]; )
-        v2 += 1;
-      return (m.properties.order[v2] ?? 1 / 0) - (u2.properties.order[v2] ?? 1 / 0) || u2.properties.count - m.properties.count || xt(m.candidate, u2.candidate);
+    return s.sort((c, p) => {
+      let m = n.get(c), u = n.get(p);
+      if (m.variants - u.variants !== 0n)
+        return Number(m.variants - u.variants);
+      let v = 0;
+      for (;v < m.properties.order.length && v < u.properties.order.length && m.properties.order[v] === u.properties.order[v]; )
+        v += 1;
+      return (m.properties.order[v] ?? 1 / 0) - (u.properties.order[v] ?? 1 / 0) || u.properties.count - m.properties.count || xt(m.candidate, u.candidate);
     }), { astNodes: s, nodeSorting: n };
   }
-  function Wi(e2, i, r) {
-    let t = pa(e2, i);
+  function Wi(e, i, r) {
+    let t = pa(e, i);
     if (t.length === 0)
       return [];
-    let n = i.important && !!(r & 1), s = [], l2 = `.${h2(e2.raw)}`;
-    for (let d2 of t) {
-      let f2 = da(d2);
-      (e2.important || n) && Yi(d2);
-      let c2 = { kind: "rule", selector: l2, nodes: d2 };
-      for (let p2 of e2.variants)
-        if (Be(c2, p2, i.variants) === null)
+    let n = i.important && !!(r & 1), s = [], l = `.${h2(e.raw)}`;
+    for (let d of t) {
+      let f = da(d);
+      (e.important || n) && Yi(d);
+      let c = { kind: "rule", selector: l, nodes: d };
+      for (let p of e.variants)
+        if (Be(c, p, i.variants) === null)
           return [];
-      s.push({ node: c2, propertySort: f2 });
+      s.push({ node: c, propertySort: f });
     }
     return s;
   }
-  function Be(e2, i, r, t = 0) {
+  function Be(e, i, r, t = 0) {
     if (i.kind === "arbitrary") {
       if (i.relative && t === 0)
         return null;
-      e2.nodes = [Z2(i.selector, e2.nodes)];
+      e.nodes = [Z2(i.selector, e.nodes)];
       return;
     }
     let { applyFn: n } = r.get(i.root);
     if (i.kind === "compound") {
-      let l2 = B2("@slot");
-      if (Be(l2, i.variant, r, t + 1) === null || i.root === "not" && l2.nodes.length > 1)
+      let l = B2("@slot");
+      if (Be(l, i.variant, r, t + 1) === null || i.root === "not" && l.nodes.length > 1)
         return null;
-      for (let f2 of l2.nodes)
-        if (f2.kind !== "rule" && f2.kind !== "at-rule" || n(f2, i) === null)
+      for (let f of l.nodes)
+        if (f.kind !== "rule" && f.kind !== "at-rule" || n(f, i) === null)
           return null;
-      P2(l2.nodes, (f2) => {
-        if ((f2.kind === "rule" || f2.kind === "at-rule") && f2.nodes.length <= 0)
-          return f2.nodes = e2.nodes, V2.Skip;
-      }), e2.nodes = l2.nodes;
+      P2(l.nodes, (f) => {
+        if ((f.kind === "rule" || f.kind === "at-rule") && f.nodes.length <= 0)
+          return f.nodes = e.nodes, V2.Skip;
+      }), e.nodes = l.nodes;
       return;
     }
-    if (n(e2, i) === null)
+    if (n(e, i) === null)
       return null;
   }
-  function Bi(e2) {
-    let i = e2.options?.types ?? [];
+  function Bi(e) {
+    let i = e.options?.types ?? [];
     return i.length > 1 && i.includes("any");
   }
-  function pa(e2, i) {
-    if (e2.kind === "arbitrary") {
-      let l2 = e2.value;
-      return e2.modifier && (l2 = te2(l2, e2.modifier, i.theme)), l2 === null ? [] : [[a2(e2.property, l2)]];
+  function pa(e, i) {
+    if (e.kind === "arbitrary") {
+      let l = e.value;
+      return e.modifier && (l = te2(l, e.modifier, i.theme)), l === null ? [] : [[a2(e.property, l)]];
     }
-    let r = i.utilities.get(e2.root) ?? [], t = [], n = r.filter((l2) => !Bi(l2));
-    for (let l2 of n) {
-      if (l2.kind !== e2.kind)
+    let r = i.utilities.get(e.root) ?? [], t = [], n = r.filter((l) => !Bi(l));
+    for (let l of n) {
+      if (l.kind !== e.kind)
         continue;
-      let d2 = l2.compileFn(e2);
-      if (d2 !== undefined) {
-        if (d2 === null) {
-          if (l2.options?.types?.length)
+      let d = l.compileFn(e);
+      if (d !== undefined) {
+        if (d === null) {
+          if (l.options?.types?.length)
             return t;
           continue;
         }
-        t.push(d2);
+        t.push(d);
       }
     }
     if (t.length > 0)
       return t;
-    let s = r.filter((l2) => Bi(l2));
-    for (let l2 of s) {
-      if (l2.kind !== e2.kind)
+    let s = r.filter((l) => Bi(l));
+    for (let l of s) {
+      if (l.kind !== e.kind)
         continue;
-      let d2 = l2.compileFn(e2);
-      if (d2 !== undefined) {
-        if (d2 === null) {
-          if (l2.options?.types?.length)
+      let d = l.compileFn(e);
+      if (d !== undefined) {
+        if (d === null) {
+          if (l.options?.types?.length)
             return t;
           continue;
         }
-        t.push(d2);
+        t.push(d);
       }
     }
     return t;
   }
-  function Yi(e2) {
-    for (let i of e2)
+  function Yi(e) {
+    for (let i of e)
       i.kind !== "at-root" && (i.kind === "declaration" ? i.important = true : (i.kind === "rule" || i.kind === "at-rule") && Yi(i.nodes));
   }
-  function da(e2) {
-    let i = new Set, r = 0, t = e2.slice(), n = false;
+  function da(e) {
+    let i = new Set, r = 0, t = e.slice(), n = false;
     for (;t.length > 0; ) {
       let s = t.shift();
       if (s.kind === "declaration") {
         if (s.value === undefined || (r++, n))
           continue;
         if (s.property === "--tw-sort") {
-          let d2 = pr.indexOf(s.value ?? "");
-          if (d2 !== -1) {
-            i.add(d2), n = true;
+          let d = pr.indexOf(s.value ?? "");
+          if (d !== -1) {
+            i.add(d), n = true;
             continue;
           }
         }
-        let l2 = pr.indexOf(s.property);
-        l2 !== -1 && i.add(l2);
+        let l = pr.indexOf(s.property);
+        l !== -1 && i.add(l);
       } else if (s.kind === "rule" || s.kind === "at-rule")
-        for (let l2 of s.nodes)
-          t.push(l2);
+        for (let l of s.nodes)
+          t.push(l);
     }
-    return { order: Array.from(i).sort((s, l2) => s - l2), count: r };
+    return { order: Array.from(i).sort((s, l) => s - l), count: r };
   }
-  function Ve(e2, i) {
-    let r = 0, t = Z2("&", e2), n = new Set, s = new U2(() => new Set), l2 = new U2(() => new Set);
-    P2([t], (m, u2) => {
+  function Ve(e, i) {
+    let r = 0, t = Z2("&", e), n = new Set, s = new U2(() => new Set), l = new U2(() => new Set);
+    P2([t], (m, u) => {
       if (m.kind === "at-rule") {
         if (m.name === "@keyframes")
-          return P2(m.nodes, (v2) => {
-            if (v2.kind === "at-rule" && v2.name === "@apply")
+          return P2(m.nodes, (v) => {
+            if (v.kind === "at-rule" && v.name === "@apply")
               throw new Error("You cannot use `@apply` inside `@keyframes`.");
           }), V2.Skip;
         if (m.name === "@utility") {
-          let v2 = m.params.replace(/-\*$/, "");
-          l2.get(v2).add(m), P2(m.nodes, (h3) => {
-            if (!(h3.kind !== "at-rule" || h3.name !== "@apply")) {
+          let v = m.params.replace(/-\*$/, "");
+          l.get(v).add(m), P2(m.nodes, (h) => {
+            if (!(h.kind !== "at-rule" || h.name !== "@apply")) {
               n.add(m);
-              for (let k of Gi(h3, i))
+              for (let k of Gi(h, i))
                 s.get(m).add(k);
             }
           });
           return;
         }
         if (m.name === "@apply") {
-          if (u2.parent === null)
+          if (u.parent === null)
             return;
-          r |= 1, n.add(u2.parent);
-          for (let v2 of Gi(m, i))
-            for (let h3 of u2.path())
-              n.has(h3) && s.get(h3).add(v2);
+          r |= 1, n.add(u.parent);
+          for (let v of Gi(m, i))
+            for (let h of u.path())
+              n.has(h) && s.get(h).add(v);
         }
       }
     });
-    let d2 = new Set, f2 = [], c2 = new Set;
-    function p2(m, u2 = []) {
+    let d2 = new Set, f = [], c = new Set;
+    function p(m, u = []) {
       if (!d2.has(m)) {
-        if (c2.has(m)) {
-          let v2 = u2[(u2.indexOf(m) + 1) % u2.length];
-          throw m.kind === "at-rule" && m.name === "@utility" && v2.kind === "at-rule" && v2.name === "@utility" && P2(m.nodes, (h3) => {
-            if (h3.kind !== "at-rule" || h3.name !== "@apply")
+        if (c.has(m)) {
+          let v = u[(u.indexOf(m) + 1) % u.length];
+          throw m.kind === "at-rule" && m.name === "@utility" && v.kind === "at-rule" && v.name === "@utility" && P2(m.nodes, (h) => {
+            if (h.kind !== "at-rule" || h.name !== "@apply")
               return;
-            let k = h3.params.split(/\s+/g);
-            for (let y2 of k)
-              for (let S2 of i.parseCandidate(y2))
-                switch (S2.kind) {
+            let k = h.params.split(/\s+/g);
+            for (let y of k)
+              for (let S of i.parseCandidate(y))
+                switch (S.kind) {
                   case "arbitrary":
                     break;
                   case "static":
                   case "functional":
-                    if (v2.params.replace(/-\*$/, "") === S2.root)
-                      throw new Error(`You cannot \`@apply\` the \`${y2}\` utility here because it creates a circular dependency.`);
+                    if (v.params.replace(/-\*$/, "") === S.root)
+                      throw new Error(`You cannot \`@apply\` the \`${y}\` utility here because it creates a circular dependency.`);
                     break;
                   default:
                 }
@@ -5654,80 +5664,80 @@ Only valid data types are: ${ir.map((k) => `"${k}"`).join(", ")}.
 ${se([m])}
 Relies on:
 
-${se([v2])}`);
+${se([v])}`);
         }
-        c2.add(m);
-        for (let v2 of s.get(m))
-          for (let h3 of l2.get(v2))
-            u2.push(m), p2(h3, u2), u2.pop();
-        d2.add(m), c2.delete(m), f2.push(m);
+        c.add(m);
+        for (let v of s.get(m))
+          for (let h of l.get(v))
+            u.push(m), p(h, u), u.pop();
+        d2.add(m), c.delete(m), f.push(m);
       }
     }
     for (let m of n)
-      p2(m);
-    for (let m of f2)
-      "nodes" in m && P2(m.nodes, (u2) => {
-        if (u2.kind !== "at-rule" || u2.name !== "@apply")
+      p(m);
+    for (let m of f)
+      "nodes" in m && P2(m.nodes, (u) => {
+        if (u.kind !== "at-rule" || u.name !== "@apply")
           return;
-        let v2 = u2.params.split(/(\s+)/g), h3 = {}, k = [], y2 = [], S2 = 0;
-        for (let [b2, I2] of v2.entries())
-          b2 % 2 === 0 && (I2[0] === "-" && I2[1] === "-" ? y2.push(I2) : k.push(I2), h3[I2] = S2), S2 += I2.length;
-        if (y2.length) {
+        let v = u.params.split(/(\s+)/g), h = {}, k = [], y = [], S = 0;
+        for (let [b, I] of v.entries())
+          b % 2 === 0 && (I[0] === "-" && I[1] === "-" ? y.push(I) : k.push(I), h[I] = S), S += I.length;
+        if (y.length) {
           if (k.length === 0)
             return V2.Skip;
-          let b2 = y2.join(" ");
-          throw new Error(`You cannot use \`@apply\` with both mixins and utilities. Please move \`@apply ${b2}\` into a separate rule.`);
+          let b = y.join(" ");
+          throw new Error(`You cannot use \`@apply\` with both mixins and utilities. Please move \`@apply ${b}\` into a separate rule.`);
         }
-        if (u2.nodes.length > 0 && k.length) {
-          let b2 = k.join(" ");
-          throw new Error(`The rule \`@apply ${b2}\` must not have a body.`);
+        if (u.nodes.length > 0 && k.length) {
+          let b = k.join(" ");
+          throw new Error(`The rule \`@apply ${b}\` must not have a body.`);
         }
         {
-          let b2 = Object.keys(h3), I2 = $e(b2, i, { respectImportant: false, onInvalidCandidate: (E2) => {
-            if (i.theme.prefix && !E2.startsWith(i.theme.prefix))
-              throw new Error(`Cannot apply unprefixed utility class \`${E2}\`. Did you mean \`${i.theme.prefix}:${E2}\`?`);
-            if (i.invalidCandidates.has(E2))
-              throw new Error(`Cannot apply utility class \`${E2}\` because it has been explicitly disabled: https://tailwindcss.com/docs/detecting-classes-in-source-files#explicitly-excluding-classes`);
-            let j2 = d(E2, ":");
-            if (j2.length > 1) {
-              let q2 = j2.pop();
-              if (i.candidatesToCss([q2])[0]) {
-                let G2 = i.candidatesToCss(j2.map((ie) => `${ie}:[--tw-variant-check:1]`)), ee2 = j2.filter((ie, o2) => G2[o2] === null);
-                if (ee2.length > 0) {
-                  if (ee2.length === 1)
-                    throw new Error(`Cannot apply utility class \`${E2}\` because the ${ee2.map((ie) => `\`${ie}\``)} variant does not exist.`);
+          let b = Object.keys(h), I = $e(b, i, { respectImportant: false, onInvalidCandidate: (E) => {
+            if (i.theme.prefix && !E.startsWith(i.theme.prefix))
+              throw new Error(`Cannot apply unprefixed utility class \`${E}\`. Did you mean \`${i.theme.prefix}:${E}\`?`);
+            if (i.invalidCandidates.has(E))
+              throw new Error(`Cannot apply utility class \`${E}\` because it has been explicitly disabled: https://tailwindcss.com/docs/detecting-classes-in-source-files#explicitly-excluding-classes`);
+            let j = d(E, ":");
+            if (j.length > 1) {
+              let q = j.pop();
+              if (i.candidatesToCss([q])[0]) {
+                let G = i.candidatesToCss(j.map((ie) => `${ie}:[--tw-variant-check:1]`)), ee = j.filter((ie, o) => G[o] === null);
+                if (ee.length > 0) {
+                  if (ee.length === 1)
+                    throw new Error(`Cannot apply utility class \`${E}\` because the ${ee.map((ie) => `\`${ie}\``)} variant does not exist.`);
                   {
                     let ie = new Intl.ListFormat("en", { style: "long", type: "conjunction" });
-                    throw new Error(`Cannot apply utility class \`${E2}\` because the ${ie.format(ee2.map((o2) => `\`${o2}\``))} variants do not exist.`);
+                    throw new Error(`Cannot apply utility class \`${E}\` because the ${ie.format(ee.map((o) => `\`${o}\``))} variants do not exist.`);
                   }
                 }
               }
             }
-            throw i.theme.size === 0 ? new Error(`Cannot apply unknown utility class \`${E2}\`. Are you using CSS modules or similar and missing \`@reference\`? https://tailwindcss.com/docs/functions-and-directives#reference-directive`) : new Error(`Cannot apply unknown utility class \`${E2}\``);
-          } }), D2 = u2.src, O2 = I2.astNodes.map((E2) => {
-            let j2 = I2.nodeSorting.get(E2)?.candidate, q2 = j2 ? h3[j2] : undefined;
-            if (E2 = re2(E2), !D2 || !j2 || q2 === undefined)
-              return P2([E2], (ee2) => {
-                ee2.src = D2;
-              }), E2;
-            let G2 = [D2[0], D2[1], D2[2]];
-            return G2[1] += 7 + q2, G2[2] = G2[1] + j2.length, P2([E2], (ee2) => {
-              ee2.src = G2;
-            }), E2;
-          }), L2 = [];
-          for (let E2 of O2)
-            if (E2.kind === "rule")
-              for (let j2 of E2.nodes)
-                L2.push(j2);
+            throw i.theme.size === 0 ? new Error(`Cannot apply unknown utility class \`${E}\`. Are you using CSS modules or similar and missing \`@reference\`? https://tailwindcss.com/docs/functions-and-directives#reference-directive`) : new Error(`Cannot apply unknown utility class \`${E}\``);
+          } }), D = u.src, O = I.astNodes.map((E) => {
+            let j = I.nodeSorting.get(E)?.candidate, q = j ? h[j] : undefined;
+            if (E = re2(E), !D || !j || q === undefined)
+              return P2([E], (ee) => {
+                ee.src = D;
+              }), E;
+            let G = [D[0], D[1], D[2]];
+            return G[1] += 7 + q, G[2] = G[1] + j.length, P2([E], (ee) => {
+              ee.src = G;
+            }), E;
+          }), L = [];
+          for (let E of O)
+            if (E.kind === "rule")
+              for (let j of E.nodes)
+                L.push(j);
             else
-              L2.push(E2);
-          return V2.Replace(L2);
+              L.push(E);
+          return V2.Replace(L);
         }
       });
     return r;
   }
-  function* Gi(e2, i) {
-    for (let r of e2.params.split(/\s+/g))
+  function* Gi(e, i) {
+    for (let r of e.params.split(/\s+/g))
       for (let t of i.parseCandidate(r))
         switch (t.kind) {
           case "arbitrary":
@@ -5739,350 +5749,350 @@ ${se([v2])}`);
           default:
         }
   }
-  async function dr(e2, i, r, t = 0, n = false) {
-    let s = 0, l2 = [];
-    return P2(e2, (d2) => {
-      if (d2.kind === "at-rule" && (d2.name === "@import" || d2.name === "@reference")) {
-        let f2 = ma(M2(d2.params));
-        if (f2 === null)
+  async function dr(e, i, r, t = 0, n = false) {
+    let s = 0, l = [];
+    return P2(e, (d) => {
+      if (d.kind === "at-rule" && (d.name === "@import" || d.name === "@reference")) {
+        let f = ma(M2(d.params));
+        if (f === null)
           return;
-        d2.name === "@reference" && (f2.media = "reference"), s |= 2;
-        let { uri: c2, layer: p2, media: m, supports: u2 } = f2;
-        if (c2.startsWith("data:") || c2.startsWith("http://") || c2.startsWith("https://"))
+        d.name === "@reference" && (f.media = "reference"), s |= 2;
+        let { uri: c, layer: p, media: m, supports: u } = f;
+        if (c.startsWith("data:") || c.startsWith("http://") || c.startsWith("https://"))
           return;
-        let v2 = ve({}, []);
-        return l2.push((async () => {
+        let v = ve({}, []);
+        return l.push((async () => {
           if (t > 100)
-            throw new Error(`Exceeded maximum recursion depth while resolving \`${c2}\` in \`${i}\`)`);
-          let h3 = await r(c2, i), k = Te(h3.content, { from: n ? h3.path : undefined });
-          await dr(k, h3.base, r, t + 1, n), v2.nodes = ga(d2, [ve({ base: h3.base }, k)], p2, m, u2);
-        })()), V2.ReplaceSkip(v2);
+            throw new Error(`Exceeded maximum recursion depth while resolving \`${c}\` in \`${i}\`)`);
+          let h = await r(c, i), k = Te(h.content, { from: n ? h.path : undefined });
+          await dr(k, h.base, r, t + 1, n), v.nodes = ga(d, [ve({ base: h.base }, k)], p, m, u);
+        })()), V2.ReplaceSkip(v);
       }
-    }), l2.length > 0 && await Promise.all(l2), s;
+    }), l.length > 0 && await Promise.all(l), s;
   }
-  function ma(e2) {
+  function ma(e) {
     let i, r = null, t = null, n = null;
-    for (let s = 0;s < e2.length; s++) {
-      let l2 = e2[s];
-      if (l2.kind !== "separator") {
-        if (l2.kind === "word" && !i) {
-          if (!l2.value || l2.value[0] !== '"' && l2.value[0] !== "'")
+    for (let s = 0;s < e.length; s++) {
+      let l = e[s];
+      if (l.kind !== "separator") {
+        if (l.kind === "word" && !i) {
+          if (!l.value || l.value[0] !== '"' && l.value[0] !== "'")
             return null;
-          i = l2.value.slice(1, -1);
+          i = l.value.slice(1, -1);
           continue;
         }
-        if (l2.kind === "function" && l2.value.toLowerCase() === "url" || !i)
+        if (l.kind === "function" && l.value.toLowerCase() === "url" || !i)
           return null;
-        if ((l2.kind === "word" || l2.kind === "function") && l2.value.toLowerCase() === "layer") {
+        if ((l.kind === "word" || l.kind === "function") && l.value.toLowerCase() === "layer") {
           if (r)
             return null;
           if (n)
             throw new Error("`layer(…)` in an `@import` should come before any other functions or conditions");
-          "nodes" in l2 ? r = F2(l2.nodes) : r = "";
+          "nodes" in l ? r = F2(l.nodes) : r = "";
           continue;
         }
-        if (l2.kind === "function" && l2.value.toLowerCase() === "supports") {
+        if (l.kind === "function" && l.value.toLowerCase() === "supports") {
           if (n)
             return null;
-          n = F2(l2.nodes);
+          n = F2(l.nodes);
           continue;
         }
-        t = F2(e2.slice(s));
+        t = F2(e.slice(s));
         break;
       }
     }
     return i ? { uri: i, layer: r, media: t, supports: n } : null;
   }
-  function ga(e2, i, r, t, n) {
+  function ga(e, i, r, t, n) {
     let s = i;
     if (r !== null) {
-      let l2 = B2("@layer", r, s);
-      l2.src = e2.src, s = [l2];
+      let l = B2("@layer", r, s);
+      l.src = e.src, s = [l];
     }
     if (t !== null) {
-      let l2 = B2("@media", t, s);
-      l2.src = e2.src, s = [l2];
+      let l = B2("@media", t, s);
+      l.src = e.src, s = [l];
     }
     if (n !== null) {
-      let l2 = B2("@supports", n[0] === "(" ? n : `(${n})`, s);
-      l2.src = e2.src, s = [l2];
+      let l = B2("@supports", n[0] === "(" ? n : `(${n})`, s);
+      l.src = e.src, s = [l];
     }
     return s;
   }
-  function Ye(e2) {
-    if (Object.prototype.toString.call(e2) !== "[object Object]")
+  function Ye(e) {
+    if (Object.prototype.toString.call(e) !== "[object Object]")
       return false;
-    let i = Object.getPrototypeOf(e2);
+    let i = Object.getPrototypeOf(e);
     return i === null || Object.getPrototypeOf(i) === null;
   }
-  function ot(e2, i, r, t = []) {
+  function ot(e, i, r, t = []) {
     for (let n of i)
       if (n != null)
         for (let s of Reflect.ownKeys(n)) {
           t.push(s);
-          let l2 = r(e2[s], n[s], t);
-          l2 !== undefined ? e2[s] = l2 : !Ye(e2[s]) || !Ye(n[s]) ? e2[s] = n[s] : e2[s] = ot({}, [e2[s], n[s]], r, t), t.pop();
+          let l = r(e[s], n[s], t);
+          l !== undefined ? e[s] = l : !Ye(e[s]) || !Ye(n[s]) ? e[s] = n[s] : e[s] = ot({}, [e[s], n[s]], r, t), t.pop();
         }
-    return e2;
+    return e;
   }
-  function Rt(e2, i, r) {
+  function Rt(e, i, r) {
     return function(n, s) {
-      let l2 = n.lastIndexOf("/"), d2 = null;
-      l2 !== -1 && (d2 = n.slice(l2 + 1).trim(), n = n.slice(0, l2).trim());
-      let f2 = (() => {
-        let c2 = Pe(n), [p2, m] = ha(e2.theme, c2), u2 = r(qi(i() ?? {}, c2) ?? null);
-        if (typeof u2 == "string" && (u2 = u2.replace("<alpha-value>", "1")), typeof p2 != "object")
-          return typeof m != "object" && m & 4 ? u2 ?? p2 : p2;
-        if (u2 !== null && typeof u2 == "object" && !Array.isArray(u2)) {
-          let v2 = ot({}, [u2], (h3, k) => k);
-          if (p2 === null && Object.hasOwn(u2, "__CSS_VALUES__")) {
-            let h3 = {};
-            for (let k in u2.__CSS_VALUES__)
-              h3[k] = u2[k], delete v2[k];
-            p2 = h3;
+      let l = n.lastIndexOf("/"), d = null;
+      l !== -1 && (d = n.slice(l + 1).trim(), n = n.slice(0, l).trim());
+      let f = (() => {
+        let c = Pe(n), [p, m] = ha(e.theme, c), u = r(qi(i() ?? {}, c) ?? null);
+        if (typeof u == "string" && (u = u.replace("<alpha-value>", "1")), typeof p != "object")
+          return typeof m != "object" && m & 4 ? u ?? p : p;
+        if (u !== null && typeof u == "object" && !Array.isArray(u)) {
+          let v = ot({}, [u], (h, k) => k);
+          if (p === null && Object.hasOwn(u, "__CSS_VALUES__")) {
+            let h = {};
+            for (let k in u.__CSS_VALUES__)
+              h[k] = u[k], delete v[k];
+            p = h;
           }
-          for (let h3 in p2)
-            h3 !== "__CSS_VALUES__" && (u2?.__CSS_VALUES__?.[h3] & 4 && qi(v2, h3.split("-")) !== undefined || (v2[a(h3)] = p2[h3]));
-          return v2;
+          for (let h in p)
+            h !== "__CSS_VALUES__" && (u?.__CSS_VALUES__?.[h] & 4 && qi(v, h.split("-")) !== undefined || (v[a(h)] = p[h]));
+          return v;
         }
-        if (Array.isArray(p2) && Array.isArray(m) && Array.isArray(u2)) {
-          let v2 = p2[0], h3 = p2[1];
-          m[0] & 4 && (v2 = u2[0] ?? v2);
-          for (let k of Object.keys(h3))
-            m[1][k] & 4 && (h3[k] = u2[1][k] ?? h3[k]);
-          return [v2, h3];
+        if (Array.isArray(p) && Array.isArray(m) && Array.isArray(u)) {
+          let v = p[0], h = p[1];
+          m[0] & 4 && (v = u[0] ?? v);
+          for (let k of Object.keys(h))
+            m[1][k] & 4 && (h[k] = u[1][k] ?? h[k]);
+          return [v, h];
         }
-        return p2 !== null && typeof p2 == "object" && !Array.isArray(p2) && "DEFAULT" in p2 ? p2.DEFAULT : p2 ?? u2;
+        return p !== null && typeof p == "object" && !Array.isArray(p) && "DEFAULT" in p ? p.DEFAULT : p ?? u;
       })();
-      return d2 && typeof f2 == "string" && (f2 = X2(f2, d2)), f2 ?? s;
+      return d && typeof f == "string" && (f = X2(f, d)), f ?? s;
     };
   }
-  function ha(e2, i) {
+  function ha(e, i) {
     if (i.length === 1 && i[0].startsWith("--"))
-      return [e2.get([i[0]]), e2.getOptions(i[0])];
-    let r = We(i), t = new Map, n = new U2(() => new Map), s = e2.namespace(`--${r}`);
+      return [e.get([i[0]]), e.getOptions(i[0])];
+    let r = We(i), t = new Map, n = new U2(() => new Map), s = e.namespace(`--${r}`);
     if (s.size === 0)
       return [null, 0];
-    let l2 = new Map;
-    for (let [p2, m] of s) {
-      if (!p2 || !p2.includes("--")) {
-        t.set(p2, m), l2.set(p2, e2.getOptions(p2 ? `--${r}-${p2}` : `--${r}`));
+    let l = new Map;
+    for (let [p, m] of s) {
+      if (!p || !p.includes("--")) {
+        t.set(p, m), l.set(p, e.getOptions(p ? `--${r}-${p}` : `--${r}`));
         continue;
       }
-      let u2 = p2.indexOf("--"), v2 = p2.slice(0, u2), h3 = p2.slice(u2 + 2);
-      h3 = h3.replace(/-([a-z])/g, (k, y2) => y2.toUpperCase()), n.get(v2 === "" ? null : v2).set(h3, [m, e2.getOptions(`--${r}${p2}`)]);
+      let u = p.indexOf("--"), v = p.slice(0, u), h = p.slice(u + 2);
+      h = h.replace(/-([a-z])/g, (k, y) => y.toUpperCase()), n.get(v === "" ? null : v).set(h, [m, e.getOptions(`--${r}${p}`)]);
     }
-    let d2 = e2.getOptions(`--${r}`);
-    for (let [p2, m] of n) {
-      let u2 = t.get(p2);
-      if (typeof u2 != "string")
+    let d = e.getOptions(`--${r}`);
+    for (let [p, m] of n) {
+      let u = t.get(p);
+      if (typeof u != "string")
         continue;
-      let v2 = {}, h3 = {};
-      for (let [k, [y2, S2]] of m)
-        v2[k] = y2, h3[k] = S2;
-      t.set(p2, [u2, v2]), l2.set(p2, [d2, h3]);
+      let v = {}, h = {};
+      for (let [k, [y, S]] of m)
+        v[k] = y, h[k] = S;
+      t.set(p, [u, v]), l.set(p, [d, h]);
     }
-    let f2 = {}, c2 = {};
-    for (let [p2, m] of t)
-      Hi(f2, [p2 ?? "DEFAULT"], m);
-    for (let [p2, m] of l2)
-      Hi(c2, [p2 ?? "DEFAULT"], m);
-    return i[i.length - 1] === "DEFAULT" ? [f2?.DEFAULT ?? null, c2.DEFAULT ?? 0] : ("DEFAULT" in f2) && Object.keys(f2).length === 1 ? [f2.DEFAULT, c2.DEFAULT ?? 0] : (f2.__CSS_VALUES__ = c2, [f2, c2]);
+    let f = {}, c = {};
+    for (let [p, m] of t)
+      Hi(f, [p ?? "DEFAULT"], m);
+    for (let [p, m] of l)
+      Hi(c, [p ?? "DEFAULT"], m);
+    return i[i.length - 1] === "DEFAULT" ? [f?.DEFAULT ?? null, c.DEFAULT ?? 0] : ("DEFAULT" in f) && Object.keys(f).length === 1 ? [f.DEFAULT, c.DEFAULT ?? 0] : (f.__CSS_VALUES__ = c, [f, c]);
   }
-  function qi(e2, i) {
+  function qi(e, i) {
     for (let r = 0;r < i.length; ++r) {
       let t = i[r];
-      if (e2 == null || typeof e2 != "object" || !Object.hasOwn(e2, t)) {
+      if (e == null || typeof e != "object" || !Object.hasOwn(e, t)) {
         if (i[r + 1] === undefined)
           return;
         i[r + 1] = `${t}-${i[r + 1]}`;
         continue;
       }
-      e2 = e2[t];
+      e = e[t];
     }
-    return e2;
+    return e;
   }
-  function Hi(e2, i, r) {
+  function Hi(e, i, r) {
     for (let t of i.slice(0, -1))
-      e2[t] === undefined && (e2[t] = {}), e2 = e2[t];
-    e2[i[i.length - 1]] = r;
+      e[t] === undefined && (e[t] = {}), e = e[t];
+    e[i[i.length - 1]] = r;
   }
   var Zi = /^[a-z@][a-zA-Z0-9/%._-]*$/;
-  function mr({ designSystem: e2, ast: i, resolvedConfig: r, featuresRef: t, referenceMode: n, src: s }) {
-    let l2 = { addBase(d2) {
+  function mr({ designSystem: e, ast: i, resolvedConfig: r, featuresRef: t, referenceMode: n, src: s }) {
+    let l = { addBase(d) {
       if (n)
         return;
-      let f2 = ke(d2);
-      t.current |= Le(f2, e2);
-      let c2 = B2("@layer", "base", f2);
-      P2([c2], (p2) => {
-        p2.src = s;
-      }), i.push(c2);
-    }, addVariant(d2, f2) {
-      if (!Et.test(d2))
-        throw new Error(`\`addVariant('${d2}')\` defines an invalid variant name. Variants should only contain alphanumeric, dashes, or underscore characters and start with a lowercase letter or number.`);
-      if (typeof f2 == "string") {
-        if (f2.includes(":merge("))
+      let f = ke(d);
+      t.current |= Le(f, e);
+      let c = B2("@layer", "base", f);
+      P2([c], (p) => {
+        p.src = s;
+      }), i.push(c);
+    }, addVariant(d, f) {
+      if (!Et.test(d))
+        throw new Error(`\`addVariant('${d}')\` defines an invalid variant name. Variants should only contain alphanumeric, dashes, or underscore characters and start with a lowercase letter or number.`);
+      if (typeof f == "string") {
+        if (f.includes(":merge("))
           return;
-      } else if (Array.isArray(f2)) {
-        if (f2.some((p2) => p2.includes(":merge(")))
+      } else if (Array.isArray(f)) {
+        if (f.some((p) => p.includes(":merge(")))
           return;
-      } else if (typeof f2 == "object") {
-        let p2 = function(m, u2) {
-          return Object.entries(m).some(([v2, h3]) => v2.includes(u2) || typeof h3 == "object" && p2(h3, u2));
+      } else if (typeof f == "object") {
+        let p = function(m, u) {
+          return Object.entries(m).some(([v, h]) => v.includes(u) || typeof h == "object" && p(h, u));
         };
-        var c2 = p2;
-        if (p2(f2, ":merge("))
+        var c = p;
+        if (p(f, ":merge("))
           return;
       }
-      typeof f2 == "string" || Array.isArray(f2) ? e2.variants.static(d2, (p2) => {
-        p2.nodes = Ji(f2, p2.nodes);
-      }, { compounds: Oe(typeof f2 == "string" ? [f2] : f2) }) : typeof f2 == "object" && e2.variants.fromAst(d2, ke(f2), e2);
-    }, matchVariant(d2, f2, c2) {
-      function p2(u2, v2, h3) {
-        let k = f2(u2, { modifier: v2?.value ?? null });
-        return Ji(k, h3);
+      typeof f == "string" || Array.isArray(f) ? e.variants.static(d, (p) => {
+        p.nodes = Ji(f, p.nodes);
+      }, { compounds: Oe(typeof f == "string" ? [f] : f) }) : typeof f == "object" && e.variants.fromAst(d, ke(f), e);
+    }, matchVariant(d, f, c) {
+      function p(u, v, h) {
+        let k = f(u, { modifier: v?.value ?? null });
+        return Ji(k, h);
       }
       try {
-        let u2 = f2("a", { modifier: null });
-        if (typeof u2 == "string" && u2.includes(":merge("))
+        let u = f("a", { modifier: null });
+        if (typeof u == "string" && u.includes(":merge("))
           return;
-        if (Array.isArray(u2) && u2.some((v2) => v2.includes(":merge(")))
+        if (Array.isArray(u) && u.some((v) => v.includes(":merge(")))
           return;
       } catch {}
-      let m = Object.keys(c2?.values ?? {});
-      e2.variants.group(() => {
-        e2.variants.functional(d2, (u2, v2) => {
-          if (!v2.value) {
-            if (c2?.values && "DEFAULT" in c2.values) {
-              u2.nodes = p2(c2.values.DEFAULT, v2.modifier, u2.nodes);
+      let m = Object.keys(c?.values ?? {});
+      e.variants.group(() => {
+        e.variants.functional(d, (u, v) => {
+          if (!v.value) {
+            if (c?.values && "DEFAULT" in c.values) {
+              u.nodes = p(c.values.DEFAULT, v.modifier, u.nodes);
               return;
             }
             return null;
           }
-          if (v2.value.kind === "arbitrary")
-            u2.nodes = p2(v2.value.value, v2.modifier, u2.nodes);
-          else if (v2.value.kind === "named" && c2?.values) {
-            if (!Object.hasOwn(c2.values, v2.value.value))
+          if (v.value.kind === "arbitrary")
+            u.nodes = p(v.value.value, v.modifier, u.nodes);
+          else if (v.value.kind === "named" && c?.values) {
+            if (!Object.hasOwn(c.values, v.value.value))
               return null;
-            let h3 = c2.values[v2.value.value];
-            if (typeof h3 != "string")
+            let h = c.values[v.value.value];
+            if (typeof h != "string")
               return null;
-            u2.nodes = p2(h3, v2.modifier, u2.nodes);
+            u.nodes = p(h, v.modifier, u.nodes);
           } else
             return null;
         });
-      }, (u2, v2) => {
-        if (u2.kind !== "functional" || v2.kind !== "functional")
+      }, (u, v) => {
+        if (u.kind !== "functional" || v.kind !== "functional")
           return 0;
-        let h3 = u2.value ? u2.value.value : "DEFAULT", k = v2.value ? v2.value.value : "DEFAULT", y2 = (c2?.values && Object.hasOwn(c2.values, h3) ? c2.values[h3] : undefined) ?? h3, S2 = (c2?.values && Object.hasOwn(c2.values, k) ? c2.values[k] : undefined) ?? k;
-        if (c2 && typeof c2.sort == "function")
-          return c2.sort({ value: y2, modifier: u2.modifier?.value ?? null }, { value: S2, modifier: v2.modifier?.value ?? null });
-        let x2 = m.indexOf(h3), b2 = m.indexOf(k);
-        return x2 = x2 === -1 ? m.length : x2, b2 = b2 === -1 ? m.length : b2, x2 !== b2 ? x2 - b2 : y2 < S2 ? -1 : 1;
-      }), e2.variants.suggest(d2, () => Object.keys(c2?.values ?? {}).filter((u2) => u2 !== "DEFAULT"));
+        let h = u.value ? u.value.value : "DEFAULT", k = v.value ? v.value.value : "DEFAULT", y = (c?.values && Object.hasOwn(c.values, h) ? c.values[h] : undefined) ?? h, S = (c?.values && Object.hasOwn(c.values, k) ? c.values[k] : undefined) ?? k;
+        if (c && typeof c.sort == "function")
+          return c.sort({ value: y, modifier: u.modifier?.value ?? null }, { value: S, modifier: v.modifier?.value ?? null });
+        let x = m.indexOf(h), b = m.indexOf(k);
+        return x = x === -1 ? m.length : x, b = b === -1 ? m.length : b, x !== b ? x - b : y < S ? -1 : 1;
+      }), e.variants.suggest(d, () => Object.keys(c?.values ?? {}).filter((u) => u !== "DEFAULT"));
     }, addUtilities(d2) {
       d2 = Array.isArray(d2) ? d2 : [d2];
-      let f2 = d2.flatMap((p2) => Object.entries(p2));
-      f2 = f2.flatMap(([p2, m]) => d(p2, ",").map((u2) => [u2.trim(), m]));
-      let c2 = new U2(() => []);
-      for (let [p2, m] of f2) {
-        if (p2.startsWith("@keyframes ")) {
+      let f = d2.flatMap((p) => Object.entries(p));
+      f = f.flatMap(([p, m]) => d(p, ",").map((u) => [u.trim(), m]));
+      let c = new U2(() => []);
+      for (let [p, m] of f) {
+        if (p.startsWith("@keyframes ")) {
           if (!n) {
-            let h3 = Z2(p2, ke(m));
-            P2([h3], (k) => {
+            let h = Z2(p, ke(m));
+            P2([h], (k) => {
               k.src = s;
-            }), i.push(h3);
+            }), i.push(h);
           }
           continue;
         }
-        let u2 = fe(p2), v2 = false;
-        if (P2(u2, (h3) => {
-          if (h3.kind === "selector" && h3.value[0] === "." && Zi.test(h3.value.slice(1))) {
-            let k = h3.value;
-            h3.value = "&";
-            let y2 = oe2(u2), S2 = k.slice(1), x2 = y2 === "&" ? ke(m) : [Z2(y2, ke(m))];
-            c2.get(S2).push(...x2), v2 = true, h3.value = k;
+        let u = fe(p), v = false;
+        if (P2(u, (h) => {
+          if (h.kind === "selector" && h.value[0] === "." && Zi.test(h.value.slice(1))) {
+            let k = h.value;
+            h.value = "&";
+            let y = oe2(u), S = k.slice(1), x = y === "&" ? ke(m) : [Z2(y, ke(m))];
+            c.get(S).push(...x), v = true, h.value = k;
             return;
           }
-          if (h3.kind === "function" && (h3.value === ":not" || h3.value === ":nth-child" || h3.value === ":nth-last-child"))
+          if (h.kind === "function" && (h.value === ":not" || h.value === ":nth-child" || h.value === ":nth-last-child"))
             return V2.Skip;
-        }), !v2)
-          throw new Error(`\`addUtilities({ '${p2}' : … })\` defines an invalid utility selector. Utilities must be a single class name and start with a lowercase letter, eg. \`.scrollbar-none\`.`);
+        }), !v)
+          throw new Error(`\`addUtilities({ '${p}' : … })\` defines an invalid utility selector. Utilities must be a single class name and start with a lowercase letter, eg. \`.scrollbar-none\`.`);
       }
-      for (let [p2, m] of c2)
-        e2.theme.prefix && P2(m, (u2) => {
-          if (u2.kind === "rule") {
-            let v2 = fe(u2.selector);
-            P2(v2, (h3) => {
-              h3.kind === "selector" && h3.value[0] === "." && (h3.value = `.${e2.theme.prefix}\\:${h3.value.slice(1)}`);
-            }), u2.selector = oe2(v2);
+      for (let [p, m] of c)
+        e.theme.prefix && P2(m, (u) => {
+          if (u.kind === "rule") {
+            let v = fe(u.selector);
+            P2(v, (h) => {
+              h.kind === "selector" && h.value[0] === "." && (h.value = `.${e.theme.prefix}\\:${h.value.slice(1)}`);
+            }), u.selector = oe2(v);
           }
-        }), e2.utilities.static(p2, (u2) => {
-          let v2 = m.map(re2);
-          return Qi(v2, p2, u2.raw), t.current |= Ve(v2, e2), v2;
+        }), e.utilities.static(p, (u) => {
+          let v = m.map(re2);
+          return Qi(v, p, u.raw), t.current |= Ve(v, e), v;
         });
-    }, matchUtilities(d2, f2) {
-      let c2 = f2?.type ? Array.isArray(f2?.type) ? f2.type : [f2.type] : ["any"];
-      for (let [m, u2] of Object.entries(d2)) {
-        let v2 = function({ negative: h3 }) {
+    }, matchUtilities(d, f) {
+      let c = f?.type ? Array.isArray(f?.type) ? f.type : [f.type] : ["any"];
+      for (let [m, u] of Object.entries(d)) {
+        let v = function({ negative: h }) {
           return (k) => {
-            if (k.value?.kind === "arbitrary" && c2.length > 0 && !c2.includes("any") && (k.value.dataType && !c2.includes(k.value.dataType) || !k.value.dataType && !ge(k.value.value, c2)))
+            if (k.value?.kind === "arbitrary" && c.length > 0 && !c.includes("any") && (k.value.dataType && !c.includes(k.value.dataType) || !k.value.dataType && !ge(k.value.value, c)))
               return;
-            let y2 = c2.includes("color"), S2 = null, x2 = false;
+            let y = c.includes("color"), S = null, x = false;
             {
-              let D2 = f2?.values ?? {};
-              y2 && (D2 = Object.assign({ inherit: "inherit", transparent: "transparent", current: "currentcolor" }, D2)), k.value ? k.value.kind === "arbitrary" ? S2 = k.value.value : k.value.fraction && Object.hasOwn(D2, k.value.fraction) ? (S2 = D2[k.value.fraction], x2 = true) : Object.hasOwn(D2, k.value.value) ? S2 = D2[k.value.value] : D2.__BARE_VALUE__ && (S2 = D2.__BARE_VALUE__(k.value) ?? null, x2 = (k.value.fraction !== null && S2?.includes("/")) ?? false) : S2 = D2.DEFAULT ?? null;
+              let D = f?.values ?? {};
+              y && (D = Object.assign({ inherit: "inherit", transparent: "transparent", current: "currentcolor" }, D)), k.value ? k.value.kind === "arbitrary" ? S = k.value.value : k.value.fraction && Object.hasOwn(D, k.value.fraction) ? (S = D[k.value.fraction], x = true) : Object.hasOwn(D, k.value.value) ? S = D[k.value.value] : D.__BARE_VALUE__ && (S = D.__BARE_VALUE__(k.value) ?? null, x = (k.value.fraction !== null && S?.includes("/")) ?? false) : S = D.DEFAULT ?? null;
             }
-            if (S2 === null)
+            if (S === null)
               return;
-            let b2;
+            let b;
             {
-              let D2 = f2?.modifiers ?? null;
-              k.modifier ? D2 === "any" || k.modifier.kind === "arbitrary" ? b2 = k.modifier.value : D2 && Object.hasOwn(D2, k.modifier.value) ? b2 = D2[k.modifier.value] : y2 && !Number.isNaN(Number(k.modifier.value)) ? b2 = `${k.modifier.value}%` : b2 = null : b2 = null;
+              let D = f?.modifiers ?? null;
+              k.modifier ? D === "any" || k.modifier.kind === "arbitrary" ? b = k.modifier.value : D && Object.hasOwn(D, k.modifier.value) ? b = D[k.modifier.value] : y && !Number.isNaN(Number(k.modifier.value)) ? b = `${k.modifier.value}%` : b = null : b = null;
             }
-            if (k.modifier && b2 === null && !x2)
+            if (k.modifier && b === null && !x)
               return k.value?.kind === "arbitrary" ? null : undefined;
-            y2 && b2 !== null && (S2 = X2(S2, b2)), h3 && (S2 = `calc(${S2} * -1)`);
-            let I2 = ke(u2(S2, { modifier: b2 }));
-            return Qi(I2, m, k.raw), t.current |= Ve(I2, e2), I2;
+            y && b !== null && (S = X2(S, b)), h && (S = `calc(${S} * -1)`);
+            let I = ke(u(S, { modifier: b }));
+            return Qi(I, m, k.raw), t.current |= Ve(I, e), I;
           };
         };
-        var p2 = v2;
+        var p = v;
         if (!Zi.test(m))
           throw new Error(`\`matchUtilities({ '${m}' : … })\` defines an invalid utility name. Utilities should be alphanumeric and start with a lowercase letter, eg. \`scrollbar\`.`);
-        f2?.supportsNegativeValues && e2.utilities.functional(`-${m}`, v2({ negative: true }), { types: c2 }), e2.utilities.functional(m, v2({ negative: false }), { types: c2 }), e2.utilities.suggest(m, () => {
-          let h3 = f2?.values ?? {}, k = new Set(Object.keys(h3));
+        f?.supportsNegativeValues && e.utilities.functional(`-${m}`, v({ negative: true }), { types: c }), e.utilities.functional(m, v({ negative: false }), { types: c }), e.utilities.suggest(m, () => {
+          let h = f?.values ?? {}, k = new Set(Object.keys(h));
           k.delete("__BARE_VALUE__"), k.delete("__CSS_VALUES__"), k.has("DEFAULT") && (k.delete("DEFAULT"), k.add(null));
-          let y2 = f2?.modifiers ?? {}, S2 = y2 === "any" ? [] : Object.keys(y2);
-          return [{ supportsNegative: f2?.supportsNegativeValues ?? false, values: Array.from(k), modifiers: S2 }];
+          let y = f?.modifiers ?? {}, S = y === "any" ? [] : Object.keys(y);
+          return [{ supportsNegative: f?.supportsNegativeValues ?? false, values: Array.from(k), modifiers: S }];
         });
       }
-    }, addComponents(d2, f2) {
-      this.addUtilities(d2, f2);
-    }, matchComponents(d2, f2) {
-      this.matchUtilities(d2, f2);
-    }, theme: Rt(e2, () => r.theme ?? {}, (d2) => d2), prefix(d2) {
-      return d2;
-    }, config(d2, f2) {
-      let c2 = r;
-      if (!d2)
-        return c2;
-      let p2 = Pe(d2);
-      for (let m = 0;m < p2.length; ++m) {
-        let u2 = p2[m];
-        if (c2[u2] === undefined)
-          return f2;
-        c2 = c2[u2];
+    }, addComponents(d, f) {
+      this.addUtilities(d, f);
+    }, matchComponents(d, f) {
+      this.matchUtilities(d, f);
+    }, theme: Rt(e, () => r.theme ?? {}, (d) => d), prefix(d) {
+      return d;
+    }, config(d, f) {
+      let c = r;
+      if (!d)
+        return c;
+      let p = Pe(d);
+      for (let m = 0;m < p.length; ++m) {
+        let u = p[m];
+        if (c[u] === undefined)
+          return f;
+        c = c[u];
       }
-      return c2 ?? f2;
+      return c ?? f;
     } };
-    return l2.addComponents = l2.addComponents.bind(l2), l2.matchComponents = l2.matchComponents.bind(l2), l2;
+    return l.addComponents = l.addComponents.bind(l), l.matchComponents = l.matchComponents.bind(l), l;
   }
-  function ke(e2) {
+  function ke(e) {
     let i = [];
-    e2 = Array.isArray(e2) ? e2 : [e2];
-    let r = e2.flatMap((t) => Object.entries(t));
+    e = Array.isArray(e) ? e : [e];
+    let r = e.flatMap((t) => Object.entries(t));
     for (let [t, n] of r)
       if (n != null && n !== false)
         if (typeof n != "object") {
@@ -6101,8 +6111,8 @@ ${se([v2])}`);
           i.push(Z2(t, ke(n)));
     return i;
   }
-  function Ji(e2, i) {
-    return (typeof e2 == "string" ? [e2] : e2).flatMap((t) => {
+  function Ji(e, i) {
+    return (typeof e == "string" ? [e] : e).flatMap((t) => {
       if (t.trim().endsWith("}")) {
         let n = t.replace("}", "{@slot}}"), s = Te(n);
         return cr(s, i), s;
@@ -6110,8 +6120,8 @@ ${se([v2])}`);
         return Z2(t, i);
     });
   }
-  function Qi(e2, i, r) {
-    P2(e2, (t) => {
+  function Qi(e, i, r) {
+    P2(e, (t) => {
       if (t.kind === "rule") {
         let n = fe(t.selector);
         P2(n, (s) => {
@@ -6120,23 +6130,23 @@ ${se([v2])}`);
       }
     });
   }
-  function Xi(e2, i) {
+  function Xi(e, i) {
     for (let r of va(i))
-      e2.theme.addKeyframes(r);
+      e.theme.addKeyframes(r);
   }
-  function va(e2) {
+  function va(e) {
     let i = [];
-    if ("keyframes" in e2.theme)
-      for (let [r, t] of Object.entries(e2.theme.keyframes))
+    if ("keyframes" in e.theme)
+      for (let [r, t] of Object.entries(e.theme.keyframes))
         i.push(B2("@keyframes", r, ke(t)));
     return i;
   }
-  function en(e2) {
-    return { theme: { ...ye, colors: ({ theme: i }) => i("color", {}), extend: { fontSize: ({ theme: i }) => ({ ...i("text", {}) }), boxShadow: ({ theme: i }) => ({ ...i("shadow", {}) }), animation: ({ theme: i }) => ({ ...i("animate", {}) }), aspectRatio: ({ theme: i }) => ({ ...i("aspect", {}) }), borderRadius: ({ theme: i }) => ({ ...i("radius", {}) }), screens: ({ theme: i }) => ({ ...i("breakpoint", {}) }), letterSpacing: ({ theme: i }) => ({ ...i("tracking", {}) }), lineHeight: ({ theme: i }) => ({ ...i("leading", {}) }), transitionDuration: { DEFAULT: e2.get(["--default-transition-duration"]) ?? null }, transitionTimingFunction: { DEFAULT: e2.get(["--default-transition-timing-function"]) ?? null }, maxWidth: ({ theme: i }) => ({ ...i("container", {}) }) } } };
+  function en(e) {
+    return { theme: { ...ye, colors: ({ theme: i }) => i("color", {}), extend: { fontSize: ({ theme: i }) => ({ ...i("text", {}) }), boxShadow: ({ theme: i }) => ({ ...i("shadow", {}) }), animation: ({ theme: i }) => ({ ...i("animate", {}) }), aspectRatio: ({ theme: i }) => ({ ...i("aspect", {}) }), borderRadius: ({ theme: i }) => ({ ...i("radius", {}) }), screens: ({ theme: i }) => ({ ...i("breakpoint", {}) }), letterSpacing: ({ theme: i }) => ({ ...i("tracking", {}) }), lineHeight: ({ theme: i }) => ({ ...i("leading", {}) }), transitionDuration: { DEFAULT: e.get(["--default-transition-duration"]) ?? null }, transitionTimingFunction: { DEFAULT: e.get(["--default-transition-timing-function"]) ?? null }, maxWidth: ({ theme: i }) => ({ ...i("container", {}) }) } } };
   }
   var wa = { blocklist: [], future: {}, experimental: {}, prefix: "", important: false, darkMode: null, theme: {}, plugins: [], content: { files: [] } };
-  function hr(e2, i) {
-    let r = { design: e2, configs: [], plugins: [], content: { files: [] }, theme: {}, extend: {}, result: structuredClone(wa) };
+  function hr(e, i) {
+    let r = { design: e, configs: [], plugins: [], content: { files: [] }, theme: {}, extend: {}, result: structuredClone(wa) };
     for (let n of i)
       gr(r, n);
     for (let n of r.configs)
@@ -6144,122 +6154,122 @@ ${se([v2])}`);
     let t = ba(r);
     return { resolvedConfig: { ...r.result, content: r.content, theme: r.theme, plugins: r.plugins }, replacedThemeKeys: t };
   }
-  function ka(e2, i) {
-    if (Array.isArray(e2) && Ye(e2[0]))
-      return e2.concat(i);
-    if (Array.isArray(i) && Ye(i[0]) && Ye(e2))
-      return [e2, ...i];
+  function ka(e, i) {
+    if (Array.isArray(e) && Ye(e[0]))
+      return e.concat(i);
+    if (Array.isArray(i) && Ye(i[0]) && Ye(e))
+      return [e, ...i];
     if (Array.isArray(i))
       return i;
   }
-  function gr(e2, { config: i, base: r, path: t, reference: n, src: s }) {
-    let l2 = [];
-    for (let c2 of i.plugins ?? [])
-      "__isOptionsFunction" in c2 ? l2.push({ ...c2(), reference: n, src: s }) : ("handler" in c2) ? l2.push({ ...c2, reference: n, src: s }) : l2.push({ handler: c2, reference: n, src: s });
+  function gr(e, { config: i, base: r, path: t, reference: n, src: s }) {
+    let l = [];
+    for (let c of i.plugins ?? [])
+      "__isOptionsFunction" in c ? l.push({ ...c(), reference: n, src: s }) : ("handler" in c) ? l.push({ ...c, reference: n, src: s }) : l.push({ handler: c, reference: n, src: s });
     if (Array.isArray(i.presets) && i.presets.length === 0)
       throw new Error("Error in the config file/plugin/preset. An empty preset (`preset: []`) is not currently supported.");
-    for (let c2 of i.presets ?? [])
-      gr(e2, { path: t, base: r, config: c2, reference: n, src: s });
-    for (let c2 of l2)
-      e2.plugins.push(c2), c2.config && gr(e2, { path: t, base: r, config: c2.config, reference: !!c2.reference, src: c2.src ?? s });
-    let d2 = i.content ?? [], f2 = Array.isArray(d2) ? d2 : d2.files;
-    for (let c2 of f2)
-      e2.content.files.push(typeof c2 == "object" ? c2 : { base: r, pattern: c2 });
-    e2.configs.push(i);
+    for (let c of i.presets ?? [])
+      gr(e, { path: t, base: r, config: c, reference: n, src: s });
+    for (let c of l)
+      e.plugins.push(c), c.config && gr(e, { path: t, base: r, config: c.config, reference: !!c.reference, src: c.src ?? s });
+    let d = i.content ?? [], f = Array.isArray(d) ? d : d.files;
+    for (let c of f)
+      e.content.files.push(typeof c == "object" ? c : { base: r, pattern: c });
+    e.configs.push(i);
   }
-  function ba(e2) {
-    let i = new Set, r = Rt(e2.design, () => e2.theme, n), t = Object.assign(r, { theme: r, colors: o });
+  function ba(e) {
+    let i = new Set, r = Rt(e.design, () => e.theme, n), t = Object.assign(r, { theme: r, colors: o });
     function n(s) {
       return typeof s == "function" ? s(t) ?? null : s ?? null;
     }
-    for (let s of e2.configs) {
-      let l2 = s.theme ?? {}, d2 = l2.extend ?? {};
-      for (let f2 in l2)
-        f2 !== "extend" && i.add(f2);
-      Object.assign(e2.theme, l2);
-      for (let f2 in d2)
-        e2.extend[f2] ??= [], e2.extend[f2].push(d2[f2]);
+    for (let s of e.configs) {
+      let l = s.theme ?? {}, d = l.extend ?? {};
+      for (let f in l)
+        f !== "extend" && i.add(f);
+      Object.assign(e.theme, l);
+      for (let f in d)
+        e.extend[f] ??= [], e.extend[f].push(d[f]);
     }
-    delete e2.theme.extend;
-    for (let s in e2.extend) {
-      let l2 = [e2.theme[s], ...e2.extend[s]];
-      e2.theme[s] = () => {
-        let d2 = l2.map(n);
-        return ot({}, d2, ka);
+    delete e.theme.extend;
+    for (let s in e.extend) {
+      let l = [e.theme[s], ...e.extend[s]];
+      e.theme[s] = () => {
+        let d = l.map(n);
+        return ot({}, d, ka);
       };
     }
-    for (let s in e2.theme)
-      e2.theme[s] = n(e2.theme[s]);
-    if (e2.theme.screens && typeof e2.theme.screens == "object")
-      for (let s of Object.keys(e2.theme.screens)) {
-        let l2 = e2.theme.screens[s];
-        l2 && typeof l2 == "object" && (("raw" in l2) || ("max" in l2) || ("min" in l2) && (e2.theme.screens[s] = l2.min));
+    for (let s in e.theme)
+      e.theme[s] = n(e.theme[s]);
+    if (e.theme.screens && typeof e.theme.screens == "object")
+      for (let s of Object.keys(e.theme.screens)) {
+        let l = e.theme.screens[s];
+        l && typeof l == "object" && (("raw" in l) || ("max" in l) || ("min" in l) && (e.theme.screens[s] = l.min));
       }
     return i;
   }
-  function tn(e2, i) {
-    let r = e2.theme.container || {};
+  function tn(e, i) {
+    let r = e.theme.container || {};
     if (typeof r != "object" || r === null)
       return;
     let t = ya(r, i);
     t.length !== 0 && i.utilities.static("container", () => t.map(re2));
   }
-  function ya({ center: e2, padding: i, screens: r }, t) {
+  function ya({ center: e, padding: i, screens: r }, t) {
     let n = [], s = null;
-    if (e2 && n.push(a2("margin-inline", "auto")), (typeof i == "string" || typeof i == "object" && i !== null && ("DEFAULT" in i)) && n.push(a2("padding-inline", typeof i == "string" ? i : i.DEFAULT)), typeof r == "object" && r !== null) {
+    if (e && n.push(a2("margin-inline", "auto")), (typeof i == "string" || typeof i == "object" && i !== null && ("DEFAULT" in i)) && n.push(a2("padding-inline", typeof i == "string" ? i : i.DEFAULT)), typeof r == "object" && r !== null) {
       s = new Map;
-      let l2 = Array.from(t.theme.namespace("--breakpoint").entries());
-      if (l2.sort((d2, f2) => Ee(d2[1], f2[1], "asc")), l2.length > 0) {
-        let [d2] = l2[0];
-        n.push(B2("@media", `(width >= --theme(--breakpoint-${d2}))`, [a2("max-width", "none")]));
+      let l = Array.from(t.theme.namespace("--breakpoint").entries());
+      if (l.sort((d, f) => Ee(d[1], f[1], "asc")), l.length > 0) {
+        let [d] = l[0];
+        n.push(B2("@media", `(width >= --theme(--breakpoint-${d}))`, [a2("max-width", "none")]));
       }
-      for (let [d2, f2] of Object.entries(r)) {
-        if (typeof f2 == "object")
-          if ("min" in f2)
-            f2 = f2.min;
+      for (let [d, f] of Object.entries(r)) {
+        if (typeof f == "object")
+          if ("min" in f)
+            f = f.min;
           else
             continue;
-        s.set(d2, B2("@media", `(width >= ${f2})`, [a2("max-width", f2)]));
+        s.set(d, B2("@media", `(width >= ${f})`, [a2("max-width", f)]));
       }
     }
     if (typeof i == "object" && i !== null) {
-      let l2 = Object.entries(i).filter(([d2]) => d2 !== "DEFAULT").map(([d2, f2]) => [d2, t.theme.resolveValue(d2, ["--breakpoint"]), f2]).filter(Boolean);
-      l2.sort((d2, f2) => Ee(d2[1], f2[1], "asc"));
-      for (let [d2, , f2] of l2)
-        if (s && s.has(d2))
-          s.get(d2).nodes.push(a2("padding-inline", f2));
+      let l = Object.entries(i).filter(([d]) => d !== "DEFAULT").map(([d, f]) => [d, t.theme.resolveValue(d, ["--breakpoint"]), f]).filter(Boolean);
+      l.sort((d, f) => Ee(d[1], f[1], "asc"));
+      for (let [d, , f] of l)
+        if (s && s.has(d))
+          s.get(d).nodes.push(a2("padding-inline", f));
         else {
           if (s)
             continue;
-          n.push(B2("@media", `(width >= theme(--breakpoint-${d2}))`, [a2("padding-inline", f2)]));
+          n.push(B2("@media", `(width >= theme(--breakpoint-${d}))`, [a2("padding-inline", f)]));
         }
     }
     if (s)
-      for (let [, l2] of s)
-        n.push(l2);
+      for (let [, l] of s)
+        n.push(l);
     return n;
   }
-  function rn({ addVariant: e2, config: i }) {
+  function rn({ addVariant: e, config: i }) {
     let r = i("darkMode", null), [t, n = ".dark"] = Array.isArray(r) ? r : [r];
     if (t === "variant") {
       let s;
       if (Array.isArray(n) || typeof n == "function" ? s = n : typeof n == "string" && (s = [n]), Array.isArray(s))
-        for (let l2 of s)
-          l2 === ".dark" ? (t = false, console.warn('When using `variant` for `darkMode`, you must provide a selector.\nExample: `darkMode: ["variant", ".your-selector &"]`')) : l2.includes("&") || (t = false, console.warn('When using `variant` for `darkMode`, your selector must contain `&`.\nExample `darkMode: ["variant", ".your-selector &"]`'));
+        for (let l of s)
+          l === ".dark" ? (t = false, console.warn('When using `variant` for `darkMode`, you must provide a selector.\nExample: `darkMode: ["variant", ".your-selector &"]`')) : l.includes("&") || (t = false, console.warn('When using `variant` for `darkMode`, your selector must contain `&`.\nExample `darkMode: ["variant", ".your-selector &"]`'));
       n = s;
     }
-    t === null || (t === "selector" ? e2("dark", `&:where(${n}, ${n} *)`) : t === "media" ? e2("dark", "@media (prefers-color-scheme: dark)") : t === "variant" ? e2("dark", n) : t === "class" && e2("dark", `&:is(${n} *)`));
+    t === null || (t === "selector" ? e("dark", `&:where(${n}, ${n} *)`) : t === "media" ? e("dark", "@media (prefers-color-scheme: dark)") : t === "variant" ? e("dark", n) : t === "class" && e("dark", `&:is(${n} *)`));
   }
-  function nn(e2) {
+  function nn(e) {
     for (let [r, t] of [["t", "top"], ["tr", "top right"], ["r", "right"], ["br", "bottom right"], ["b", "bottom"], ["bl", "bottom left"], ["l", "left"], ["tl", "top left"]])
-      e2.utilities.suggest(`bg-gradient-to-${r}`, () => []), e2.utilities.static(`bg-gradient-to-${r}`, () => [a2("--tw-gradient-position", `to ${t} in oklab`), a2("background-image", "linear-gradient(var(--tw-gradient-stops))")]);
-    e2.utilities.suggest("bg-left-top", () => []), e2.utilities.static("bg-left-top", () => [a2("background-position", "left top")]), e2.utilities.suggest("bg-right-top", () => []), e2.utilities.static("bg-right-top", () => [a2("background-position", "right top")]), e2.utilities.suggest("bg-left-bottom", () => []), e2.utilities.static("bg-left-bottom", () => [a2("background-position", "left bottom")]), e2.utilities.suggest("bg-right-bottom", () => []), e2.utilities.static("bg-right-bottom", () => [a2("background-position", "right bottom")]), e2.utilities.suggest("object-left-top", () => []), e2.utilities.static("object-left-top", () => [a2("object-position", "left top")]), e2.utilities.suggest("object-right-top", () => []), e2.utilities.static("object-right-top", () => [a2("object-position", "right top")]), e2.utilities.suggest("object-left-bottom", () => []), e2.utilities.static("object-left-bottom", () => [a2("object-position", "left bottom")]), e2.utilities.suggest("object-right-bottom", () => []), e2.utilities.static("object-right-bottom", () => [a2("object-position", "right bottom")]), e2.utilities.suggest("max-w-screen", () => []), e2.utilities.functional("max-w-screen", (r) => {
+      e.utilities.suggest(`bg-gradient-to-${r}`, () => []), e.utilities.static(`bg-gradient-to-${r}`, () => [a2("--tw-gradient-position", `to ${t} in oklab`), a2("background-image", "linear-gradient(var(--tw-gradient-stops))")]);
+    e.utilities.suggest("bg-left-top", () => []), e.utilities.static("bg-left-top", () => [a2("background-position", "left top")]), e.utilities.suggest("bg-right-top", () => []), e.utilities.static("bg-right-top", () => [a2("background-position", "right top")]), e.utilities.suggest("bg-left-bottom", () => []), e.utilities.static("bg-left-bottom", () => [a2("background-position", "left bottom")]), e.utilities.suggest("bg-right-bottom", () => []), e.utilities.static("bg-right-bottom", () => [a2("background-position", "right bottom")]), e.utilities.suggest("object-left-top", () => []), e.utilities.static("object-left-top", () => [a2("object-position", "left top")]), e.utilities.suggest("object-right-top", () => []), e.utilities.static("object-right-top", () => [a2("object-position", "right top")]), e.utilities.suggest("object-left-bottom", () => []), e.utilities.static("object-left-bottom", () => [a2("object-position", "left bottom")]), e.utilities.suggest("object-right-bottom", () => []), e.utilities.static("object-right-bottom", () => [a2("object-position", "right bottom")]), e.utilities.suggest("max-w-screen", () => []), e.utilities.functional("max-w-screen", (r) => {
       if (!r.value || r.value.kind === "arbitrary")
         return;
-      let t = e2.theme.resolve(r.value.value, ["--breakpoint"]);
+      let t = e.theme.resolve(r.value.value, ["--breakpoint"]);
       if (t)
         return [a2("max-width", t)];
-    }), e2.utilities.suggest("overflow-ellipsis", () => []), e2.utilities.static("overflow-ellipsis", () => [a2("text-overflow", "ellipsis")]), e2.utilities.suggest("decoration-slice", () => []), e2.utilities.static("decoration-slice", () => [a2("-webkit-box-decoration-break", "slice"), a2("box-decoration-break", "slice")]), e2.utilities.suggest("decoration-clone", () => []), e2.utilities.static("decoration-clone", () => [a2("-webkit-box-decoration-break", "clone"), a2("box-decoration-break", "clone")]), e2.utilities.suggest("flex-shrink", () => []), e2.utilities.functional("flex-shrink", (r) => {
+    }), e.utilities.suggest("overflow-ellipsis", () => []), e.utilities.static("overflow-ellipsis", () => [a2("text-overflow", "ellipsis")]), e.utilities.suggest("decoration-slice", () => []), e.utilities.static("decoration-slice", () => [a2("-webkit-box-decoration-break", "slice"), a2("box-decoration-break", "slice")]), e.utilities.suggest("decoration-clone", () => []), e.utilities.static("decoration-clone", () => [a2("-webkit-box-decoration-break", "clone"), a2("box-decoration-break", "clone")]), e.utilities.suggest("flex-shrink", () => []), e.utilities.functional("flex-shrink", (r) => {
       if (!r.modifier) {
         if (!r.value)
           return [a2("flex-shrink", "1")];
@@ -6268,7 +6278,7 @@ ${se([v2])}`);
         if (u(r.value.value))
           return [a2("flex-shrink", r.value.value)];
       }
-    }), e2.utilities.suggest("flex-grow", () => []), e2.utilities.functional("flex-grow", (r) => {
+    }), e.utilities.suggest("flex-grow", () => []), e.utilities.functional("flex-grow", (r) => {
       if (!r.modifier) {
         if (!r.value)
           return [a2("flex-grow", "1")];
@@ -6277,69 +6287,69 @@ ${se([v2])}`);
         if (u(r.value.value))
           return [a2("flex-grow", r.value.value)];
       }
-    }), e2.utilities.suggest("order-none", () => []), e2.utilities.static("order-none", () => [a2("order", "0")]), e2.utilities.suggest("break-words", () => []), e2.utilities.static("break-words", () => [a2("overflow-wrap", "break-word")]);
+    }), e.utilities.suggest("order-none", () => []), e.utilities.static("order-none", () => [a2("order", "0")]), e.utilities.suggest("break-words", () => []), e.utilities.static("break-words", () => [a2("overflow-wrap", "break-word")]);
     for (let [r, t] of [["start", "inset-inline-start"], ["end", "inset-inline-end"]]) {
       let n = function({ negative: s }) {
-        return (l2) => {
-          if (l2.value === null)
+        return (l) => {
+          if (l.value === null)
             return;
-          if (l2.value.kind === "arbitrary") {
-            if (l2.modifier)
+          if (l.value.kind === "arbitrary") {
+            if (l.modifier)
               return;
-            let f2 = l2.value.value;
-            return [a2(t, s ? `calc(${f2} * -1)` : f2)];
+            let f = l.value.value;
+            return [a2(t, s ? `calc(${f} * -1)` : f)];
           }
-          let d2 = e2.theme.resolve(l2.value.fraction ?? l2.value.value, ["--inset", "--spacing"]);
-          if (d2 === null && l2.value.fraction) {
-            let [f2, c2] = d(l2.value.fraction, "/");
-            if (!u(f2) || !u(c2))
+          let d2 = e.theme.resolve(l.value.fraction ?? l.value.value, ["--inset", "--spacing"]);
+          if (d2 === null && l.value.fraction) {
+            let [f, c] = d(l.value.fraction, "/");
+            if (!u(f) || !u(c))
               return;
-            d2 = `calc(${l2.value.fraction} * 100%)`;
+            d2 = `calc(${l.value.fraction} * 100%)`;
           }
           if (d2 === null && s) {
-            let f2 = e2.theme.resolve(null, ["--spacing"]);
-            if (f2 && de(l2.value.value) && (d2 = `calc(${f2} * -${l2.value.value})`, d2 !== null))
+            let f = e.theme.resolve(null, ["--spacing"]);
+            if (f && de(l.value.value) && (d2 = `calc(${f} * -${l.value.value})`, d2 !== null))
               return [a2(t, d2)];
           }
           if (d2 === null) {
-            let f2 = e2.theme.resolve(null, ["--spacing"]);
-            f2 && de(l2.value.value) && (d2 = `calc(${f2} * ${l2.value.value})`);
+            let f = e.theme.resolve(null, ["--spacing"]);
+            f && de(l.value.value) && (d2 = `calc(${f} * ${l.value.value})`);
           }
           if (d2 !== null)
             return [a2(t, s ? `calc(${d2} * -1)` : d2)];
         };
       };
       var i = n;
-      e2.utilities.static(`${r}-auto`, () => [a2(t, "auto")]), e2.utilities.static(`${r}-full`, () => [a2(t, "100%")]), e2.utilities.static(`-${r}-full`, () => [a2(t, "-100%")]), e2.utilities.static(`${r}-px`, () => [a2(t, "1px")]), e2.utilities.static(`-${r}-px`, () => [a2(t, "-1px")]), e2.utilities.functional(`-${r}`, n({ negative: true })), e2.utilities.functional(r, n({ negative: false }));
+      e.utilities.static(`${r}-auto`, () => [a2(t, "auto")]), e.utilities.static(`${r}-full`, () => [a2(t, "100%")]), e.utilities.static(`-${r}-full`, () => [a2(t, "-100%")]), e.utilities.static(`${r}-px`, () => [a2(t, "1px")]), e.utilities.static(`-${r}-px`, () => [a2(t, "-1px")]), e.utilities.functional(`-${r}`, n({ negative: true })), e.utilities.functional(r, n({ negative: false }));
     }
   }
-  function ln(e2, i) {
-    let r = e2.theme.screens || {}, t = i.variants.get("min")?.order ?? 0, n = [];
-    for (let [l2, d2] of Object.entries(r)) {
-      let u2 = function(v2) {
-        i.variants.static(l2, (h3) => {
-          h3.nodes = [B2("@media", m, h3.nodes)];
-        }, { order: v2 });
+  function ln(e, i) {
+    let r = e.theme.screens || {}, t = i.variants.get("min")?.order ?? 0, n = [];
+    for (let [l, d] of Object.entries(r)) {
+      let u = function(v) {
+        i.variants.static(l, (h) => {
+          h.nodes = [B2("@media", m, h.nodes)];
+        }, { order: v });
       };
-      var s = u2;
-      let f2 = i.variants.get(l2), c2 = i.theme.resolveValue(l2, ["--breakpoint"]);
-      if (f2 && c2 && !i.theme.hasDefault(`--breakpoint-${l2}`))
+      var s = u;
+      let f = i.variants.get(l), c = i.theme.resolveValue(l, ["--breakpoint"]);
+      if (f && c && !i.theme.hasDefault(`--breakpoint-${l}`))
         continue;
-      let p2 = true;
-      typeof d2 == "string" && (p2 = false);
-      let m = xa(d2);
-      p2 ? n.push(u2) : u2(t);
+      let p = true;
+      typeof d == "string" && (p = false);
+      let m = xa(d);
+      p ? n.push(u) : u(t);
     }
     if (n.length !== 0) {
-      for (let [, l2] of i.variants.variants)
-        l2.order > t && (l2.order += n.length);
-      i.variants.compareFns = new Map(Array.from(i.variants.compareFns).map(([l2, d2]) => (l2 > t && (l2 += n.length), [l2, d2])));
-      for (let [l2, d2] of n.entries())
-        d2(t + l2 + 1);
+      for (let [, l] of i.variants.variants)
+        l.order > t && (l.order += n.length);
+      i.variants.compareFns = new Map(Array.from(i.variants.compareFns).map(([l, d]) => (l > t && (l += n.length), [l, d])));
+      for (let [l, d] of n.entries())
+        d(t + l + 1);
     }
   }
-  function xa(e2) {
-    return (Array.isArray(e2) ? e2 : [e2]).map((r) => typeof r == "string" ? { min: r } : r && typeof r == "object" ? r : null).map((r) => {
+  function xa(e) {
+    return (Array.isArray(e) ? e : [e]).map((r) => typeof r == "string" ? { min: r } : r && typeof r == "object" ? r : null).map((r) => {
       if (r === null)
         return null;
       if ("raw" in r)
@@ -6348,232 +6358,232 @@ ${se([v2])}`);
       return r.max !== undefined && (t += `${r.max} >= `), t += "width", r.min !== undefined && (t += ` >= ${r.min}`), `(${t})`;
     }).filter(Boolean).join(", ");
   }
-  function an(e2, i) {
-    let r = e2.theme.aria || {}, t = e2.theme.supports || {}, n = e2.theme.data || {};
+  function an(e, i) {
+    let r = e.theme.aria || {}, t = e.theme.supports || {}, n = e.theme.data || {};
     if (Object.keys(r).length > 0) {
-      let s = i.variants.get("aria"), l2 = s?.applyFn, d2 = s?.compounds;
-      i.variants.functional("aria", (f2, c2) => {
-        let p2 = c2.value;
-        return p2 && p2.kind === "named" && p2.value in r ? l2?.(f2, { ...c2, value: { kind: "arbitrary", value: r[p2.value] } }) : l2?.(f2, c2);
-      }, { compounds: d2 });
+      let s = i.variants.get("aria"), l = s?.applyFn, d = s?.compounds;
+      i.variants.functional("aria", (f, c) => {
+        let p = c.value;
+        return p && p.kind === "named" && p.value in r ? l?.(f, { ...c, value: { kind: "arbitrary", value: r[p.value] } }) : l?.(f, c);
+      }, { compounds: d });
     }
     if (Object.keys(t).length > 0) {
-      let s = i.variants.get("supports"), l2 = s?.applyFn, d2 = s?.compounds;
-      i.variants.functional("supports", (f2, c2) => {
-        let p2 = c2.value;
-        return p2 && p2.kind === "named" && p2.value in t ? l2?.(f2, { ...c2, value: { kind: "arbitrary", value: t[p2.value] } }) : l2?.(f2, c2);
-      }, { compounds: d2 });
+      let s = i.variants.get("supports"), l = s?.applyFn, d = s?.compounds;
+      i.variants.functional("supports", (f, c) => {
+        let p = c.value;
+        return p && p.kind === "named" && p.value in t ? l?.(f, { ...c, value: { kind: "arbitrary", value: t[p.value] } }) : l?.(f, c);
+      }, { compounds: d });
     }
     if (Object.keys(n).length > 0) {
-      let s = i.variants.get("data"), l2 = s?.applyFn, d2 = s?.compounds;
-      i.variants.functional("data", (f2, c2) => {
-        let p2 = c2.value;
-        return p2 && p2.kind === "named" && p2.value in n ? l2?.(f2, { ...c2, value: { kind: "arbitrary", value: n[p2.value] } }) : l2?.(f2, c2);
-      }, { compounds: d2 });
+      let s = i.variants.get("data"), l = s?.applyFn, d = s?.compounds;
+      i.variants.functional("data", (f, c) => {
+        let p = c.value;
+        return p && p.kind === "named" && p.value in n ? l?.(f, { ...c, value: { kind: "arbitrary", value: n[p.value] } }) : l?.(f, c);
+      }, { compounds: d });
     }
   }
   var Aa = /^[a-z]+$/;
-  async function sn({ designSystem: e2, base: i, ast: r, loadModule: t, sources: n }) {
-    let s = 0, l2 = [], d2 = [];
-    P2(r, (m, u2) => {
+  async function sn({ designSystem: e, base: i, ast: r, loadModule: t, sources: n }) {
+    let s = 0, l = [], d2 = [];
+    P2(r, (m, u) => {
       if (m.kind !== "at-rule")
         return;
-      let v2 = et(u2);
+      let v = et(u);
       if (m.name === "@plugin") {
-        if (v2.parent !== null)
+        if (v.parent !== null)
           throw new Error("`@plugin` cannot be nested.");
-        let h3 = m.params.slice(1, -1);
-        if (h3.length === 0)
+        let h = m.params.slice(1, -1);
+        if (h.length === 0)
           throw new Error("`@plugin` must have a path.");
         let k = {};
-        for (let y2 of m.nodes ?? []) {
-          if (y2.kind !== "declaration")
+        for (let y of m.nodes ?? []) {
+          if (y.kind !== "declaration")
             throw new Error(`Unexpected \`@plugin\` option:
 
-${se([y2])}
+${se([y])}
 
 \`@plugin\` options must be a flat list of declarations.`);
-          if (y2.value === undefined)
+          if (y.value === undefined)
             continue;
-          let S2 = y2.value, x2 = d(S2, ",").map((b2) => {
-            if (b2 = b2.trim(), b2 === "null")
+          let S = y.value, x = d(S, ",").map((b) => {
+            if (b = b.trim(), b === "null")
               return null;
-            if (b2 === "true")
+            if (b === "true")
               return true;
-            if (b2 === "false")
+            if (b === "false")
               return false;
-            if (Number.isNaN(Number(b2))) {
-              if (b2[0] === '"' && b2[b2.length - 1] === '"' || b2[0] === "'" && b2[b2.length - 1] === "'")
-                return b2.slice(1, -1);
-              if (b2[0] === "{" && b2[b2.length - 1] === "}")
-                throw new Error(`Unexpected \`@plugin\` option: Value of declaration \`${se([y2]).trim()}\` is not supported.
+            if (Number.isNaN(Number(b))) {
+              if (b[0] === '"' && b[b.length - 1] === '"' || b[0] === "'" && b[b.length - 1] === "'")
+                return b.slice(1, -1);
+              if (b[0] === "{" && b[b.length - 1] === "}")
+                throw new Error(`Unexpected \`@plugin\` option: Value of declaration \`${se([y]).trim()}\` is not supported.
 
 Using an object as a plugin option is currently only supported in JavaScript configuration files.`);
             } else
-              return Number(b2);
-            return b2;
+              return Number(b);
+            return b;
           });
-          k[y2.property] = x2.length === 1 ? x2[0] : x2;
+          k[y.property] = x.length === 1 ? x[0] : x;
         }
-        return l2.push([{ id: h3, base: v2.context.base, reference: !!v2.context.reference, src: m.src }, Object.keys(k).length > 0 ? k : null]), s |= 4, V2.Replace([]);
+        return l.push([{ id: h, base: v.context.base, reference: !!v.context.reference, src: m.src }, Object.keys(k).length > 0 ? k : null]), s |= 4, V2.Replace([]);
       }
       if (m.name === "@config") {
         if (m.nodes.length > 0)
           throw new Error("`@config` cannot have a body.");
-        if (v2.parent !== null)
+        if (v.parent !== null)
           throw new Error("`@config` cannot be nested.");
-        return d2.push({ id: m.params.slice(1, -1), base: v2.context.base, reference: !!v2.context.reference, src: m.src }), s |= 4, V2.Replace([]);
+        return d2.push({ id: m.params.slice(1, -1), base: v.context.base, reference: !!v.context.reference, src: m.src }), s |= 4, V2.Replace([]);
       }
-    }), nn(e2);
-    let f2 = e2.resolveThemeValue;
-    if (e2.resolveThemeValue = function(u2, v2) {
-      return u2.startsWith("--") ? f2(u2, v2) : (s |= on({ designSystem: e2, base: i, ast: r, sources: n, configs: [], pluginDetails: [] }), e2.resolveThemeValue(u2, v2));
-    }, !l2.length && !d2.length)
+    }), nn(e);
+    let f = e.resolveThemeValue;
+    if (e.resolveThemeValue = function(u, v) {
+      return u.startsWith("--") ? f(u, v) : (s |= on({ designSystem: e, base: i, ast: r, sources: n, configs: [], pluginDetails: [] }), e.resolveThemeValue(u, v));
+    }, !l.length && !d2.length)
       return 0;
-    let [c2, p2] = await Promise.all([Promise.all(d2.map(async ({ id: m, base: u2, reference: v2, src: h3 }) => {
-      let k = await t(m, u2, "config");
-      return { path: m, base: k.base, config: k.module, reference: v2, src: h3 };
-    })), Promise.all(l2.map(async ([{ id: m, base: u2, reference: v2, src: h3 }, k]) => {
-      let y2 = await t(m, u2, "plugin");
-      return { path: m, base: y2.base, plugin: y2.module, options: k, reference: v2, src: h3 };
+    let [c, p] = await Promise.all([Promise.all(d2.map(async ({ id: m, base: u, reference: v, src: h }) => {
+      let k = await t(m, u, "config");
+      return { path: m, base: k.base, config: k.module, reference: v, src: h };
+    })), Promise.all(l.map(async ([{ id: m, base: u, reference: v, src: h }, k]) => {
+      let y = await t(m, u, "plugin");
+      return { path: m, base: y.base, plugin: y.module, options: k, reference: v, src: h };
     }))]);
-    return s |= on({ designSystem: e2, base: i, ast: r, sources: n, configs: c2, pluginDetails: p2 }), s;
+    return s |= on({ designSystem: e, base: i, ast: r, sources: n, configs: c, pluginDetails: p }), s;
   }
-  function on({ designSystem: e2, base: i, ast: r, sources: t, configs: n, pluginDetails: s }) {
-    let l2 = 0, f2 = [...s.map((k) => {
+  function on({ designSystem: e, base: i, ast: r, sources: t, configs: n, pluginDetails: s }) {
+    let l = 0, f = [...s.map((k) => {
       if (!k.options)
         return { config: { plugins: [k.plugin] }, base: k.base, reference: k.reference, src: k.src };
       if ("__isOptionsFunction" in k.plugin)
         return { config: { plugins: [k.plugin(k.options)] }, base: k.base, reference: k.reference, src: k.src };
       throw new Error(`The plugin "${k.path}" does not accept options`);
-    }), ...n], { resolvedConfig: c2 } = hr(e2, [{ config: en(e2.theme), base: i, reference: true, src: undefined }, ...f2, { config: { plugins: [rn] }, base: i, reference: true, src: undefined }]), { resolvedConfig: p2, replacedThemeKeys: m } = hr(e2, f2), u2 = { designSystem: e2, ast: r, resolvedConfig: c2, featuresRef: { set current(k) {
-      l2 |= k;
-    } } }, v2 = mr({ ...u2, referenceMode: false, src: undefined }), h3 = e2.resolveThemeValue;
-    e2.resolveThemeValue = function(y2, S2) {
-      if (y2[0] === "-" && y2[1] === "-")
-        return h3(y2, S2);
-      let x2 = v2.theme(y2, undefined);
-      if (Array.isArray(x2) && x2.length === 2)
-        return x2[0];
-      if (Array.isArray(x2))
-        return x2.join(", ");
-      if (typeof x2 == "object" && x2 !== null && "DEFAULT" in x2)
-        return x2.DEFAULT;
-      if (typeof x2 == "string")
-        return x2;
+    }), ...n], { resolvedConfig: c } = hr(e, [{ config: en(e.theme), base: i, reference: true, src: undefined }, ...f, { config: { plugins: [rn] }, base: i, reference: true, src: undefined }]), { resolvedConfig: p, replacedThemeKeys: m } = hr(e, f), u = { designSystem: e, ast: r, resolvedConfig: c, featuresRef: { set current(k) {
+      l |= k;
+    } } }, v = mr({ ...u, referenceMode: false, src: undefined }), h = e.resolveThemeValue;
+    e.resolveThemeValue = function(y, S) {
+      if (y[0] === "-" && y[1] === "-")
+        return h(y, S);
+      let x = v.theme(y, undefined);
+      if (Array.isArray(x) && x.length === 2)
+        return x[0];
+      if (Array.isArray(x))
+        return x.join(", ");
+      if (typeof x == "object" && x !== null && "DEFAULT" in x)
+        return x.DEFAULT;
+      if (typeof x == "string")
+        return x;
     };
-    for (let { handler: k, reference: y2, src: S2 } of c2.plugins) {
-      let x2 = mr({ ...u2, referenceMode: y2 ?? false, src: S2 });
-      k(x2);
+    for (let { handler: k, reference: y, src: S } of c.plugins) {
+      let x = mr({ ...u, referenceMode: y ?? false, src: S });
+      k(x);
     }
-    if (gi(e2, p2, m), Xi(e2, p2), an(p2, e2), ln(p2, e2), tn(p2, e2), !e2.theme.prefix && c2.prefix) {
-      if (c2.prefix.endsWith("-") && (c2.prefix = c2.prefix.slice(0, -1), console.warn(`The prefix "${c2.prefix}" is invalid. Prefixes must be lowercase ASCII letters (a-z) only and is written as a variant before all utilities. We have fixed up the prefix for you. Remove the trailing \`-\` to silence this warning.`)), !Aa.test(c2.prefix))
-        throw new Error(`The prefix "${c2.prefix}" is invalid. Prefixes must be lowercase ASCII letters (a-z) only.`);
-      e2.theme.prefix = c2.prefix;
+    if (gi(e, p, m), Xi(e, p), an(p, e), ln(p, e), tn(p, e), !e.theme.prefix && c.prefix) {
+      if (c.prefix.endsWith("-") && (c.prefix = c.prefix.slice(0, -1), console.warn(`The prefix "${c.prefix}" is invalid. Prefixes must be lowercase ASCII letters (a-z) only and is written as a variant before all utilities. We have fixed up the prefix for you. Remove the trailing \`-\` to silence this warning.`)), !Aa.test(c.prefix))
+        throw new Error(`The prefix "${c.prefix}" is invalid. Prefixes must be lowercase ASCII letters (a-z) only.`);
+      e.theme.prefix = c.prefix;
     }
-    if (!e2.important && c2.important === true && (e2.important = true), typeof c2.important == "string") {
-      let k = c2.important;
-      P2(r, (y2, S2) => {
-        if (y2.kind !== "at-rule" || y2.name !== "@tailwind" || y2.params !== "utilities")
+    if (!e.important && c.important === true && (e.important = true), typeof c.important == "string") {
+      let k = c.important;
+      P2(r, (y, S) => {
+        if (y.kind !== "at-rule" || y.name !== "@tailwind" || y.params !== "utilities")
           return;
-        let x2 = et(S2);
-        return x2.parent?.kind === "rule" && x2.parent.selector === k ? V2.Stop : V2.ReplaceStop(H2(k, [y2]));
+        let x = et(S);
+        return x.parent?.kind === "rule" && x.parent.selector === k ? V2.Stop : V2.ReplaceStop(H2(k, [y]));
       });
     }
-    for (let k of c2.blocklist)
-      e2.invalidCandidates.add(k);
-    for (let k of c2.content.files) {
+    for (let k of c.blocklist)
+      e.invalidCandidates.add(k);
+    for (let k of c.content.files) {
       if ("raw" in k)
         throw new Error(`Error in the config file/plugin/preset. The \`content\` key contains a \`raw\` entry:
 
 ${JSON.stringify(k, null, 2)}
 
 This feature is not currently supported.`);
-      let y2 = false;
-      k.pattern[0] == "!" && (y2 = true, k.pattern = k.pattern.slice(1)), t.push({ ...k, negated: y2 });
+      let y = false;
+      k.pattern[0] == "!" && (y = true, k.pattern = k.pattern.slice(1)), t.push({ ...k, negated: y });
     }
-    return l2;
+    return l;
   }
-  function un({ ast: e2 }) {
+  function un({ ast: e }) {
     let i = new U2((n) => ft(n.code)), r = new U2((n) => ({ url: n.file, content: n.code, ignore: false })), t = { file: null, sources: [], mappings: [] };
-    P2(e2, (n) => {
+    P2(e, (n) => {
       if (!n.src || !n.dst)
         return;
       let s = r.get(n.src[0]);
       if (!s.content)
         return;
-      let l2 = i.get(n.src[0]), d2 = i.get(n.dst[0]), f2 = s.content.slice(n.src[1], n.src[2]), c2 = 0;
-      for (let u2 of f2.split(`
+      let l = i.get(n.src[0]), d = i.get(n.dst[0]), f = s.content.slice(n.src[1], n.src[2]), c = 0;
+      for (let u of f.split(`
 `)) {
-        if (u2.trim() !== "") {
-          let v2 = l2.find(n.src[1] + c2), h3 = d2.find(n.dst[1]);
-          t.mappings.push({ name: null, originalPosition: { source: s, ...v2 }, generatedPosition: h3 });
+        if (u.trim() !== "") {
+          let v = l.find(n.src[1] + c), h = d.find(n.dst[1]);
+          t.mappings.push({ name: null, originalPosition: { source: s, ...v }, generatedPosition: h });
         }
-        c2 += u2.length, c2 += 1;
+        c += u.length, c += 1;
       }
-      let p2 = l2.find(n.src[2]), m = d2.find(n.dst[2]);
-      t.mappings.push({ name: null, originalPosition: { source: s, ...p2 }, generatedPosition: m });
+      let p = l.find(n.src[2]), m = d.find(n.dst[2]);
+      t.mappings.push({ name: null, originalPosition: { source: s, ...p }, generatedPosition: m });
     });
     for (let n of i.keys())
       t.sources.push(r.get(n));
     return t.mappings.sort((n, s) => n.generatedPosition.line - s.generatedPosition.line || n.generatedPosition.column - s.generatedPosition.column || (n.originalPosition?.line ?? 0) - (s.originalPosition?.line ?? 0) || (n.originalPosition?.column ?? 0) - (s.originalPosition?.column ?? 0)), t;
   }
   var fn = /^(-?\d+)\.\.(-?\d+)(?:\.\.(-?\d+))?$/;
-  function Pt(e2) {
-    let i = e2.indexOf("{");
+  function Pt(e) {
+    let i = e.indexOf("{");
     if (i === -1)
-      return [e2];
-    let r = [], t = e2.slice(0, i), n = e2.slice(i), s = 0, l2 = n.lastIndexOf("}");
+      return [e];
+    let r = [], t = e.slice(0, i), n = e.slice(i), s = 0, l = n.lastIndexOf("}");
     for (let m = 0;m < n.length; m++) {
-      let u2 = n[m];
-      if (u2 === "{")
+      let u = n[m];
+      if (u === "{")
         s++;
-      else if (u2 === "}" && (s--, s === 0)) {
-        l2 = m;
+      else if (u === "}" && (s--, s === 0)) {
+        l = m;
         break;
       }
     }
-    if (l2 === -1)
-      throw new Error(`The pattern \`${e2}\` is not balanced.`);
-    let d2 = n.slice(1, l2), f2 = n.slice(l2 + 1), c2;
-    Ca(d2) ? c2 = Sa(d2) : c2 = d(d2, ","), c2 = c2.flatMap((m) => Pt(m));
-    let p2 = Pt(f2);
-    for (let m of p2)
-      for (let u2 of c2)
-        r.push(t + u2 + m);
+    if (l === -1)
+      throw new Error(`The pattern \`${e}\` is not balanced.`);
+    let d2 = n.slice(1, l), f = n.slice(l + 1), c;
+    Ca(d2) ? c = Sa(d2) : c = d(d2, ","), c = c.flatMap((m) => Pt(m));
+    let p = Pt(f);
+    for (let m of p)
+      for (let u of c)
+        r.push(t + u + m);
     return r;
   }
-  function Ca(e2) {
-    return fn.test(e2);
+  function Ca(e) {
+    return fn.test(e);
   }
-  function Sa(e2) {
-    let i = e2.match(fn);
+  function Sa(e) {
+    let i = e.match(fn);
     if (!i)
-      return [e2];
-    let [, r, t, n] = i, s = n ? parseInt(n, 10) : undefined, l2 = [];
+      return [e];
+    let [, r, t, n] = i, s = n ? parseInt(n, 10) : undefined, l = [];
     if (/^-?\d+$/.test(r) && /^-?\d+$/.test(t)) {
-      let d2 = parseInt(r, 10), f2 = parseInt(t, 10);
-      if (s === undefined && (s = d2 <= f2 ? 1 : -1), s === 0)
+      let d = parseInt(r, 10), f = parseInt(t, 10);
+      if (s === undefined && (s = d <= f ? 1 : -1), s === 0)
         throw new Error("Step cannot be zero in sequence expansion.");
-      let c2 = d2 < f2;
-      c2 && s < 0 && (s = -s), !c2 && s > 0 && (s = -s);
-      for (let p2 = d2;c2 ? p2 <= f2 : p2 >= f2; p2 += s)
-        l2.push(p2.toString());
+      let c = d < f;
+      c && s < 0 && (s = -s), !c && s > 0 && (s = -s);
+      for (let p = d;c ? p <= f : p >= f; p += s)
+        l.push(p.toString());
     }
-    return l2;
+    return l;
   }
-  function cn(e2, i) {
+  function cn(e, i) {
     let r = new Set, t = new Set, n = [];
-    function s(l2, d2 = []) {
-      if (e2.has(l2) && !r.has(l2)) {
-        t.has(l2) && i.onCircularDependency?.(d2, l2), t.add(l2);
-        for (let f2 of e2.get(l2) ?? [])
-          d2.push(l2), s(f2, d2), d2.pop();
-        r.add(l2), t.delete(l2), n.push(l2);
+    function s(l, d = []) {
+      if (e.has(l) && !r.has(l)) {
+        t.has(l) && i.onCircularDependency?.(d, l), t.add(l);
+        for (let f of e.get(l) ?? [])
+          d.push(l), s(f, d), d.pop();
+        r.add(l), t.delete(l), n.push(l);
       }
     }
-    for (let l2 of e2.keys())
-      s(l2);
+    for (let l of e.keys())
+      s(l);
     return n;
   }
   var Va = /^[a-z]+$/;
@@ -6584,256 +6594,256 @@ This feature is not currently supported.`);
   function Ta() {
     throw new Error("No `loadStylesheet` function provided to `compile`");
   }
-  function Na(e2) {
+  function Na(e) {
     let i = 0, r = null;
-    for (let t of d(e2, " "))
+    for (let t of d(e, " "))
       t === "reference" ? i |= 2 : t === "inline" ? i |= 1 : t === "default" ? i |= 4 : t === "static" ? i |= 8 : t.startsWith("prefix(") && t.endsWith(")") && (r = t.slice(7, -1));
     return [i, r];
   }
-  var ze = ((f2) => (f2[f2.None = 0] = "None", f2[f2.AtApply = 1] = "AtApply", f2[f2.AtImport = 2] = "AtImport", f2[f2.JsPluginCompat = 4] = "JsPluginCompat", f2[f2.ThemeFunction = 8] = "ThemeFunction", f2[f2.Utilities = 16] = "Utilities", f2[f2.Variants = 32] = "Variants", f2[f2.AtTheme = 64] = "AtTheme", f2))(ze || {});
-  async function pn(e2, { base: i = "", from: r, loadModule: t = $a, loadStylesheet: n = Ta } = {}) {
+  var ze = ((f) => (f[f.None = 0] = "None", f[f.AtApply = 1] = "AtApply", f[f.AtImport = 2] = "AtImport", f[f.JsPluginCompat = 4] = "JsPluginCompat", f[f.ThemeFunction = 8] = "ThemeFunction", f[f.Utilities = 16] = "Utilities", f[f.Variants = 32] = "Variants", f[f.AtTheme = 64] = "AtTheme", f))(ze || {});
+  async function pn(e, { base: i = "", from: r, loadModule: t = $a, loadStylesheet: n = Ta } = {}) {
     let s = 0;
-    e2 = [ve({ base: i }, e2)], s |= await dr(e2, i, n, 0, r !== undefined);
-    let l2 = null, d2 = new p, f2 = new Map, c2 = new Map, p2 = [], m = null, u2 = null, v2 = [], h3 = [], k = [], y2 = [], S2 = null;
-    P2(e2, (b2, I2) => {
-      if (b2.kind !== "at-rule")
+    e = [ve({ base: i }, e)], s |= await dr(e, i, n, 0, r !== undefined);
+    let l = null, d2 = new p, f = new Map, c = new Map, p2 = [], m = null, u = null, v = [], h = [], k = [], y = [], S = null;
+    P2(e, (b, I) => {
+      if (b.kind !== "at-rule")
         return;
-      let D2 = et(I2);
-      if (b2.name === "@tailwind" && (b2.params === "utilities" || b2.params.startsWith("utilities"))) {
-        if (u2 !== null)
+      let D = et(I);
+      if (b.name === "@tailwind" && (b.params === "utilities" || b.params.startsWith("utilities"))) {
+        if (u !== null)
           return V2.Replace([]);
-        if (D2.context.reference)
+        if (D.context.reference)
           return V2.Replace([]);
-        let O2 = d(b2.params, " ");
-        for (let L2 of O2)
-          if (L2.startsWith("source(")) {
-            let E2 = L2.slice(7, -1);
-            if (E2 === "none") {
-              S2 = E2;
+        let O = d(b.params, " ");
+        for (let L of O)
+          if (L.startsWith("source(")) {
+            let E = L.slice(7, -1);
+            if (E === "none") {
+              S = E;
               continue;
             }
-            if (E2[0] === '"' && E2[E2.length - 1] !== '"' || E2[0] === "'" && E2[E2.length - 1] !== "'" || E2[0] !== "'" && E2[0] !== '"')
+            if (E[0] === '"' && E[E.length - 1] !== '"' || E[0] === "'" && E[E.length - 1] !== "'" || E[0] !== "'" && E[0] !== '"')
               throw new Error("`source(…)` paths must be quoted.");
-            S2 = { base: D2.context.sourceBase ?? D2.context.base, pattern: E2.slice(1, -1) };
+            S = { base: D.context.sourceBase ?? D.context.base, pattern: E.slice(1, -1) };
           }
-        u2 = b2, s |= 16;
+        u = b, s |= 16;
       }
-      if (b2.name === "@utility") {
-        if (D2.parent !== null)
+      if (b.name === "@utility") {
+        if (D.parent !== null)
           throw new Error("`@utility` cannot be nested.");
-        if (b2.nodes.length === 0)
-          throw new Error(`\`@utility ${b2.params}\` is empty. Utilities should include at least one property.`);
-        let O2 = ui(b2);
-        if (O2 === null) {
-          if (!b2.params.endsWith("-*")) {
-            if (b2.params.endsWith("*"))
-              throw new Error(`\`@utility ${b2.params}\` defines an invalid utility name. A functional utility must end in \`-*\`.`);
-            if (b2.params.includes("*"))
-              throw new Error(`\`@utility ${b2.params}\` defines an invalid utility name. The dynamic portion marked by \`-*\` must appear once at the end.`);
+        if (b.nodes.length === 0)
+          throw new Error(`\`@utility ${b.params}\` is empty. Utilities should include at least one property.`);
+        let O = ui(b);
+        if (O === null) {
+          if (!b.params.endsWith("-*")) {
+            if (b.params.endsWith("*"))
+              throw new Error(`\`@utility ${b.params}\` defines an invalid utility name. A functional utility must end in \`-*\`.`);
+            if (b.params.includes("*"))
+              throw new Error(`\`@utility ${b.params}\` defines an invalid utility name. The dynamic portion marked by \`-*\` must appear once at the end.`);
           }
-          throw new Error(`\`@utility ${b2.params}\` defines an invalid utility name. Utilities should be alphanumeric and start with a lowercase letter.`);
+          throw new Error(`\`@utility ${b.params}\` defines an invalid utility name. Utilities should be alphanumeric and start with a lowercase letter.`);
         }
-        p2.push(O2);
+        p2.push(O);
       }
-      if (b2.name === "@source") {
-        if (b2.nodes.length > 0)
+      if (b.name === "@source") {
+        if (b.nodes.length > 0)
           throw new Error("`@source` cannot have a body.");
-        if (D2.parent !== null)
+        if (D.parent !== null)
           throw new Error("`@source` cannot be nested.");
-        let O2 = false, L2 = false, E2 = b2.params;
-        if (E2[0] === "n" && E2.startsWith("not ") && (O2 = true, E2 = E2.slice(4)), E2[0] === "i" && E2.startsWith("inline(") && (L2 = true, E2 = E2.slice(7, -1).trim()), E2[0] === '"' && E2[E2.length - 1] !== '"' || E2[0] === "'" && E2[E2.length - 1] !== "'" || E2[0] !== "'" && E2[0] !== '"')
+        let O = false, L = false, E = b.params;
+        if (E[0] === "n" && E.startsWith("not ") && (O = true, E = E.slice(4)), E[0] === "i" && E.startsWith("inline(") && (L = true, E = E.slice(7, -1).trim()), E[0] === '"' && E[E.length - 1] !== '"' || E[0] === "'" && E[E.length - 1] !== "'" || E[0] !== "'" && E[0] !== '"')
           throw new Error("`@source` paths must be quoted.");
-        let j2 = E2.slice(1, -1);
-        if (L2) {
-          let q2 = O2 ? y2 : k, G2 = d(j2, " ");
-          for (let ee2 of G2)
-            for (let ie of Pt(ee2))
-              q2.push(ie);
+        let j = E.slice(1, -1);
+        if (L) {
+          let q = O ? y : k, G = d(j, " ");
+          for (let ee of G)
+            for (let ie of Pt(ee))
+              q.push(ie);
         } else
-          h3.push({ base: D2.context.base, pattern: j2, negated: O2 });
+          h.push({ base: D.context.base, pattern: j, negated: O });
         return V2.ReplaceSkip([]);
       }
-      if (b2.name === "@variant" && (D2.parent === null ? b2.nodes.length === 0 ? b2.name = "@custom-variant" : (P2(b2.nodes, (O2) => {
-        if (O2.kind === "at-rule" && O2.name === "@slot")
-          return b2.name = "@custom-variant", V2.Stop;
-      }), b2.name === "@variant" && v2.push(b2)) : v2.push(b2)), b2.name === "@custom-variant") {
-        if (D2.parent !== null)
+      if (b.name === "@variant" && (D.parent === null ? b.nodes.length === 0 ? b.name = "@custom-variant" : (P2(b.nodes, (O) => {
+        if (O.kind === "at-rule" && O.name === "@slot")
+          return b.name = "@custom-variant", V2.Stop;
+      }), b.name === "@variant" && v.push(b)) : v.push(b)), b.name === "@custom-variant") {
+        if (D.parent !== null)
           throw new Error("`@custom-variant` cannot be nested.");
-        let [O2, L2] = d(b2.params, " ");
-        if (!Et.test(O2))
-          throw new Error(`\`@custom-variant ${O2}\` defines an invalid variant name. Variants should only contain alphanumeric, dashes, or underscore characters and start with a lowercase letter or number.`);
-        if (b2.nodes.length > 0 && L2)
-          throw new Error(`\`@custom-variant ${O2}\` cannot have both a selector and a body.`);
-        if (b2.nodes.length === 0) {
-          if (!L2)
-            throw new Error(`\`@custom-variant ${O2}\` has no selector or body.`);
-          let E2 = d(L2.slice(1, -1), ",");
-          if (E2.length === 0 || E2.some((G2) => G2.trim() === ""))
-            throw new Error(`\`@custom-variant ${O2} (${E2.join(",")})\` selector is invalid.`);
-          let j2 = [], q2 = [];
-          for (let G2 of E2)
-            G2 = G2.trim(), G2[0] === "@" ? j2.push(G2) : q2.push(G2);
-          f2.set(O2, (G2) => {
-            G2.variants.static(O2, (ee2) => {
+        let [O, L] = d(b.params, " ");
+        if (!Et.test(O))
+          throw new Error(`\`@custom-variant ${O}\` defines an invalid variant name. Variants should only contain alphanumeric, dashes, or underscore characters and start with a lowercase letter or number.`);
+        if (b.nodes.length > 0 && L)
+          throw new Error(`\`@custom-variant ${O}\` cannot have both a selector and a body.`);
+        if (b.nodes.length === 0) {
+          if (!L)
+            throw new Error(`\`@custom-variant ${O}\` has no selector or body.`);
+          let E = d(L.slice(1, -1), ",");
+          if (E.length === 0 || E.some((G) => G.trim() === ""))
+            throw new Error(`\`@custom-variant ${O} (${E.join(",")})\` selector is invalid.`);
+          let j = [], q = [];
+          for (let G of E)
+            G = G.trim(), G[0] === "@" ? j.push(G) : q.push(G);
+          f.set(O, (G) => {
+            G.variants.static(O, (ee) => {
               let ie = [];
-              q2.length > 0 && ie.push(H2(q2.join(", "), ee2.nodes));
-              for (let o2 of j2)
-                ie.push(Z2(o2, ee2.nodes));
-              ee2.nodes = ie;
-            }, { compounds: Oe([...q2, ...j2]) });
-          }), c2.set(O2, new Set);
+              q.length > 0 && ie.push(H2(q.join(", "), ee.nodes));
+              for (let o of j)
+                ie.push(Z2(o, ee.nodes));
+              ee.nodes = ie;
+            }, { compounds: Oe([...q, ...j]) });
+          }), c.set(O, new Set);
         } else {
-          let E2 = new Set;
-          P2(b2.nodes, (j2) => {
-            j2.kind === "at-rule" && j2.name === "@variant" && E2.add(j2.params);
-          }), f2.set(O2, (j2) => {
-            j2.variants.fromAst(O2, b2.nodes, j2);
-          }), c2.set(O2, E2);
+          let E = new Set;
+          P2(b.nodes, (j) => {
+            j.kind === "at-rule" && j.name === "@variant" && E.add(j.params);
+          }), f.set(O, (j) => {
+            j.variants.fromAst(O, b.nodes, j);
+          }), c.set(O, E);
         }
         return V2.ReplaceSkip([]);
       }
-      if (b2.name === "@media") {
-        let O2 = d(b2.params, " "), L2 = [];
-        for (let E2 of O2)
-          if (E2.startsWith("source(")) {
-            let j2 = E2.slice(7, -1);
-            P2(b2.nodes, (q2) => {
-              if (q2.kind === "at-rule" && q2.name === "@tailwind" && q2.params === "utilities")
-                return q2.params += ` source(${j2})`, V2.ReplaceStop([ve({ sourceBase: D2.context.base }, [q2])]);
+      if (b.name === "@media") {
+        let O = d(b.params, " "), L = [];
+        for (let E of O)
+          if (E.startsWith("source(")) {
+            let j = E.slice(7, -1);
+            P2(b.nodes, (q) => {
+              if (q.kind === "at-rule" && q.name === "@tailwind" && q.params === "utilities")
+                return q.params += ` source(${j})`, V2.ReplaceStop([ve({ sourceBase: D.context.base }, [q])]);
             });
-          } else if (E2.startsWith("theme(")) {
-            let j2 = E2.slice(6, -1), q2 = j2.includes("reference");
-            P2(b2.nodes, (G2) => {
-              if (G2.kind !== "context") {
-                if (G2.kind !== "at-rule") {
-                  if (q2)
+          } else if (E.startsWith("theme(")) {
+            let j = E.slice(6, -1), q = j.includes("reference");
+            P2(b.nodes, (G) => {
+              if (G.kind !== "context") {
+                if (G.kind !== "at-rule") {
+                  if (q)
                     throw new Error('Files imported with `@import "…" theme(reference)` must only contain `@theme` blocks.\nUse `@reference "…";` instead.');
                   return V2.Continue;
                 }
-                if (G2.name === "@theme")
-                  return G2.params += " " + j2, V2.Skip;
+                if (G.name === "@theme")
+                  return G.params += " " + j, V2.Skip;
               }
             });
-          } else if (E2.startsWith("prefix(")) {
-            let j2 = E2.slice(7, -1);
-            P2(b2.nodes, (q2) => {
-              if (q2.kind === "at-rule" && q2.name === "@theme")
-                return q2.params += ` prefix(${j2})`, V2.Skip;
+          } else if (E.startsWith("prefix(")) {
+            let j = E.slice(7, -1);
+            P2(b.nodes, (q) => {
+              if (q.kind === "at-rule" && q.name === "@theme")
+                return q.params += ` prefix(${j})`, V2.Skip;
             });
           } else
-            E2 === "important" ? l2 = true : E2 === "reference" ? b2.nodes = [ve({ reference: true }, b2.nodes)] : L2.push(E2);
-        if (L2.length > 0)
-          b2.params = L2.join(" ");
-        else if (O2.length > 0)
-          return V2.Replace(b2.nodes);
+            E === "important" ? l = true : E === "reference" ? b.nodes = [ve({ reference: true }, b.nodes)] : L.push(E);
+        if (L.length > 0)
+          b.params = L.join(" ");
+        else if (O.length > 0)
+          return V2.Replace(b.nodes);
         return V2.Continue;
       }
-      if (b2.name === "@theme") {
-        let [O2, L2] = Na(b2.params);
-        if (s |= 64, D2.context.reference && (O2 |= 2), L2) {
-          if (!Va.test(L2))
-            throw new Error(`The prefix "${L2}" is invalid. Prefixes must be lowercase ASCII letters (a-z) only.`);
-          d2.prefix = L2;
+      if (b.name === "@theme") {
+        let [O, L] = Na(b.params);
+        if (s |= 64, D.context.reference && (O |= 2), L) {
+          if (!Va.test(L))
+            throw new Error(`The prefix "${L}" is invalid. Prefixes must be lowercase ASCII letters (a-z) only.`);
+          d2.prefix = L;
         }
-        return P2(b2.nodes, (E2) => {
-          if (E2.kind === "at-rule" && E2.name === "@keyframes")
-            return d2.addKeyframes(E2), V2.Skip;
-          if (E2.kind === "comment")
+        return P2(b.nodes, (E) => {
+          if (E.kind === "at-rule" && E.name === "@keyframes")
+            return d2.addKeyframes(E), V2.Skip;
+          if (E.kind === "comment")
             return;
-          if (E2.kind === "declaration" && E2.property.startsWith("--")) {
-            d2.add(a(E2.property), E2.value ?? "", O2, E2.src);
+          if (E.kind === "declaration" && E.property.startsWith("--")) {
+            d2.add(a(E.property), E.value ?? "", O, E.src);
             return;
           }
-          let j2 = se([B2(b2.name, b2.params, [E2])]).split(`
-`).map((q2, G2, ee2) => `${G2 === 0 || G2 >= ee2.length - 2 ? " " : ">"} ${q2}`).join(`
+          let j = se([B2(b.name, b.params, [E])]).split(`
+`).map((q, G, ee) => `${G === 0 || G >= ee.length - 2 ? " " : ">"} ${q}`).join(`
 `);
           throw new Error(`\`@theme\` blocks must only contain custom properties or \`@keyframes\`.
 
-${j2}`);
-        }), m ? V2.ReplaceSkip([]) : (m = H2(":root, :host", []), m.src = b2.src, V2.ReplaceSkip(m));
+${j}`);
+        }), m ? V2.ReplaceSkip([]) : (m = H2(":root, :host", []), m.src = b.src, V2.ReplaceSkip(m));
       }
     });
-    let x2 = Fi(d2, u2?.src);
-    if (l2 && (x2.important = l2), y2.length > 0)
-      for (let b2 of y2)
-        x2.invalidCandidates.add(b2);
-    s |= await sn({ designSystem: x2, base: i, ast: e2, loadModule: t, sources: h3 });
-    for (let b2 of f2.keys())
-      x2.variants.static(b2, () => {});
-    for (let b2 of cn(c2, { onCircularDependency(I2, D2) {
-      let O2 = se(I2.map((L2, E2) => B2("@custom-variant", L2, [B2("@variant", I2[E2 + 1] ?? D2, [])]))).replaceAll(";", " { … }").replace(`@custom-variant ${D2} {`, `@custom-variant ${D2} { /* ← */`);
+    let x = Fi(d2, u?.src);
+    if (l && (x.important = l), y.length > 0)
+      for (let b of y)
+        x.invalidCandidates.add(b);
+    s |= await sn({ designSystem: x, base: i, ast: e, loadModule: t, sources: h });
+    for (let b of f.keys())
+      x.variants.static(b, () => {});
+    for (let b of cn(c, { onCircularDependency(I, D) {
+      let O = se(I.map((L, E) => B2("@custom-variant", L, [B2("@variant", I[E + 1] ?? D, [])]))).replaceAll(";", " { … }").replace(`@custom-variant ${D} {`, `@custom-variant ${D} { /* ← */`);
       throw new Error(`Circular dependency detected in custom variants:
 
-${O2}`);
+${O}`);
     } }))
-      f2.get(b2)?.(x2);
-    for (let b2 of p2)
-      b2(x2);
+      f.get(b)?.(x);
+    for (let b of p2)
+      b(x);
     if (m) {
-      let b2 = [];
-      for (let [D2, O2] of x2.theme.entries()) {
-        if (O2.options & 2)
+      let b = [];
+      for (let [D, O] of x.theme.entries()) {
+        if (O.options & 2)
           continue;
-        let L2 = a2(h2(D2), O2.value);
-        L2.src = O2.src, b2.push(L2);
+        let L = a2(h2(D), O.value);
+        L.src = O.src, b.push(L);
       }
-      let I2 = x2.theme.getKeyframes();
-      for (let D2 of I2)
-        e2.push(ve({ theme: true }, [Y2([D2])]));
-      m.nodes = [ve({ theme: true }, b2)];
+      let I = x.theme.getKeyframes();
+      for (let D of I)
+        e.push(ve({ theme: true }, [Y2([D])]));
+      m.nodes = [ve({ theme: true }, b)];
     }
-    if (s |= at(e2, x2), s |= Le(e2, x2), s |= Ve(e2, x2), u2) {
-      let b2 = u2;
-      b2.kind = "context", b2.context = {};
+    if (s |= at(e, x), s |= Le(e, x), s |= Ve(e, x), u) {
+      let b = u;
+      b.kind = "context", b.context = {};
     }
-    return P2(e2, (b2) => {
-      if (b2.kind === "at-rule")
-        return b2.name === "@utility" ? V2.Replace([]) : V2.Skip;
-    }), { designSystem: x2, ast: e2, sources: h3, root: S2, utilitiesNode: u2, features: s, inlineCandidates: k };
+    return P2(e, (b) => {
+      if (b.kind === "at-rule")
+        return b.name === "@utility" ? V2.Replace([]) : V2.Skip;
+    }), { designSystem: x, ast: e, sources: h, root: S, utilitiesNode: u, features: s, inlineCandidates: k };
   }
-  async function Ea(e2, i = {}) {
-    let { designSystem: r, ast: t, sources: n, root: s, utilitiesNode: l2, features: d2, inlineCandidates: f2 } = await pn(e2, i);
+  async function Ea(e, i = {}) {
+    let { designSystem: r, ast: t, sources: n, root: s, utilitiesNode: l, features: d, inlineCandidates: f } = await pn(e, i);
     t.unshift(gt(`! tailwindcss v${yr} | MIT License | https://tailwindcss.com `));
-    function c2(h3) {
-      r.invalidCandidates.add(h3);
+    function c(h) {
+      r.invalidCandidates.add(h);
     }
-    let p2 = new Set, m = null, u2 = 0, v2 = false;
-    for (let h3 of f2)
-      r.invalidCandidates.has(h3) || (p2.add(h3), v2 = true);
-    return { sources: n, root: s, features: d2, build(h3) {
-      if (d2 === 0)
-        return e2;
-      if (!l2)
+    let p = new Set, m = null, u = 0, v = false;
+    for (let h of f)
+      r.invalidCandidates.has(h) || (p.add(h), v = true);
+    return { sources: n, root: s, features: d, build(h) {
+      if (d === 0)
+        return e;
+      if (!l)
         return m ??= Ne(t, r, i.polyfills), m;
-      let k = v2, y2 = false;
-      v2 = false;
-      let S2 = p2.size;
-      for (let b2 of h3)
-        if (!r.invalidCandidates.has(b2))
-          if (b2[0] === "-" && b2[1] === "-") {
-            let I2 = r.theme.markUsedVariable(b2);
-            k ||= I2, y2 ||= I2;
+      let k = v, y = false;
+      v = false;
+      let S = p.size;
+      for (let b of h)
+        if (!r.invalidCandidates.has(b))
+          if (b[0] === "-" && b[1] === "-") {
+            let I = r.theme.markUsedVariable(b);
+            k ||= I, y ||= I;
           } else
-            p2.add(b2), k ||= p2.size !== S2;
+            p.add(b), k ||= p.size !== S;
       if (!k)
         return m ??= Ne(t, r, i.polyfills), m;
-      let x2 = $e(p2, r, { onInvalidCandidate: c2 }).astNodes;
-      return i.from && P2(x2, (b2) => {
-        b2.src ??= l2.src;
-      }), !y2 && u2 === x2.length ? (m ??= Ne(t, r, i.polyfills), m) : (u2 = x2.length, l2.nodes = x2, m = Ne(t, r, i.polyfills), m);
+      let x = $e(p, r, { onInvalidCandidate: c }).astNodes;
+      return i.from && P2(x, (b) => {
+        b.src ??= l.src;
+      }), !y && u === x.length ? (m ??= Ne(t, r, i.polyfills), m) : (u = x.length, l.nodes = x, m = Ne(t, r, i.polyfills), m);
     } };
   }
-  async function zf(e2, i = {}) {
-    let r = Te(e2, { from: i.from }), t = await Ea(r, i), n = r, s = e2;
-    return { ...t, build(l2) {
-      let d2 = t.build(l2);
-      return d2 === n || (s = se(d2, !!i.from), n = d2), s;
+  async function zf(e, i = {}) {
+    let r = Te(e, { from: i.from }), t = await Ea(r, i), n = r, s = e;
+    return { ...t, build(l) {
+      let d = t.build(l);
+      return d === n || (s = se(d, !!i.from), n = d), s;
     }, buildSourceMap() {
       return un({ ast: n });
     } };
   }
-  async function jf(e2, i = {}) {
-    return (await pn(Te(e2, { from: i.from }), i)).designSystem;
+  async function jf(e, i = {}) {
+    return (await pn(Te(e, { from: i.from }), i)).designSystem;
   }
 
   // node_modules/tailwindcss/index.css
@@ -8731,15 +8741,22 @@ input:where([type='button'], [type='reset'], [type='submit']),
   function loadDesignSystem(css) {
     return jf(css, options);
   }
+  // package.json
+  var version = "0.6.1";
 
   // src/postwind.js
-  var PostWind = (() => {
+  function serverStub() {
+    const noop = () => Promise.resolve(null);
+    return Object.assign(noop, { version, init: noop, ready: noop, shortcut: noop, breakpoint: noop, resolve: noop });
+  }
+  var PostWind = typeof document === "undefined" ? serverStub() : (() => {
     const breakpoints = {};
     const shortcuts = {};
     const cache = {};
     const candidates = new Set;
     const aliases = new Map;
     const seen = new Set;
+    const warned = new Set;
     const knownCache = new Map;
     let pending = [];
     let compiler = null;
@@ -8754,10 +8771,11 @@ input:where([type='button'], [type='reset'], [type='submit']),
     let _nonce = document.currentScript?.nonce || null;
     let _revealResolve;
     const _revealed = new Promise((r) => _revealResolve = r);
-    function applyNonce(el2) {
+    const initOptions = ["css", "preflight", "breakpoints", "shortcuts", "preload", "body", "warn", "nonce"];
+    function applyNonce(el) {
       if (_nonce)
-        el2.nonce = _nonce;
-      return el2;
+        el.nonce = _nonce;
+      return el;
     }
     function createStyle(id) {
       const style = document.createElement("style");
@@ -8771,9 +8789,11 @@ input:where([type='button'], [type='reset'], [type='submit']),
     document.head.appendChild(styleMain);
     const visibleObserver = new IntersectionObserver((entries) => {
       for (const entry of entries) {
-        entry.target.classList.toggle("pw-visible", entry.isIntersecting);
+        const vh = entry.rootBounds?.height || window.innerHeight;
+        const on = entry.isIntersecting && (entry.intersectionRatio >= 0.5 || entry.intersectionRect.height >= vh / 2);
+        entry.target.classList.toggle("pw-visible", on);
       }
-    }, { threshold: 0.5 });
+    }, { threshold: Array.from({ length: 21 }, (_, i) => i / 20) });
     const observedElements = new WeakSet;
     const unitRe = /^(.+-)(\d+(?:\.\d+)?)(px|rem|em|vh|vw|vmin|vmax|%|ch|ex|cap|lh|dvh|dvw|svh|svw|cqw|cqh)$/;
     const containerQueryRe = /^(min|max)-(\d+):(.+)$/;
@@ -8781,12 +8801,12 @@ input:where([type='button'], [type='reset'], [type='submit']),
       let depth = 0;
       let idx = -1;
       for (let i = 0;i < cls.length; i++) {
-        const c2 = cls[i];
-        if (c2 === "[" || c2 === "(")
+        const c = cls[i];
+        if (c === "[" || c === "(")
           depth++;
-        else if (c2 === "]" || c2 === ")")
+        else if (c === "]" || c === ")")
           depth--;
-        else if (c2 === ":" && depth === 0)
+        else if (c === ":" && depth === 0)
           idx = i;
       }
       return idx;
@@ -8821,15 +8841,15 @@ input:where([type='button'], [type='reset'], [type='submit']),
       const base = parts[0];
       const prop = base.slice(0, base.lastIndexOf("-") + 1);
       const bps = [null, "t", "d"];
-      return parts.map((v2, i) => {
-        const c2 = toTw(i === 0 ? base : prop + v2);
-        return bps[i] ? `${bps[i]}:${c2}` : c2;
+      return parts.map((v, i) => {
+        const c = toTw(i === 0 ? base : prop + v);
+        return bps[i] ? `${bps[i]}:${c}` : c;
       });
     }
     function canonical(cls) {
-      const at2 = cls.match(/^([^@\s]+)@([a-z][a-z0-9-]*)$/);
-      if (at2 && breakpoints[at2[2]])
-        return canonical(`${at2[2]}:${at2[1]}`);
+      const at = cls.match(/^([^@\s]+)@([a-z][a-z0-9-]*)$/);
+      if (at && breakpoints[at[2]])
+        return canonical(`${at[2]}:${at[1]}`);
       if (cls.includes("|"))
         return responsive(cls.split("|"));
       if (isColonResponsive(cls))
@@ -8837,25 +8857,34 @@ input:where([type='button'], [type='reset'], [type='submit']),
       return [toTw(cls)];
     }
     const reSpecial = /[\\^$.*+?()[\]{}|]/g;
-    function aliasSelector(css, canon, names) {
-      const esc = CSS.escape(canon);
-      const re3 = new RegExp("\\." + esc.replace(reSpecial, "\\$&") + "(?![\\w\\\\-])", "g");
-      const list = [...names].map((n) => "." + CSS.escape(n)).join(", ");
-      return css.replace(re3, `:is(.${esc}, ${list})`);
+    function aliasRewriter(map) {
+      const lookup = new Map;
+      for (const [canon, names] of map) {
+        const esc = CSS.escape(canon);
+        const list = [...names].map((n) => "." + CSS.escape(n)).join(", ");
+        lookup.set(esc, `:is(.${esc}, ${list})`);
+      }
+      if (!lookup.size)
+        return (css) => css;
+      const alt = [...lookup.keys()].map((e) => e.replace(reSpecial, "\\$&")).join("|");
+      const re = new RegExp(`\\.(${alt})(?![\\w\\\\-])`, "g");
+      return (css) => css.replace(re, (_, esc) => lookup.get(esc));
     }
+    let _aliasRewrite = null;
     function applyAliases(css) {
-      for (const [canon, names] of aliases)
-        css = aliasSelector(css, canon, names);
-      return css;
+      _aliasRewrite ||= aliasRewriter(aliases);
+      return _aliasRewrite(css);
     }
     function warnIfUnresolved(cls, list) {
+      if (warned.has(cls))
+        return;
       const sugar = list.length !== 1 || list[0] !== cls;
       const sep = cls.indexOf(":");
       const prefix = sep > 0 ? cls.slice(0, sep) : null;
       const ours = sugar || prefix && (breakpoints[prefix] || prefix === "dark" || prefix === "visible");
       if (!ours)
         return;
-      const missing = list.filter((c2) => !known(c2));
+      const missing = list.filter((c) => !known(c));
       if (list.length && !missing.length)
         return;
       let hint;
@@ -8865,6 +8894,7 @@ input:where([type='button'], [type='reset'], [type='submit']),
         hint = `"${cls.slice(sep + 1)}" is not a Tailwind class`;
       else
         hint = `not Tailwind classes: ${missing.join(", ")}`;
+      warned.add(cls);
       console.warn(`[postwind] no CSS for "${cls}" (${hint})`);
     }
     function addClass(cls) {
@@ -8874,24 +8904,32 @@ input:where([type='button'], [type='reset'], [type='submit']),
       if (cls.startsWith("onload:") || containerQueryRe.test(cls))
         return;
       const list = canonical(cls);
-      for (const c2 of list) {
-        if (c2 !== cls) {
-          if (!aliases.has(c2))
-            aliases.set(c2, new Set);
-          aliases.get(c2).add(cls);
+      for (const c of list) {
+        if (c !== cls) {
+          if (!aliases.has(c))
+            aliases.set(c, new Set);
+          aliases.get(c).add(cls);
+          _aliasRewrite = null;
         }
-        if (!candidates.has(c2)) {
-          candidates.add(c2);
-          pending.push(c2);
+        if (!candidates.has(c)) {
+          candidates.add(c);
+          pending.push(c);
         }
       }
       if (_warn)
         warnIfUnresolved(cls, list);
     }
+    function shortcutKey(name) {
+      return /^[A-Za-z_][\w-]*$/.test(name) ? "." + name : name;
+    }
+    function addShortcuts(map) {
+      for (const [name, classes] of Object.entries(map))
+        shortcuts[shortcutKey(name)] = classes;
+    }
     function expandShortcut(sel, depth = 0) {
       const out = [];
       for (const cls of shortcuts[sel].split(/\s+/).filter(Boolean)) {
-        const nested = shortcuts[cls] ? cls : shortcuts["." + cls] ? "." + cls : null;
+        const nested = shortcuts["." + cls] ? "." + cls : null;
         if (nested && depth < 10)
           out.push(...expandShortcut(nested, depth + 1));
         else
@@ -8902,10 +8940,10 @@ input:where([type='button'], [type='reset'], [type='submit']),
     function shortcutCss() {
       const rules = [];
       for (const sel of Object.keys(shortcuts)) {
-        const list = expandShortcut(sel).map(toTw).filter((c2) => {
-          const ok = known(c2);
+        const list = expandShortcut(sel).map(toTw).filter((c) => {
+          const ok = known(c);
           if (!ok && _warn)
-            console.warn(`[postwind] shortcut "${sel}": "${c2}" is not a Tailwind class`);
+            console.warn(`[postwind] shortcut "${sel}": "${c}" is not a Tailwind class`);
           return ok;
         });
         if (list.length)
@@ -8916,20 +8954,38 @@ ${rules.join(`
 `)}
 }` : "";
     }
+    function mediaWidth(media, kind) {
+      const m = media.match(new RegExp(`${kind}-width:\\s*(\\d+(?:\\.\\d+)?)(px|rem|em)`));
+      return m ? parseFloat(m[1]) * (m[2] === "px" ? 1 : 16) : null;
+    }
+    function sortedBreakpoints() {
+      const rank = (media) => {
+        const min = mediaWidth(media, "min");
+        if (min !== null)
+          return [1, min];
+        const max = mediaWidth(media, "max");
+        return max !== null ? [0, -max] : [2, 0];
+      };
+      return Object.entries(breakpoints).sort(([, a], [, b]) => {
+        const ra = rank(a);
+        const rb = rank(b);
+        return ra[0] - rb[0] || ra[1] - rb[1];
+      });
+    }
     function baseCss() {
       const parts = [
         _preflight ? '@import "tailwindcss";' : `@layer theme, base, components, utilities;
 @import "tailwindcss/theme.css" layer(theme);
 @import "tailwindcss/utilities.css" layer(utilities);`
       ];
-      for (const [name, media] of Object.entries(breakpoints)) {
+      for (const [name, media] of sortedBreakpoints()) {
         parts.push(`@custom-variant ${name} (${media});`);
       }
-      parts.push("@custom-variant dark (&:where(body.dark, body.dark *));");
+      parts.push("@custom-variant dark (&:where(.dark, .dark *));");
       parts.push("@custom-variant visible (&:where(.pw-visible));");
       parts.push(_css);
-      for (const el2 of document.querySelectorAll('style[type="text/tailwindcss"]')) {
-        parts.push(el2.textContent);
+      for (const el of document.querySelectorAll('style[type="text/tailwindcss"]')) {
+        parts.push(el.textContent);
       }
       return parts.join(`
 `);
@@ -8941,10 +8997,17 @@ ${rules.join(`
         knownCache.clear();
         compiler = await createCompiler(base + `
 ` + shortcutCss());
-      } catch (e2) {
-        console.error("[postwind] compile failed:", e2.message);
-        throw e2;
+      } catch (e) {
+        console.error("[postwind] compile failed:", e.message);
+        throw e;
       }
+      const raw = [...seen];
+      seen.clear();
+      aliases.clear();
+      candidates.clear();
+      _aliasRewrite = null;
+      for (const cls of raw)
+        addClass(cls);
       pending = [...candidates];
       _lastCss = "";
       rebuild();
@@ -8968,7 +9031,7 @@ ${rules.join(`
       if (scheduled)
         return;
       scheduled = true;
-      queueMicrotask(() => {
+      requestAnimationFrame(() => {
         scheduled = false;
         rebuild();
       });
@@ -8989,12 +9052,6 @@ ${rules.join(`
       }
       return null;
     }
-    function declarations(css) {
-      let s = css.trim();
-      while (s.startsWith("@"))
-        s = s.slice(s.indexOf("{") + 1, s.lastIndexOf("}")).trim();
-      return s.slice(s.indexOf("{") + 1, s.lastIndexOf("}")).trim();
-    }
     function ready() {
       if (!_ready)
         init();
@@ -9002,9 +9059,10 @@ ${rules.join(`
     }
     async function resolve(cls) {
       await ready();
-      if (shortcuts[cls]) {
+      const key = shortcutKey(cls);
+      if (shortcuts[key]) {
         rebuild();
-        return extractRule(_lastCss, cls);
+        return extractRule(_lastCss, key);
       }
       const list = canonical(cls);
       if (!list.length)
@@ -9012,16 +9070,9 @@ ${rules.join(`
       const out = ds.candidatesToCss(list).filter(Boolean);
       if (!out.length)
         return null;
-      let css = out.join(`
-`);
-      for (const c2 of list)
-        if (c2 !== cls)
-          css = aliasSelector(css, c2, [cls]);
-      return css;
-    }
-    async function twCSS(cls) {
-      const css = await resolve(cls);
-      return css ? declarations(css) : null;
+      const own = list.filter((c) => c !== cls).map((c) => [c, [cls]]);
+      return aliasRewriter(new Map(own))(out.join(`
+`));
     }
     function inject(cls) {
       if (cache[cls])
@@ -9035,70 +9086,115 @@ ${rules.join(`
     }
     function breakpoint(name, media) {
       breakpoints[name] = media;
+      bindBodyClass();
       return _ready ? recompile() : Promise.resolve();
     }
     function shortcut(name, classes) {
-      if (typeof name === "object")
-        Object.assign(shortcuts, name);
-      else
-        shortcuts[name] = classes;
+      addShortcuts(typeof name === "object" ? name : { [name]: classes });
       return _ready ? recompile() : Promise.resolve();
     }
-    function observeVisible(el2) {
-      if (observedElements.has(el2))
+    function observeVisible(el) {
+      if (observedElements.has(el))
         return;
-      observedElements.add(el2);
-      _revealed.then(() => visibleObserver.observe(el2));
+      observedElements.add(el);
+      _revealed.then(() => visibleObserver.observe(el));
     }
-    const containerQueryElements = new WeakMap;
-    function setupContainerQuery(el2, mode, width, innerClass) {
-      if (!containerQueryElements.has(el2)) {
-        containerQueryElements.set(el2, []);
-        const ro = new ResizeObserver((entries) => {
-          for (const entry of entries) {
-            const w2 = entry.contentRect.width;
-            for (const q2 of containerQueryElements.get(el2) || []) {
-              const active = q2.mode === "min" ? w2 >= q2.width : w2 <= q2.width;
-              el2.classList.toggle(q2.innerClass, active);
-            }
-          }
-        });
-        ro.observe(el2);
+    const cqState = new WeakMap;
+    const cqObserver = new ResizeObserver((entries) => {
+      for (const entry of entries)
+        applyContainerQueries(entry.target, entry.contentRect.width);
+    });
+    function applyContainerQueries(el, width) {
+      const state = cqState.get(el);
+      if (!state)
+        return;
+      const on = new Set;
+      for (const q of state.queries.values()) {
+        if (q.mode === "min" ? width >= q.width : width <= q.width)
+          on.add(q.cls);
       }
-      containerQueryElements.get(el2).push({ mode, width, innerClass });
+      for (const { cls } of state.queries.values()) {
+        if (on.has(cls)) {
+          if (!el.classList.contains(cls)) {
+            el.classList.add(cls);
+            state.added.add(cls);
+          }
+        } else if (state.added.has(cls)) {
+          el.classList.remove(cls);
+          state.added.delete(cls);
+        }
+      }
     }
-    function handleOnload(el2, cls) {
+    function syncContainerQueries(el) {
+      const classes = [...el.classList].filter((c) => containerQueryRe.test(c));
+      let state = cqState.get(el);
+      if (!state) {
+        if (!classes.length)
+          return;
+        state = { queries: new Map, added: new Set };
+        cqState.set(el, state);
+      }
+      let changed = false;
+      for (const cls of classes) {
+        if (state.queries.has(cls))
+          continue;
+        const [, mode, width, inner] = cls.match(containerQueryRe);
+        state.queries.set(cls, { mode, width: +width, cls: inner });
+        if (compiler)
+          addClass(inner);
+        changed = true;
+      }
+      for (const cls of state.queries.keys()) {
+        if (classes.includes(cls))
+          continue;
+        state.queries.delete(cls);
+        changed = true;
+      }
+      if (!changed)
+        return;
+      const targets = new Set([...state.queries.values()].map((q) => q.cls));
+      for (const cls of state.added) {
+        if (targets.has(cls))
+          continue;
+        el.classList.remove(cls);
+        state.added.delete(cls);
+      }
+      cqObserver.unobserve(el);
+      if (state.queries.size)
+        cqObserver.observe(el);
+      else
+        cqState.delete(el);
+    }
+    function handleOnload(el, cls) {
       const targetClass = cls.substring(7);
-      _revealed.then(() => setTimeout(() => el2.classList.add(targetClass), 100));
+      _revealed.then(() => setTimeout(() => el.classList.add(targetClass), 100));
     }
     const wired = new WeakMap;
-    function processElement(el2) {
-      if (!el2.classList)
+    function processElement(el) {
+      if (!el.classList)
         return;
-      for (const cls of el2.classList) {
-        if (cls.startsWith("onload:") || containerQueryRe.test(cls)) {
-          if (!wired.has(el2))
-            wired.set(el2, new Set);
-          if (wired.get(el2).has(cls))
-            continue;
-          wired.get(el2).add(cls);
-          if (cls.startsWith("onload:")) {
-            handleOnload(el2, cls);
-          } else {
-            const m = cls.match(containerQueryRe);
-            setupContainerQuery(el2, m[1], parseInt(m[2]), m[3]);
+      for (const cls of el.classList) {
+        if (cls.startsWith("onload:")) {
+          if (!wired.has(el))
+            wired.set(el, new Set);
+          if (!wired.get(el).has(cls)) {
+            wired.get(el).add(cls);
+            handleOnload(el, cls);
           }
           continue;
         }
+        if (containerQueryRe.test(cls))
+          continue;
         if (cls.startsWith("visible:"))
-          observeVisible(el2);
+          observeVisible(el);
         if (compiler)
           addClass(cls);
       }
+      syncContainerQueries(el);
     }
     function initClasses(root) {
-      for (const el2 of (root || document).querySelectorAll("[class]"))
-        processElement(el2);
+      for (const el of (root || document).querySelectorAll("[class]"))
+        processElement(el);
     }
     function _reveal() {
       if (!document.body)
@@ -9144,25 +9240,30 @@ ${rules.join(`
       attributes: true,
       attributeFilter: ["class"]
     });
+    let _bodyClass = false;
     let _bodyClassCurrent = null;
-    function _setupBodyClass() {
-      function update() {
-        if (!document.body)
-          return;
-        const w2 = window.innerWidth;
-        const name = w2 < 768 ? "mobile" : w2 < 1024 ? "tablet" : "desktop";
-        if (name !== _bodyClassCurrent) {
-          if (_bodyClassCurrent)
-            document.body.classList.remove(_bodyClassCurrent);
-          document.body.classList.add(name);
-          _bodyClassCurrent = name;
-        }
-      }
-      if (document.body)
-        update();
-      else
-        document.addEventListener("DOMContentLoaded", update);
-      window.addEventListener("resize", update);
+    let _bodyQueries = [];
+    function updateBodyClass() {
+      if (!document.body)
+        return;
+      const [m, d] = _bodyQueries;
+      const name = m?.matches ? "mobile" : d?.matches ? "desktop" : "tablet";
+      if (name === _bodyClassCurrent)
+        return;
+      if (_bodyClassCurrent)
+        document.body.classList.remove(_bodyClassCurrent);
+      document.body.classList.add(name);
+      _bodyClassCurrent = name;
+    }
+    function bindBodyClass() {
+      if (!_bodyClass)
+        return;
+      for (const q of _bodyQueries)
+        q?.removeEventListener("change", updateBodyClass);
+      _bodyQueries = ["m", "d"].map((n) => breakpoints[n] && window.matchMedia(breakpoints[n].replace(/^@media\s*/, "")));
+      for (const q of _bodyQueries)
+        q?.addEventListener("change", updateBodyClass);
+      updateBodyClass();
     }
     function _setupDarkAuto() {
       if (!window.matchMedia)
@@ -9173,7 +9274,7 @@ ${rules.join(`
         const query = window.matchMedia("(prefers-color-scheme: dark)");
         if (query.matches)
           document.body.classList.add("dark");
-        query.addEventListener("change", (e2) => document.body.classList.toggle("dark", e2.matches));
+        query.addEventListener("change", (e) => document.body.classList.toggle("dark", e.matches));
       };
       if (document.body)
         run();
@@ -9181,6 +9282,10 @@ ${rules.join(`
         document.addEventListener("DOMContentLoaded", run);
     }
     function init(opts = {}) {
+      for (const key of Object.keys(opts)) {
+        if (!initOptions.includes(key))
+          console.warn(`[postwind] unknown init option "${key}"`);
+      }
       if (opts.warn !== undefined)
         _warn = !!opts.warn;
       if (opts.nonce) {
@@ -9203,7 +9308,7 @@ ${rules.join(`
         dirty = true;
       }
       if (opts.shortcuts) {
-        Object.assign(shortcuts, opts.shortcuts);
+        addShortcuts(opts.shortcuts);
         dirty = true;
       }
       if (opts.preload) {
@@ -9213,7 +9318,9 @@ ${rules.join(`
           list.forEach(inject);
       }
       if (opts.body)
-        _setupBodyClass();
+        _bodyClass = true;
+      if (opts.body || opts.breakpoints)
+        whenDom().then(bindBodyClass);
       if (_ready) {
         if (dirty)
           recompile();
@@ -9237,20 +9344,18 @@ ${rules.join(`
     } else if (!_ready) {
       queueMicrotask(() => _ready || init());
     }
+    inject.version = version;
     inject.init = init;
     inject.ready = ready;
     inject.breakpoint = breakpoint;
     inject.shortcut = shortcut;
     inject.resolve = resolve;
-    inject.twCSS = twCSS;
-    inject.cache = cache;
-    inject.observeVisible = observeVisible;
-    inject.processElement = processElement;
     breakpoint("m", "@media (max-width: 767px)");
     breakpoint("t", "@media (min-width: 768px)");
     breakpoint("d", "@media (min-width: 1024px)");
     return inject;
   })();
-  window.PostWind = PostWind;
+  if (typeof window !== "undefined")
+    window.PostWind = PostWind;
   var postwind_default = PostWind;
 })();
